@@ -6,13 +6,33 @@
     "AgenteSmart-frontend": {
       "projectType": "application",
       "schematics": {
-        "@schematics/angular:component": {
-          "style": "scss"
-        }
+                "@schematics/angular:component": {
+                    "style": "scss",
+                    "spec": false
+                },
+                "@schematics/angular:class": {
+                    "spec": false
+                },
+                "@schematics/angular:directive": {
+                    "spec": false
+                },
+                "@schematics/angular:guard": {
+                    "spec": false
+                },
+                "@schematics/angular:module": {
+                    "spec": false
+                },
+                "@schematics/angular:pipe": {
+                    "spec": false
+                },
+                "@schematics/angular:service": {
+                    "spec": false
+                }
+            
       },
       "root": "",
       "sourceRoot": "src",
-      "prefix": "app",
+      "prefix": "aSmart",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
@@ -25,12 +45,17 @@
             "aot": true,
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/manifest.webmanifest"
             ],
-            "styles": [
+            "styles": [{
+                  "input": "src/tema.scss"
+              },
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/jquery/dist/jquery.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -59,7 +84,9 @@
                   "maximumWarning": "6kb",
                   "maximumError": "10kb"
                 }
-              ]
+              ],
+              "serviceWorker": true,
+              "ngswConfigPath": "ngsw-config.json"
             }
           }
         },
@@ -89,7 +116,8 @@
             "karmaConfig": "karma.conf.js",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/manifest.webmanifest"
             ],
             "styles": [
               "src/styles.scss"
@@ -124,5 +152,8 @@
         }
       }
     }},
-  "defaultProject": "AgenteSmart-frontend"
+  "defaultProject": "AgenteSmart-frontend",
+  "cli": {
+    "analytics": "b88c81b1-2ff8-4f46-80dd-bd75ce3d676a"
+  }
 }

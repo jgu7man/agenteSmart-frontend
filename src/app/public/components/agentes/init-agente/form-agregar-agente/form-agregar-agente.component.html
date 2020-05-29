@@ -1,0 +1,38 @@
+<form
+  action="#"
+  method="post"
+>
+  <div class="row">
+    <div class="col s12 m6">
+      <mat-form-field>
+        <mat-label>Client Acceses Token</mat-label>
+        <input
+          matInput
+          name="clientToken"
+          id="clientToken"
+          [(ngModel)]="agente.clientToken"
+        />
+      </mat-form-field>
+    </div>
+
+    <div class="col s12 m6">
+      <mat-form-field>
+        <mat-label>Developer Access Token</mat-label>
+        <input
+          matInput
+          name="developerToken"
+          id="developerToken"
+          [(ngModel)]="agente.developerToken"
+        />
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s12 center">
+      <button
+        mat-raised-button
+        color="accent"
+      >Agregar</button>
+    </div>
+  </div>
+</form>

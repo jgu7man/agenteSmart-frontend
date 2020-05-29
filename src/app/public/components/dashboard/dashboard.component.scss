@@ -1,0 +1,31 @@
+.test-chat {
+    min-width: 350px;
+}
+
+.side-nav {
+    width: 220px;
+}
+
+mat-drawer-container {
+    height: 89vh;
+}
+
+.sidenav-footer {
+    position: fixed;
+    bottom: 10%;
+    left: 0;
+    right: 0;
+}
+
+
+#footer {
+    bottom: 0%;
+    z-index: 1;
+}
+
+
+@media screen and (max-width: 700px){
+    .sidenav-footer{
+        bottom: 15%;
+    }
+}

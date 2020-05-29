@@ -1,0 +1,45 @@
+<div class="container">
+    <div class="row">
+        <div class="col s12">
+            <mat-card class="plain">
+                <mat-card-title>
+                    Crear agente
+                </mat-card-title>
+                <mat-card-subtitle>
+                    Puedes crear un agente de ventas nuevo o agregar algún agente de DialogFlow para admisitrarlo aquí
+                </mat-card-subtitle>
+                <mat-card-content>
+                    <mat-accordion>
+
+                        <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    <b>Agente existente</b>
+                                </mat-panel-title>
+                                <mat-panel-description>
+                                    Si ya cuentas con un agente de dialogflow, agrégalo
+                                </mat-panel-description>
+                            </mat-expansion-panel-header>
+                            <aSmart-form-agregar-agente></aSmart-form-agregar-agente>
+                        </mat-expansion-panel>
+
+                        <mat-expansion-panel [expanded]="true">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    <b>Agente nuevo</b>
+                                </mat-panel-title>
+                                <mat-panel-description>
+                                    Crea un agente nuevo desde cero
+                                </mat-panel-description>
+                            </mat-expansion-panel-header>
+                            <aSmart-form-crear-agente></aSmart-form-crear-agente>
+                        </mat-expansion-panel>
+
+                    </mat-accordion>
+
+                </mat-card-content>
+
+            </mat-card>
+        </div>
+    </div>
+</div>
