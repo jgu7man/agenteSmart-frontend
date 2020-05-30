@@ -51,6 +51,7 @@
             "styles": [{
                   "input": "src/tema.scss"
               },
+              
               "src/styles.scss"
             ],
             "scripts": [

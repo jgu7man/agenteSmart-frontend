@@ -23,21 +23,12 @@ export class LoginButtonComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this._auth.openPopup().subscribe( res => {
+      this._auth.googleSingIn().then( res => {
         console.log( 'se autenticó' )
-        console.log(res)
       })
     });
   }
-  createAgent(): void {
-    let projectName = "prueba07", 
-      projectId = "prueba07-a230",
-      agentName = "nuevoagente07"
-    this._auth.createNewAgent(projectName,projectId, agentName).subscribe(data => {
-      console.log(data);
-      this.agente = data;
-    }) 
-  }
+  
 
 }
 

@@ -10,9 +10,14 @@ mat-drawer-container {
     height: 89vh;
 }
 
+::ng-deep .mat-drawer-inner-container {
+    contain: content;
+}
+
+
 .sidenav-footer {
     position: fixed;
-    bottom: 10%;
+    bottom: 0;
     left: 0;
     right: 0;
 }
