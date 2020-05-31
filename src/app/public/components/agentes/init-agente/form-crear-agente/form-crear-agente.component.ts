@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AgenteModel } from '../agente.model';
-import { AgenteService } from './crear-agente.service';
+import { CrearAgenteService } from './crear-agente.service';
 
 @Component({
   selector: 'aSmart-form-crear-agente',
@@ -11,7 +11,7 @@ export class FormCrearAgenteComponent implements OnInit {
 
   agente: AgenteModel
   constructor(
-    private _agente: AgenteService
+    private _agente: CrearAgenteService
   ) {
     this.agente = new AgenteModel('','','es-419','America/New_York','','')
   }

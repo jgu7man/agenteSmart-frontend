@@ -9,9 +9,9 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$agenteSmart-primary: mat-palette($mat-teal, A400, 500, 800);
+$agenteSmart-primary: mat-palette($mat-indigo, A400, 500, 800);
 $agenteSmart-accent: mat-palette($mat-yellow, 400, 200, 300);
-$agenteSmart-background: map_get($mat-teal, 50);
+$agenteSmart-background: map_get($mat-indigo, 50);
 // The warn palette is optional (defaults to red).
 $agenteSmart-warn: mat-palette($mat-red);
 // Create the theme object (a Sass map containing all of the palettes).

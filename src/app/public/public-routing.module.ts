@@ -4,6 +4,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { PublicComponent } from './public.component';
 import { AgentesComponent } from './components/agentes/agentes.component';
 import { InitAgenteComponent } from './components/agentes/init-agente/init-agente.component';
+import { AgenteComponent } from './components/agentes/agente/agente.component';
 
 
 const routes: Routes = [
@@ -11,10 +12,10 @@ const routes: Routes = [
     path: '', component: PublicComponent, children: [
       {
         path: 'dashboard', component: DashboardComponent, children: [
-          {
-            path: 'agentes', component: AgentesComponent, children: [
-              { path: 'init', component: InitAgenteComponent}
-            ]}
+          // { path: '', redirectTo: 'agentes' },
+          { path: 'agentes', component: AgentesComponent },
+          { path: 'crear_agente', component: InitAgenteComponent },
+          { path: 'agente/:id', component: AgenteComponent}
           ]}
         ]}
   ];

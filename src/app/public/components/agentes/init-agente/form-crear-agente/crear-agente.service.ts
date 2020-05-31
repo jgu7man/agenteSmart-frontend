@@ -6,21 +6,27 @@ import { AuthService } from 'src/app/admin/auth/auth.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { UserInterface } from 'src/app/admin/auth/auth.service';
 import { catchError } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
+interface doc {
+  user: string,
+  agente: string
+}
 
 @Injectable({
   providedIn: 'root'
 })
-export class AgenteService {
+export class CrearAgenteService {
   
   constructor(
     private _http: HttpClient,
     private _auth: AuthService,
-    private afs: AngularFirestore
+    private afs: AngularFirestore,
+    private router: Router
   ) { }
 
   waitFor = (ms) => new Promise(r => setTimeout(r, ms))
-  
+  Doc: doc = {user:'', agente:''}
   
   // ? Guardar datos en base de datos
   async saveAgent(agente: AgenteModel) {
@@ -39,17 +45,24 @@ export class AgenteService {
           agente = { ...agente }
           console.log( { agente } )
 
+          agente.avatarUri = agente.avatarUri ? agente.avatarUri : 'favicon.ico'
+          agente.description = agente.description ? agente.description : `Agente de ${user.email}`
 
           // Guardado a Firestore
           const userRef = this.afs.collection( 'usuarios' ).ref.doc( user.uid )
           const agentesColl = userRef.collection( 'agentes' )
-          const agenteNuevo = await agentesColl.add( agente )
+          const agenteNuevo = await agentesColl.add( {
+            displayName: agente.displayName,
+            avatarUri: agente.avatarUri,
+            description: agente.description,
+            created: new Date()
+          } )
 
 
           // Transformar id para generar un string único
           // Juntar el nombre del agente sin espacios más 6 dígitos del ID generado
           // por el Firebase
-          var sufixId = agente.displayName.split( ' ' ).join( '-' )
+          var sufixId = agente.displayName.split( ' ' ).join( '-' ).toLowerCase()
           var codeId = agenteNuevo.id.slice( 0, 6 ).toLowerCase()
 
 
@@ -59,13 +72,20 @@ export class AgenteService {
 
           this.waitFor( 5000 )
 
-
-          // * Espera la creación del proyecto
-          // await this.createProject(agente).toPromise()
+          agentesColl.doc( agenteNuevo.id ).update( {
+            agenteId: agente.agenteId,
+            id: agenteNuevo.id
+          } )
+          
+          this.Doc = {
+            user: user.uid,
+            agente: agenteNuevo.id
+          }
+          console.log(user.uid);
 
           // * Crear el agente
           await this.createNewAgent( agente ).subscribe( () => {
-            console.log( 'creado' )
+            this.router.navigate(['/dashboard/agentes'])
           } )
 
         } )
@@ -83,11 +103,11 @@ export class AgenteService {
   
   // ? Crear proyecto
   createNewAgent( agente: AgenteModel ): Observable<{}> {
-    // const _Url = "https://us-central1-main-agentesmart.cloudfunctions.net/createProject"
+    const _Url = "https://us-central1-main-agentesmart.cloudfunctions.net/dialogflow/agentes/create"
 
     console.log(agente);
 
-    const _Url = "http://localhost:5000/main-agentesmart/us-central1/dialogflow/agentes/create"
+    // const _Url = "http://localhost:5000/main-agentesmart/us-central1/dialogflow/agentes/create"
 
     let params = {...agente}
     return this._http.post<{}>( _Url, params, {
@@ -109,6 +129,10 @@ export class AgenteService {
         `Backend returned code ${ error.status }, ` +
         `body was: ${ error.error }` );
     }
+    // delete the recent docuement
+    console.log(this.Doc);
+    this.afs.collection( 'usuarios' ).ref.doc( this.Doc.user )
+      .collection( 'agentes' ).doc(this.Doc.agente).delete()
     // return an observable with a user-facing error message
     return throwError(
       'Something bad happened; please try again later.' );

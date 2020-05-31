@@ -1,1 +1,16 @@
-<router-outlet></router-outlet>
+<div class="container">
+    <div class="row">
+        <div class="col s12 l6 agente-box" *ngFor="let agente of agentes">
+            <mat-card [routerLink]="['/dashboard/agente/', agente.agenteId]" >
+                <mat-card-header> 
+                    <div mat-card-avatar 
+                    class="avatar-img" 
+                    [ngStyle]="{'background-image':'url('+agente.avatarUri+')'}" 
+                    alt=""></div>
+                    <mat-card-title>{{agente.displayName}} </mat-card-title>
+                    <mat-card-subtitle> {{agente.description}} </mat-card-subtitle>
+                </mat-card-header>
+            </mat-card>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,17 @@
+mat-list-item {
+    cursor: pointer;
+    transition: all .3s;
+}
+
+::ng-deep .mat-expansion-panel-body {
+    padding: 0 5px 16px !important;
+    .collection {
+        border-left: none !important;
+        border-right: none !important;
+        .collection-item {
+            color: #3d5afe !important;
+        
+        }
+    }
+}
+

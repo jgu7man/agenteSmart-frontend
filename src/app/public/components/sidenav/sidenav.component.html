@@ -1,1 +1,17 @@
-<p>sidenav works!</p>
+<mat-accordion>
+    <mat-expansion-panel (click)="_agentes.loadAgentes()" [expanded]="onActive('agentes')">
+        <mat-expansion-panel-header 
+            [routerLink]="['/dashboard/agentes']">
+            Agentes
+        </mat-expansion-panel-header>
+        <div class="collection">
+            <a [routerLink]="['/dashboard/crear_agente']" 
+            routerLinkActive="active"
+            class="collection-item">Crear agente</a>
+            <a *ngFor="let agente of agentes"
+            [routerLink]="['/dashboard/agente', agente.agenteId]" 
+            routerLinkActive="active"
+            class="collection-item">{{agente.displayName}}</a>
+        </div>
+    </mat-expansion-panel>
+</mat-accordion>

@@ -17,6 +17,7 @@ import { FormCrearAgenteComponent } from './components/agentes/init-agente/form-
 import { FormAgregarAgenteComponent } from './components/agentes/init-agente/form-agregar-agente/form-agregar-agente.component';
 import { InitAgenteComponent } from './components/agentes/init-agente/init-agente.component';
 import { AlertModule } from '../global/alert/alert.module';
+import { AgenteComponent } from './components/agentes/agente/agente.component';
 
 
 
@@ -33,6 +34,7 @@ import { AlertModule } from '../global/alert/alert.module';
     FormCrearAgenteComponent,
     FormAgregarAgenteComponent,
     InitAgenteComponent,
+    AgenteComponent,
   ],
   imports: [
     CommonModule,
