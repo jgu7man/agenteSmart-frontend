@@ -14,4 +14,26 @@
             class="collection-item">{{agente.displayName}}</a>
         </div>
     </mat-expansion-panel>
+    <mat-expansion-panel (click)="_agentes.loadAgentes()" [expanded]="onActive('inventario')">
+        <mat-expansion-panel-header 
+            [routerLink]="['/dashboard/agentes']">
+            Inventario
+        </mat-expansion-panel-header>
+        <div class="collection">
+            <a [routerLink]="['/dashboard/crear_agente']" 
+            routerLinkActive="active"
+            class="collection-item">Productos</a>
+        </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel (click)="_agentes.loadAgentes()" [expanded]="onActive('integraciones')">
+        <mat-expansion-panel-header 
+            [routerLink]="['/dashboard/agentes']">
+            Integraciones
+        </mat-expansion-panel-header>
+        <div class="collection">
+            <a [routerLink]="['/dashboard/crear_agente']" 
+            routerLinkActive="active"
+            class="collection-item">Integración</a>
+        </div>
+    </mat-expansion-panel>
 </mat-accordion>
