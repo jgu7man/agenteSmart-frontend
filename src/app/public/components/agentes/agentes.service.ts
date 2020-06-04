@@ -16,25 +16,22 @@ export class AgentesService {
         public _auth: AuthService,
         private router: Router
     ) {
-        this._auth.user$.pipe().subscribe( usuario => {
-            if ( usuario ) {
-                this.usuario = usuario
-                this.loadAgentes()
-            }
+        
+    }
+    
+    async loadAgentes(usuario) {
+        this.agentes = []
+        
+        const agentesCol = await this.afs.collection( 'usuarios' ).ref
+            .doc( usuario.uid ).collection( 'agentes' ).get()
+    
+        agentesCol.forEach( agente => {
+            this.agentes.push( agente.data() as AgenteModel )
         } )
         
-     }
-
-    async loadAgentes() {
-        this.agentes = []
-        const agentesCol = await this.afs.collection( 'usuarios' ).ref
-            .doc( this.usuario.uid ).collection( 'agentes' ).get()
-
-            agentesCol.forEach( agente => {
-                this.agentes.push( agente.data() as AgenteModel )
-            } )
-        
         return this.getAgentes.next(this.agentes)
+            
+            
 
     }
 

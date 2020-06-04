@@ -1,5 +1,21 @@
-<mat-toolbar id="navbar" color="primary">
-    <span>AgenteMii</span>
+<mat-toolbar gdev-color [color]="'white'" [background]="'primary'" id="navbar">
+    <span>Agente Smart</span>
     <span class="espacio"></span>
-    <aSmart-login-button></aSmart-login-button>
+    <aSmart-login-button *ngIf="!auth.user$ | async"></aSmart-login-button>
+    <div class="col right user-profile" *ngIf="auth.user$ | async as user">
+        
+        <button mat-button
+        [matMenuTriggerFor]="menuProfile"
+        ><i class="fas fa-chevron-circle-down"></i></button>
+        <mat-menu #menuProfile="matMenu">
+            <button mat-menu-item>Ver perfil</button>
+            <button mat-menu-item>Cerrar sesión</button>
+        </mat-menu>
+        
+        <div class="imgProfileContainer">
+            <img src="{{user.photoURL}}" alt="">
+        </div>
+
+        <p class="userName"> {{user.displayName}} </p>
+    </div>
 </mat-toolbar>

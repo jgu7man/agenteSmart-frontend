@@ -18,6 +18,8 @@ import { FormAgregarAgenteComponent } from './components/agentes/init-agente/for
 import { InitAgenteComponent } from './components/agentes/init-agente/init-agente.component';
 import { AlertModule } from '../global/alert/alert.module';
 import { AgenteComponent } from './components/agentes/agente/agente.component';
+import { ColorThemeModule } from '../global/color-theme/color-theme.module';
+import { ColorDirective } from '../global/color-theme/color.directive';
 
 
 
@@ -42,7 +44,11 @@ import { AgenteComponent } from './components/agentes/agente/agente.component';
     AuthModule,
     PublicRoutingModule,
     ComunesModule,
-    AlertModule
+    AlertModule,
+    ColorThemeModule
+  ],
+  providers: [
+    ColorDirective
   ]
 })
 export class PublicModule { }

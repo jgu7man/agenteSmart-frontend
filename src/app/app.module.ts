@@ -24,6 +24,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { InterceptorService } from './admin/auth/interceptor.service';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { LoadingModule } from './global/loading/loading.module';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { environment } from '../environments/environment';
     AdminModule,
     AdminRoutingModule,
     AuthModule,
+    LoadingModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [],
