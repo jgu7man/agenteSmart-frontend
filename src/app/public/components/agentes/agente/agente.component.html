@@ -1,1 +1,30 @@
-<p>agente works!</p>
+<nav 
+gdev-color
+[background]="'white'"
+class="agentNav" 
+mat-tab-nav-bar 
+mat-align-tabs="end" 
+*ngIf="agente">
+    <div class="agentInfo">
+        
+        <div class="imgAgentAvatar">
+            <img src="../../../../../favicon.ico" alt="">
+        </div>
+
+        <p 
+        gdev-color
+        [color]="'dark'"
+        class="agentName"
+        > {{agente.displayName}} </p>
+    </div>
+    <a mat-tab-link
+        *ngFor="let link of agentLinks"
+        [routerLink]="link.path"
+        routerLinkActive="active" 
+        #rla="routerLinkActive"
+        [active]="rla.isActive">
+        {{link.label}}
+    </a>
+</nav>
+
+<router-outlet></router-outlet>

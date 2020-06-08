@@ -1,4 +1,7 @@
-<mat-drawer-container class="dash-container" hasBackdrop="false">
+<mat-drawer-container 
+[style]="{'height':windowHeight+'px' }"
+class="dash-container" 
+hasBackdrop="false">
   <mat-drawer
     #sideNav
     class="side-nav"
@@ -12,6 +15,7 @@
     <aSmart-sidenav></aSmart-sidenav>
     <mat-toolbar 
     gdev-color
+    class="test-chat-btn"
     [background]="'dark'"
     >
       <button mat-raised-button color="accent" (click)="testChat.toggle()">
@@ -24,12 +28,12 @@
     Test-chat
   </mat-drawer>
 
-  <mat-drawer-content>
+  <mat-drawer-content gdev-color [background]="'bg1'">
     <router-outlet></router-outlet>
   </mat-drawer-content>
 </mat-drawer-container>
 
-<mat-toolbar
+<mat-toolbar 
   *ngIf="responsive.small()"
   class="sidenav-footer"
   id="footer"

@@ -20,12 +20,20 @@ import { AlertModule } from '../global/alert/alert.module';
 import { AgenteComponent } from './components/agentes/agente/agente.component';
 import { ColorThemeModule } from '../global/color-theme/color-theme.module';
 import { ColorDirective } from '../global/color-theme/color.directive';
+import { EntradasComponent } from './components/agentes/agente/entradas/entradas.component';
+import { EntidadesComponent } from './components/agentes/agente/entidades/entidades.component';
+import { AccionesComponent } from './components/agentes/agente/acciones/acciones.component';
+import { OpcionesComponent } from './components/agentes/agente/opciones/opciones.component';
+import { lowecaseDirective } from '../global/directives/lowercase.directive';
+import { NormalizeDirective } from '../global/directives/normalize.directive';
 
 
 
 
 @NgModule({
   declarations: [
+    lowecaseDirective,
+    NormalizeDirective,
     PublicComponent,
     LoginComponent,
     NavbarComponent,
@@ -37,6 +45,10 @@ import { ColorDirective } from '../global/color-theme/color.directive';
     FormAgregarAgenteComponent,
     InitAgenteComponent,
     AgenteComponent,
+    EntradasComponent,
+    EntidadesComponent,
+    AccionesComponent,
+    OpcionesComponent,
   ],
   imports: [
     CommonModule,

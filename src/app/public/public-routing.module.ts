@@ -5,6 +5,10 @@ import { PublicComponent } from './public.component';
 import { AgentesComponent } from './components/agentes/agentes.component';
 import { InitAgenteComponent } from './components/agentes/init-agente/init-agente.component';
 import { AgenteComponent } from './components/agentes/agente/agente.component';
+import { EntradasComponent } from './components/agentes/agente/entradas/entradas.component';
+import { EntidadesComponent } from './components/agentes/agente/entidades/entidades.component';
+import { AccionesComponent } from './components/agentes/agente/acciones/acciones.component';
+import { OpcionesComponent } from './components/agentes/agente/opciones/opciones.component';
 
 
 const routes: Routes = [
@@ -15,7 +19,14 @@ const routes: Routes = [
           // { path: '', redirectTo: 'agentes' },
           { path: 'agentes', component: AgentesComponent },
           { path: 'crear_agente', component: InitAgenteComponent },
-          { path: 'agente/:id', component: AgenteComponent}
+          {
+            path: 'agente/:id', component: AgenteComponent, children: [
+              { path: '', redirectTo: 'entradas', pathMatch: 'full' },
+              { path: 'entradas', component: EntradasComponent },
+              { path: 'entidadaes', component: EntidadesComponent },
+              { path: 'acciones', component: AccionesComponent },
+              { path: 'opciones', component: OpcionesComponent },
+          ] },
           ]}
         ]}
   ];

@@ -15,8 +15,15 @@ mat-drawer-container {
 }
 
 
-.sidenav-footer {
-    position: fixed;
+mat-toolbar.sidenav-footer {
+    position: fixed !important;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.test-chat-btn {
+    position: absolute !important;
     bottom: 0;
     left: 0;
     right: 0;
@@ -27,6 +34,12 @@ mat-drawer-container {
     bottom: 0%;
     z-index: 1;
 }
+
+.container {
+    width: 95% !important;
+}
+
+
 
 
 @media screen and (max-width: 700px){

@@ -1,7 +1,7 @@
 <mat-toolbar gdev-color [color]="'white'" [background]="'primary'" id="navbar">
     <span>Agente Smart</span>
     <span class="espacio"></span>
-    <aSmart-login-button *ngIf="!auth.user$ | async"></aSmart-login-button>
+    <aSmart-login-button *ngIf="!auth.user$"></aSmart-login-button>
     <div class="col right user-profile" *ngIf="auth.user$ | async as user">
         
         <button mat-button

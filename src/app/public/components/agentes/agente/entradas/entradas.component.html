@@ -1,0 +1,42 @@
+<div class="container">
+    <div class="row">
+        <div class="col s12 m3 en-Column" *ngFor="let contexto of contextos">
+            <p *ngIf="contexto != ''">{{contexto}}</p>
+        </div>
+        <div class="col s12 m3 en-Column">
+
+            <div class="row">
+                <div class="col s12">
+                    <ng-template #addContext>
+                        <div class="contextField">
+                            <mat-form-field appearence="outline">
+                                <mat-label>Contexto Nuevo</mat-label>
+                                <input
+                                lowecase
+                                matInput
+                                #input
+                                #contextoNuevo
+                                type="text" 
+                                name="contextoNuevo" 
+                                id="contextoNuevo"
+                                (keydown)="delSpaces($event)"
+                                (keyup.enter)="onSetContext()"
+                                [(ngModel)]="newContext"
+                                >
+                            </mat-form-field>
+                        </div>
+                    </ng-template>
+                    <div class="addContexto" 
+                        *ngIf="!switchAddContext; else addContext">
+                        <button 
+                        mat-button 
+                        (click)="onAddContext()"
+                        >Agregar contexto</button>
+                    </div>
+                    
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

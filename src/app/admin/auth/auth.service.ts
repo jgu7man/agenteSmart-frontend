@@ -7,6 +7,7 @@ import { of, Observable, Subject, throwError } from 'rxjs';
 import { switchMap, first, catchError } from 'rxjs/operators';
 import { HttpHeaders, HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
 // import * as google from 'googleapis'
+import { Loading } from '../../global/loading/loading.service';
 
 // const oauth2Client = new google.auth.OAuth2(
 //   '683912406589-acc9kkbnqu7qgao221kuk6aqanqli01b.apps.googleusercontent.com',
@@ -14,21 +15,23 @@ import { HttpHeaders, HttpClient, HttpParams, HttpErrorResponse } from '@angular
 //   'http://localhost'
 // );
 
-@Injectable({
+@Injectable( {
   providedIn: 'root'
-})
+} )
 export class AuthService {
-
+  
   user$: Observable<any>
   authenticated$: Subject<any> = new Subject()
-
-  constructor(
+  
+  
+  constructor (
     private afAuth: AngularFireAuth,
     private afs: AngularFirestore,
     private router: Router,
-    private _http: HttpClient
-  ) {
-
+    private _http: HttpClient,
+    private loading: Loading
+    ) {
+      
 
     //? Método para cargar el usuario autenticado de manera asíncrona
     this.user$ = this.afAuth.authState.pipe(
@@ -41,6 +44,29 @@ export class AuthService {
 
   
   
+  
+  async getCurrentUser() {
+    var user: UserInterface = JSON.parse( sessionStorage.getItem( 'aSmart-user' ) )
+    if ( !user ) {
+      this.user$.pipe().subscribe( userAuth => {
+        if ( userAuth ) {
+          sessionStorage.setItem( 'aSmart-user', JSON.stringify( userAuth ) )
+          
+          var location = window.location.href
+            .split( '//' )[ 1 ].split( '/' ).slice( 1 ).join( '/' );
+          
+          this.router.navigateByUrl( '/' ).then( () => {
+            this.router.navigate( [ location ] );
+
+          })
+        } else {
+          this.router.navigate(['/'])
+        }
+      })
+    } else {
+      return user
+    }
+   }
 
   
   

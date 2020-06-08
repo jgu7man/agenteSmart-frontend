@@ -22,8 +22,9 @@ export class AlertService {
 
   // Función que envía un mensaje de alerta
   // y espera la confirmación de la lectura del usuario
-  sendAlertMessage( mensaje: AlertMsgModel ): Observable<any> {
-    if ( !mensaje.confirmacion ) mensaje.confirmacion = 'aceptar'
+  sendAlertMessage( mensaje: AlertMsgModel | string ): Observable<any> {
+    var msg: AlertMsgModel = typeof mensaje == 'string' ?
+      { confirmacion: 'aceptar', mensaje: mensaje } : mensaje 
 
     const dialogRef = this.dialogBox.open( MessageComponent, {
       width: '300px',
