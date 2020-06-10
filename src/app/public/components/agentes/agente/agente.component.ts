@@ -3,6 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { AgentesService } from '../agentes.service';
 import { AuthService } from '../../../../admin/auth/auth.service';
 import { AgenteModel } from '../init-agente/agente.model';
+import { DashboardService } from '../../dashboard/dashboard.service';
+import { NAVLINK } from '../../navbar/navlink.interface';
+import { ResponsiveService } from '../../../../services/responsive.service';
 
 @Component({
   selector: 'aSmart-agente',
@@ -16,11 +19,16 @@ export class AgenteComponent implements OnInit {
   constructor (
     private ruta: ActivatedRoute,
     private _agentes: AgentesService,
-    private auth: AuthService
+    private auth: AuthService,
+    private _dashboard: DashboardService,
+    public _responsive: ResponsiveService
   ) { }
 
   ngOnInit(): void {
     this.loadAgente()
+    if ( this._responsive.small ) {
+      this._dashboard.setMobileNavbar(this.agentLinks)
+    }
   }
 
   loadAgente() {
@@ -36,15 +44,12 @@ export class AgenteComponent implements OnInit {
   }
 
   agentLinks:NAVLINK[] = [
-    { path: 'entradas', label: 'Entradas' },
-    { path: 'entidades', label: 'Entidades' },
-    { path: 'acciones', label: 'Acciones' },
-    { path: 'opciones', label: 'Opciones' },
+    { path: 'entradas', label: 'Entradas', icon:'fa-sign-in-alt' },
+    { path: 'entidades', label: 'Entidades', icon:'fa-exchange-alt' },
+    { path: 'acciones', label: 'Acciones', icon:'fa-hand-scissors' },
+    { path: 'opciones', label: 'Opciones', icon:'fa-ellipsis-v' },
   ]
 
 }
 
-interface NAVLINK {
-  path: string
-  label: string
-}
+

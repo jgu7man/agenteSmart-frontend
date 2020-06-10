@@ -1,0 +1,14 @@
+#entradas_container {
+    width: unset !important;
+    overflow: scroll;
+}
+
+#contextos {
+    margin: 0 1em;
+    display: flex;
+}
+
+.en-Column {
+    min-width: 300px;
+    overflow-y:scroll;
+}

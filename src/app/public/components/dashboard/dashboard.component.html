@@ -1,12 +1,13 @@
 <mat-drawer-container 
-[style]="{'height':windowHeight+'px' }"
+responsive [strechHeight]
 class="dash-container" 
 hasBackdrop="false">
   <mat-drawer
     #sideNav
     class="side-nav"
     mode="side"
-    [opened]="!responsive.small()"
+    responsive
+    [opened]="!responsive.small"
     position="start"
     gdev-color
     [background]="'dark'"
@@ -33,14 +34,21 @@ hasBackdrop="false">
   </mat-drawer-content>
 </mat-drawer-container>
 
-<mat-toolbar 
-  *ngIf="responsive.small()"
-  class="sidenav-footer"
+<nav
+  *ngIf="responsive.small"
+  class="nav-footer"
   id="footer"
-  color="accent"
+  gdev-color [background]="'acent'"
+  mat-tab-nav-bar
 >
   <button mat-button (click)="sideNav.toggle()">Menú</button>
-  <mat-tab-group>
-    <mat-tab label="Cuenta"></mat-tab>
-  </mat-tab-group>
-</mat-toolbar>
+  <a mat-tab-link
+        *ngFor="let item of mobileNavbar"
+        [routerLink]="[item.path]"
+        routerLinkActive="active" 
+        #rla="routerLinkActive"
+        [active]="rla.isActive">
+        
+        <span> {{item.label}} </span>
+    </a>
+</nav>

@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ResponsiveService } from 'src/app/services/responsive.service';
+import { NAVLINK } from '../navbar/navlink.interface';
+import { DashboardService } from './dashboard.service';
 
 @Component({
   selector: 'aSmart-dashboard',
@@ -9,13 +11,17 @@ import { ResponsiveService } from 'src/app/services/responsive.service';
 })
 export class DashboardComponent implements OnInit {
 
-  windowHeight
+  mobileNavbar: NAVLINK[]
   constructor (
-    public responsive: ResponsiveService
+    public responsive: ResponsiveService,
+    private dashboard: DashboardService
   ) { }
 
   ngOnInit() {
-    this.windowHeight = window.innerHeight -64
+    
+    this.dashboard._setMobileNavBar.subscribe( result => {
+      this.mobileNavbar = result
+    })
   }
 
 

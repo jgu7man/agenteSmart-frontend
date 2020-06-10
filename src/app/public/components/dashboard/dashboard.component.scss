@@ -15,7 +15,7 @@ mat-drawer-container {
 }
 
 
-mat-toolbar.sidenav-footer {
+mat-toolbar.nav-footer {
     position: fixed !important;
     bottom: 0;
     left: 0;
@@ -43,7 +43,7 @@ mat-toolbar.sidenav-footer {
 
 
 @media screen and (max-width: 700px){
-    .sidenav-footer{
+    .nav-footer{
         bottom: 15%;
     }
 }

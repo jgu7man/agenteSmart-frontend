@@ -18,6 +18,7 @@ mat-align-tabs="end"
         > {{agente.displayName}} </p>
     </div>
     <a mat-tab-link
+        [ngStyle]="{'display': _responsive.small ? 'none' : 'inline-flex'}"
         *ngFor="let link of agentLinks"
         [routerLink]="link.path"
         routerLinkActive="active" 

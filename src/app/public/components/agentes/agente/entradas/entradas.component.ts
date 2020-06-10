@@ -22,7 +22,8 @@ export class EntradasComponent implements OnInit {
     private _loading: Loading,
     private _text: TextService
   ) {
-    this.agenteID = this._url.snapshot.paramMap.get('id')
+    this.agenteID = this._url.parent.snapshot.paramMap.get('id')
+    
    }
 
   async ngOnInit() {
