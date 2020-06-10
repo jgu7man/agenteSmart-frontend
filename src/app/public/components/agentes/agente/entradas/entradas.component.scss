@@ -1,6 +1,6 @@
 #entradas_container {
     width: unset !important;
-    overflow: scroll;
+    margin: 1em auto 0;
 }
 
 #contextos {
@@ -10,5 +10,5 @@
 
 .en-Column {
     min-width: 300px;
-    overflow-y:scroll;
+    overflow-y:auto;
 }

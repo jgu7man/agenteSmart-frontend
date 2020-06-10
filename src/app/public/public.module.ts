@@ -27,6 +27,7 @@ import { OpcionesComponent } from './components/agentes/agente/opciones/opciones
 import { lowecaseDirective } from '../global/directives/lowercase.directive';
 import { NormalizeDirective } from '../global/directives/normalize.directive';
 import { ResponsiveDirective } from '../global/directives/responsive.directive';
+import { StretchHeightDirective } from '../global/directives/stretchHeight.directive';
 
 
 
@@ -36,6 +37,7 @@ import { ResponsiveDirective } from '../global/directives/responsive.directive';
     lowecaseDirective,
     NormalizeDirective,
     ResponsiveDirective,
+    StretchHeightDirective,
     PublicComponent,
     LoginComponent,
     NavbarComponent,

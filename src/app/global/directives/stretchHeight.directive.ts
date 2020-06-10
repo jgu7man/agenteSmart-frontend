@@ -2,13 +2,13 @@ import { Directive, ElementRef, Input, OnInit, AfterViewInit } from '@angular/co
 import { Loading } from '../loading/loading.service';
 
 @Directive( {
-    selector: '[responsive]',
+    selector: '[strechHeight]',
 })
-export class ResponsiveDirective implements OnInit{
+export class StretchHeightDirective implements OnInit{
 
-    @Input() hideOn: 'small' | 'med' | 'large' | 'extraLarge'
-    @Input() strechWidth: boolean = true
-    @Input() strechHeight: boolean = true
+    // @Input() hideOn: 'small' | 'med' | 'large' | 'extraLarge'
+    // @Input() strechWidth: boolean = true
+    // @Input() strechHeight: boolean = true
 
     public smallWidth = 450
     public medWidth = 700
@@ -49,13 +49,13 @@ export class ResponsiveDirective implements OnInit{
         var height = this.deviceSize != 'small' ? 
             this.fullHeight - y : this.fullHeight - y - 49
         
-        console.log(y, height, this.elementRef.nativeElement.class);
+        console.log(y, height, this.elementRef.nativeElement.id);
         this.elementRef.nativeElement.style.height = height+'px'
             
     }
 
-    hide() {
-        window.screen.width < this.smallWidth ? true : false
-        this.elementRef.nativeElement.style.display = 'none';
-    }
+    // hide() {
+    //     window.screen.width < this.smallWidth ? true : false
+    //     this.elementRef.nativeElement.style.display = 'none';
+    // }
 }

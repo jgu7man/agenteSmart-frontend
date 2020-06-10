@@ -1,18 +1,22 @@
 <mat-drawer-container 
-responsive [strechHeight]
+id="dashboard_container"
+strechHeight
 class="dash-container" 
 hasBackdrop="false">
+
+
+<!-- Left sidebar -->
   <mat-drawer
     #sideNav
     class="side-nav"
     mode="side"
-    responsive
     [opened]="!responsive.small"
     position="start"
     gdev-color
     [background]="'dark'"
     
   >
+
     <aSmart-sidenav></aSmart-sidenav>
     <mat-toolbar 
     gdev-color
@@ -24,16 +28,27 @@ hasBackdrop="false">
       </button>
     </mat-toolbar>
   </mat-drawer>
+  <!-- End Left Sidenav -->
 
+
+
+  <!-- Test chat -->
   <mat-drawer #testChat class="test-chat" mode="over" position="end">
     Test-chat
   </mat-drawer>
 
-  <mat-drawer-content gdev-color [background]="'bg1'">
+
+
+
+  <!-- Dashboard -->
+  <mat-drawer-content strechHeight id="dashboard_area"  gdev-color [background]="'bg1'">
     <router-outlet></router-outlet>
   </mat-drawer-content>
 </mat-drawer-container>
 
+
+
+<!-- Mobile navbar -->
 <nav
   *ngIf="responsive.small"
   class="nav-footer"

@@ -1,14 +1,12 @@
 <div class="container" id="entradas_container">
-    <div class="row" id="contextos">
+    <div class="row" id="contextos" >
         <div class="col s12 m3 en-Column"
          *ngFor="let contexto of contextos"
-         responsive [strechHeight]
+         strechHeight id="context-{{contexto}}"
          >
             <p *ngIf="contexto != ''">{{contexto}}</p>
         </div>
-        <div class="col s12 m3 en-Column"
-        responsive [strechHeight]
-        >
+        <div class="col s12 m3 en-Column">
 
             <div class="row">
                 <div class="col s12">
