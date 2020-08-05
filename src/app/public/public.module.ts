@@ -28,6 +28,10 @@ import { lowecaseDirective } from '../global/directives/lowercase.directive';
 import { NormalizeDirective } from '../global/directives/normalize.directive';
 import { ResponsiveDirective } from '../global/directives/responsive.directive';
 import { StretchHeightDirective } from '../global/directives/stretchHeight.directive';
+import { EntradasListComponent } from './components/agentes/agente/entradas/entradas-list/entradas-list.component';
+import { ContextosComponent } from './components/agentes/agente/contextos/contextos.component';
+import { AddContextoComponent } from './components/agentes/agente/contextos/add-contexto/add-contexto.component';
+import { ContextoComponent } from './components/agentes/agente/contextos/contexto/contexto.component';
 
 
 
@@ -53,6 +57,10 @@ import { StretchHeightDirective } from '../global/directives/stretchHeight.direc
     EntidadesComponent,
     AccionesComponent,
     OpcionesComponent,
+    EntradasListComponent,
+    ContextosComponent,
+    AddContextoComponent,
+    ContextoComponent,
   ],
   imports: [
     CommonModule,

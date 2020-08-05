@@ -9,6 +9,7 @@ import { EntradasComponent } from './components/agentes/agente/entradas/entradas
 import { EntidadesComponent } from './components/agentes/agente/entidades/entidades.component';
 import { AccionesComponent } from './components/agentes/agente/acciones/acciones.component';
 import { OpcionesComponent } from './components/agentes/agente/opciones/opciones.component';
+import { ContextosComponent } from './components/agentes/agente/contextos/contextos.component';
 
 
 const routes: Routes = [
@@ -22,7 +23,7 @@ const routes: Routes = [
           {
             path: 'agente/:id', component: AgenteComponent, children: [
               { path: '', redirectTo: 'entradas', pathMatch: 'full' },
-              { path: 'entradas', component: EntradasComponent },
+              { path: 'entradas', component: ContextosComponent },
               { path: 'entidadaes', component: EntidadesComponent },
               { path: 'acciones', component: AccionesComponent },
               { path: 'opciones', component: OpcionesComponent },

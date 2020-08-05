@@ -1,8 +1,11 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { AgenteService } from '../agente.service';
+import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
+import {ContextosService } from '../contextos/contextos.service';
 import { ActivatedRoute } from '@angular/router';
 import { Loading } from '../../../../../global/loading/loading.service';
 import { TextService } from 'src/app/services/text.service';
+import { AgenteModel } from '../../init-agente/agente.model';
+import { AgentesService } from '../../agentes.service';
+import { EntradasService } from './entradas.service';
 
 @Component({
   selector: 'aSmart-entradas',
@@ -11,56 +14,44 @@ import { TextService } from 'src/app/services/text.service';
 })
 export class EntradasComponent implements OnInit {
 
-  agenteID
-  newContext: string = ''
-  switchAddContext: boolean = false
-  contextos: string[]
-  @ViewChild('contextoNuevo') contextoNuevo: ElementRef
+  agente: AgenteModel
+  projectId
+  newIntent: string = ''
+  switchAddIntent: boolean = false
+
+  @Input() contexto: string
+  @ViewChild( 'intentNuevo' ) intentNuevo: ElementRef
+  
   constructor (
-    private _agente: AgenteService,
-    private _url: ActivatedRoute,
+    private _agentes: AgentesService,
     private _loading: Loading,
-    private _text: TextService
+    private _entradas: EntradasService
   ) {
-    this.agenteID = this._url.parent.snapshot.paramMap.get('id')
     
    }
 
   async ngOnInit() {
-    this.getContextos()
+    this._agentes.agente$.subscribe( agente => {
+      this.agente = agente
+    })
   }
 
-  async onAddContext() {
-    this.switchAddContext = !this.switchAddContext
-    await this._loading.waitFor(100)
-    this.contextoNuevo.nativeElement.focus()
-  }
-
-  async getContextos() {
-    let contextos = await this._agente.getContexts( this.agenteID )
-    this.contextos = contextos.length > 0 ? contextos : undefined
-    console.log(this.contextos);
-  }
   
-  onSetContext() {
-    if ( this.newContext ) {
-      var newContext = this._text.normalize( this.newContext ) 
-      
-      this._agente.setContext( this.agenteID, newContext )
-      .then( () => {
-        this.newContext = ''
-        this.getContextos()
-      } )
-    } 
-    this.switchAddContext = false
+
+  async onAddIntent() {
+    this.switchAddIntent = !this.switchAddIntent
+    await this._loading.waitFor( 100 )
+    this.intentNuevo.nativeElement.focus()
   }
 
-  delSpaces( e ) {
-    if ( e.which === 32 ) {
-      this.newContext.valueOf().replace(/\s/g, '')
-      return false
+  
+
+  onSetIntent(contexto) {
+    if ( this.newIntent ) {
+      this._entradas.setEntrada( this.newIntent, contexto )
     }
-    
   }
+
+  
 
 }

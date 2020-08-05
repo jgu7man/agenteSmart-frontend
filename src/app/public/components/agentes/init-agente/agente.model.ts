@@ -1,6 +1,6 @@
 export class AgenteModel {
     constructor(
-        public project: string,
+        public projectId: string,
         public displayName: string,
         public defaultLanguageCode: string,
         public timeZone: string,

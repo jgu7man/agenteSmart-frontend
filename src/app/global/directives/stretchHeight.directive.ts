@@ -49,7 +49,6 @@ export class StretchHeightDirective implements OnInit{
         var height = this.deviceSize != 'small' ? 
             this.fullHeight - y : this.fullHeight - y - 49
         
-        console.log(y, height, this.elementRef.nativeElement.id);
         this.elementRef.nativeElement.style.height = height+'px'
             
     }

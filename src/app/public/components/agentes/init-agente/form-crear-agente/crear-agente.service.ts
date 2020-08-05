@@ -66,15 +66,15 @@ export class CrearAgenteService {
           var codeId = agenteNuevo.id.slice( 0, 6 ).toLowerCase()
 
 
-          agente[ 'agenteId' ] = `${ sufixId }-${ codeId }`
-          console.log( { agenteId: agente.agenteId } )
+          agente.projectId = `${ sufixId }-${ codeId }`
+          console.log( { projectId: agente.agenteId } )
 
 
           this.waitFor( 5000 )
 
           agentesColl.doc( agenteNuevo.id ).update( {
-            agenteId: agente.agenteId,
-            id: agenteNuevo.id
+            agenteId: agenteNuevo.id,
+            project: agente.projectId
           } )
           
           this.Doc = {

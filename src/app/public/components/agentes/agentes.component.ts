@@ -17,13 +17,10 @@ export class AgentesComponent implements OnInit, AfterViewInit {
     public _agentes: AgentesService,
     public router: Router,
     private loading: Loading,
-    private _auth: AuthService
   ) {}
   
   async ngOnInit() {
-    this._auth.user$.pipe().subscribe( user => {
-      if(user) this._agentes.loadAgentes(user)
-    })
+    
     this._agentes.getAgentes.subscribe( result => {
       this.agentes = result
     } )

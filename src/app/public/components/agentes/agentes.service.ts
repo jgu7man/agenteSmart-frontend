@@ -9,22 +9,26 @@ import { Router, RouterEvent, NavigationEnd } from '@angular/router';
 export class AgentesService {
     
     usuario: UserInterface
+    $agente:AgenteModel
     agentes: AgenteModel[]
-    agente: Subject<AgenteModel> = new Subject()
+    agente$: Subject<AgenteModel> = new Subject()
     public getAgentes: Subject<AgenteModel[]> = new Subject()
     constructor (
         private afs: AngularFirestore,
         public _auth: AuthService,
         private router: Router
     ) {
-        
     }
     
-    async loadAgentes(usuario) {
+    async getData() {
+        this.usuario = await this._auth.getCurrentUser()
+    }
+    
+    async loadAgentes() {
         this.agentes = []
         
         const agentesCol = await this.afs.collection( 'usuarios' ).ref
-            .doc( usuario.uid ).collection( 'agentes' ).get()
+            .doc( this.usuario.uid ).collection( 'agentes' ).get()
     
         agentesCol.forEach( agente => {
             this.agentes.push( agente.data() as AgenteModel )
@@ -36,12 +40,13 @@ export class AgentesService {
 
     }
 
-    async loadOneAgente( usuario, agenteId ) {
+    async loadOneAgente(  projectId ) {
         const agentesRES = await this.afs.collection( 'usuarios' ).ref
-            .doc( usuario.uid ).collection( 'agentes' )
-            .where( 'agenteId', '==', agenteId ).get()
-        let Agente = agentesRES.docs[0].data() as AgenteModel
-        return this.agente.next( Agente )
+            .doc( this.usuario.uid ).collection( 'agentes' )
+            .where( 'projectId', '==', projectId ).get()
+        let Agente = agentesRES.docs[ 0 ].data() as AgenteModel
+        this.agente$.next( Agente )
+        return this.agente$
     }
 
 }

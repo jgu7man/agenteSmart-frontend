@@ -6,6 +6,8 @@ import { AgenteModel } from '../init-agente/agente.model';
 import { DashboardService } from '../../dashboard/dashboard.service';
 import { NAVLINK } from '../../navbar/navlink.interface';
 import { ResponsiveService } from '../../../../services/responsive.service';
+import { CacheService } from '../../../../global/cache/cache.service';
+import { CurrentAgenteService } from './agente.service';
 
 @Component({
   selector: 'aSmart-agente',
@@ -18,10 +20,11 @@ export class AgenteComponent implements OnInit {
   agente: AgenteModel
   constructor (
     private ruta: ActivatedRoute,
-    private _agentes: AgentesService,
+    private _agente: CurrentAgenteService,
     private auth: AuthService,
     private _dashboard: DashboardService,
-    public _responsive: ResponsiveService
+    public _responsive: ResponsiveService,
+    private _cache: CacheService
   ) { }
 
   ngOnInit(): void {
@@ -31,16 +34,20 @@ export class AgenteComponent implements OnInit {
     }
   }
 
-  loadAgente() {
-    const agentId = this.ruta.snapshot.paramMap.get( 'id' )
-    this.auth.user$.pipe().subscribe( async user => {
-      if ( user ) {
-        this._agentes.loadOneAgente( user, agentId )
-        this._agentes.agente.subscribe( agente => {
-          this.agente = agente
-        } )
-      }
-    })
+  async loadAgente() {
+
+    this.agente = await this._cache.getDataKey( 'agente' ) as AgenteModel
+    console.log(this.agente);
+
+    if ( !this.agente ) {
+      const projectId = this.ruta.snapshot.paramMap.get( 'id' )
+      if ( projectId ) { this._cache.updateData( 'projectId', projectId ) }
+      await ( await this._agente.getCurrentAgent( projectId ) )
+        .subscribe( agente => {
+        this.agente = agente
+      })
+      
+    }
   }
 
   agentLinks:NAVLINK[] = [

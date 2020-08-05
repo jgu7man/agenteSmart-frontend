@@ -1,61 +1,46 @@
 import { Injectable } from '@angular/core';
+import { AgenteModel } from '../init-agente/agente.model';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { UserInterface, AuthService } from '../../../../admin/auth/auth.service';
-import { AlertService } from '../../../../global/alert/alert.service';
+import { AuthService, UserInterface } from '../../../../admin/auth/auth.service';
+import { CacheService } from '../../../../global/cache/cache.service';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AgenteService {
+export class CurrentAgenteService {
 
-  contexts: string[]
-  user: UserInterface
+  currentAgent: AgenteModel
+  usuario: UserInterface
+  agente$: Subject<AgenteModel> = new Subject()
+
   constructor (
-    private afs: AngularFirestore,
+    private fs: AngularFirestore,
+    private _cache: CacheService,
     private _auth: AuthService,
-    private _alerta: AlertService
   ) {
-    this._auth.getCurrentUser().then(user =>this.user = user)
-   }
-  
-  async setContext(agenteID, contextName) {
-    const contextRef = this.afs.collection(
-      `usuarios/${ this.user.uid }/agentes/${ agenteID }/contextos`
-    ).ref;
+    this.getCacheData()
+  } 
 
-    let contextCol = await contextRef.get() 
-    if ( contextCol.size > 0 ) {
-      let contextList = [];
-      contextCol.forEach( context => { contextList.push(context.id) })
-      if ( !contextList.includes( contextName ) ) {
-        await contextRef.doc( contextName )
-        .set( { contextName: contextName }, { merge: true } )
-      } else {
-        this._alerta.sendAlertMessage('Contexto duplicado')
-      }
-    } else {
-      await contextRef.doc( contextName )
-        .set( { contextName: contextName }, { merge: true } )
-    }
-
-
-
-    return 
+  async getCacheData() {
+    this.usuario = await this._auth.getCurrentUser()
   }
-
-  async getContexts( agenteID ) {
-    var user = await this._auth.getCurrentUser()
-    const contextRef = this.afs.collection(
-      `usuarios/${ user.uid }/agentes/${ agenteID }/contextos`
-    ).ref
-    var contextos: string[] = []
-
-    var contextCol = await contextRef.get()
-    contextCol.forEach( contexto => {
-      contextos.push(contexto.id)
-    } )
+  
+  
+  async getCurrentAgent( projectId? ) {
+    console.log(projectId);
+    const agentesRES = await this.fs.collection( 'usuarios' ).ref
+      .doc( this.usuario.uid ).collection( 'agentes' )
+      .where( 'projectId', '==', projectId ).get()
     
-    console.log(contextos);
-    return contextos
+    let Agente = agentesRES.docs[ 0 ].data() as AgenteModel
+
+    this.currentAgent = Agente
+    console.log( this.currentAgent );
+    this._cache.updateData( 'agente', this.currentAgent )
+    this._cache.updateData( 'agenteId', this.currentAgent.agenteId )
+    this.agente$.next( Agente )
+    return this.agente$ 
+    
   }
 }

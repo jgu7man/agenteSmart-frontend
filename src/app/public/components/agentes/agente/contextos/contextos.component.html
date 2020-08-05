@@ -1,0 +1,56 @@
+<div id="entradas_container">
+    <div class="row" id="contextos" *ngIf="contextos" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="drop($event)">
+        <div class="col s12 m3 en-Column" cdkDrag cdkDragLockAxis="x"
+         *ngFor="let contexto of contextos"
+         strechHeight id="context-{{contexto}}"
+         >
+
+
+            <!-- Titulo de contexto agregado -->
+            <div class="row">
+                <div class="col s10">
+                    <aSmart-contexto cdkDragHandle class="context-name" (mousedown)="grabEffect($event)" (mouseup)="grabEffect($event)" [contexto]="contexto" ></aSmart-contexto>
+                </div>
+                <div class="col s2">
+                    <button mat-button [mat-menu-trigger-for]="contextMenu">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                    <mat-menu #contextMenu="matMenu">
+                        <button mat-menu-item (click)="editContext.toEditContext(contexto.contextName)">Editar</button>
+                        <button mat-menu-item (click)="toDeleteContext(contexto)">Eliminar</button>
+                    </mat-menu>
+                </div>
+            </div>
+            
+            <!-- Agregado de entrada nueva -->
+            <aSmart-entradas></aSmart-entradas>
+            
+        </div>
+
+
+        <!-- Agregado de nuevo contexto -->
+        <div class="col s12 m3 en-Column">
+
+            <div class="row">
+                <div class="col s12">
+                    <ng-container *ngIf="!switchAddContext; else addContext">
+                        <div class="addContexto">
+                            <button mat-button 
+                            (click)="toAddContext()"
+                            >Agregar contexto</button>
+                        </div>
+                    </ng-container>
+                    <ng-template #addContext>
+                        <aSmart-add-contexto 
+                        (contextAdded)="getContextos()"
+                        [lastIndex]="contextos.length" 
+                        (unfocus)="switchAddContext = false">
+                        </aSmart-add-contexto>
+                    </ng-template>
+                    
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
