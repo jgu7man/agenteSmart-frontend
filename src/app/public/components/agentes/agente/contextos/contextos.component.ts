@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ViewEncapsulation, ContentChildren, QueryList, ViewChildren } from '@angular/core';
 import { AgentesService } from '../../agentes.service';
 import { ContextosService } from './contextos.service';
 import { ActivatedRoute } from '@angular/router';
@@ -26,7 +26,7 @@ export class ContextosComponent implements OnInit {
 
   @ViewChild(AddContextoComponent) addContext: AddContextoComponent
 
-  @ViewChild( ContextoComponent ) editContext: ContextoComponent
+  @ViewChildren( ContextoComponent ) contextCols: QueryList<ContextoComponent>
 
   constructor (
     public _contextos: ContextosService,
@@ -36,6 +36,15 @@ export class ContextosComponent implements OnInit {
 
   async ngOnInit() {
     this.getContextos()
+  }
+
+  trackContextById( index: number, context: Contexto ) {
+    return context.id
+  }
+
+  toEdit(contexto: Contexto) {
+    var column = this.contextCols.find( contextCol => contextCol.contextId == contexto.id )
+    column.toEditContext(contexto.contextName)
   }
 
 

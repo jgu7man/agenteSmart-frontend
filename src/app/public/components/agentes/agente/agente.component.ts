@@ -37,13 +37,11 @@ export class AgenteComponent implements OnInit {
   async loadAgente() {
 
     this.agente = await this._cache.getDataKey( 'agente' ) as AgenteModel
-    console.log(this.agente);
 
     if ( !this.agente ) {
       const projectId = this.ruta.snapshot.paramMap.get( 'id' )
       if ( projectId ) { this._cache.updateData( 'projectId', projectId ) }
       this._agente.getCurrentAgent( projectId ).then( agente => {
-          console.log(agente);
         this.agente = agente
       })
       

@@ -30,6 +30,12 @@ export class ContextosService {
   async getAgentePath() {
     return this.agentePath = await this._agente.getAgentePath('contextos')
   }
+
+
+  // TITLE CRUD de contextos
+
+  // CREATE
+
   
   async setContext( contexto: Contexto ) {
     this.getAgentePath()
@@ -50,6 +56,9 @@ export class ContextosService {
   }
 
 
+  // READ
+
+
   async getOneContext( contexto: Contexto ) {
     this.getAgentePath()
     const contextRef = this.afs.collection( this.agentePath ).ref;
@@ -62,6 +71,7 @@ export class ContextosService {
   }
 
 
+  // READ ALL
 
 
   async getAllContexts() {
@@ -79,6 +89,9 @@ export class ContextosService {
   }
 
 
+  // UPDATE Index
+
+
   async updateIndex( contextos: Contexto[] ) {
     this.getAgentePath()
     const contextRef = this.afs.collection( this.agentePath ).ref;
@@ -91,12 +104,15 @@ export class ContextosService {
 
 
 
+  // DELETE
+
+
+
   async delContext( context:Contexto  ) {
     this.getAgentePath()
+    var entradasPath = await  this._agente.getAgentePath('entradas')
     const contextRef = this.afs.collection( this.agentePath ).ref;
-    const entradaRef = this.afs.collection(
-      `usuarios/${ this.user.uid }/agentes/${ this.agenteId }/entradas`
-    ).ref;
+    const entradaRef = this.afs.collection(entradasPath).ref;
       
     const entradas = await this._entradas.getEntradasListByContextoId( context.id )
     if ( entradas.length > 0 ) {

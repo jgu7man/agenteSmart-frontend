@@ -1,5 +1,5 @@
 <ng-container *ngIf="!switchEditContext; else editContext">
-    <p class="contexto-name" *ngIf="contexto">{{contexto.contextName}}</p>
+    <p  class="contexto-name" *ngIf="contexto">{{contexto.contextName}}</p>
 </ng-container>
 <ng-template #editContext>
     <div class="contextField">
@@ -7,7 +7,6 @@
         <input 
         lowecase
         matInput
-        #input
         #contextEditing
         type="text" 
         name="contextEditing" 

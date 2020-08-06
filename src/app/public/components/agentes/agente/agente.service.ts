@@ -26,7 +26,6 @@ export class CurrentAgenteService {
   
   async getCurrentAgent( projectId? ) {
     this.usuario = await this._auth.getCurrentUser()
-    console.log(projectId);
     const agentesRES = await this.fs.collection( 'usuarios' ).ref
       .doc( this.usuario.uid ).collection( 'agentes' )
       .where( 'projectId', '==', projectId ).get()
@@ -34,7 +33,6 @@ export class CurrentAgenteService {
     let Agente = agentesRES.docs[ 0 ].data() as AgenteModel
 
     this.currentAgent = Agente
-    console.log( this.currentAgent );
     this._cache.updateData( 'agenteId', this.currentAgent.agenteId )
     this.agente$.next( Agente )
     return Agente
@@ -42,7 +40,6 @@ export class CurrentAgenteService {
   }
 
   async getAgentePath( col?) {
-    console.log(col);
     const cacheAgenteId = await this._cache.getDataKey( 'agenteId' )
     const userId = await ( await this._auth.getCurrentUser() ).uid
     var agenteId = cacheAgenteId ? cacheAgenteId : await ( await this.agente$.pipe( take( 1 ) ).toPromise() ).agenteId

@@ -1,7 +1,7 @@
 <div id="entradas_container">
     <div class="row" id="contextos" *ngIf="contextos" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="drop($event)">
         <div class="col s12 m3 en-Column" cdkDrag cdkDragLockAxis="x"
-         *ngFor="let contexto of contextos"
+         *ngFor="let contexto of contextos; trackBy: trackContextById"
          strechHeight id="context-{{contexto}}"
          >
 
@@ -9,14 +9,21 @@
             <!-- Titulo de contexto agregado -->
             <div class="row">
                 <div class="col s10">
-                    <aSmart-contexto cdkDragHandle [contextToEdit]="contextToEdit" class="context-name" (mousedown)="grabEffect($event)" (mouseup)="grabEffect($event)" [contexto]="contexto" ></aSmart-contexto>
+                    <aSmart-contexto 
+                    cdkDragHandle 
+                    class="context-name" 
+                    [contextId]="contexto.id"
+                    [contexto]="contexto" 
+                    (mousedown)="grabEffect($event)" 
+                    (mouseup)="ungrab($event)" 
+                    ></aSmart-contexto>
                 </div>
                 <div class="col s2">
                     <button mat-button [mat-menu-trigger-for]="contextMenu">
                         <i class="fas fa-ellipsis-v"></i>
                     </button>
                     <mat-menu #contextMenu="matMenu">
-                        <button mat-menu-item (click)="contextToEdit = contexto.contextName">Editar</button>
+                        <button mat-menu-item (click)="toEdit(contexto)">Editar</button>
                         <button mat-menu-item (click)="toDeleteContext(contexto)">Eliminar</button>
                     </mat-menu>
                 </div>
