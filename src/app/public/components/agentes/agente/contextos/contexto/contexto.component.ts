@@ -4,6 +4,7 @@ import { ContextosService } from '../contextos.service';
 import { CurrentAgenteService } from '../../agente.service';
 import { Contexto } from '../contexto.model';
 import { Loading } from '../../../../../../global/loading/loading.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'aSmart-contexto',
@@ -12,29 +13,35 @@ import { Loading } from '../../../../../../global/loading/loading.service';
 })
 export class ContextoComponent implements OnInit {
 
+  private _contexToEdit: BehaviorSubject<string> = new BehaviorSubject('')
+  @Input() set contextToEdit( contex: string ) { this._contexToEdit.next( contex )}
+  
   @Input() contexto: Contexto
   editedContext
+  switchEditContext
   @ViewChild( 'contextEditing' ) contextEditing: ElementRef
-  switchEditContext: boolean = false
   @Output() contextEdited: EventEmitter<any> = new EventEmitter()
 
   constructor (
     private _text: TextService,
     private _contextos: ContextosService,
-    private _agente: CurrentAgenteService,
     private _loading: Loading
   ) {
     
    }
 
   ngOnInit(): void {
+    this._contexToEdit.subscribe( async context => {
+      // this.toEditContext()
+      this.editedContext = context
+      this.switchEditContext = !this.switchEditContext
+      await this._loading.waitFor( 100 )
+      this.contextEditing.nativeElement.focus()
+    })
   }
 
-  async toEditContext( contextName: string ) {
-    this.editedContext = contextName
-    this.switchEditContext = !this.switchEditContext
-    await this._loading.waitFor( 100 )
-    this.contextEditing.nativeElement.focus()
+  async toEditContext( ) {
+    // this.editedContext = this.contexto
   }
 
   onEditContext() {

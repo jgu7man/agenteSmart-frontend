@@ -6,9 +6,9 @@
                     <div mat-card-avatar 
                     class="avatar-img" 
                     [ngStyle]="{'background-image':'url('+agente.avatarUri+')'}" 
-                    [routerLink]="['/dashboard/agente/', agente.agenteId]"
+                    [routerLink]="['/dashboard/agente/', agente.projectId]"
                     alt=""></div>
-                    <mat-card-title [routerLink]="['/dashboard/agente/', agente.agenteId]"
+                    <mat-card-title [routerLink]="['/dashboard/agente/', agente.projectId]"
                     >{{agente.displayName}} </mat-card-title>
                     <mat-card-subtitle> {{agente.description}} </mat-card-subtitle>
                     <button class="card-menu" mat-button [matMenuTriggerFor]="menu">

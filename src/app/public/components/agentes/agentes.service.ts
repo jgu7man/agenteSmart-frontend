@@ -18,13 +18,13 @@ export class AgentesService {
         public _auth: AuthService,
         private router: Router
     ) {
+
     }
     
-    async getData() {
-        this.usuario = await this._auth.getCurrentUser()
-    }
+    
     
     async loadAgentes() {
+        this.usuario = await this._auth.getCurrentUser()
         this.agentes = []
         
         const agentesCol = await this.afs.collection( 'usuarios' ).ref
@@ -33,8 +33,7 @@ export class AgentesService {
         agentesCol.forEach( agente => {
             this.agentes.push( agente.data() as AgenteModel )
         } )
-        
-        return this.getAgentes.next(this.agentes)
+        return this.agentes
             
             
 

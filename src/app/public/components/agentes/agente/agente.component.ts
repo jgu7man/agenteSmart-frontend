@@ -42,8 +42,8 @@ export class AgenteComponent implements OnInit {
     if ( !this.agente ) {
       const projectId = this.ruta.snapshot.paramMap.get( 'id' )
       if ( projectId ) { this._cache.updateData( 'projectId', projectId ) }
-      await ( await this._agente.getCurrentAgent( projectId ) )
-        .subscribe( agente => {
+      this._agente.getCurrentAgent( projectId ).then( agente => {
+          console.log(agente);
         this.agente = agente
       })
       

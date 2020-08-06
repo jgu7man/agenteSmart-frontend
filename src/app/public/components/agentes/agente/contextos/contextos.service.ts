@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, CollectionReference } from '@angular/fire/firestore';
 import { UserInterface, AuthService } from '../../../../../admin/auth/auth.service';
 import { AlertService } from '../../../../../global/alert/alert.service';
 import { EntradasService } from '../entradas/entradas.service';
 import { EntradaModel } from '../entradas/entrada.model';
 import { CacheService } from '../../../../../global/cache/cache.service';
 import { Contexto } from './contexto.model';
+import { CurrentAgenteService } from '../agente.service';
+import { take } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -15,28 +17,23 @@ export class ContextosService {
   contexts: string[]
   user: UserInterface
   agenteId: string
+  agentePath
+  contextRef:CollectionReference
   constructor (
     private afs: AngularFirestore,
-    private _auth: AuthService,
     private _alerta: AlertService,
     private _entradas: EntradasService,
-    private _cache: CacheService
+    private _agente: CurrentAgenteService
   ) {
-    this.getData()
   }
   
-  async getData() {
-    this.agenteId = await this._cache.getDataKey( 'agenteId' )
-    this.user = await this._cache.getDataKey( 'user' )
-    if ( !this.user ) this._auth.getCurrentUser().then( user => this.user = user )
-
+  async getAgentePath() {
+    return this.agentePath = await this._agente.getAgentePath('contextos')
   }
   
   async setContext( contexto: Contexto ) {
-    
-    const contextRef = this.afs.collection(
-      `usuarios/${ this.user.uid }/agentes/${ this.agenteId }/contextos`
-    ).ref;
+    this.getAgentePath()
+    const contextRef = this.afs.collection(this.agentePath).ref;
 
     if ( !contexto.id ) {
       var contextList = await this.getAllContexts()
@@ -54,9 +51,8 @@ export class ContextosService {
 
 
   async getOneContext( contexto: Contexto ) {
-    const contextRef = this.afs.collection(
-      `usuarios/${ this.user.uid }/agentes/${ this.agenteId }/contextos`
-    ).ref;
+    this.getAgentePath()
+    const contextRef = this.afs.collection( this.agentePath ).ref;
 
     var contextDoc = await contextRef.doc( contexto.id ).get()
     var contextGeted: Contexto = contextDoc.data() as Contexto
@@ -68,10 +64,9 @@ export class ContextosService {
 
 
 
-  async getAllContexts( ) {
-    const contextRef = this.afs.collection(
-      `usuarios/${ this.user.uid }/agentes/${ this.agenteId }/contextos`
-    ).ref
+  async getAllContexts() {
+    await this.getAgentePath()
+    const contextRef = this.afs.collection(this.agentePath).ref.orderBy('index')
     var contextos: Contexto[] = []
 
     var contextCol = await contextRef.get()
@@ -84,11 +79,21 @@ export class ContextosService {
   }
 
 
+  async updateIndex( contextos: Contexto[] ) {
+    this.getAgentePath()
+    const contextRef = this.afs.collection( this.agentePath ).ref;
+
+    contextos.forEach( (contexto, index) => {
+      contextRef.doc(contexto.id).update({index:index})
+    } )
+    return 
+  }
+
+
 
   async delContext( context:Contexto  ) {
-    const contextRef = this.afs.collection(
-      `usuarios/${ this.user.uid }/agentes/${ this.agenteId }/contextos`
-    ).ref;
+    this.getAgentePath()
+    const contextRef = this.afs.collection( this.agentePath ).ref;
     const entradaRef = this.afs.collection(
       `usuarios/${ this.user.uid }/agentes/${ this.agenteId }/entradas`
     ).ref;

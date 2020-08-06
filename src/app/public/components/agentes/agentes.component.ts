@@ -20,10 +20,7 @@ export class AgentesComponent implements OnInit, AfterViewInit {
   ) {}
   
   async ngOnInit() {
-    
-    this._agentes.getAgentes.subscribe( result => {
-      this.agentes = result
-    } )
+    this.agentes = await this._agentes.loadAgentes()
   }
   
   async ngAfterViewInit() {

@@ -22,6 +22,7 @@ export class ContextosComponent implements OnInit {
   switchAddContext: boolean = false
   switchEditContext: boolean = false
   contextos: Contexto[]
+  contextToEdit: string
 
   @ViewChild(AddContextoComponent) addContext: AddContextoComponent
 
@@ -48,7 +49,7 @@ export class ContextosComponent implements OnInit {
   
   drop( event: CdkDragDrop<any> ) {
     moveItemInArray( this.contextos, event.previousIndex, event.currentIndex )
-    console.log( this.contextos, event.previousIndex, event.currentIndex);
+    this._contextos.updateIndex(this.contextos)
   }
   
   grabEffect( element ) {
@@ -66,7 +67,6 @@ export class ContextosComponent implements OnInit {
   async getContextos() {
     let contextos = await this._contextos.getAllContexts( )
     this.contextos = contextos.length > 0 ? contextos : undefined
-    console.log( this.contextos );
   }
 
   

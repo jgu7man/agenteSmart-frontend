@@ -4,7 +4,7 @@ import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firest
 import { auth } from 'firebase/app'
 import { Router } from '@angular/router';
 import { of, Observable, Subject, throwError } from 'rxjs';
-import { switchMap, first, catchError } from 'rxjs/operators';
+import { switchMap, first, catchError, take } from 'rxjs/operators';
 import { HttpHeaders, HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
 // import * as google from 'googleapis'
 import { Loading } from '../../global/loading/loading.service';
@@ -44,35 +44,31 @@ export class AuthService {
 
   
   
-  
   async getCurrentUser() {
-    var user: UserInterface = JSON.parse( sessionStorage.getItem( 'aSmart-user' ) )
+    var user = JSON.parse( sessionStorage.getItem( 'aSmart-user' ) )
+    
     if ( !user ) {
-      this.user$.pipe().subscribe( userAuth => {
-        if ( userAuth ) {
-          sessionStorage.setItem( 'aSmart-user', JSON.stringify( userAuth ) )
-          
-          var location = window.location.href
-            .split( '//' )[ 1 ].split( '/' ).slice( 1 ).join( '/' );
-          
-          this.router.navigateByUrl( '/' ).then( () => {
-            this.router.navigate( [ location ] );
-
-          })
-        } else {
-          this.router.navigate(['/'])
-        }
-      })
+      
+      var user2 = await this.user$.pipe( take( 1 ) ).toPromise()
+      console.log( user2 );
+      sessionStorage.setItem('aSmart-user', JSON.stringify(user2))
+      return user2
+      
     } else {
+      
       return user
     }
-   }
+  }
+  
+  
 
   
   
   
    // ? Iniciar sesión con una cuenta google
   async googleSingIn() {
+   
+
     // Abre el popup de autenticación
     const provider = new auth.GoogleAuthProvider();
     var credential = await this.afAuth.auth.signInWithPopup(provider)

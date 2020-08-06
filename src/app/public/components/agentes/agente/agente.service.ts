@@ -3,7 +3,8 @@ import { AgenteModel } from '../init-agente/agente.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthService, UserInterface } from '../../../../admin/auth/auth.service';
 import { CacheService } from '../../../../global/cache/cache.service';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -19,15 +20,12 @@ export class CurrentAgenteService {
     private _cache: CacheService,
     private _auth: AuthService,
   ) {
-    this.getCacheData()
   } 
-
-  async getCacheData() {
-    this.usuario = await this._auth.getCurrentUser()
-  }
+  
   
   
   async getCurrentAgent( projectId? ) {
+    this.usuario = await this._auth.getCurrentUser()
     console.log(projectId);
     const agentesRES = await this.fs.collection( 'usuarios' ).ref
       .doc( this.usuario.uid ).collection( 'agentes' )
@@ -37,10 +35,18 @@ export class CurrentAgenteService {
 
     this.currentAgent = Agente
     console.log( this.currentAgent );
-    this._cache.updateData( 'agente', this.currentAgent )
     this._cache.updateData( 'agenteId', this.currentAgent.agenteId )
     this.agente$.next( Agente )
-    return this.agente$ 
+    return Agente
     
+  }
+
+  async getAgentePath( col?) {
+    console.log(col);
+    const cacheAgenteId = await this._cache.getDataKey( 'agenteId' )
+    const userId = await ( await this._auth.getCurrentUser() ).uid
+    var agenteId = cacheAgenteId ? cacheAgenteId : await ( await this.agente$.pipe( take( 1 ) ).toPromise() ).agenteId
+
+    return !col ? `usuarios/${ userId }/agentes/${ agenteId }` : `usuarios/${ userId }/agentes/${ agenteId }/${col}`
   }
 }
