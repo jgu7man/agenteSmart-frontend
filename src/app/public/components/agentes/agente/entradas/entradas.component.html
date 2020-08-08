@@ -1,3 +1,13 @@
+<!-- Lista de entradas -->
+<div class="entradas-list">
+    <mat-card *ngFor="let entrada of entradas; trackBy:trackByName">
+        <mat-card-content class="entrada-card">
+            <p class="entrada-name"> {{entrada.displayName}} </p>
+        </mat-card-content>
+    </mat-card>
+</div>
+
+
 <!-- Agregado de entrada nueva -->
 <div class="row">
     <div class="add-intent" [ngClass]="{'activate': switchAddIntent}" *ngIf="!switchAddIntent; else addIntent" (click)="onAddIntent()">
@@ -7,7 +17,6 @@
         <mat-card>
             <mat-card-content>
                 <mat-form-field>
-                    <mat-label>Nombre de entrada nueva</mat-label>
                     <input matInput 
                     type="text" 
                     name="intentName" 
@@ -25,7 +34,6 @@
 </div>
 
 
-<!-- Lista de entradas -->
-<aSmart-entradas-list [contexto]="contexto"></aSmart-entradas-list>
+
             
         

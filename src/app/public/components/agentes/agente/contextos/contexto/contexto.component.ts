@@ -5,7 +5,6 @@ import { CurrentAgenteService } from '../../agente.service';
 import { Contexto } from '../contexto.model';
 import { Loading } from '../../../../../../global/loading/loading.service';
 import { BehaviorSubject } from 'rxjs';
-import { Context } from 'vm';
 
 @Component({
   selector: 'aSmart-contexto',

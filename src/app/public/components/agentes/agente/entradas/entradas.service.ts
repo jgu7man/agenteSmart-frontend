@@ -1,19 +1,22 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, CollectionReference } from '@angular/fire/firestore';
 import { AuthService, UserInterface } from '../../../../../admin/auth/auth.service';
 import { AlertService } from '../../../../../global/alert/alert.service';
 import { TextService } from '../../../../../services/text.service';
 import { CacheService } from '../../../../../global/cache/cache.service';
 import { AgentesService } from '../../agentes.service';
 import { CurrentAgenteService } from '../agente.service';
+import { EntradaModel } from './entrada.model';
+import { Subject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EntradasService {
 
-  user: UserInterface
-  agenteId: string
+  entradasPath: string
+  entradasOfContext$:Subject<EntradaModel> = new Subject() 
+  
   constructor (
     private fs: AngularFirestore,
     private _auth: AuthService,
@@ -21,25 +24,22 @@ export class EntradasService {
     private _text: TextService,
     private _cache: CacheService,
     private _agente: CurrentAgenteService
-  ) {
-    this.getData()
+    ) {
+    }
+    
+    
+  async entradasCollection() {
+    this.entradasPath = await this._agente.getAgentePath( 'entradas' )
+    const entradasRef = this.fs.collection( this.entradasPath ).ref
+    return entradasRef
   }
+    
   
-  async getData() {
-    this.agenteId = await this._cache.getDataKey( 'agenteId' )
-    if ( !this.agenteId ) {
-      this._agente.agente$.subscribe( agente => {
-      this.agenteId = agente.agenteId
-    })}
-    this.user = await this._cache.getDataKey( 'user' )
-    if (!this.user) this._auth.getCurrentUser().then( user => this.user = user )
-  }
+  
 
 
-  async setEntrada( entradaName: string, contexto:string ) {
-    const entradasRef = this.fs.collection(
-      `usuarios/${ this.user.uid }/agentes/${ this.agenteId }/entradas`
-    ).ref
+  async setEntrada( entradaName: string, contexto: string ) {
+    
 
     const name = this._text.normalize( entradaName.toLowerCase() )
     
@@ -47,56 +47,61 @@ export class EntradasService {
     if ( entradaList.length > 0 ) {
       if ( !entradaList.includes( name ) ) {
 
-        await entradasRef.doc( name )
+        console.log(name);
+
+        await (await this.entradasCollection()).doc(name)
           .set( {
             name: name,
             displayName: entradaName,
-            inputContextNames: [contexto]
+            contextos: [contexto]
           }, { merge: true } )
+        
+        return true
       } else {
         this._alerta.sendAlertMessage( 'Entrada Duplicada' )
       }
     } else {
-      await entradasRef.doc( name )
+      console.log(name);
+
+      await (await this.entradasCollection()).doc( name )
         .set( {
           name: name,
           displayName: entradaName,
-          inputContextNames: [ contexto ]
+          contextos: [ contexto ]
         } )
+      return true
     }
+
+
   }
 
   async getAllEntradasList() {
-    const entradasRef = this.fs.collection(
-      `usuarios/${ this.user.uid }/agentes/${ this.agenteId }/entradas`
-    ).ref
-
-    const entradaCol = await entradasRef.get()
+    const entradaCol = await (await this.entradasCollection()).get()
     const entradaList = []
     entradaCol.forEach( entrada => { entradaList.push( entrada.id ) } )
     return entradaList
   }
 
 
-  async getEntradasListByContextoId(contextoId: string) {
-    const entradasRef = this.fs.collection(
-      `usuarios/${ this.user.uid }/agentes/${ this.agenteId }/entradas`
-    ).ref
-
-    const entradaCol = await entradasRef.where('contextos', 'array-contains', contextoId).get()
+  async getEntradasListByContextoId( contextoId: string ) {
+    const entradaCol = await (await this.entradasCollection()).where('contextos', 'array-contains', contextoId).get()
     const entradaList = []
-    entradaCol.forEach( entrada => { entradaList.push( entrada.id ) } )
+    entradaCol.forEach( entrada => { entradaList.push( entrada.data()) } )
     return entradaList
   }
 
   async getEntradasListByContextoName( contextoName: string ) {
-    const entradasRef = this.fs.collection(
-      `usuarios/${ this.user.uid }/agentes/${ this.agenteId }/entradas`
-    ).ref
-
-    const entradaCol = await entradasRef.where( 'inputContextNames', 'array-contains', contextoName ).get()
+    const entradaCol = await (await this.entradasCollection()).where( 'inputContextNames', 'array-contains', contextoName ).get()
     const entradaList = []
     entradaCol.forEach( entrada => { entradaList.push( entrada.id ) } )
     return entradaList
   }
+
+
+  async updateEntradaName( entrada: EntradaModel ) {
+    
+
+    
+  }
+
 }

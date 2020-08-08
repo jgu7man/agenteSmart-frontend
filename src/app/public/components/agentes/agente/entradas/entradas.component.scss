@@ -9,3 +9,21 @@
     cursor: pointer;
     translate: all .3s;
 }
+
+::ng-deep.entradas-list {
+    position: relative;
+    mat-card {
+        margin: 1em 0;
+        z-index: 2;
+    }
+}
+
+::ng-deep.entradas-list:before {
+    content: "";
+    border-left: solid 1px #202020;
+    left: 50%;
+    position: absolute;
+    height: 100%;
+    display: block;
+    z-index: 1;
+}

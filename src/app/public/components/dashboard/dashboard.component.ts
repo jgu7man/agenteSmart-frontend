@@ -2,6 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ResponsiveService } from 'src/app/services/responsive.service';
 import { NAVLINK } from '../navbar/navlink.interface';
 import { DashboardService } from './dashboard.service';
+import { MatDrawer } from '@angular/material/sidenav';
 
 @Component({
   selector: 'aSmart-dashboard',
@@ -12,15 +13,22 @@ import { DashboardService } from './dashboard.service';
 export class DashboardComponent implements OnInit {
 
   mobileNavbar: NAVLINK[]
+  toggleSideNav
   constructor (
     public responsive: ResponsiveService,
-    private dashboard: DashboardService
+    public dashboard: DashboardService
   ) { }
 
   ngOnInit() {
-    
+   this.toggleMenuMobile()
     this.dashboard._setMobileNavBar.subscribe( result => {
       this.mobileNavbar = result
+    })
+  }
+
+  toggleMenuMobile() {
+    this.dashboard.toggleMobileMenu.subscribe( ( toggle: boolean ) => {
+      this.toggleSideNav = !this.toggleSideNav
     })
   }
 

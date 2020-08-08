@@ -6,6 +6,7 @@ import { TextService } from 'src/app/services/text.service';
 import { AgenteModel } from '../../init-agente/agente.model';
 import { AgentesService } from '../../agentes.service';
 import { EntradasService } from './entradas.service';
+import { EntradaModel } from './entrada.model';
 
 @Component({
   selector: 'aSmart-entradas',
@@ -18,6 +19,7 @@ export class EntradasComponent implements OnInit {
   projectId
   newIntent: string = ''
   switchAddIntent: boolean = false
+  entradas: EntradaModel[]
 
   @Input() contexto: string
   @ViewChild( 'intentNuevo' ) intentNuevo: ElementRef
@@ -31,9 +33,8 @@ export class EntradasComponent implements OnInit {
    }
 
   async ngOnInit() {
-    this._agentes.agente$.subscribe( agente => {
-      this.agente = agente
-    })
+    this.getEntradas()
+    console.log(this.entradas);
   }
 
   
@@ -46,10 +47,21 @@ export class EntradasComponent implements OnInit {
 
   
 
-  onSetIntent(contexto) {
+  async onSetIntent(contexto) {
     if ( this.newIntent ) {
-      this._entradas.setEntrada( this.newIntent, contexto )
+      console.log(this.newIntent, contexto);
+      await this._entradas.setEntrada( this.newIntent, contexto )
+      this.switchAddIntent = false
+      this.getEntradas()
     }
+  }
+
+  trackByName(index, intent: EntradaModel) {
+    return intent.name
+  }
+
+  async getEntradas() {
+    this.entradas = await this._entradas.getEntradasListByContextoId(this.contexto)
   }
 
   

@@ -7,12 +7,13 @@
     margin: 0 1em;
     display: block;
     width: 100%;
+    
 }
 
 .en-Column {
     background: #EFF1FE;
     width: 275px !important ;
-    overflow-y:auto;
+    min-width: 275px;
     .context-name {cursor: grab;}
     .grabbed {cursor: grabbing;}
     .contexto-name {
@@ -42,4 +43,12 @@
 
 .cdk-drag-animating {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+
+@media screen and (max-width: 450px) {
+    #contextos{
+        display: flex;
+        flex-direction: row;    
+    }
 }

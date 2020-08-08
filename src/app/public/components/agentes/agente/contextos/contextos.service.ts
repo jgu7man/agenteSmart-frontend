@@ -27,9 +27,12 @@ export class ContextosService {
   ) {
   }
   
-  async getAgentePath() {
-    return this.agentePath = await this._agente.getAgentePath('contextos')
+  async contextosCollection() {
+    const contextosPath = await this._agente.getAgentePath( 'contextos' )
+    const contextosRef = this.afs.collection( contextosPath ).ref;
+    return contextosRef
   }
+
 
 
   // TITLE CRUD de contextos
@@ -38,19 +41,18 @@ export class ContextosService {
 
   
   async setContext( contexto: Contexto ) {
-    this.getAgentePath()
-    const contextRef = this.afs.collection(this.agentePath).ref;
 
     if ( !contexto.id ) {
       var contextList = await this.getAllContexts()
       let contextFinded = contextList.find(context => context.contextName === contexto.contextName)
       if ( !contextFinded ) {
-        await contextRef.add( contexto ).then(res =>{contextRef.doc(res.id).update({id: res.id})})
+        let contextNuevo = await ( await this.contextosCollection() ).add( contexto );
+        await (await this.contextosCollection()).doc( contextNuevo.id ).update( { id: contextNuevo.id })
       } else {
         this._alerta.sendAlertMessage('Contexto duplicado')
       }
     } else {
-      await contextRef.doc( contexto.id ).update( contexto )
+      await (await this.contextosCollection()).doc( contexto.id ).update( contexto )
     }
     return 
   }
@@ -60,10 +62,9 @@ export class ContextosService {
 
 
   async getOneContext( contexto: Contexto ) {
-    this.getAgentePath()
-    const contextRef = this.afs.collection( this.agentePath ).ref;
+    
 
-    var contextDoc = await contextRef.doc( contexto.id ).get()
+    var contextDoc = await (await this.contextosCollection()).doc( contexto.id ).get()
     var contextGeted: Contexto = contextDoc.data() as Contexto
     
     return contextGeted
@@ -73,13 +74,12 @@ export class ContextosService {
 
   // READ ALL
 
+  
 
   async getAllContexts() {
-    await this.getAgentePath()
-    const contextRef = this.afs.collection(this.agentePath).ref.orderBy('index')
     var contextos: Contexto[] = []
 
-    var contextCol = await contextRef.get()
+    var contextCol = await (await this.contextosCollection()).orderBy('index').get()
     contextCol.forEach( contexto => {
       contextos.push(contexto.data() as Contexto)
     } )
@@ -93,11 +93,10 @@ export class ContextosService {
 
 
   async updateIndex( contextos: Contexto[] ) {
-    this.getAgentePath()
-    const contextRef = this.afs.collection( this.agentePath ).ref;
+    
 
-    contextos.forEach( (contexto, index) => {
-      contextRef.doc(contexto.id).update({index:index})
+    contextos.forEach( async (contexto, index) => {
+      await (await this.contextosCollection()).doc(contexto.id).update({index:index})
     } )
     return 
   }
@@ -109,9 +108,7 @@ export class ContextosService {
 
 
   async delContext( context:Contexto  ) {
-    this.getAgentePath()
     var entradasPath = await  this._agente.getAgentePath('entradas')
-    const contextRef = this.afs.collection( this.agentePath ).ref;
     const entradaRef = this.afs.collection(entradasPath).ref;
       
     const entradas = await this._entradas.getEntradasListByContextoId( context.id )
@@ -123,7 +120,7 @@ export class ContextosService {
       } )
     }
     
-    contextRef.doc( context.id ).delete()
+    await (await this.contextosCollection()).doc( context.id ).delete()
     return 
   }
 }

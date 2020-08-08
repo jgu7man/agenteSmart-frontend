@@ -10,8 +10,14 @@ mat-drawer-container {
     height: 89vh;
 }
 
+::ng-deep mat-drawer-container::-webkit-scrollbar, 
+.mat-drawer-content::-webkit-scrollbar, 
+.mat-drawer-inner-container::-webkit-scrollbar {
+    display: none;
+}
+
 .mat-drawer-content {
-    overflow: unset;
+    overflow: unset !important;
 }
 
 ::ng-deep .mat-drawer-inner-container {

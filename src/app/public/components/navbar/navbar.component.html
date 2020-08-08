@@ -1,4 +1,5 @@
 <mat-toolbar gdev-color [color]="'white'" [background]="'primary'" id="navbar">
+    <span class="hide-on-large-only mobile-menu" (click)="dashboard.toggleMobileMenu.emit()"> <i class="fas fa-bars    "></i> </span>
     <span>Agente Smart</span>
     <span class="espacio"></span>
     <div class="col right user-profile" *ngIf="user; else unlogged">
