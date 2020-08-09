@@ -7,6 +7,8 @@ import { AgenteModel } from '../../init-agente/agente.model';
 import { AgentesService } from '../../agentes.service';
 import { EntradasService } from './entradas.service';
 import { EntradaModel } from './entrada.model';
+import { CacheService } from '../../../../../global/cache/cache.service';
+import { Contexto } from '../contextos/contexto.model';
 
 @Component({
   selector: 'aSmart-entradas',
@@ -21,25 +23,23 @@ export class EntradasComponent implements OnInit {
   switchAddIntent: boolean = false
   entradas: EntradaModel[]
 
-  @Input() contexto: string
+  @Input() contexto: Contexto
   @ViewChild( 'intentNuevo' ) intentNuevo: ElementRef
   
   constructor (
-    private _agentes: AgentesService,
     private _loading: Loading,
-    private _entradas: EntradasService
+    private _entradas: EntradasService,
   ) {
     
    }
 
   async ngOnInit() {
     this.getEntradas()
-    console.log(this.entradas);
   }
 
   
 
-  async onAddIntent() {
+  async toAddIntent() {
     this.switchAddIntent = !this.switchAddIntent
     await this._loading.waitFor( 100 )
     this.intentNuevo.nativeElement.focus()
@@ -47,10 +47,11 @@ export class EntradasComponent implements OnInit {
 
   
 
-  async onSetIntent(contexto) {
+  async onAddIntent(contexto) {
     if ( this.newIntent ) {
-      console.log(this.newIntent, contexto);
-      await this._entradas.setEntrada( this.newIntent, contexto )
+      console.log( this.newIntent, contexto );
+      let lastIndex = this.entradas.length
+      await this._entradas.setEntrada( this.newIntent, contexto, lastIndex)
       this.switchAddIntent = false
       this.getEntradas()
     }
@@ -61,7 +62,7 @@ export class EntradasComponent implements OnInit {
   }
 
   async getEntradas() {
-    this.entradas = await this._entradas.getEntradasListByContextoId(this.contexto)
+    this.entradas = await this._entradas.getEntradasListByContexto( this.contexto)
   }
 
   

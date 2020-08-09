@@ -1,6 +1,9 @@
 <!-- Lista de entradas -->
 <div class="entradas-list">
-    <mat-card *ngFor="let entrada of entradas; trackBy:trackByName">
+    <mat-card *ngFor="let entrada of entradas; trackBy:trackByName" 
+    [routerLink]="['../entrada',entrada.name]"
+    [queryParams]="{'contexto': contexto.contextName}"
+    > 
         <mat-card-content class="entrada-card">
             <p class="entrada-name"> {{entrada.displayName}} </p>
         </mat-card-content>
@@ -10,7 +13,7 @@
 
 <!-- Agregado de entrada nueva -->
 <div class="row">
-    <div class="add-intent" [ngClass]="{'activate': switchAddIntent}" *ngIf="!switchAddIntent; else addIntent" (click)="onAddIntent()">
+    <div class="add-intent" [ngClass]="{'activate': switchAddIntent}" *ngIf="!switchAddIntent; else addIntent" (click)="toAddIntent()">
         <i class="fas fa-plus"></i>
     </div>
     <ng-template #addIntent>
@@ -22,8 +25,8 @@
                     name="intentName" 
                     id="intentName"
                     #intentNuevo
-                    (keyup.enter)="onSetIntent(contexto)"
-                    (blur)="newIntent == '' ? switchAddIntent = false : onSetIntent(contexto)"
+                    (keyup.enter)="onAddIntent(contexto.id)"
+                    (blur)="newIntent == '' ? switchAddIntent = false : onAddIntent(contexto.id)"
                     [(ngModel)]="newIntent"
                     >
                 </mat-form-field>

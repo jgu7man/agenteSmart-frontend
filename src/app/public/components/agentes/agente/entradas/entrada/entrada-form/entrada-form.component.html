@@ -1,0 +1,9 @@
+<div id="entrada-container" *ngIf="entrada">
+    <aSmart-entrada-header [entrada]="entrada"></aSmart-entrada-header>
+
+    <div class="row entrada-content">
+        <form (ngSubmit)="onSubmit()" #entradaForm="ngForm">
+            
+        </form>
+    </div>
+</div>

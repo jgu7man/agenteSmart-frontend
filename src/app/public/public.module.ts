@@ -32,6 +32,12 @@ import { EntradasListComponent } from './components/agentes/agente/entradas/entr
 import { ContextosComponent } from './components/agentes/agente/contextos/contextos.component';
 import { AddContextoComponent } from './components/agentes/agente/contextos/add-contexto/add-contexto.component';
 import { ContextoComponent } from './components/agentes/agente/contextos/contexto/contexto.component';
+import { EntradaComponent } from './components/agentes/agente/entradas/entrada/entrada.component';
+import { EntradaFormComponent } from './components/agentes/agente/entradas/entrada/entrada-form/entrada-form.component';
+import { EntradaRespManagerComponent } from './components/agentes/agente/entradas/entrada/entrada-resp-manager/entrada-resp-manager.component';
+import { EntradaHeaderComponent } from './components/agentes/agente/entradas/entrada/entrada-form/entrada-header/entrada-header.component';
+import { BreadcumsComponent } from './components/agentes/agente/entradas/entrada/entrada-form/breadcums/breadcums.component';
+import { DelEntradaDialogComponent } from './components/agentes/agente/entradas/del-entrada-dialog/del-entrada-dialog.component';
 
 
 
@@ -61,6 +67,12 @@ import { ContextoComponent } from './components/agentes/agente/contextos/context
     ContextosComponent,
     AddContextoComponent,
     ContextoComponent,
+    EntradaComponent,
+    EntradaFormComponent,
+    EntradaRespManagerComponent,
+    EntradaHeaderComponent,
+    BreadcumsComponent,
+    DelEntradaDialogComponent,
   ],
   imports: [
     CommonModule,

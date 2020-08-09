@@ -2,6 +2,7 @@ import { Contexto } from '../contextos/contexto.model';
 import { RespuestaEntrada } from './entrada-respuestas.model';
 
 export interface EntradaModel {
+    index: number,
     name: string,
     displayName: string,
     webhookState: 'WEBHOOK_STATE_ENABLED_FOR_SLOT_FILLING',

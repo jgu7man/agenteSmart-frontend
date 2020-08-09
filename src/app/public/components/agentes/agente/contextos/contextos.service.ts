@@ -111,7 +111,7 @@ export class ContextosService {
     var entradasPath = await  this._agente.getAgentePath('entradas')
     const entradaRef = this.afs.collection(entradasPath).ref;
       
-    const entradas = await this._entradas.getEntradasListByContextoId( context.id )
+    const entradas = await this._entradas.getEntradasListByContexto( context )
     if ( entradas.length > 0 ) {
       entradas.forEach( ( entrada: EntradaModel ) => {
         let contextToDel = entrada.contextos.findIndex( ent => ent === context.id )

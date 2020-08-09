@@ -1,0 +1,10 @@
+<p>
+    <a [routerLink]="['../../entradas']"  ><span><b>{{contexto}}: </b></span></a>
+    <span *ngFor="let entrada of entradas | slice:0:intenIndex +1; index as i">
+        <a [routerLink]="['../../entrada',entrada.name]"
+        [queryParams]="{'contexto': contexto}">
+        {{entrada.displayName}}
+    </a> 
+    <span *ngIf="i != entradas.length -1"> > </span>
+</span>
+</p>

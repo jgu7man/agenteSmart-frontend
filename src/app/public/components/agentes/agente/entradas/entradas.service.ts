@@ -8,6 +8,8 @@ import { AgentesService } from '../../agentes.service';
 import { CurrentAgenteService } from '../agente.service';
 import { EntradaModel } from './entrada.model';
 import { Subject, Observable } from 'rxjs';
+import { Loading } from '../../../../../global/loading/loading.service';
+import { Contexto } from '../contextos/contexto.model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,17 +17,22 @@ import { Subject, Observable } from 'rxjs';
 export class EntradasService {
 
   entradasPath: string
-  entradasOfContext$:Subject<EntradaModel> = new Subject() 
   
   constructor (
     private fs: AngularFirestore,
-    private _auth: AuthService,
     private _alerta: AlertService,
     private _text: TextService,
     private _cache: CacheService,
-    private _agente: CurrentAgenteService
+    private _agente: CurrentAgenteService,
+    private _loading: Loading
     ) {
     }
+    
+  entradasOfContext() {
+    
+  }
+
+  
     
     
   async entradasCollection() {
@@ -38,7 +45,7 @@ export class EntradasService {
   
 
 
-  async setEntrada( entradaName: string, contexto: string ) {
+  async setEntrada( entradaName: string, contexto: string, index?:number ) {
     
 
     const name = this._text.normalize( entradaName.toLowerCase() )
@@ -47,17 +54,6 @@ export class EntradasService {
     if ( entradaList.length > 0 ) {
       if ( !entradaList.includes( name ) ) {
 
-        console.log(name);
-
-        await (await this.entradasCollection()).doc(name)
-          .set( {
-            name: name,
-            displayName: entradaName,
-            contextos: [contexto]
-          }, { merge: true } )
-        
-        return true
-      } else {
         this._alerta.sendAlertMessage( 'Entrada Duplicada' )
       }
     } else {
@@ -65,6 +61,7 @@ export class EntradasService {
 
       await (await this.entradasCollection()).doc( name )
         .set( {
+          index: index,
           name: name,
           displayName: entradaName,
           contextos: [ contexto ]
@@ -75,33 +72,52 @@ export class EntradasService {
 
   }
 
+
+  async updateEntradaName(entradaName: string, displayName:string) {
+    await ( await this.entradasCollection() ).doc( entradaName ).update( {
+      displayName: displayName
+    })
+  }
+
   async getAllEntradasList() {
-    const entradaCol = await (await this.entradasCollection()).get()
-    const entradaList = []
-    entradaCol.forEach( entrada => { entradaList.push( entrada.id ) } )
-    return entradaList
+    var entradasList = []
+      const entradaCol = await ( await this.entradasCollection() ).get()
+      await this._loading.asyncForEach( entradaCol.docs, entrada => { entradasList.push( entrada.data() ) } )
+      await this._cache.updateData( 'todasEntradasList', entradasList )
+    return entradasList
   }
 
 
-  async getEntradasListByContextoId( contextoId: string ) {
-    const entradaCol = await (await this.entradasCollection()).where('contextos', 'array-contains', contextoId).get()
-    const entradaList = []
-    entradaCol.forEach( entrada => { entradaList.push( entrada.data()) } )
-    return entradaList
+  async getEntradasListByContexto( contexto: Contexto ) {
+    var entradasList = []
+    const entradaCol = await ( await this.entradasCollection() ).where( 'contextos', 'array-contains', contexto.id ).get()
+    
+    await this._loading.asyncForEach( entradaCol.docs, entrada => { entradasList.push( entrada.data() ) } )
+    await this._cache.updateData( 'entradasList:'+contexto.contextName, entradasList )
+    return entradasList
   }
 
   async getEntradasListByContextoName( contextoName: string ) {
-    const entradaCol = await (await this.entradasCollection()).where( 'inputContextNames', 'array-contains', contextoName ).get()
-    const entradaList = []
-    entradaCol.forEach( entrada => { entradaList.push( entrada.id ) } )
-    return entradaList
+    var entradasList = []
+    const entradaCol = await ( await this.entradasCollection() ).where( 'inputContextNames', 'array-contains', contextoName ).get()
+    
+    await this._loading.asyncForEach( entradaCol.docs, entrada => { entradasList.push( entrada.data() ) } )
+    await this._cache.updateData( 'entradasList:'+contextoName, entradasList )
+    return entradasList
+  }
+
+  async getEntrada(name) {
+    const entradaDoc = await ( await this.entradasCollection() ).doc( name ).get()
+    return entradaDoc.data() as EntradaModel
   }
 
 
-  async updateEntradaName( entrada: EntradaModel ) {
-    
 
-    
+  async deleteEntrada(entradaName) {
+    return await (await this.entradasCollection()).doc(entradaName).delete()
   }
+
+
+  
 
 }
