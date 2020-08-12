@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ElementRef } from '@angular/core';
 import { TextService } from '../../../../../../services/text.service';
 import { ContextosService } from '../contextos.service';
-import { CurrentAgenteService } from '../../agente.service';
+import { CurrentAgenteService } from '../../current-agente.service';
 import { Contexto } from '../contexto.model';
 import { Loading } from '../../../../../../global/loading/loading.service';
 import { BehaviorSubject } from 'rxjs';

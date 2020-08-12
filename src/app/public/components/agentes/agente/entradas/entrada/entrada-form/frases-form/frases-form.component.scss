@@ -1,0 +1,16 @@
+#inputPhrase, #newPhraseInput {
+    width: 100%;
+}
+
+.phrases-list:first-child {
+    border-top: solid 1px #202020;
+}
+
+.phrase-item {
+    line-height: 3;
+    border-bottom: solid 1px #202020;
+}
+
+.frase-handler {
+    margin: .5em;
+}

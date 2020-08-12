@@ -1,0 +1,42 @@
+<div class="row">
+    <div class="col s10">
+        <h5>Frases de entrenamiento</h5>
+    </div>
+    <div class="col s2">
+        <button mat-button (click)="toAddPhrase()">
+            <i class="fas fa-plus"></i>
+        </button>
+    </div>
+</div>
+<div class="row">
+    <div class="col s12">
+        <ul class="phrases-list">
+
+
+            <!-- READ Muestra las frases -->
+            <li *ngFor="let frase of frases" 
+            class="phrase-item"
+            (click)="toEditPhrase(frase)"
+            >
+                <aSmart-frase-item [frase]="frase" [phraseName]="frase.name" ></aSmart-frase-item>
+            </li>
+
+            <!-- CREATE Agregar nueva frase -->
+            <li *ngIf="addPhraseInput">
+                <mat-form-field>
+                    <input 
+                    matInput
+                    #newPhraseInput
+                    type="text" 
+                    name="newPhraseInput" 
+                    id="newPhraseInput"
+                    (blur)="addPhraseInput = false"
+                    [(ngModel)]="newPhrase"
+                    (keyup.enter)="newPhrase != '' ? onSetPhrase() : addPhraseInput = false"
+                    >
+                </mat-form-field>
+            </li>
+        </ul>
+
+    </div>
+</div>

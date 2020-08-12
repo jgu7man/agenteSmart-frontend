@@ -7,7 +7,7 @@ import { DashboardService } from '../../dashboard/dashboard.service';
 import { NAVLINK } from '../../navbar/navlink.interface';
 import { ResponsiveService } from '../../../../services/responsive.service';
 import { CacheService } from '../../../../global/cache/cache.service';
-import { CurrentAgenteService } from './agente.service';
+import { CurrentAgenteService } from './current-agente.service';
 
 @Component({
   selector: 'aSmart-agente',
@@ -41,7 +41,7 @@ export class AgenteComponent implements OnInit {
     if ( !this.agente ) {
       const projectId = this.ruta.snapshot.paramMap.get( 'id' )
       if ( projectId ) { this._cache.updateData( 'projectId', projectId ) }
-      this._agente.getCurrentAgent( projectId ).then( agente => {
+      this._agente.get( projectId ).then( agente => {
         this.agente = agente
       })
       

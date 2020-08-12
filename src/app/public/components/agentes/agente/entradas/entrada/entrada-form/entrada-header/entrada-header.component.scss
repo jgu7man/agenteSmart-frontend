@@ -14,3 +14,14 @@
         min-width: 40px;
     }
 }
+
+@media screen and (max-width: 450px) {
+    #entrada-header{
+        display: block;
+        .row {
+            display: flex;
+            align-items: center;
+            margin: 0;
+        }
+    }
+}

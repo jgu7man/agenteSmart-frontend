@@ -48,11 +48,10 @@ export class EntradasComponent implements OnInit {
   
 
   async onAddIntent(contexto) {
+    this.switchAddIntent = false
     if ( this.newIntent ) {
-      console.log( this.newIntent, contexto );
       let lastIndex = this.entradas.length
       await this._entradas.setEntrada( this.newIntent, contexto, lastIndex)
-      this.switchAddIntent = false
       this.getEntradas()
     }
   }

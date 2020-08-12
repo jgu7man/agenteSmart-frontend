@@ -24,6 +24,7 @@ export class AgentesService {
     
     
     async loadAgentes() {
+        // Obtiene el usuario autenticado
         this.usuario = await this._auth.getCurrentUser()
         this.agentes = []
         

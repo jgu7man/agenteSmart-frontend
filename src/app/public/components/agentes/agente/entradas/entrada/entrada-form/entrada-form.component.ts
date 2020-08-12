@@ -4,6 +4,8 @@ import { EntradaModel } from '../../entrada.model';
 import { EntradasService } from '../../entradas.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Location } from '@angular/common';
+import { CurrentEntradaService } from '../current-entrada.service';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'aSmart-entrada-form',
@@ -14,42 +16,32 @@ export class EntradaFormComponent implements OnInit {
 
   entradaName: string
   entrada: EntradaModel
-  
-
 
   constructor (
-    private _route: ActivatedRoute,
-    private router: Router,
-    private _entradas: EntradasService,
-    private _dialog: MatDialog,
-    public location: Location
-  ) {
-    this.entradaName = this._route.snapshot.paramMap.get( 'name' )
-   }
+    public location: Location,
+    private _entrada: CurrentEntradaService
+  ) {}
 
   ngOnInit(): void {
-    this.loadEntrada()
-    this.router.events.subscribe( (val) => {
-      if ( val instanceof NavigationEnd ) {
-        this.entradaName = this._route.snapshot.paramMap.get( 'name' )
-        this.loadEntrada()
-      }
-    })
+    this.getEntrada()
+    
+  }
+
+  async getEntrada() {
+    this.entrada = ( await this._entrada.currentEntrada$.pipe( take( 1 ) ).toPromise() ).entrada
   }
   
-  
-  
-  
-
-  async loadEntrada() {
-    this.entrada = await this._entradas.getEntrada( this.entradaName )
-  }
-  
-
-
   onSubmit() {
     
   }
+  
+  
+  
+
+  
+  
+
+
 
 }
 

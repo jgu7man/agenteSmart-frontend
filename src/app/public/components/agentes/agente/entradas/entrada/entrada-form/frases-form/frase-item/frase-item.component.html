@@ -1,0 +1,33 @@
+<!-- READ Frase -->
+<ng-container *ngIf="!switchPhraseInput; else phraseInput">
+    <span class="frase-handler">
+        <i class="fas fa-quote-right"></i>
+    </span>
+    <span *ngFor="let part of frase.parts">
+        <span [ngSwitch]="part.entityType">
+        <span *ngSwitchCase="true">
+            
+        </span>
+        <span *ngSwitchDefault>
+            {{part.text}}
+        </span>
+        </span>
+    </span>
+</ng-container>
+
+
+<!-- UPDATE Editar frases -->
+<ng-template #phraseInput>
+    <mat-form-field>
+        <input 
+        matInput
+        #inputPhrase
+        type="text" 
+        name="inputPhrase" 
+        id="inputPhrase"
+        [(ngModel)]="phraseToEdit"
+        (keyup.enter)="onSetPhrase(frase)"
+        (blur)="onSetPhrase(frase)"
+        >
+    </mat-form-field>
+</ng-template>

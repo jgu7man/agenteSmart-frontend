@@ -24,11 +24,12 @@ export class AlertService {
   // y espera la confirmación de la lectura del usuario
   sendAlertMessage( mensaje: AlertMsgModel | string ): Observable<any> {
     var msg: AlertMsgModel = typeof mensaje == 'string' ?
-      { confirmacion: 'aceptar', mensaje: mensaje } : mensaje 
+      { confirmacion: 'aceptar', mensaje: mensaje } : mensaje
+    
 
     const dialogRef = this.dialogBox.open( MessageComponent, {
       width: '300px',
-      data: mensaje
+      data: msg
     } )
     dialogRef.afterClosed().subscribe(result => {
       this.respuestaAlerta$.next( result );

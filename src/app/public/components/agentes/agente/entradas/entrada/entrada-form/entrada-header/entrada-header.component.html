@@ -1,42 +1,44 @@
-<div class="row" id="entrada-header" >
-    <div class="col s1 goback-btn">
-        <button mat-button (click)="location.back()" >
-            <i class="fas fa-arrow-left"></i>
-        </button>
+<div id="entrada-header" *ngIf="entrada" >
+    <div class="row">
+        <div class="col s2 m1 goback-btn">
+            <button mat-button (click)="location.back()" >
+                <i class="fas fa-arrow-left"></i>
+            </button>
+        </div>
+        <div class="col s8 m9">
+            <aSmart-breadcums [intenIndex]="entrada.index"></aSmart-breadcums>
+        </div>
+        <div class="col s2">
+            <button mat-button [mat-menu-trigger-for]="menuEntrada">
+                <i class="fas fa-ellipsis-v"></i>
+            </button>
+            <mat-menu #menuEntrada>
+                <button mat-menu-item (click)="toEditName()">Editar</button>
+                <button mat-menu-item (click)="toDelEntrada()" >Eliminar</button>
+            </mat-menu>
+        </div>
     </div>
-    <div class="col s9">
-        <aSmart-breadcums [intenIndex]="entrada.index"></aSmart-breadcums>
-    </div>
-    <div class="col s2">
-        <button mat-button [mat-menu-trigger-for]="menuEntrada">
-            <i class="fas fa-ellipsis-v"></i>
-        </button>
-        <mat-menu #menuEntrada>
-            <button mat-menu-item (click)="toEditName()">Editar</button>
-            <button mat-menu-item (click)="toDelEntrada()" >Eliminar</button>
-        </mat-menu>
-    </div>
-</div>
-<div class="row">
-    <div class="col s12">
-        <ng-container *ngIf="!switchEdit; else editEntrada">
-            <h4> {{entrada.displayName}} </h4>
-        </ng-container>
-        <ng-template #editEntrada>
-            <mat-form-field>
-                <input 
-                matInput
-                type="text" 
-                name="displayName" 
-                id="displayName"
-                #displayName
-                (keyup.enter)="updateDisplayName()"
-                (blur)="nameEdited == entrada.displayName ? switchEdit = false : updateDisplayName()"
-                [(ngModel)]="nameEdited"
-                >
-            </mat-form-field>
-        </ng-template>
-        
+    <div class="row">
+        <div class="col s12">
+            <ng-container *ngIf="!switchEdit; else editEntrada">
+                <h4> {{entrada.displayName}} </h4>
+            </ng-container>
+            <ng-template #editEntrada>
+                <mat-form-field>
+                    <input 
+                    matInput
+                    type="text" 
+                    name="displayName" 
+                    id="displayName"
+                    #displayName
+                    (keyup.enter)="updateDisplayName()"
+                    (blur)="nameEdited == entrada.displayName ? switchEdit = false : updateDisplayName()"
+                    [(ngModel)]="nameEdited"
+                    >
+                </mat-form-field>
+            </ng-template>
+            
+        </div>
     </div>
 </div>
 

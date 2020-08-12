@@ -5,11 +5,12 @@ import { AlertService } from '../../../../../global/alert/alert.service';
 import { TextService } from '../../../../../services/text.service';
 import { CacheService } from '../../../../../global/cache/cache.service';
 import { AgentesService } from '../../agentes.service';
-import { CurrentAgenteService } from '../agente.service';
+import { CurrentAgenteService } from '../current-agente.service';
 import { EntradaModel } from './entrada.model';
 import { Subject, Observable } from 'rxjs';
 import { Loading } from '../../../../../global/loading/loading.service';
 import { Contexto } from '../contextos/contexto.model';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -18,31 +19,33 @@ export class EntradasService {
 
   entradasPath: string
   
+  
   constructor (
     private fs: AngularFirestore,
     private _alerta: AlertService,
     private _text: TextService,
     private _cache: CacheService,
     private _agente: CurrentAgenteService,
-    private _loading: Loading
-    ) {
+    private _loading: Loading,
+    private _route: ActivatedRoute,
+    private router: Router
+  ) {
+    
     }
     
-  entradasOfContext() {
-    
-  }
-
   
-    
-    
   async entradasCollection() {
-    this.entradasPath = await this._agente.getAgentePath( 'entradas' )
+    this.entradasPath = await this._agente.getPath( 'entradas' )
     const entradasRef = this.fs.collection( this.entradasPath ).ref
     return entradasRef
   }
+  
     
+
+  // SECTION CRUD de entradas
   
   
+  // CREATE Entradas
 
 
   async setEntrada( entradaName: string, contexto: string, index?:number ) {
@@ -50,15 +53,16 @@ export class EntradasService {
 
     const name = this._text.normalize( entradaName.toLowerCase() )
     
+    // READ Busca en las entradas que no esté duplicada
     const entradaList = await this.getAllEntradasList()
-    if ( entradaList.length > 0 ) {
-      if ( !entradaList.includes( name ) ) {
-
-        this._alerta.sendAlertMessage( 'Entrada Duplicada' )
-      }
+    if ( entradaList.includes( name ) ) {
+      console.log(name, ' duplicada');
+      this._alerta.sendAlertMessage( 'Entrada Duplicada' )
     } else {
-      console.log(name);
+    
 
+
+      
       await (await this.entradasCollection()).doc( name )
         .set( {
           index: index,
@@ -73,11 +77,9 @@ export class EntradasService {
   }
 
 
-  async updateEntradaName(entradaName: string, displayName:string) {
-    await ( await this.entradasCollection() ).doc( entradaName ).update( {
-      displayName: displayName
-    })
-  }
+  
+
+  // READ ENTRADAS
 
   async getAllEntradasList() {
     var entradasList = []
@@ -106,16 +108,8 @@ export class EntradasService {
     return entradasList
   }
 
-  async getEntrada(name) {
-    const entradaDoc = await ( await this.entradasCollection() ).doc( name ).get()
-    return entradaDoc.data() as EntradaModel
-  }
+  
 
-
-
-  async deleteEntrada(entradaName) {
-    return await (await this.entradasCollection()).doc(entradaName).delete()
-  }
 
 
   

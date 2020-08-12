@@ -1,4 +1,4 @@
-<p>
+<p id="breadcums">
     <a [routerLink]="['../../entradas']"  ><span><b>{{contexto}}: </b></span></a>
     <span *ngFor="let entrada of entradas | slice:0:intenIndex +1; index as i">
         <a [routerLink]="['../../entrada',entrada.name]"

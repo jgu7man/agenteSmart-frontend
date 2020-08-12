@@ -7,7 +7,7 @@
     margin: 0 1em;
     display: block;
     width: 100%;
-    
+    overflow: auto !important;
 }
 
 .en-Column {
@@ -49,6 +49,7 @@
 @media screen and (max-width: 450px) {
     #contextos{
         display: flex;
-        flex-direction: row;    
+        flex-direction: row;  
+        overflow: auto !important;  
     }
 }

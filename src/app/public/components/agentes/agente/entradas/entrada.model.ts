@@ -24,14 +24,14 @@ export interface EntradaModel {
 
 
 export interface FraseEntrenamiento {
-    name: string,
     type: 'EXAMPLE',
-    parts: FraseParte[],}
+    parts: FraseParte[],
+    name?: string,}
     export interface FraseParte {
         text: string,
-        entityType: string,
-        alias: string,
-        userDefined: boolean    
+        entityType?: string,
+        alias?: string,
+        userDefined?: boolean    
     }
 
 export interface ParametroEntrada {

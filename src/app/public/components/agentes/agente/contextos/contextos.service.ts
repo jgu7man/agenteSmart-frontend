@@ -6,7 +6,7 @@ import { EntradasService } from '../entradas/entradas.service';
 import { EntradaModel } from '../entradas/entrada.model';
 import { CacheService } from '../../../../../global/cache/cache.service';
 import { Contexto } from './contexto.model';
-import { CurrentAgenteService } from '../agente.service';
+import { CurrentAgenteService } from '../current-agente.service';
 import { take } from 'rxjs/operators';
 
 @Injectable({
@@ -28,14 +28,14 @@ export class ContextosService {
   }
   
   async contextosCollection() {
-    const contextosPath = await this._agente.getAgentePath( 'contextos' )
+    const contextosPath = await this._agente.getPath( 'contextos' )
     const contextosRef = this.afs.collection( contextosPath ).ref;
     return contextosRef
   }
 
 
 
-  // TITLE CRUD de contextos
+  // SECTION CRUD de contextos
 
   // CREATE
 
@@ -108,7 +108,7 @@ export class ContextosService {
 
 
   async delContext( context:Contexto  ) {
-    var entradasPath = await  this._agente.getAgentePath('entradas')
+    var entradasPath = await  this._agente.getPath('entradas')
     const entradaRef = this.afs.collection(entradasPath).ref;
       
     const entradas = await this._entradas.getEntradasListByContexto( context )

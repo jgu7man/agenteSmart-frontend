@@ -1,8 +1,27 @@
 <div class="row">
-    <div strechHeight class="col s12 m6" id="intent-form">
-        <aSmart-entrada-form></aSmart-entrada-form>
-    </div>
-    <div class="col s12 m6" id="resp-manager">
-        <aSmart-entrada-resp-manager></aSmart-entrada-resp-manager>
-    </div>
+    <ng-container *ngIf="!responsive.small; else mobileDesing">
+        <div strechHeight class="col s12" id="intent-form">
+            <aSmart-entrada-form></aSmart-entrada-form>
+        </div>
+        <div class="col s12" id="resp-manager">
+            <aSmart-entrada-resp-manager></aSmart-entrada-resp-manager>
+        </div>
+    </ng-container>
+    <ng-template #mobileDesing>
+        <mat-accordion>
+            <mat-expansion-panel class="intent-panel" [expanded]="true">
+                <mat-expansion-panel-header>
+                    Entrada
+                </mat-expansion-panel-header>
+                <aSmart-entrada-form></aSmart-entrada-form>
+            </mat-expansion-panel>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    Respuestas
+                </mat-expansion-panel-header>
+                <aSmart-entrada-resp-manager></aSmart-entrada-resp-manager>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </ng-template>
+    
 </div>

@@ -38,6 +38,8 @@ import { EntradaRespManagerComponent } from './components/agentes/agente/entrada
 import { EntradaHeaderComponent } from './components/agentes/agente/entradas/entrada/entrada-form/entrada-header/entrada-header.component';
 import { BreadcumsComponent } from './components/agentes/agente/entradas/entrada/entrada-form/breadcums/breadcums.component';
 import { DelEntradaDialogComponent } from './components/agentes/agente/entradas/del-entrada-dialog/del-entrada-dialog.component';
+import { FrasesFormComponent } from './components/agentes/agente/entradas/entrada/entrada-form/frases-form/frases-form.component';
+import { FraseItemComponent } from './components/agentes/agente/entradas/entrada/entrada-form/frases-form/frase-item/frase-item.component';
 
 
 
@@ -73,6 +75,8 @@ import { DelEntradaDialogComponent } from './components/agentes/agente/entradas/
     EntradaHeaderComponent,
     BreadcumsComponent,
     DelEntradaDialogComponent,
+    FrasesFormComponent,
+    FraseItemComponent,
   ],
   imports: [
     CommonModule,
