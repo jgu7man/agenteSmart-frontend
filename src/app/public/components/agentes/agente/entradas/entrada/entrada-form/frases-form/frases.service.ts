@@ -108,4 +108,16 @@ export class FrasesService {
     return partes
   }
 
+
+
+  async deletePhrase( frase: FraseEntrenamiento ) {
+    const entrada = await this._cache.getDataKey( 'currentEntrada' )
+    const phrasesList = await this.get()
+    const phraseToDel = phrasesList.findIndex( phrase => phrase.name === frase.name )
+    phrasesList.splice( phraseToDel, 1 );
+    
+    ( await this.entradasCollection() ).doc( entrada.name ).set( { trainingPhrases: phrasesList }, { merge: true } );
+    return
+  }
+
 }

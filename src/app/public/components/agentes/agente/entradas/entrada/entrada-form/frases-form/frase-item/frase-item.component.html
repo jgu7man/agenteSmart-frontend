@@ -3,7 +3,7 @@
     <span class="frase-handler">
         <i class="fas fa-quote-right"></i>
     </span>
-    <span *ngFor="let part of frase.parts">
+    <span *ngFor="let part of frase.parts" (click)="toEditPhrase(frase)">
         <span [ngSwitch]="part.entityType">
         <span *ngSwitchCase="true">
             
@@ -12,6 +12,9 @@
             {{part.text}}
         </span>
         </span>
+    </span>
+    <span class="delItem" (click)="delItem()">
+        <i class="fas fa-trash-alt red-text"></i>
     </span>
 </ng-container>
 

@@ -16,9 +16,14 @@
             <!-- READ Muestra las frases -->
             <li *ngFor="let frase of frases" 
             class="phrase-item"
-            (click)="toEditPhrase(frase)"
             >
-                <aSmart-frase-item [frase]="frase" [phraseName]="frase.name" ></aSmart-frase-item>
+                <aSmart-frase-item 
+                
+                [frase]="frase" 
+                [phraseName]="frase.name" 
+                (onDeleted)="getFrasesEntrenamiento()"
+                >
+                </aSmart-frase-item>
             </li>
 
             <!-- CREATE Agregar nueva frase -->

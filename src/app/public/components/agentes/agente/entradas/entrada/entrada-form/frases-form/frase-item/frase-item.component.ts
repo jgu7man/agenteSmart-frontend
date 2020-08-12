@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, ViewChild, Output, EventEmitter } from '@angular/core';
 import { FraseEntrenamiento } from '../../../../entrada.model';
 import { Loading } from '../../../../../../../../../global/loading/loading.service';
 import { FrasesService } from '../frases.service';
@@ -16,6 +16,8 @@ export class FraseItemComponent implements OnInit {
   @Input() phraseName: string
   @ViewChild( 'inputPhrase' ) inputPhrase: ElementRef
   phraseToEdit: string
+
+  @Output() onDeleted = new EventEmitter<boolean>()
 
   constructor (
     private loading: Loading,
@@ -53,6 +55,12 @@ export class FraseItemComponent implements OnInit {
 
     }
     
+  }
+
+  delItem() {
+    this._frases.deletePhrase( this.frase ).then( () => {
+      this.onDeleted.emit(true)
+    })
   }
 
 }

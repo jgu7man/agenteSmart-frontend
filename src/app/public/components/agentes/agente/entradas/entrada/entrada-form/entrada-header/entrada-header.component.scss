@@ -1,14 +1,19 @@
 #entrada-header {
-    display: flex;
-    align-items: center;
-    margin: 0 !important;
+    .row{
+        display: flex;
+        align-items: center;
+        margin: 0 !important;
+        h4 {
+            margin-top: 0;
+        }
+    }
 }
 
 #displayName {
     font-size: 2.28rem;
 }
 
-.goback-btn {
+.goback-btn, .menu-btn {
     button {
         padding: 0 5px;
         min-width: 40px;
