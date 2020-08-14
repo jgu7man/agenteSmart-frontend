@@ -13,7 +13,7 @@ export class BreadcumsComponent implements OnInit {
 
   entradas: EntradaModel[]
   contexto
-  @Input() intenIndex
+  @Input() intentIndex
   constructor (
     private _cache: CacheService,
     private _route: ActivatedRoute,
@@ -24,6 +24,7 @@ export class BreadcumsComponent implements OnInit {
   async ngOnInit() {
     this.contexto = this._route.snapshot.queryParamMap.get('contexto')
     this.entradas = await this._cache.getDataKey( 'entradasList:' + this.contexto )
+    console.log( 'entrada index: ', this.intentIndex);
   }
 
 

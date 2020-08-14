@@ -1,12 +1,12 @@
 <div id="entrada-header" *ngIf="entrada" >
-    <div class="row">
+    <div class="row align-cols">
         <div class="col s2 m1 goback-btn">
             <button mat-button (click)="location.back()" >
                 <i class="fas fa-arrow-left"></i>
             </button>
         </div>
         <div class="col s8 m9">
-            <aSmart-breadcums [intenIndex]="entrada.index"></aSmart-breadcums>
+            <aSmart-breadcums [intentIndex]="entrada.index"></aSmart-breadcums>
         </div>
         <div class="col s2 m1 menu-btn">
             <button mat-button [mat-menu-trigger-for]="menuEntrada">

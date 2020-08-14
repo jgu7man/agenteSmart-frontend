@@ -1,7 +1,5 @@
 #entrada-header {
     .row{
-        display: flex;
-        align-items: center;
         margin: 0 !important;
         h4 {
             margin-top: 0;
@@ -24,8 +22,6 @@
     #entrada-header{
         display: block;
         .row {
-            display: flex;
-            align-items: center;
             margin: 0;
         }
     }

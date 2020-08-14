@@ -1,0 +1,14 @@
+<ng-container *ngIf="!switchClaseInput; else claseInput">
+    <div class="col s3">
+        {{clase.value}}
+    </div>
+    <div class="col s9">
+        <mat-chip-list>
+            <mat-chip *ngFor="let sinonimo of clase.synonyms" >{{sinonimo}}</mat-chip>
+        </mat-chip-list>
+    </div>
+</ng-container>
+<ng-template #claseInput>
+    
+</ng-template>
+

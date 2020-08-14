@@ -29,7 +29,7 @@ export class AuthService {
     private afs: AngularFirestore,
     private router: Router,
     private _http: HttpClient,
-    private loading: Loading
+    private loading: Loading,
     ) {
       
 
@@ -51,7 +51,11 @@ export class AuthService {
       
       var user2 = await this.user$.pipe( take( 1 ) ).toPromise()
       console.log( user2 );
-      sessionStorage.setItem('aSmart-user', JSON.stringify(user2))
+      if ( !user2 ) {
+        this.router.navigate(['/'], {queryParams:{logged: false}})
+      } else {
+        sessionStorage.setItem('aSmart-user', JSON.stringify(user2))
+      }
       return user2
       
     } else {

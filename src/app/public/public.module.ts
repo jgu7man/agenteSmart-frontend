@@ -21,7 +21,7 @@ import { AgenteComponent } from './components/agentes/agente/agente.component';
 import { ColorThemeModule } from '../global/color-theme/color-theme.module';
 import { ColorDirective } from '../global/color-theme/color.directive';
 import { EntradasComponent } from './components/agentes/agente/entradas/entradas.component';
-import { EntidadesComponent } from './components/agentes/agente/entidades/entidades.component';
+import { TiposComponent } from './components/agentes/agente/tipos/tipos.component';
 import { AccionesComponent } from './components/agentes/agente/acciones/acciones.component';
 import { OpcionesComponent } from './components/agentes/agente/opciones/opciones.component';
 import { lowecaseDirective } from '../global/directives/lowercase.directive';
@@ -40,6 +40,10 @@ import { BreadcumsComponent } from './components/agentes/agente/entradas/entrada
 import { DelEntradaDialogComponent } from './components/agentes/agente/entradas/del-entrada-dialog/del-entrada-dialog.component';
 import { FrasesFormComponent } from './components/agentes/agente/entradas/entrada/entrada-form/frases-form/frases-form.component';
 import { FraseItemComponent } from './components/agentes/agente/entradas/entrada/entrada-form/frases-form/frase-item/frase-item.component';
+import { AddTipoComponent } from './components/agentes/agente/tipos/add-tipo/add-tipo.component';
+import { AddClaseComponent } from './components/agentes/agente/tipos/add-tipo/add-clase/add-clase.component';
+import { TipoComponent } from './components/agentes/agente/tipos/tipo/tipo.component';
+import { ClaseItemComponent } from './components/agentes/agente/tipos/tipo/clase-item/clase-item.component';
 
 
 
@@ -62,7 +66,7 @@ import { FraseItemComponent } from './components/agentes/agente/entradas/entrada
     InitAgenteComponent,
     AgenteComponent,
     EntradasComponent,
-    EntidadesComponent,
+    TiposComponent,
     AccionesComponent,
     OpcionesComponent,
     EntradasListComponent,
@@ -77,6 +81,10 @@ import { FraseItemComponent } from './components/agentes/agente/entradas/entrada
     DelEntradaDialogComponent,
     FrasesFormComponent,
     FraseItemComponent,
+    AddTipoComponent,
+    AddClaseComponent,
+    TipoComponent,
+    ClaseItemComponent,
   ],
   imports: [
     CommonModule,

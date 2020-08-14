@@ -1,6 +1,8 @@
 <p id="breadcums">
+    <!-- CONTEXTO -->
     <a [routerLink]="['../../entradas']"  ><span><b>{{contexto}}: </b></span></a>
-    <span *ngFor="let entrada of entradas | slice:0:intenIndex +1; index as i">
+    <!-- ENTRADAS -->
+    <span *ngFor="let entrada of entradas | slice:0:intentIndex +1; index as i">
         <a [routerLink]="['../../entrada',entrada.name]"
         [queryParams]="{'contexto': contexto}">
         {{entrada.displayName}}

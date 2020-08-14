@@ -22,12 +22,9 @@ export class CurrentEntradaService {
     ) { }
 
   async getCurrentEntrada() {
-    let entrada: EntradaModel = await this._cache.getDataKey( 'currentEntrada' )
-    if ( !entrada ) {
-      return await (await this.currentEntrada$.pipe(take(1)).toPromise()).entrada
-    } else {
-      return entrada
-    }
+    let entrada: EntradaModel =
+      await ( await this.currentEntrada$.pipe( take( 1 ) ).toPromise() ).entrada
+    return entrada
   }
     
 

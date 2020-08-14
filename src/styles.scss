@@ -15,3 +15,9 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 div::-webkit-scrollbar {
     display: none;
 }
+
+
+.align-cols {
+    display: flex;
+    align-items: center;
+}

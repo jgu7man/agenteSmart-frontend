@@ -84,7 +84,6 @@ export class ContextosService {
       contextos.push(contexto.data() as Contexto)
     } )
     
-    console.log(contextos);
     return contextos
   }
 

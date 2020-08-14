@@ -1,0 +1,7 @@
+#entrada-container {
+    overflow: auto;
+}
+
+#entrada-container::-webkit-scrollbar {
+    display: none;
+}

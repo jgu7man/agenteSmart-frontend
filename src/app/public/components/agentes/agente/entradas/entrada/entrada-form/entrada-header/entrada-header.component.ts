@@ -29,7 +29,9 @@ export class EntradaHeaderComponent implements OnInit {
   }
   
   async getEntrada() {
-    this.entrada = ( await this._entrada.currentEntrada$.pipe( take( 1 ) ).toPromise() ).entrada
+    this._entrada.currentEntrada$.subscribe( current => {
+      this.entrada = current.entrada
+    })
   }
 
   

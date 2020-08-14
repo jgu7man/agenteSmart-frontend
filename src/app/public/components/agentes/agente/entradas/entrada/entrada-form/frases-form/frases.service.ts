@@ -50,6 +50,7 @@ export class FrasesService {
 
   async get() {
     const entrada = await this._entrada.getCurrentEntrada()
+    console.log(entrada);
     const frasesList: FraseEntrenamiento[] = await ( await ( await this.entradasCollection() )
       .doc( entrada.name ).get() )
         .get( 'trainingPhrases' );

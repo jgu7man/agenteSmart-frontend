@@ -6,7 +6,7 @@ import { AgentesComponent } from './components/agentes/agentes.component';
 import { InitAgenteComponent } from './components/agentes/init-agente/init-agente.component';
 import { AgenteComponent } from './components/agentes/agente/agente.component';
 import { EntradasComponent } from './components/agentes/agente/entradas/entradas.component';
-import { EntidadesComponent } from './components/agentes/agente/entidades/entidades.component';
+import { TiposComponent } from './components/agentes/agente/tipos/tipos.component';
 import { AccionesComponent } from './components/agentes/agente/acciones/acciones.component';
 import { OpcionesComponent } from './components/agentes/agente/opciones/opciones.component';
 import { ContextosComponent } from './components/agentes/agente/contextos/contextos.component';
@@ -26,7 +26,7 @@ const routes: Routes = [
               { path: '', redirectTo: 'entradas', pathMatch: 'full' },
               { path: 'entradas', component: ContextosComponent },
               { path: 'entrada/:name', component: EntradaComponent },
-              { path: 'entidadaes', component: EntidadesComponent },
+              { path: 'tipos', component: TiposComponent },
               { path: 'acciones', component: AccionesComponent },
               { path: 'opciones', component: OpcionesComponent },
           ] },

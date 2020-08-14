@@ -111,6 +111,11 @@ export class FrasesFormComponent implements OnInit {
     console.log(this.frases);
   }
 
+
+  trackByFraseName( index, frase: FraseEntrenamiento ) {
+    return frase.name
+  }
+
   
 
 }

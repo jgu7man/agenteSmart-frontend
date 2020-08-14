@@ -1,0 +1,61 @@
+    <ng-container *ngIf="kind != 'KIND_MAP'; else sinonimos">
+        <div class="col s12">
+            <input
+                placeholder="nueva clase"
+                type="text"
+                name="addClaseItem"
+                id="addClaseItem"
+                matInput
+                [(ngModel)]="newClaseItem"
+            />
+        </div>
+    </ng-container>
+
+
+    <ng-template #sinonimos>
+        <div class="col s3">
+            <mat-form-field style="width: 100%;">
+                <input
+                placeholder="nueva clase"
+                type="text"
+                name="addClaseItem"
+                id="addClaseItem"
+                matInput
+                [(ngModel)]="newClaseItem"
+                />
+            </mat-form-field>
+        </div>
+        <div class="col s7">
+            <mat-form-field style="width: 100%;">
+                <mat-chip-list
+                class="mat-chip-list-stacked"
+                #newSinonimosList
+                aria-label="Sinónimos"
+                >
+                    <mat-chip
+                    *ngFor="let sinonimo of newClaseSinonimos"
+                    [selectable]="true"
+                    [removable]="true"
+                    (removed)="delSinonimo(sinonimo)"
+                    >
+                        {{ sinonimo }}
+                        <mat-icon matChipRemove>cancel</mat-icon>
+                    </mat-chip>
+                    <input
+                        placeholder="nuevo sinónimo"
+                        style="max-height: 1em;"
+                        [matChipInputFor]="newSinonimosList"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                        [matChipInputAddOnBlur]="true"
+                        (matChipInputTokenEnd)="addSinonimo($event)"
+                    />
+                </mat-chip-list>
+            </mat-form-field>
+        </div>
+        <div class="col s2">
+            <button mat-button>
+                <i class="fas fa-plus-circle"></i>
+            </button>
+        </div>
+    </ng-template>
+

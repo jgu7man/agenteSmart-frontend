@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row align-cols">
     <div class="col s10">
         <h5>Frases de entrenamiento</h5>
     </div>
@@ -14,7 +14,7 @@
 
 
             <!-- READ Muestra las frases -->
-            <li *ngFor="let frase of frases" 
+            <li *ngFor="let frase of frases; trackBy:trackByFraseName" 
             class="phrase-item"
             >
                 <aSmart-frase-item 
