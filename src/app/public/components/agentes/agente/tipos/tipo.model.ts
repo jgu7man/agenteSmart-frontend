@@ -13,5 +13,5 @@ export class TipoEntidadModel {
 
 export interface Clase {
     value: string,
-    synonyms: string[]
+    synonyms?: string[],
 }

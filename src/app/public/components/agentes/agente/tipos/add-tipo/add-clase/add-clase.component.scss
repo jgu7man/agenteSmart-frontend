@@ -1,0 +1,7 @@
+::ng-deep .mat-chip-list-wrapper {
+    flex-direction: row !important;
+    align-items: center !important;
+    mat-chip {
+        width: unset !important;
+    }
+}

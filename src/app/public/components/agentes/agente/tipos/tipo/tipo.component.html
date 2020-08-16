@@ -1,6 +1,26 @@
-<mat-expansion-panel>
+<mat-expansion-panel (afterExpand)="onExpanded($event)" (afterCollapse)="onExpanded($event)">
     <mat-expansion-panel-header>
-        {{tipo.displayName}}
+        <ng-container *ngIf="!switchEditTipo; else editTipoInput">
+            @{{tipo.displayName}}
+        </ng-container>
+
+        <!-- UPDATE tipo name -->
+        <ng-template #editTipoInput>
+            <mat-form-field>
+                <input 
+                matInput
+                type="text" 
+                #editInput
+                name="editInput" 
+                id="editInput"
+                [(ngModel)]="tipo.displayName"
+                (keydown)="delSpaces($event)"
+                (keyup.enter)="tipo.displayName == '' ? null : tiposService.setTipo(tipo)"
+                (keyup.enter)="$event.target.blur()"
+                >
+            </mat-form-field>                            
+        </ng-template>
     </mat-expansion-panel-header>
-    content2
+    <aSmart-tipo-body [tipo]="tipo" ></aSmart-tipo-body>
+    <button mat-raised-button [color]="'warn'" (click)="onDeleteTipo()">Eliminar</button>
 </mat-expansion-panel>

@@ -3,6 +3,7 @@ import { TipoEntidadModel, Clase } from '../tipo.model';
 import { Loading } from '../../../../../../global/loading/loading.service';
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { TiposService } from '../tipos.service';
+import { MatExpansionPanel } from '@angular/material/expansion';
 
 
 @Component({
@@ -20,6 +21,7 @@ export class AddTipoComponent implements OnInit {
   
 
   @ViewChild( 'addInput' ) addInput: ElementRef
+  @ViewChild( 'addPanel' ) addPanel: MatExpansionPanel
   @Output() saved = new EventEmitter<boolean>()
 
 
@@ -27,7 +29,7 @@ export class AddTipoComponent implements OnInit {
     private loading: Loading,
     public tiposService: TiposService
   ) {
-    this.newTipo = new TipoEntidadModel( '', '', 'KIND_MAP', 'AUTO_EXPANSION_MODE_DEFAULT', this.clases, true )
+    this.newTipo = new TipoEntidadModel( '', '', 'KIND_LIST', 'AUTO_EXPANSION_MODE_UNSPECIFIED', this.clases, false )
    }
 
   ngOnInit(): void {
@@ -41,36 +43,22 @@ export class AddTipoComponent implements OnInit {
       null
   }
 
-  onKindChange(event: MatCheckboxChange) {
-    this.newTipo.kind = event.checked ? 'KIND_MAP' : 'KIND_LIST';
-    return this.tiposService.setTipo(this.newTipo)
-  }
-
-  onExpanptionChange( event: MatCheckboxChange ) {
-    this.newTipo.autoExpansionMode = event.checked ? 'AUTO_EXPANSION_MODE_DEFAULT' : 'AUTO_EXPANSION_MODE_UNSPECIFIED';
-    return this.tiposService.setTipo( this.newTipo )
-  }
-
-  onFuzzyChange( event: MatCheckboxChange ) {
-    this.newTipo.enableFuzzyExtraction = event.checked ? true : false
-    return this.tiposService.setTipo( this.newTipo )
-  }
-
-  onClaseAdded(event) {
-    this.switchAddClase = false
-  }
+  
 
 
   async onAddTipo() {
     this.switchAddInput = false
     if ( this.newTipo.displayName != '' ) {
-
+      this.tiposService.setTipo( this.newTipo ).then( name => {
+        this.newTipo.name = name
+      })
     }
   }
 
   toSave() {
-    this.newTipo = new TipoEntidadModel( '', '', 'KIND_MAP', 'AUTO_EXPANSION_MODE_DEFAULT', this.clases, true )
     this.switchAddInput = false
+    this.addPanel.close()
+    this.newTipo = new TipoEntidadModel( '', '', 'KIND_MAP', 'AUTO_EXPANSION_MODE_DEFAULT', this.clases, true )
     this.saved.emit(true)
   }
 

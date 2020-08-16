@@ -1,0 +1,132 @@
+<div id="tipo-body" *ngIf="tipo">
+    <div class="row">
+        <div class="col s12" id="tipo-options">
+
+            <mat-checkbox 
+            [color]="'primary'"
+            (change)="onKindChange($event)" 
+            [checked]="tipo.kind == 'KIND_MAP'">
+                Activar sinónimos
+            </mat-checkbox>
+            
+            <mat-checkbox 
+            [color]="'primary'"
+            (change)="onExpanptionChange($event)" 
+            [checked]="tipo.autoExpansionMode == 'AUTO_EXPANSION_MODE_DEFAULT'">
+                Auto expansión
+            </mat-checkbox>
+            
+            <mat-checkbox 
+            [color]="'primary'"
+            (change)="onFuzzyChange($event)"
+            [checked]="tipo.enableFuzzyExtraction" >
+                Activar coincidencia parcial
+            </mat-checkbox>
+
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col s12">
+            <h6> Clases del tipo de dato</h6>
+
+
+            <!-- UPDATE Clases con sinónimos -->
+            <mat-card *ngIf="tipo.kind == 'KIND_MAP'; else lista">
+                <mat-card-content>
+                    <div class="row">
+                        <div class="col s3">Clase</div>
+                        <div class="col s9">Sinónimos</div>
+                    </div>
+                    
+                    <ul class="clase-list collection">
+                    
+                    <!-- READ CLASES DE TIPO -->
+                        <li class="clase-item collection-item" *ngFor="let clase of tipo.entities; trackBy:trackByName">
+                            <div class="row">
+                                <aSmart-clase-item 
+                                (claseDeleted)="refresh()"
+                                (closeClaseEdit)="toEditClase($event)"
+                                [clase]="clase" 
+                                [claseId]="clase.value" 
+                                [tipo]="tipo"
+                                ></aSmart-clase-item>
+
+                            </div>
+                        </li>
+            
+                        <!-- CREATE CLASE DE TIPO -->
+                        <ng-template #addClase>
+                            <li class="clase-item collection-item" [ngClass]="{'collection-item': switchAddClase}">
+                                <aSmart-add-clase 
+                                [tipo]="tipo"
+                                (claseDone)="onClaseAdded($event)"
+                                >
+                                </aSmart-add-clase>    
+                            </li>
+                        </ng-template>
+                    </ul>
+                    
+                    <ng-container *ngIf="!switchAddClase; else addClase">
+                        <button 
+                        mat-button 
+                        (click)="switchAddClase = true"
+                        [disabled]="!tipo.name"
+                        >
+                            Agregar nueva clase
+                        </button>
+                    </ng-container>
+
+                </mat-card-content>
+            </mat-card>
+
+
+            <!-- UPDATE Clases sin sinónimos -->
+            <ng-template #lista>
+                <mat-card>
+                    <mat-card-content>
+                        <ul class="clase-list collection">
+
+
+                            <!-- READ CLASES DE TIPO -->
+                            <li class="clase-item collection-item" *ngFor="let clase of tipo.entities; trackBy:trackByName">
+                                <div class="row">
+                                    <aSmart-clase-item 
+                                    (claseDeleted)="refresh()"
+                                    (closeClaseEdit)="toEditClase($event)"
+                                    [clase]="clase" 
+                                    [claseId]="clase.value" 
+                                    [tipo]="tipo"
+                                    ></aSmart-clase-item>
+    
+                                </div>
+                            </li>
+                
+                            <!-- CREATE CLASE DE TIPO -->
+                            <ng-template #addClase>
+                                <li class="clase-item collection-item" [ngClass]="{'collection-item': switchAddClase}">
+                                    <aSmart-add-clase 
+                                    [tipo]="tipo"
+                                    (claseDone)="onClaseAdded($event)"
+                                    >
+                                    </aSmart-add-clase>    
+                                </li>
+                            </ng-template>
+                            <ng-container *ngIf="!switchAddClase; else addClase">
+                                <button 
+                                mat-button 
+                                (click)="switchAddClase = true"
+                                [disabled]="!tipo.name"
+                                >
+                                    Agregar nueva clase
+                                </button>
+                            </ng-container>
+                        </ul>
+                    </mat-card-content>
+                </mat-card>
+            </ng-template>
+
+        </div>
+    </div>
+    
+</div>

@@ -1,5 +1,6 @@
-    <ng-container *ngIf="kind != 'KIND_MAP'; else sinonimos">
-        <div class="col s12">
+<ng-container *ngIf="tipo.kind != 'KIND_MAP'; else sinonimos">
+    <div class="col s10 m11">
+        <mat-form-field>
             <input
                 placeholder="nueva clase"
                 type="text"
@@ -7,55 +8,62 @@
                 id="addClaseItem"
                 matInput
                 [(ngModel)]="newClaseItem"
+                (blur)="newClaseItem ? onAddClase() : null"
+                (keyup.enter)="onAddClase(); $event.target.blur()"
             />
-        </div>
-    </ng-container>
+        </mat-form-field>
+    </div>
+</ng-container>
 
 
-    <ng-template #sinonimos>
-        <div class="col s3">
-            <mat-form-field style="width: 100%;">
-                <input
-                placeholder="nueva clase"
-                type="text"
-                name="addClaseItem"
-                id="addClaseItem"
-                matInput
-                [(ngModel)]="newClaseItem"
-                />
-            </mat-form-field>
-        </div>
-        <div class="col s7">
-            <mat-form-field style="width: 100%;">
-                <mat-chip-list
-                class="mat-chip-list-stacked"
-                #newSinonimosList
-                aria-label="Sinónimos"
+<ng-template #sinonimos>
+    <div class="col s3">
+        <mat-form-field style="width: 100%;">
+            <input
+            placeholder="nueva clase"
+            type="text"
+            name="addClaseItem"
+            id="addClaseItem"
+            matInput
+            [(ngModel)]="newClaseItem"
+            (keyup.enter)="onAddClase(); $event.target.blur()"
+            (keydown.Tab)="onAddClase();false"
+            />
+        </mat-form-field>
+    </div>
+    <div class="col s7 m8">
+        <mat-form-field style="width: 100%;">
+            <mat-chip-list
+            class="mat-chip-list-stacked"
+            #newSinonimosList
+            aria-label="Sinónimos"
+            [aria-orientation]="'horizontal'"
+            >
+                <mat-chip
+                *ngFor="let sinonimo of newClaseSinonimos"
+                [selectable]="true"
+                [removable]="true"
+                (removed)="delSinonimo(sinonimo)"
                 >
-                    <mat-chip
-                    *ngFor="let sinonimo of newClaseSinonimos"
-                    [selectable]="true"
-                    [removable]="true"
-                    (removed)="delSinonimo(sinonimo)"
-                    >
-                        {{ sinonimo }}
-                        <mat-icon matChipRemove>cancel</mat-icon>
-                    </mat-chip>
-                    <input
-                        placeholder="nuevo sinónimo"
-                        style="max-height: 1em;"
-                        [matChipInputFor]="newSinonimosList"
-                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                        [matChipInputAddOnBlur]="true"
-                        (matChipInputTokenEnd)="addSinonimo($event)"
-                    />
-                </mat-chip-list>
-            </mat-form-field>
-        </div>
-        <div class="col s2">
-            <button mat-button>
-                <i class="fas fa-plus-circle"></i>
+                    {{ sinonimo }}
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+                <input
+                    placeholder="nuevo sinónimo: presiona coma (,) o enter para agregar"
+                    style="max-height: 1em;"
+                    #sinonimosInput
+                    [disabled]="!switchSinonimosInput"
+                    [matChipInputFor]="newSinonimosList"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    (matChipInputTokenEnd)="addSinonimo($event)"
+                />
+            </mat-chip-list>
+        </mat-form-field>
+    </div>
+</ng-template>
+        <div class="col s2 m1">
+            <button mat-button (click)="claseDone.emit(true)">
+                <i class="fas fa-check"></i>
             </button>
         </div>
-    </ng-template>
 

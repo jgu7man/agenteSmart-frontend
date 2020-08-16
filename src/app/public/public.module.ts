@@ -44,6 +44,7 @@ import { AddTipoComponent } from './components/agentes/agente/tipos/add-tipo/add
 import { AddClaseComponent } from './components/agentes/agente/tipos/add-tipo/add-clase/add-clase.component';
 import { TipoComponent } from './components/agentes/agente/tipos/tipo/tipo.component';
 import { ClaseItemComponent } from './components/agentes/agente/tipos/tipo/clase-item/clase-item.component';
+import { TipoBodyComponent } from './components/agentes/agente/tipos/tipo/tipo-body/tipo-body.component';
 
 
 
@@ -85,6 +86,7 @@ import { ClaseItemComponent } from './components/agentes/agente/tipos/tipo/clase
     AddClaseComponent,
     TipoComponent,
     ClaseItemComponent,
+    TipoBodyComponent,
   ],
   imports: [
     CommonModule,
