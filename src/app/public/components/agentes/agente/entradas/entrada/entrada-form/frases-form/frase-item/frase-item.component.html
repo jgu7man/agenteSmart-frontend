@@ -3,18 +3,21 @@
     <span class="frase-handler">
         <i class="fas fa-quote-right"></i>
     </span>
-    <span *ngFor="let part of frase.parts" (click)="toEditPhrase(frase)">
-        <span [ngSwitch]="part.entityType">
-        <span *ngSwitchCase="true">
-            
-        </span>
-        <span *ngSwitchDefault>
-            {{part.text}}
-        </span>
+    <span *ngFor="let part of frase.parts" >
+        <span [ngSwitch]="part.selected">
+            <span *ngSwitchCase="true" class="selected">
+                {{part.text}}
+            </span>
+            <span *ngSwitchDefault>
+                {{part.text}}
+            </span>
         </span>
     </span>
     <span class="delItem" (click)="delItem()">
         <i class="fas fa-trash-alt red-text"></i>
+    </span>
+    <span class="editItem" (click)="toEditPhrase(frase)">
+        <i class="fas fa-edit blue-text"></i>
     </span>
 </ng-container>
 

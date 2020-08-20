@@ -40,7 +40,6 @@ export class EntradaComponent implements OnInit, OnDestroy {
   async loadEntrada() {
     var contexto = this._route.snapshot.queryParamMap.get( 'contexto' )
     this.entrada = await this._entrada.get( this.entradaName, contexto )
-    console.log(this.entrada);
   }
 
   ngOnDestroy(): void {

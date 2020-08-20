@@ -31,7 +31,9 @@ export interface FraseEntrenamiento {
         text: string,
         entityType?: string,
         alias?: string,
-        userDefined?: boolean    
+        userDefined?: boolean,
+        selected?: boolean,
+        paramName?: string
     }
 
 export interface ParametroEntrada {

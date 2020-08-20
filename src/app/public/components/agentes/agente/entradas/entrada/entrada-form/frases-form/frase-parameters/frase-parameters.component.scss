@@ -1,0 +1,7 @@
+.row {
+    margin: 0 !important;
+}
+
+::ng-deep .mat-form-field {
+    max-height: 10px;
+}

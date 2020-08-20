@@ -50,7 +50,6 @@ export class FrasesService {
 
   async get() {
     const entrada = await this._entrada.getCurrentEntrada()
-    console.log(entrada);
     const frasesList: FraseEntrenamiento[] = await ( await ( await this.entradasCollection() )
       .doc( entrada.name ).get() )
         .get( 'trainingPhrases' );
@@ -74,12 +73,22 @@ export class FrasesService {
     let partsString: string[] = []
     phrase.parts.forEach( part => {
       if ( part.entityType ) {
-        partsString.push( `${ part.entityType }:${ part.text }` )
+        partsString.push( `;${ part.entityType }=${ part.text };` )
       } else {
         partsString.push( part.text )
       }
     } )
-    return partsString.join( ' ' )
+    return partsString.join( '' )
+  }
+
+  stringifyParts( phrase: FraseEntrenamiento ): string {
+    let partialString: string[] = []
+    phrase.parts.forEach( part => {
+      if ( !part.selected ) {
+        partialString.push( part.text )
+      } 
+    } )
+    return partialString.join('')
   }
 
 

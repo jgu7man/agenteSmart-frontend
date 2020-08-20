@@ -24,7 +24,6 @@ export class BreadcumsComponent implements OnInit {
   async ngOnInit() {
     this.contexto = this._route.snapshot.queryParamMap.get('contexto')
     this.entradas = await this._cache.getDataKey( 'entradasList:' + this.contexto )
-    console.log( 'entrada index: ', this.intentIndex);
   }
 
 

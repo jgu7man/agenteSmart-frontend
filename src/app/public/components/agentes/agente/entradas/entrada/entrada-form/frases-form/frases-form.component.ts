@@ -5,6 +5,7 @@ import { FrasesService } from './frases.service';
 import { ActivatedRoute } from '@angular/router';
 import { CurrentEntradaService } from '../../current-entrada.service';
 import { FraseItemComponent } from './frase-item/frase-item.component';
+import { FraseParametersComponent } from './frase-parameters/frase-parameters.component';
 
 @Component({
   selector: 'aSmart-frases-form',
@@ -22,6 +23,7 @@ export class FrasesFormComponent implements OnInit {
   
   @ViewChild( 'newPhraseInput' ) newPhraseInput: ElementRef
   @ViewChildren( FraseItemComponent ) prhaseList: QueryList<FraseItemComponent>
+  @ViewChildren( FraseParametersComponent ) parametersList: QueryList<FraseParametersComponent>
 
 
   constructor (
@@ -83,6 +85,40 @@ export class FrasesFormComponent implements OnInit {
     phraseEdit.toEditPhrase(phrase)
   }
 
+  onSelect( frase: FraseEntrenamiento ) {
+    const text = window.getSelection().toString()
+
+    if ( text ) {
+      const fraseOnEditIndex = this.frases.findIndex(Frase => Frase.name == frase.name)
+      const cleanPart = this._frases.stringifyPhrase( frase )
+      console.log(cleanPart);
+      var textReplaced = cleanPart.replace( text, `:${ text }:` )
+      console.log(textReplaced);
+      var textSplited = textReplaced.split( ':' )
+      console.log(textSplited);
+      var parts: FraseParte[] = []
+      
+      
+      textSplited.forEach( ( textPart ) => {
+        if(textPart) 
+        if ( textPart != text ) { parts.push( { text: textPart, selected: false } ) }
+        else { parts.push( { text: textPart, selected: true } ) }
+      } )
+
+      console.log( parts );
+
+      this.frases[ fraseOnEditIndex ].parts = { ...parts, ...this.frases[ fraseOnEditIndex ].parts}
+
+      console.log(this.frases[fraseOnEditIndex]);
+
+      // parts.push( { text: text, selected: true } )
+      // frase.parts = parts
+      
+      const phraseItemEdited = this.prhaseList.find( Frase => Frase.phraseName == frase.name )
+      phraseItemEdited.frase.parts = parts
+    }
+  }
+
 
   
 
@@ -115,6 +151,9 @@ export class FrasesFormComponent implements OnInit {
   trackByFraseName( index, frase: FraseEntrenamiento ) {
     return frase.name
   }
+
+
+  
 
   
 

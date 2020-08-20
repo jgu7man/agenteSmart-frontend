@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ElementRef, ViewChild, Output, EventEmitter } from '@angular/core';
-import { FraseEntrenamiento } from '../../../../entrada.model';
+import { FraseEntrenamiento, FraseParte } from '../../../../entrada.model';
 import { Loading } from '../../../../../../../../../global/loading/loading.service';
 import { FrasesService } from '../frases.service';
 
@@ -57,6 +57,18 @@ export class FraseItemComponent implements OnInit {
     
   }
 
+
+  
+
+
+  onSelectPart( textSelected: string ) {
+    try {
+      
+    } catch (error) {
+      
+    }  
+  }
+
   delItem() {
     this._frases.deletePhrase( this.frase ).then( () => {
       this.onDeleted.emit(true)
@@ -64,3 +76,4 @@ export class FraseItemComponent implements OnInit {
   }
 
 }
+

@@ -16,14 +16,28 @@
             <!-- READ Muestra las frases -->
             <li *ngFor="let frase of frases; trackBy:trackByFraseName" 
             class="phrase-item"
+            (mouseup)="onSelect(frase)"
             >
                 <aSmart-frase-item 
-                
                 [frase]="frase" 
                 [phraseName]="frase.name" 
                 (onDeleted)="getFrasesEntrenamiento()"
                 >
                 </aSmart-frase-item>
+                
+                <div class="parameter-list" gdev-color [background]="'lightgrey'">
+                    <div class="row params-header">
+                        <div class="col s4">Parámetro</div>
+                        <div class="col s4">Tipo dato</div>
+                        <div class="col s4">Valor</div>
+                    </div>
+                    <aSmart-frase-parameters
+                    *ngFor="let parte of frase.parts; index as i" 
+                    [parte]="parte" 
+                    [parteIndex]="frase.name + i" 
+                    >
+                    </aSmart-frase-parameters>
+                </div>
             </li>
 
             <!-- CREATE Agregar nueva frase -->

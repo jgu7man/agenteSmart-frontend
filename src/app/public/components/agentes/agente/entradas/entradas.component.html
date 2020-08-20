@@ -26,6 +26,7 @@
                     id="intentName"
                     #intentNuevo
                     (keyup.enter)="onAddIntent(contexto.id)"
+                    (keyup.Esc)="$event.target.blur()"
                     (blur)="newIntent == '' ? switchAddIntent = false : onAddIntent(contexto.id)"
                     [(ngModel)]="newIntent"
                     >

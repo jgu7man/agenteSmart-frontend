@@ -58,7 +58,7 @@ hasBackdrop="false">
   <button mat-button (click)="sideNav.toggle()">Menú</button>
   <a mat-tab-link
         *ngFor="let item of mobileNavbar"
-        [routerLink]="[item.path]"
+        [routerLink]="['/dashboard/agente/',projectId, item.path]"
         routerLinkActive="active" 
         #rla="routerLinkActive"
         [active]="rla.isActive">
