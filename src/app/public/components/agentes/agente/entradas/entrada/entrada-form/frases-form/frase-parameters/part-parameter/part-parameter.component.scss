@@ -1,0 +1,8 @@
+.delParam {
+    opacity: 0;
+    transition: all .3s;
+}
+
+.param-row:hover .delParam {
+    opacity: 1;
+}

@@ -56,7 +56,6 @@ export class FrasesService {
 
 // READ Frases de entrenamietos
   async get() {
-    console.log('get');
     const entrada = await (await this._entrada.getCurrentEntrada())
     const frasesList: FraseEntrenamiento[] = await ( await ( await this.entradasCollection() )
       .doc( entrada.name ).get() )
@@ -79,19 +78,24 @@ export class FrasesService {
 
 
 
-  stringifyPhrase( phrase: FraseEntrenamiento ): string {
+  /**
+   * Returns the full frase in a string that represents entity parts with (;) and (=) as value
+   * @example "text ;entityTypeDisplayName=paramValue; text"
+   */
+  stringifyFullPhrase( phrase: FraseEntrenamiento ): string {
     let partsString: string[] = []
     phrase.parts.forEach( part => {
-      if ( part.entityType ) {
-        partsString.push( `;${ part.entityType }=${ part.text };` )
-      } else {
-        partsString.push( part.text )
-      }
+      if (!part.paramName) part.paramName = ''
+      partsString.push( part.entityType ?
+        `;${ part.entityType }:${part.paramName}=${ part.text };` : part.text )
     } )
     return partsString.join( '' )
   }
 
-  stringifyParts( phrase: FraseEntrenamiento ): string {
+  /**
+   * Return the parts of a frase that no has entity or not are selected
+   */
+  stringifyUnselectParts( phrase: FraseEntrenamiento ): string {
     let partialString: string[] = []
     phrase.parts.forEach( part => {
       if ( !part.selected ) {
@@ -102,30 +106,78 @@ export class FrasesService {
   }
 
 
-  createPart( frase: string ): FraseParte[] {
-    const fraseInParts = frase.split( '@' )
+
+  /**
+   * Returns a part of a string with the manual format.
+   */
+  createParts( frase: string ): FraseParte[] {
+    const fraseInParts = frase.split( ';' )
     var partes: FraseParte[] = []
 
     console.log( fraseInParts );
 
     if ( fraseInParts.length > 1 ) {
-      fraseInParts.forEach( part => {
+      fraseInParts.forEach( ( part ) => {
         let entity = part.split( ':' )
-        partes.push( {
-          entityType: `@${ entity[ 0 ] }`,
-          text: entity[ 1 ]
-        } )
+        if ( entity.length > 1 ) {
+          let param = entity[ 1 ].split('=')
+          partes.push( {
+            entityType: `@${ entity[ 0 ] }`,
+            text: param.length > 1 ? param[1] : param[0],
+            selected: true,
+            paramName: param.length > 1 ? param[0] : ''
+          } )
+        } else if (entity) {
+          partes.push( {
+            text: entity[ 0 ],
+            selected: false
+          } )
+        }
       } )
-
-
-
     } else {
-      partes.push( { text: frase } )
+      partes.push( {
+        text: frase,
+        selected: false
+      } )
     }
 
     console.log( partes );
 
     return partes
+  }
+
+
+
+  /**
+   * Returns parts after find the part that includes the text selected and split it
+   */
+  async stractEntityPart(frase: FraseEntrenamiento, text): Promise<FraseParte[]> {
+    var parts: FraseParte[] = [], textReplaced: string, partInParts: string[] = []
+    
+    frase.parts.forEach( ( part, index ) => {
+      if ( part.text.includes( text ) ) {
+
+        frase.parts.splice( index, 1 )
+        textReplaced = part.text.replace( text, `:${ text }:` )
+        partInParts = textReplaced.split( ':' )
+
+        partInParts.forEach( ( textPart ) => {
+          if ( textPart ) parts.push( {
+            text: textPart,
+            selected: textPart != text ? false : true
+          } )
+        } )
+      }
+    } )
+    return parts
+  }
+
+
+  /**
+   * name
+   */
+  public name() {
+    
   }
 
 

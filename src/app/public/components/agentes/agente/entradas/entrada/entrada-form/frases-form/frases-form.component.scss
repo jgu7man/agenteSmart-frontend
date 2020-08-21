@@ -38,6 +38,10 @@ aSmart-frase-item {
     opacity: 1;
 }
 
+.mat-expansion-panel-header[aria-disabled=true] {
+    color: rgba(0, 0, 0, 0.87) !important;
+}
+
 
 .parameter-list {
     .row{

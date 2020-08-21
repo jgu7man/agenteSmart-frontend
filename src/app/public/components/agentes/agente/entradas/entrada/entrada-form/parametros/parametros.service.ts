@@ -52,7 +52,7 @@ export class ParametrosService {
     const entrada = await this._entrada.getCurrentEntrada()
     const paramList: ParametroEntrada[] = await ( await ( await this.entradasCollection() )
       .doc( entrada.name ).get() )
-      .get( 'trainingPhrases' );
+      .get( 'parameters' );
 
     return paramList
   }

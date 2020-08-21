@@ -1,0 +1,19 @@
+<mat-form-field>
+    <input 
+    matInput
+    #partEntityInput
+    type="text" 
+    name="part-entity" 
+    id="part-entity"
+    [formControl]="tipoControl"
+    [matAutocomplete]="auto"
+    [value]="value"
+    (blur)="onTipoSelected($event)"
+    >
+    <mat-autocomplete #auto="matAutocomplete" 
+    (optionSelected)="onTipoSelected($event)">
+        <mat-option *ngFor="let tipo of tiposFiltered | async" [value]="tipo">
+            {{tipo}}
+        </mat-option>
+    </mat-autocomplete>
+</mat-form-field>

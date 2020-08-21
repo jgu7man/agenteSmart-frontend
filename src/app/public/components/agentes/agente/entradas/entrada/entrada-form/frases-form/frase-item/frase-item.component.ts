@@ -27,10 +27,14 @@ export class FraseItemComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  preventOnClick(event) {
+    event.stopImmediatePropagation()
+  }
+
   @Input() async toEditPhrase( phrase: FraseEntrenamiento ) {
     this.switchPhraseInput = true
     console.log( phrase );
-    this.phraseToEdit = await this._frases.stringifyPhrase( phrase )
+    this.phraseToEdit = await this._frases.stringifyFullPhrase( phrase )
     await this.loading.waitFor( 100 )
     this.inputPhrase.nativeElement.focus()
   }
@@ -40,15 +44,15 @@ export class FraseItemComponent implements OnInit {
   onSetPhrase( PHRASE?: FraseEntrenamiento ) {
 
     this.switchPhraseInput = false
-    console.log( this._frases.stringifyPhrase( PHRASE ), '|', this.phraseToEdit );
+    console.log( this._frases.stringifyFullPhrase( PHRASE ), '|', this.phraseToEdit );
 
-    if ( this._frases.stringifyPhrase( PHRASE ) === this.phraseToEdit ) {
+    if ( this._frases.stringifyFullPhrase( PHRASE ) === this.phraseToEdit ) {
       console.log( 'no edicion' );
     } else {
       console.log( 'editada' );
       console.log( PHRASE );
 
-      PHRASE.parts = this._frases.createPart( this.phraseToEdit )
+      PHRASE.parts = this._frases.createParts( this.phraseToEdit )
 
       console.log( PHRASE );
       this._frases.updatePhrase( PHRASE )

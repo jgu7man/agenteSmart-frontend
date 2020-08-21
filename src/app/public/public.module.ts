@@ -47,6 +47,8 @@ import { ClaseItemComponent } from './components/agentes/agente/tipos/tipo/clase
 import { TipoBodyComponent } from './components/agentes/agente/tipos/tipo/tipo-body/tipo-body.component';
 import { FraseParametersComponent } from './components/agentes/agente/entradas/entrada/entrada-form/frases-form/frase-parameters/frase-parameters.component';
 import { ParametrosComponent } from './components/agentes/agente/entradas/entrada/entrada-form/parametros/parametros.component';
+import { PartParameterComponent } from './components/agentes/agente/entradas/entrada/entrada-form/frases-form/frase-parameters/part-parameter/part-parameter.component';
+import { TipoSelectorComponent } from './components/agentes/agente/tipos/tipo-selector/tipo-selector.component';
 
 
 
@@ -91,6 +93,8 @@ import { ParametrosComponent } from './components/agentes/agente/entradas/entrad
     TipoBodyComponent,
     FraseParametersComponent,
     ParametrosComponent,
+    PartParameterComponent,
+    TipoSelectorComponent,
   ],
   imports: [
     CommonModule,

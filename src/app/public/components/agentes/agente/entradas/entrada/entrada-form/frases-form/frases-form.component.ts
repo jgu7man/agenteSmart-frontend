@@ -57,7 +57,7 @@ export class FrasesFormComponent implements OnInit, AfterViewInit {
 
       const NEWPHRASE: FraseEntrenamiento = {
         type: 'EXAMPLE',
-        parts: this._frases.createPart( this.newPhrase )
+        parts: this._frases.createParts( this.newPhrase )
       }
       console.log( NEWPHRASE );
       this.loading.waitFor( 200 )
@@ -87,40 +87,45 @@ export class FrasesFormComponent implements OnInit, AfterViewInit {
     const text = window.getSelection().toString()
 
     if ( text ) {
-      const fraseOnEditIndex = this.frases.findIndex(Frase => Frase.name == frase.name)
-      const cleanPart = this._frases.stringifyPhrase( frase )
-      console.log(cleanPart);
-      var textReplaced = cleanPart.replace( text, `:${ text }:` )
-      var textSplited = textReplaced.split( ':' )
-      var parts: FraseParte[] = []
-      
-      
-      textSplited.forEach( ( textPart ) => {
-        if(textPart) parts.push( {
-            text: textPart,
-            selected: textPart != text ? false : true
-          } )
-      } )
+      // Select the frase that whas select on
+      const fraseOnEdit = this.frases.find( Frase => Frase.name == frase.name )
+      const fraseOnEditIndex = this.frases.findIndex( Frase => Frase.name == frase.name )
 
-      this.frases[ fraseOnEditIndex ].parts = { ...parts, ...this.frases[ fraseOnEditIndex ].parts}
-      this.fraseExpanded = frase.name
+      // Define variables
+      var parts: FraseParte[] = [], textReplaced: string, partInParts: string[] = []
       
+      
+      // Find the part that includes text selected and split it
+      fraseOnEdit.parts.forEach( ( part, index ) => {
+        if ( part.text.includes( text ) ) {
+          
+          fraseOnEdit.parts.splice(index, 1)
+          textReplaced = part.text.replace( text, `:${ text }:` )
+          partInParts = textReplaced.split( ':' )
+          
+          partInParts.forEach( ( textPart ) => {
+            if(textPart) parts.push( {
+                text: textPart,
+                selected: textPart != text ? false : true
+              } )
+          } )
+        } 
+      })
+
+
+      // Merge the parts
+      parts = [ ...parts, ...this.frases[ fraseOnEditIndex ].parts ]
+      this.frases[ fraseOnEditIndex ].parts
+      
+      console.log(parts);
+      this.fraseExpanded = frase.name
       const phraseItemEdited = this.prhaseList.find( Frase => Frase.phraseName == frase.name )
       phraseItemEdited.frase.parts = parts
     }
   }
 
 
-  updateTipo(parte: FraseParte, fraseName: string) {
-    var fraseEditedIndex = this.frases.findIndex( Frase => Frase.name === fraseName )
-    var fraseEdited = this.frases[ fraseEditedIndex ]
-    var partesList = fraseEdited.parts
-    var partEditedIndex = partesList.findIndex( part => part.text == parte.text )
-    
-    partesList[ partEditedIndex ] = parte
-    fraseEdited.parts = partesList
-    this._frases.updatePhrase(fraseEdited)    
-  }
+  
 
 
 

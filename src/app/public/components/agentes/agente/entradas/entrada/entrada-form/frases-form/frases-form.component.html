@@ -19,6 +19,7 @@
             (mouseup)="onSelect(frase)"
             >
                 <mat-expansion-panel hideToggle 
+                [disabled]="frase.parts.length < 2"
                 [expanded]="frase.name == fraseExpanded">
                     <mat-expansion-panel-header>
                         <aSmart-frase-item 
@@ -35,18 +36,22 @@
 
             <!-- CREATE Agregar nueva frase -->
             <li *ngIf="addPhraseInput">
-                <mat-form-field>
-                    <input 
-                    matInput
-                    #newPhraseInput
-                    type="text" 
-                    name="newPhraseInput" 
-                    id="newPhraseInput"
-                    (blur)="addPhraseInput = false"
-                    [(ngModel)]="newPhrase"
-                    (keyup.enter)="newPhrase != '' ? onSetPhrase() : addPhraseInput = false"
-                    >
-                </mat-form-field>
+                <div class="row">
+                    <div class="col s12">
+                        <mat-form-field>
+                            <input 
+                            matInput
+                            #newPhraseInput
+                            type="text" 
+                            name="newPhraseInput" 
+                            id="newPhraseInput"
+                            (blur)="addPhraseInput = false"
+                            [(ngModel)]="newPhrase"
+                            (keyup.enter)="newPhrase != '' ? onSetPhrase() : addPhraseInput = false"
+                            >
+                        </mat-form-field>
+                    </div>
+                </div>
             </li>
         </ul>
 
