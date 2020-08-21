@@ -1,24 +1,30 @@
 <!-- READ Frase -->
 <ng-container *ngIf="!switchPhraseInput; else phraseInput">
-    <span class="frase-handler">
-        <i class="fas fa-quote-right"></i>
-    </span>
-    <span *ngFor="let part of frase.parts" >
-        <span [ngSwitch]="part.selected">
-            <span *ngSwitchCase="true" class="selected">
-                {{part.text}}
+    <div class="row">
+        <div class="col s9">
+            <span class="frase-handler">
+                <i class="fas fa-quote-right"></i>
             </span>
-            <span *ngSwitchDefault>
-                {{part.text}}
+            <span *ngFor="let part of frase.parts" >
+                <span [ngSwitch]="part.selected">
+                    <span *ngSwitchCase="true" class="selected">
+                        {{part.text}}
+                    </span>
+                    <span *ngSwitchDefault>
+                        {{part.text}}
+                    </span>
+                </span>
             </span>
-        </span>
-    </span>
-    <span class="delItem" (click)="delItem()">
-        <i class="fas fa-trash-alt red-text"></i>
-    </span>
-    <span class="editItem" (click)="toEditPhrase(frase)">
-        <i class="fas fa-edit blue-text"></i>
-    </span>
+        </div>
+        <div class="col s3">
+            <span class="delItem" (click)="delItem()">
+                <i class="fas fa-trash-alt red-text"></i>
+            </span>
+            <span class="editItem" (click)="toEditPhrase(frase)">
+                <i class="fas fa-edit blue-text"></i>
+            </span>
+        </div>
+    </div>
 </ng-container>
 
 

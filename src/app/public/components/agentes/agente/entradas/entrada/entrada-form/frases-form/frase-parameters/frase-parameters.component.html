@@ -1,34 +1,67 @@
-<div class="part-parameter-form" *ngIf="parte" >
-    <div class="row" *ngIf="parte.entityType || parte.selected">
-        <div class="col s4">
-            <mat-form-field>
-                <input 
-                matInput 
-                type="text" 
-                name="param-name" 
-                id="param-name"
-                [(ngModel)]="paramName"
-                >
-            </mat-form-field>
-        </div>
-        <div class="col s4">
-            <mat-form-field>
-                <input matInput
-                type="text" 
-                name="part-entity" 
-                id="part-entity-{{parteIndex}}"
-                [formControl]="entityControl"
-                [matAutocomplete]="auto"
-                >
-                <mat-autocomplete #auto="matAutocomplete">
-                    <mat-option *ngFor="let tipo of tiposFiltered | async" [value]="tipo">
-                        {{tipo}}
-                    </mat-option>
-                </mat-autocomplete>
-            </mat-form-field>
-        </div>
-        <div class="col s4">
-            {{parte.text}}
+<div class="parameter-list" gdev-color [background]="'lightgrey'">
+    
+    <!-- Params table header -->
+    <div class="row params-header">
+        <div class="col s3 m4">Valor</div>
+        <div class="col s3 m3">Tipo dato</div>
+        <div class="col s3 m4">Parámetro</div>
+        <div class="col s3 m1"></div>
+    </div>
+
+    
+    <!-- Params table body -->
+    <div class="part" 
+    *ngFor="let parte of frase.parts; index as i" >
+        
+        <div class="part-parameter-form" *ngIf="parte" >
+            <div class="row" *ngIf="parte.entityType || parte.selected">
+
+                <!-- Valor -->
+                <div class="col s3 m4">
+                    {{parte.text}}
+                </div>
+
+                <!-- Tipo de dato -->
+                <div class="col s3 m3">
+                    <mat-form-field>
+                        <input matInput
+                        type="text" 
+                        name="part-entity" 
+                        id="part-entity-{{parteIndex}}"
+                        [formControl]="entityControl"
+                        [matAutocomplete]="auto"
+                        >
+                        <mat-autocomplete #auto="matAutocomplete" 
+                        (optionSelected)="setTipoFrase($event, i)">
+                            <mat-option *ngFor="let tipo of tiposFiltered | async" [value]="tipo">
+                                {{tipo}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </div>
+
+                <!-- Nombre param -->
+                <div class="col s3 m4">
+                    <mat-form-field>
+                        <input 
+                        matInput 
+                        type="text" 
+                        name="param-name" 
+                        id="param-name"
+                        [(ngModel)]="paramName"
+                        (keyup.enter)="addParameter($event)"
+                        (blur)="paramName ? addParameter($event) : null"
+                        >
+                    </mat-form-field>
+                </div>
+
+                <!-- Eliminar parametro -->
+                <div class="col s3 m1">
+                    <button mat-icon-button><mat-icon>cancel</mat-icon></button>
+                </div>
+        
+                
+            </div>
         </div>
     </div>
 </div>

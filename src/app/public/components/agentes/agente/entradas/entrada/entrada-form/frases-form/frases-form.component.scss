@@ -9,6 +9,16 @@
 .phrase-item {
     line-height: 3;
     border-bottom: solid 1px #929eaa;
+    .mat-expansion-panel {
+        box-shadow: none;
+        .mat-expansion-panel-header {
+            padding: 0;
+        }
+    }
+}
+
+aSmart-frase-item {
+    width: 100%;
 }
 
 .frase-handler {
@@ -17,7 +27,7 @@
 
 .delItem, .editItem {
     float: right;
-    margin: 0 1em;
+    margin: 0 .5em;
     opacity: 0;
     transition: all .3s;
 }

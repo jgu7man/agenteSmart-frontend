@@ -1,0 +1,36 @@
+<div class="row align-cols">
+    <div class="col s10">
+        <h5>Parámetros</h5>
+    </div>
+    <div class="col s2">
+        <button mat-button (click)="toAddParam()">
+            <i class="fas fa-plus"></i>
+        </button>
+    </div>
+</div>
+<div class="row">
+    <div class="col s12">
+        <table class="responsive-table highlight bordered">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Entidad</th>
+                    <th>Valor</th>
+                    <th>Requerido</th>
+                    <th>Lista</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody *ngIf="parametros">
+                <tr *ngFor="let param of parametros" [id]="param.name">
+                    <td>{{param.displayName}}</td>
+                    <td>{{param.entityTypeDisplayName}}</td>
+                    <td>{{param.value}}</td>
+                    <td>{{param.mandatory}}</td>
+                    <td>{{param.isList}}</td>
+                    <th></th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,9 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { TiposService } from '../../../../../tipos/tipos.service';
-import { FraseParte } from '../../../../entrada.model';
+import { FraseParte, ParametroEntrada, FraseEntrenamiento } from '../../../../entrada.model';
+import { ParametrosService } from '../../parametros/parametros.service';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'aSmart-frase-parameters',
@@ -17,11 +19,13 @@ export class FraseParametersComponent implements OnInit {
   tipos: string[] = []
   tiposFiltered: Observable<string[]>
 
-  @Input() parte: FraseParte
+  @Input() frase: FraseEntrenamiento
   @Input() parteIndex: string
+  @Output() tipoSelected = new EventEmitter<FraseParte>() 
 
   constructor (
-    private _tipos: TiposService
+    private _tipos: TiposService,
+    private _params: ParametrosService
   ) { }
 
   async ngOnInit() {
@@ -41,12 +45,28 @@ export class FraseParametersComponent implements OnInit {
     tiposList.forEach( tipo => {
       this.tipos.push(tipo.displayName)
     } )
-    console.log(this.tipos);
   }
 
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase()
     return this.tipos.filter(tipo => tipo.toLowerCase().includes(filterValue))
+  }
+
+
+  setTipoFrase( event: MatAutocompleteSelectedEvent, partIndex: number ) {
+    this.frase.parts[partIndex].entityType = event.option.value
+  }
+
+  addParameter(event) {
+    event.stopInmediatePropagation()
+    var entity = this.entityControl.value
+    if ( entity ) {
+      var param: ParametroEntrada = {
+        displayName: this.paramName,
+        entityTypeDisplayName: entity
+      }
+      this._params.addParam(param)
+    }
   }
 
 

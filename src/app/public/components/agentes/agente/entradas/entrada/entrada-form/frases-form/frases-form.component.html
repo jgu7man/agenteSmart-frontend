@@ -18,26 +18,19 @@
             class="phrase-item"
             (mouseup)="onSelect(frase)"
             >
-                <aSmart-frase-item 
-                [frase]="frase" 
-                [phraseName]="frase.name" 
-                (onDeleted)="getFrasesEntrenamiento()"
-                >
-                </aSmart-frase-item>
+                <mat-expansion-panel hideToggle 
+                [expanded]="frase.name == fraseExpanded">
+                    <mat-expansion-panel-header>
+                        <aSmart-frase-item 
+                        [frase]="frase" 
+                        [phraseName]="frase.name" 
+                        (onDeleted)="getFrasesEntrenamiento()"
+                        >
+                        </aSmart-frase-item>
+                    </mat-expansion-panel-header>
                 
-                <div class="parameter-list" gdev-color [background]="'lightgrey'">
-                    <div class="row params-header">
-                        <div class="col s4">Parámetro</div>
-                        <div class="col s4">Tipo dato</div>
-                        <div class="col s4">Valor</div>
-                    </div>
-                    <aSmart-frase-parameters
-                    *ngFor="let parte of frase.parts; index as i" 
-                    [parte]="parte" 
-                    [parteIndex]="frase.name + i" 
-                    >
-                    </aSmart-frase-parameters>
-                </div>
+                    <aSmart-frase-parameters [frase]="frase"></aSmart-frase-parameters>
+                </mat-expansion-panel>
             </li>
 
             <!-- CREATE Agregar nueva frase -->

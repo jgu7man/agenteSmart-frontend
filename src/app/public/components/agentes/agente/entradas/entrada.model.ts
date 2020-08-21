@@ -37,12 +37,12 @@ export interface FraseEntrenamiento {
     }
 
 export interface ParametroEntrada {
-    name: string,
+    name?: string,
     displayName: string,
-    mandatory: boolean,
+    mandatory?: boolean,
     value?: string,
     defaultValue?: string,
-    isList: boolean
+    isList?: boolean
     entityTypeDisplayName?: string,
     prompts?: string[],
 }

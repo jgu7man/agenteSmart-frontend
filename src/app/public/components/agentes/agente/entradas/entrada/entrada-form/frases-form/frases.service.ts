@@ -25,31 +25,39 @@ export class FrasesService {
   }
   
   
-  async addTraningPhrase( phrase: FraseEntrenamiento ) {
+  // CREATE Frses de entrenamiento
+  async addTraningPhrase( frase: FraseEntrenamiento ) {
+    try {
 
-    const entrada = await this._cache.getDataKey( 'currentEntrada' )
-    phrase.name = Math.random().toString( 36 ).substring( 7 );
-    var newFrase = [ phrase ];
-    const phrasesList = await this.get()
-    console.log( { entrada, newFrase } );
-    
-    if ( phrasesList.length > 0 ) {
-      phrasesList.push( phrase )
-      await ( await this.entradasCollection() ).doc( entrada.name )
-        .update( { trainingPhrases: phrasesList } );
-    } else {
-      await ( await this.entradasCollection() ).doc( entrada.name )
-        .update( { trainingPhrases: [phrase]} );
+      const frasesList = await this.get()
+      const entrada = await this._cache.getDataKey( 'currentEntrada' )
+      frase.name = Math.random().toString( 36 ).substring( 7 );
+      var newFrase = [ frase ];
+      console.log( frase );
+      console.log( { entrada, newFrase } );
+
+      if ( frasesList.length > 0 ) {
+        frasesList.push( frase )
+        await ( await this.entradasCollection() ).doc( entrada.name )
+          .update( { trainingPhrases: frasesList } );
+      } else {
+        await ( await this.entradasCollection() ).doc( entrada.name )
+          .update( { trainingPhrases: [ frase ] } );
+      }
+
+
+      return 
+
+    } catch (error) {
+      
     }
-
-    
-    return 
   }
 
 
-
+// READ Frases de entrenamietos
   async get() {
-    const entrada = await this._entrada.getCurrentEntrada()
+    console.log('get');
+    const entrada = await (await this._entrada.getCurrentEntrada())
     const frasesList: FraseEntrenamiento[] = await ( await ( await this.entradasCollection() )
       .doc( entrada.name ).get() )
         .get( 'trainingPhrases' );
@@ -57,6 +65,8 @@ export class FrasesService {
     return frasesList
   }
 
+
+  
 
   async updatePhrase( frase: FraseEntrenamiento ) {
     const entrada = await this._cache.getDataKey( 'currentEntrada' )
