@@ -12,6 +12,7 @@ export class ParametrosComponent implements OnInit, OnDestroy {
 
   parametros: ParametroEntrada[]
   listenNewParam$: Subscription
+  listenParamDeleted$: Subscription
 
   constructor (
     private _params: ParametrosService
@@ -19,9 +20,10 @@ export class ParametrosComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     await this.loadParams()
-    this.listenNewParam$ = this._params.parameterAdded$.subscribe( () => {
-      this.loadParams()
-    })
+    this.listenNewParam$ = this._params.parameterAdded$
+      .subscribe( () => { this.loadParams() } )
+    this.listenParamDeleted$ = this._params.parameterDeleted$
+      .subscribe( () => { this.loadParams() })
   }
   
   
@@ -36,6 +38,7 @@ export class ParametrosComponent implements OnInit, OnDestroy {
   
   ngOnDestroy() {
     this.listenNewParam$.unsubscribe()
+    this.listenParamDeleted$.unsubscribe()
   }
 
 }

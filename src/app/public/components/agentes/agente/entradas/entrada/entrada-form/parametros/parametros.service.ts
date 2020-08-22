@@ -1,3 +1,4 @@
+import { EntradaModel } from './../../../entrada.model';
 import { Injectable } from '@angular/core';
 import { CurrentAgenteService } from '../../../../current-agente.service';
 import { AngularFirestore, docChanges } from '@angular/fire/firestore';
@@ -13,7 +14,11 @@ import { map, switchMap } from 'rxjs/operators';
 export class ParametrosService {
 
   entradasPath: string
+  entrada: EntradaModel
   parameterAdded$: Subject<ParametroEntrada> = new Subject()
+  parameterDeleted$: Subject<boolean> = new Subject()
+  paramList: ParametroEntrada[]
+
   constructor (
     private fs: AngularFirestore,
     private _agente: CurrentAgenteService,
@@ -31,14 +36,13 @@ export class ParametrosService {
 
   async addParam( param: ParametroEntrada ) {
 
-    const entrada = await this._cache.getDataKey( 'currentEntrada' )
+    this.entrada = await this._cache.getDataKey( 'currentEntrada' )
     param.name = Math.random().toString( 36 ).substring( 7 );
     var newParam = [ param ];
     var paramList = await this.get()
-    console.log( { entrada, newParam, paramList } );
     
     if ( !paramList ) {
-      await ( await this.entradasCollection() ).doc( entrada.name )
+      await ( await this.entradasCollection() ).doc( this.entrada.name )
         .update( { parameters: [ param ] } );
       this.parameterAdded$.next( param )
 
@@ -47,7 +51,7 @@ export class ParametrosService {
   
       if ( !paramStored ) {
         paramList.push( param )
-        await ( await this.entradasCollection() ).doc( entrada.name )
+        await ( await this.entradasCollection() ).doc( this.entrada.name )
           .update( { parameters: paramList } );
         this.parameterAdded$.next( param );
       }
@@ -60,16 +64,33 @@ export class ParametrosService {
 
 
   async get() {
-    const entrada = await this._entrada.getCurrentEntrada()
-    const paramList: ParametroEntrada[] = await ( await ( await this.entradasCollection() )
-      .doc( entrada.name ).get() )
+    this.paramList = []
+    this.entrada = await this._entrada.getCurrentEntrada()
+    this.paramList = await ( await ( await this.entradasCollection() )
+      .doc( this.entrada.name ).get() )
       .get( 'parameters' );
 
-    return paramList
+    return this.paramList
   }
 
 
-  
+  async updateParam( param: ParametroEntrada ) {
+    var paramIndex = this.paramList.findIndex( parameter => parameter.name == param.name )
+    this.paramList[paramIndex] = param
+    await ( await this.entradasCollection() ).doc( this.entrada.name ).update( {
+      parameters: this.paramList
+    })
+  }
+
+
+  async deleteParam( param: ParametroEntrada ) {
+    var paramIndex = this.paramList.findIndex( parameter => parameter.name == param.name )
+    this.paramList.splice(paramIndex, 1)
+    await ( await this.entradasCollection() ).doc( this.entrada.name ).update( {
+      parameters: this.paramList
+    } ).then(()=>this.parameterDeleted$.next(true))
+  }
+
 
   
 }
