@@ -1,36 +1,25 @@
 <div class="row align-cols">
-    <div class="col s10">
-        <h5>Parámetros</h5>
-    </div>
-    <div class="col s2">
-        <button mat-button (click)="toAddParam()">
-            <i class="fas fa-plus"></i>
-        </button>
-    </div>
+  <div class="col s10">
+    <h5>Parámetros</h5>
+  </div>
+  <div class="col s2">
+    <button mat-button (click)="toAddParam()">
+      <i class="fas fa-plus"></i>
+    </button>
+  </div>
 </div>
 <div class="row">
-    <div class="col s12">
-        <table class="responsive-table highlight bordered">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Entidad</th>
-                    <th>Valor</th>
-                    <th>Requerido</th>
-                    <th>Lista</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody *ngIf="parametros">
-                <tr *ngFor="let param of parametros" [id]="param.name">
-                    <td>{{param.displayName}}</td>
-                    <td>{{param.entityTypeDisplayName}}</td>
-                    <td>{{param.value}}</td>
-                    <td>{{param.mandatory}}</td>
-                    <td>{{param.isList}}</td>
-                    <th></th>
-                </tr>
-            </tbody>
-        </table>
+  <div class="col s12" id="params-head">
+    <div class="row">
+      <div class="col s3">Nombre</div>
+      <div class="col s3">Entidad</div>
+      <div class="col s3">Valor</div>
+      <div class="col s1">Req</div>
+      <div class="col s1">Lista</div>
+      <div class="col s1"></div>
+    </div>
+    </div>
+    <div class="col s12" *ngIf="parametros" id="params-body">
+        <aSmart-param-row *ngFor="let param of parametros" [param]="param"></aSmart-param-row>
     </div>
 </div>

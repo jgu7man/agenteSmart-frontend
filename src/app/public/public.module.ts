@@ -49,6 +49,8 @@ import { FraseParametersComponent } from './components/agentes/agente/entradas/e
 import { ParametrosComponent } from './components/agentes/agente/entradas/entrada/entrada-form/parametros/parametros.component';
 import { PartParameterComponent } from './components/agentes/agente/entradas/entrada/entrada-form/frases-form/frase-parameters/part-parameter/part-parameter.component';
 import { TipoSelectorComponent } from './components/agentes/agente/tipos/tipo-selector/tipo-selector.component';
+import { ParamValueComponent } from './components/agentes/agente/entradas/entrada/entrada-form/parametros/param-value/param-value.component';
+import { ParamRowComponent } from './components/agentes/agente/entradas/entrada/entrada-form/parametros/param-row/param-row.component';
 
 
 
@@ -95,6 +97,8 @@ import { TipoSelectorComponent } from './components/agentes/agente/tipos/tipo-se
     ParametrosComponent,
     PartParameterComponent,
     TipoSelectorComponent,
+    ParamValueComponent,
+    ParamRowComponent,
   ],
   imports: [
     CommonModule,

@@ -1,0 +1,54 @@
+<div class="row">
+
+    <!-- Display name -->
+    <div class="col s3">
+        <ng-container *ngIf="!switchNameInput; else nameInput">
+            {{param.displayName}}
+        </ng-container>
+        <ng-template #nameInput>
+            <mat-form-field>
+                <input matInput 
+                type="text" 
+                name="displayName" 
+                id="displayName"
+                [(ngModel)]="param.displayName"
+                >
+            </mat-form-field>
+        </ng-template>
+    </div>
+
+    <!-- Tipo -->
+    <div class="col s3">
+        <ng-container *ngIf="!switchTipoSelecter; else tipoSelecter">
+            {{param.entityTypeDisplayName}}
+        </ng-container>
+        <ng-template #tipoSelecter>
+            <aSmart-tipo-selector 
+            [value]="param.entityTypeDisplayName"
+            ></aSmart-tipo-selector>
+        </ng-template>
+        
+    </div>
+
+    <!-- Value -->
+    <div class="col s3">
+        <aSmart-param-value 
+        [paramValue]="param.value ? param.value : param.displayName"
+        (paramValueSelected)="onValueSelected($event)"
+        ></aSmart-param-value>
+    </div>
+
+    <div class="col s1">
+        <mat-checkbox 
+        [(ngModel)]="param.mandatory"
+        ></mat-checkbox>
+    </div>
+
+    <div class="col s1">
+        <mat-checkbox
+        [(ngModel)]="param.isList"
+        ></mat-checkbox>
+    </div>
+
+    <div class="col s1"></div>
+</div>

@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { CurrentAgenteService } from '../../../../current-agente.service';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, docChanges } from '@angular/fire/firestore';
 import { CacheService } from '../../../../../../../../global/cache/cache.service';
 import { ParametroEntrada } from '../../../entrada.model';
 import { CurrentEntradaService } from '../../current-entrada.service';
-import { Subject } from 'rxjs';
+import { Subject, Observer, Observable } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ import { Subject } from 'rxjs';
 export class ParametrosService {
 
   entradasPath: string
-  parameterAdded: Subject<ParametroEntrada> = new Subject()
+  parameterAdded$: Subject<ParametroEntrada> = new Subject()
   constructor (
     private fs: AngularFirestore,
     private _agente: CurrentAgenteService,
@@ -39,7 +40,7 @@ export class ParametrosService {
     if ( !paramList ) {
       await ( await this.entradasCollection() ).doc( entrada.name )
         .update( { parameters: [ param ] } );
-      this.parameterAdded.next( param )
+      this.parameterAdded$.next( param )
 
     } else {
       let paramStored = paramList.find( parameter => parameter.displayName = param.displayName )
@@ -48,7 +49,7 @@ export class ParametrosService {
         paramList.push( param )
         await ( await this.entradasCollection() ).doc( entrada.name )
           .update( { parameters: paramList } );
-        this.parameterAdded.next( param );
+        this.parameterAdded$.next( param );
       }
 
     }
@@ -67,4 +68,8 @@ export class ParametrosService {
     return paramList
   }
 
+
+  
+
+  
 }
