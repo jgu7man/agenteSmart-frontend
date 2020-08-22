@@ -33,17 +33,25 @@
 
     <!-- Nombre param -->
     <div class="col s3 m4">
-        <mat-form-field>
-            <input 
-            matInput 
-            type="text" 
-            name="param-name" 
-            id="param-name"
-            [(ngModel)]="paramName"
-            (keyup.enter)="addParameter($event); $event.stopInmediatePropagation()"
-            (blur)="paramName ? addParameter($event) : null"
-            >
-        </mat-form-field>
+
+        <ng-container *ngIf="parte.paramName; else paramInput">
+            {{parte.paramName}}
+        </ng-container>
+
+        <ng-template #paramInput>
+            <mat-form-field>
+                <input 
+                matInput 
+                type="text" 
+                name="param-name" 
+                id="param-name"
+                [(ngModel)]="paramName"
+                (keyup.enter)="addParameter($event);"
+                (blur)="paramName ? addParameter($event) : null"
+                >
+            </mat-form-field>
+        </ng-template>
+        
     </div>
 
     <!-- Eliminar parametro -->

@@ -29,6 +29,11 @@ export class FraseParametersComponent implements OnInit {
       this._frase.updatePhrase( this.frase )
   }
 
+  onParamAdded(parte: FraseParte, index: number) {
+    this.frase.parts[ index ] = parte
+    this._frase.updatePhrase(this.frase)
+  }
+
 
   onDelPartParam( index: number ) {
     delete this.frase.parts[ index ].entityType

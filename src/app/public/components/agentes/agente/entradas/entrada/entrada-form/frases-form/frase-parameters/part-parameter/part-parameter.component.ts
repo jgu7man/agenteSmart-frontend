@@ -15,16 +15,14 @@ import { Loading } from '../../../../../../../../../../global/loading/loading.se
 export class PartParameterComponent implements OnInit {
 
   @Input() parte: FraseParte
-  
 
-  
   switchEntitySelector: boolean = false
   paramName: string = ''
 
   @ViewChild( 'partEntityInput' ) partEntityInput: ElementRef
-
   
   @Output() onDelete = new EventEmitter<any>()
+  @Output() paramAdded = new EventEmitter<FraseParte>()
 
   constructor (
     private _params: ParametrosService,
@@ -34,9 +32,6 @@ export class PartParameterComponent implements OnInit {
   ngOnInit(): void {
     
   }
-
-  
-  
   
   async toSelectTipo() {
     this.switchEntitySelector = true
@@ -50,16 +45,20 @@ export class PartParameterComponent implements OnInit {
 
   
   addParameter( event ) {
-    event.stopInmediatePropagation()
+    event.stopImmediatePropagation()
     var entity = this.parte.entityType
     if ( entity ) {
       var param: ParametroEntrada = {
         displayName: this.paramName,
         entityTypeDisplayName: entity
       }
-      this._params.addParam( param )
+      this._params.addParam( param ).then( () => {
+        this.parte.paramName = this.paramName
+        this.paramAdded.emit(this.parte)
+      })
     }
   }
+
 
 
 
