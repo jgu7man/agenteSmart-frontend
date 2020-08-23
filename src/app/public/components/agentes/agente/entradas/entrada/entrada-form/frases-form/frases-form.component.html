@@ -19,7 +19,7 @@
             (mouseup)="onSelect(frase)"
             >
                 <mat-expansion-panel hideToggle 
-                [disabled]="frase.parts.length < 2"
+                [disabled]="disableFrase(frase)"
                 [expanded]="frase.name == fraseExpanded">
                     <mat-expansion-panel-header>
                         <aSmart-frase-item 

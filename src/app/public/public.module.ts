@@ -51,6 +51,7 @@ import { PartParameterComponent } from './components/agentes/agente/entradas/ent
 import { TipoSelectorComponent } from './components/agentes/agente/tipos/tipo-selector/tipo-selector.component';
 import { ParamValueComponent } from './components/agentes/agente/entradas/entrada/entrada-form/parametros/param-value/param-value.component';
 import { ParamRowComponent } from './components/agentes/agente/entradas/entrada/entrada-form/parametros/param-row/param-row.component';
+import { AddParameterComponent } from './components/agentes/agente/entradas/entrada/entrada-form/parametros/add-parameter/add-parameter.component';
 
 
 
@@ -99,6 +100,7 @@ import { ParamRowComponent } from './components/agentes/agente/entradas/entrada/
     TipoSelectorComponent,
     ParamValueComponent,
     ParamRowComponent,
+    AddParameterComponent,
   ],
   imports: [
     CommonModule,

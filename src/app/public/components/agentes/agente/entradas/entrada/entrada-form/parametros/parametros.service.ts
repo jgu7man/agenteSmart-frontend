@@ -3,10 +3,12 @@ import { Injectable } from '@angular/core';
 import { CurrentAgenteService } from '../../../../current-agente.service';
 import { AngularFirestore, docChanges } from '@angular/fire/firestore';
 import { CacheService } from '../../../../../../../../global/cache/cache.service';
-import { ParametroEntrada } from '../../../entrada.model';
+import { ParametroEntrada, FraseEntrenamiento, FraseParte } from '../../../entrada.model';
 import { CurrentEntradaService } from '../../current-entrada.service';
 import { Subject, Observer, Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+import { FrasesService } from '../frases-form/frases.service';
+import { Loading } from '../../../../../../../../global/loading/loading.service';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +25,9 @@ export class ParametrosService {
     private fs: AngularFirestore,
     private _agente: CurrentAgenteService,
     private _entrada: CurrentEntradaService,
-    private _cache: CacheService
+    private _cache: CacheService,
+    private _frases: FrasesService,
+    private loading: Loading
   ) { }
   
   async entradasCollection() {
@@ -88,7 +92,36 @@ export class ParametrosService {
     this.paramList.splice(paramIndex, 1)
     await ( await this.entradasCollection() ).doc( this.entrada.name ).update( {
       parameters: this.paramList
-    } ).then(()=>this.parameterDeleted$.next(true))
+    } ).then( () => {
+      this.deleteParamInParts(param.displayName)
+    } )
+  }
+
+  async deleteParamInParts( displayName: string ) {
+    const frasesList = await this._frases.get()
+
+    await this.loading.asyncForEach( frasesList,
+      async ( frase: FraseEntrenamiento ) => {
+      
+      return this.loading.asyncForEach( frase.parts,
+        ( parte: FraseParte, parteIndex ) => {
+        
+          if ( parte.paramName ) {
+            if ( parte.paramName == displayName )
+            delete frase.parts[ parteIndex ].entityType
+            delete frase.parts[ parteIndex ].paramName
+            frase.parts[ parteIndex ].selected = false
+            return this._frases.updatePhrase(frase)
+          }
+
+      })
+
+      } )
+      
+    this.parameterDeleted$.next( true )
+    
+    return 
+    
   }
 
 

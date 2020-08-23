@@ -13,6 +13,7 @@ export class ParametrosComponent implements OnInit, OnDestroy {
   parametros: ParametroEntrada[]
   listenNewParam$: Subscription
   listenParamDeleted$: Subscription
+  switchAddParameter: boolean = false
 
   constructor (
     private _params: ParametrosService
@@ -32,7 +33,7 @@ export class ParametrosComponent implements OnInit, OnDestroy {
   }
 
   toAddParam() {
-    
+    this.switchAddParameter = true
   }
 
   

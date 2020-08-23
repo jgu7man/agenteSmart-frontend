@@ -19,6 +19,9 @@
       <div class="col s1"></div>
     </div>
     </div>
+    <div class="col s12" *ngIf="switchAddParameter">
+        <aSmart-add-parameter (closeRow)="switchAddParameter = false" ></aSmart-add-parameter>
+    </div>
     <div class="col s12" *ngIf="parametros" id="params-body">
         <aSmart-param-row *ngFor="let param of parametros" [param]="param"></aSmart-param-row>
     </div>
