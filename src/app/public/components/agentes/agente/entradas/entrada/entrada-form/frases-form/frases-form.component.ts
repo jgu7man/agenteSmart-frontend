@@ -89,44 +89,28 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
 
-  onSelect( frase: FraseEntrenamiento ) {
-    const text = window.getSelection().toString()
+  async onSelect( frase: FraseEntrenamiento ) {
+    const textSelected = window.getSelection().toString()
+    
 
-    if ( text ) {
+    if ( textSelected ) {
       // Select the frase that whas select on
       const fraseOnEdit = this.frases.find( Frase => Frase.name == frase.name )
       const fraseOnEditIndex = this.frases.findIndex( Frase => Frase.name == frase.name )
 
       // Define variables
-      var parts: FraseParte[] = [], textReplaced: string, partInParts: string[] = []
-      
-      
+      var fraseRestructured: FraseEntrenamiento = 
       // Find the part that includes text selected and split it
-      fraseOnEdit.parts.forEach( ( part, index ) => {
-        if ( part.text.includes( text ) ) {
-          
-          fraseOnEdit.parts.splice(index, 1)
-          textReplaced = part.text.replace( text, `:${ text }:` )
-          partInParts = textReplaced.split( ':' )
-          
-          partInParts.forEach( ( textPart ) => {
-            if(textPart) parts.push( {
-                text: textPart,
-                selected: textPart != text ? false : true
-              } )
-          } )
-        } 
-      })
-
-
-      // Merge the parts
-      parts = [ ...parts, ...this.frases[ fraseOnEditIndex ].parts ]
-      this.frases[ fraseOnEditIndex ].parts
+      await this._frases.stractSelectedPart(frase, textSelected)
+      console.log( fraseRestructured);
       
-      console.log(parts);
+      
+      // Merge the parts
+      this.frases[ fraseOnEditIndex ] = fraseRestructured
+      
       this.fraseExpanded = frase.name
       const phraseItemEdited = this.prhaseList.find( Frase => Frase.phraseName == frase.name )
-      phraseItemEdited.frase.parts = parts
+      phraseItemEdited.frase.parts = fraseRestructured.parts
     }
   }
 

@@ -4,6 +4,7 @@ import { CurrentAgenteService } from '../../../../current-agente.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { CurrentEntradaService } from '../../current-entrada.service';
 import { CacheService } from '../../../../../../../../global/cache/cache.service';
+import { Loading } from '../../../../../../../../global/loading/loading.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,8 @@ export class FrasesService {
     private fs:  AngularFirestore,
     private _agente: CurrentAgenteService,
     private _entrada: CurrentEntradaService,
-    private _cache: CacheService
+    private _cache: CacheService,
+    private loading: Loading
   ) { }
 
   async entradasCollection() {
@@ -85,11 +87,20 @@ export class FrasesService {
   stringifyFullPhrase( phrase: FraseEntrenamiento ): string {
     let partsString: string[] = []
     phrase.parts.forEach( part => {
-      if (!part.paramName) part.paramName = ''
+      if ( !part.paramName ) part.paramName = '';
       partsString.push( part.entityType ?
-        `;${ part.entityType }:${part.paramName}=${ part.text };` : part.text )
+        `;${ part.entityType }~${ part.paramName }=${ part.text };` : part.text );
+      
     } )
     return partsString.join( '' )
+  }
+
+  stringCleanPhrase( phrase: FraseEntrenamiento ): string {
+    let partsString: string[] = []
+    phrase.parts.forEach( part => {
+      partsString.push(part.text)
+    } )
+    return partsString.join('')
   }
 
   /**
@@ -118,21 +129,25 @@ export class FrasesService {
 
     if ( fraseInParts.length > 1 ) {
       fraseInParts.forEach( ( part ) => {
-        let entity = part.split( ':' )
-        if ( entity.length > 1 ) {
-          let param = entity[ 1 ].split('=')
-          partes.push( {
-            entityType: `@${ entity[ 0 ] }`,
-            text: param.length > 1 ? param[1] : param[0],
-            selected: true,
-            paramName: param.length > 1 ? param[0] : ''
-          } )
-        } else if (entity) {
-          partes.push( {
-            text: entity[ 0 ],
-            selected: false
-          } )
+        if ( part ) { 
+
+          let partSplited = part.split( '~' )
+          if ( partSplited.length > 1 ) {
+            let param = partSplited[ 1 ].split( '=' )
+            partes.push( {
+              entityType: `@${ partSplited[ 0 ] }`,
+              text: param.length > 1 ? param[ 1 ] : param[ 0 ],
+              selected: true,
+              paramName: param.length > 1 ? param[ 0 ] : ''
+            } )
+          } else if ( partSplited ) {
+            partes.push( {
+              text: partSplited[ 0 ],
+              selected: false
+            } )
+          }
         }
+
       } )
     } else {
       partes.push( {
@@ -151,33 +166,53 @@ export class FrasesService {
   /**
    * Returns parts after find the part that includes the text selected and split it
    */
-  async stractEntityPart(frase: FraseEntrenamiento, text): Promise<FraseParte[]> {
-    var parts: FraseParte[] = [], textReplaced: string, partInParts: string[] = []
-    
-    frase.parts.forEach( ( part, index ) => {
-      if ( part.text.includes( text ) ) {
+  async stractSelectedPart(frase: FraseEntrenamiento, textSelected): Promise<FraseEntrenamiento> {
+    var parts: FraseParte[] = []
+    const cleanFrase = this.stringCleanPhrase( frase )
 
+    // First search
+    await this.loading.asyncForEach( frase.parts, async ( part, index ) => {
+      if ( part.text.includes( textSelected ) ) {
         frase.parts.splice( index, 1 )
-        textReplaced = part.text.replace( text, `:${ text }:` )
-        partInParts = textReplaced.split( ':' )
-
-        partInParts.forEach( ( textPart ) => {
-          if ( textPart ) parts.push( {
-            text: textPart,
-            selected: textPart != text ? false : true
-          } )
-        } )
+        parts = await this.getTextSelectInPart(part.text, textSelected)
       }
     } )
-    return parts
+    console.log(parts);
+
+    if ( parts.length < 2 ) {
+      if ( cleanFrase.includes( textSelected ) ) {
+        parts = []
+        parts = await this.getTextSelectInPart(cleanFrase, textSelected)
+        frase.parts =  parts
+      }
+    } else {
+      parts = [ ...parts, ...frase.parts ]
+      frase.parts = parts
+    }
+
+    console.log(parts);
+    return frase
   }
 
 
   /**
    * name
    */
-  public name() {
-    
+  public async getTextSelectInPart( textOnSearch: string, textSelected: string ): Promise<FraseParte[]> {
+    var parts: FraseParte[] = []
+    var textReplaced: string, partInParts: string[] = []
+
+    textReplaced = textOnSearch.replace( textSelected, `:${ textSelected }:` )
+    partInParts = textReplaced.split( ':' )
+
+    partInParts.forEach( ( textPart ) => {
+      if ( textPart ) parts.push( {
+        text: textPart,
+        selected: textPart != textSelected ? false : true
+      } )
+    } )
+
+    return parts
   }
 
 

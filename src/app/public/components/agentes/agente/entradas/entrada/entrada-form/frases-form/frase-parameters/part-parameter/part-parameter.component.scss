@@ -6,3 +6,7 @@
 .param-row:hover .delParam {
     opacity: 1;
 }
+
+::ng-deep .mat-form-field-underline{
+    opacity: 0;
+}
