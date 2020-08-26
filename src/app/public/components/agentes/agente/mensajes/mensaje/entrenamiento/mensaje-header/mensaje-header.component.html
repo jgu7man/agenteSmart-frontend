@@ -1,0 +1,45 @@
+<div id="mensaje-header" *ngIf="mensaje" >
+    <div class="row align-cols">
+        <div class="col s2 m1 goback-btn">
+            <button mat-button (click)="location.back()" >
+                <i class="fas fa-arrow-left"></i>
+            </button>
+        </div>
+        <div class="col s8 m9">
+            <aSmart-breadcums [intentIndex]="mensaje.index"></aSmart-breadcums>
+        </div>
+        <div class="col s2 m1 menu-btn">
+            <button mat-button [mat-menu-trigger-for]="menuMensaje">
+                <i class="fas fa-ellipsis-v"></i>
+            </button>
+            <mat-menu #menuMensaje>
+                <button mat-menu-item (click)="toEditName()">Editar</button>
+                <button mat-menu-item (click)="toDelMensaje()" >Eliminar</button>
+            </mat-menu>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12">
+            <ng-container *ngIf="!switchEdit; else editMensaje">
+                <h4> {{mensaje.displayName}} </h4>
+            </ng-container>
+            <ng-template #editMensaje>
+                <mat-form-field>
+                    <input 
+                    matInput
+                    type="text" 
+                    name="displayName" 
+                    id="displayName"
+                    #displayName
+                    (keyup.enter)="updateDisplayName()"
+                    (blur)="nameEdited == mensaje.displayName ? switchEdit = false : updateDisplayName()"
+                    [(ngModel)]="nameEdited"
+                    >
+                </mat-form-field>
+            </ng-template>
+            
+        </div>
+    </div>
+</div>
+
+

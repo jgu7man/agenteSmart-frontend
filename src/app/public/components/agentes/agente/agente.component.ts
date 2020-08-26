@@ -49,7 +49,7 @@ export class AgenteComponent implements OnInit {
   }
 
   agentLinks:NAVLINK[] = [
-    { path: 'entradas', label: 'Entradas', icon:'fa-sign-in-alt' },
+    { path: 'mensajes', label: 'Mensajes', icon:'fa-sign-in-alt' },
     { path: 'tipos', label: 'Tipos', icon:'fa-exchange-alt' },
     { path: 'acciones', label: 'Acciones', icon:'fa-hand-scissors' },
     { path: 'opciones', label: 'Opciones', icon:'fa-ellipsis-v' },

@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, CollectionReference } from '@angular/fire/firestore';
 import { UserInterface, AuthService } from '../../../../../admin/auth/auth.service';
 import { AlertService } from '../../../../../global/alert/alert.service';
-import { EntradasService } from '../entradas/entradas.service';
-import { EntradaModel } from '../entradas/entrada.model';
+import { MensajesService } from '../mensajes/mensajes.service';
+import { IntentModel } from '../mensajes/mensaje.model';
 import { CacheService } from '../../../../../global/cache/cache.service';
 import { Contexto } from './contexto.model';
 import { CurrentAgenteService } from '../current-agente.service';
@@ -22,7 +22,7 @@ export class ContextosService {
   constructor (
     private afs: AngularFirestore,
     private _alerta: AlertService,
-    private _entradas: EntradasService,
+    private _mensajes: MensajesService,
     private _agente: CurrentAgenteService
   ) {
   }
@@ -107,15 +107,15 @@ export class ContextosService {
 
 
   async delContext( context:Contexto  ) {
-    var entradasPath = await  this._agente.getPath('entradas')
-    const entradaRef = this.afs.collection(entradasPath).ref;
+    var mensajesPath = await  this._agente.getPath('mensajes')
+    const mensajeRef = this.afs.collection(mensajesPath).ref;
       
-    const entradas = await this._entradas.getEntradasListByContexto( context )
-    if ( entradas.length > 0 ) {
-      entradas.forEach( ( entrada: EntradaModel ) => {
-        let contextToDel = entrada.contextos.findIndex( ent => ent === context.id )
-        entrada.contextos.splice( contextToDel, 1 );
-        entradaRef.doc(entrada.name).set({contextos: entrada.contextos}, {merge: true})
+    const mensajes = await this._mensajes.getMensajesListByContexto( context )
+    if ( mensajes.length > 0 ) {
+      mensajes.forEach( ( mensaje: IntentModel ) => {
+        let contextToDel = mensaje.contextos.findIndex( ent => ent === context.id )
+        mensaje.contextos.splice( contextToDel, 1 );
+        mensajeRef.doc(mensaje.name).set({contextos: mensaje.contextos}, {merge: true})
       } )
     }
     

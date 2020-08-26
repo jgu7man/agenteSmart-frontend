@@ -1,4 +1,4 @@
-<div id="entradas_container">
+<div id="mensajes_container">
     <div class="row" id="contextos" *ngIf="contextos" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="drop($event)">
         <div class="col s12 m3 en-Column" cdkDrag cdkDragLockAxis="x"
          *ngFor="let contexto of contextos; trackBy: trackContextById"
@@ -29,8 +29,8 @@
                 </div>
             </div>
             
-            <!-- Agregado de entrada nueva -->
-            <aSmart-entradas [contexto]="contexto"></aSmart-entradas>
+            <!-- Agregado de mensaje nueva -->
+            <aSmart-mensajes [contexto]="contexto"></aSmart-mensajes>
             
         </div>
 

@@ -1,0 +1,27 @@
+<div class="row">
+    <ng-container *ngIf="!responsive.small; else mobileDesing">
+        <div strechHeight class="col s6" id="intent-form">
+            <aSmart-entrenamiento></aSmart-entrenamiento>
+        </div>
+        <div class="col s6" id="resp-manager">
+            <aSmart-respuestas></aSmart-respuestas>
+        </div>
+    </ng-container>
+    <ng-template #mobileDesing>
+        <mat-accordion>
+            <mat-expansion-panel class="intent-panel" [expanded]="true">
+                <mat-expansion-panel-header>
+                    Mensaje
+                </mat-expansion-panel-header>
+                <aSmart-entrenamiento></aSmart-entrenamiento>
+            </mat-expansion-panel>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    Respuestas
+                </mat-expansion-panel-header>
+                <aSmart-respuestas></aSmart-respuestas>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </ng-template>
+    
+</div>

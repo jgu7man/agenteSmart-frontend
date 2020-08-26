@@ -1,0 +1,7 @@
+#mensaje-container {
+    overflow: auto;
+}
+
+#mensaje-container::-webkit-scrollbar {
+    display: none;
+}

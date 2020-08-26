@@ -1,0 +1,103 @@
+<!-- Parámetro -->
+<div class="row">
+    <div class="col s4 resp-label">
+        Si
+    </div>
+    <div class="col s8">
+        <mat-select placeholder="parámetro" [(ngModel)]="paramSelected" name="param">
+            <mat-option *ngFor="let param of resService.paramList" [value]="param.name">
+                {{param.displayName}}
+            </mat-option>
+        </mat-select>
+    </div>
+</div>
+
+<!-- Condición -->
+<div class="row">
+    <div class="col s4 resp-label">
+        es
+    </div>
+    <div class="col s8">
+        <mat-select placeholder="condición" [(ngModel)]="condicionSelected" name="condition">
+            <mat-option *ngFor="let condition of condicionesList" [value]="condition.operator">
+                {{condition.displayText}}
+            </mat-option>
+        </mat-select>
+    </div>
+</div>
+
+
+<!-- Valor -->
+<div class="row">
+    <div class="col s4 resp-label">
+        Valor
+    </div>
+    <div class="col s8">
+        <mat-form-field>
+            <input 
+            class="resp-input"
+            matInput
+            type="text" 
+            name="conditionValue" 
+            id="conditionValue"
+            [(ngModel)]="conditionValue"
+            >
+        </mat-form-field>
+    </div>
+</div>
+
+
+
+<!-- Respuesta -->
+<div class="row">
+    <div class="col s4 resp-label">
+        Respuesta
+    </div>
+    <div class="col s8">
+        <mat-form-field>
+            <textarea 
+            matInput
+            class="resp-input"
+            name="mensaje" 
+            id="mensaje" 
+            cols="30" 
+            rows="5"></textarea>
+        </mat-form-field>
+    </div>
+</div>
+
+<!-- Siguiente contexto -->
+<div class="row">
+    <div class="col s4 resp-label">
+        Contexto
+    </div>
+    <div class="col s8">
+        <mat-select 
+        *ngIf="resService.contextList"
+        placeholder="Siguiente contexto" 
+        [(ngModel)]="siguienteMensaje" 
+        name="contexto">
+            <mat-option *ngFor="let contexto of resService.contextList" [value]="contexto.id">
+                {{contexto.contextName}}
+            </mat-option>
+        </mat-select>
+    </div>
+</div>
+
+<!-- Siguiente mensaje -->
+<div class="row">
+    <div class="col s4 resp-label">
+        Siguiente
+    </div>
+    <div class="col s8">
+        <mat-select 
+        *ngIf="resService.mensajesList"
+        placeholder="Siguiente mensaje" 
+        [(ngModel)]="siguienteMensaje" 
+        name="mensaje">
+            <mat-option *ngFor="let mensaje of resService.mensajesList" [value]="mensaje.name">
+                {{mensaje.displayName}}
+            </mat-option>
+        </mat-select>
+    </div>
+</div>
