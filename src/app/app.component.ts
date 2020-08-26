@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { ColorService } from './global/color-theme/color.service';
+import { ColorService } from './Gdev-Tools/gdev-color/color.service';
 
 @Component({
   selector: 'app-root',

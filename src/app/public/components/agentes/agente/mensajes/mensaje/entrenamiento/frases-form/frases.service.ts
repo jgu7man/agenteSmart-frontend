@@ -3,8 +3,8 @@ import { FraseEntrenamiento, FraseParte } from '../../../mensaje.model';
 import { CurrentAgenteService } from '../../../../current-agente.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { CurrentMensajeService } from '../../current-mensaje.service';
-import { CacheService } from '../../../../../../../../global/cache/cache.service';
-import { Loading } from '../../../../../../../../global/loading/loading.service';
+import { CacheService } from '../../../../../../../../Gdev-Tools/gdev-cache/cache.service';
+import { Loading } from '../../../../../../../../Gdev-Tools/loading/loading.service';
 
 @Injectable({
   providedIn: 'root'

@@ -24,7 +24,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { InterceptorService } from './admin/auth/interceptor.service';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
-import { LoadingModule } from './global/loading/loading.module';
+import { LoadingModule } from './Gdev-Tools/loading/loading.module';
 
 @NgModule({
   declarations: [

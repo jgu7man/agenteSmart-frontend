@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, ViewChildren, QueryList, ViewEncapsulation, AfterViewInit, OnDestroy } from '@angular/core';
 import { FraseEntrenamiento, FraseParte } from '../../../mensaje.model';
-import { Loading } from '../../../../../../../../global/loading/loading.service';
+import { Loading } from '../../../../../../../../Gdev-Tools/loading/loading.service';
 import { FrasesService } from './frases.service';
 import { ActivatedRoute } from '@angular/router';
 import { CurrentMensajeService } from '../../current-mensaje.service';

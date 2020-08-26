@@ -4,7 +4,7 @@ import { Contexto } from '../contextos/contexto.model';
 import { AccionModel } from '../acciones/accion.model';
 import { MensajesService } from '../mensajes/mensajes.service';
 import { ContextosService } from '../contextos/contextos.service';
-import { CacheService } from '../../../../../global/cache/cache.service';
+import { CacheService } from '../../../../../Gdev-Tools/gdev-cache/cache.service';
 import { CurrentMensajeService } from '../mensajes/mensaje/current-mensaje.service';
 
 

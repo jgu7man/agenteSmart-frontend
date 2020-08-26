@@ -2,13 +2,13 @@ import { IntentModel } from '../../../mensaje.model';
 import { Injectable } from '@angular/core';
 import { CurrentAgenteService } from '../../../../current-agente.service';
 import { AngularFirestore, docChanges } from '@angular/fire/firestore';
-import { CacheService } from '../../../../../../../../global/cache/cache.service';
+import { CacheService } from '../../../../../../../../Gdev-Tools/gdev-cache/cache.service';
 import { ParametroMensaje, FraseEntrenamiento, FraseParte } from '../../../mensaje.model';
 import { CurrentMensajeService } from '../../current-mensaje.service';
 import { Subject, Observer, Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { FrasesService } from '../frases-form/frases.service';
-import { Loading } from '../../../../../../../../global/loading/loading.service';
+import { Loading } from '../../../../../../../../Gdev-Tools/loading/loading.service';
 
 @Injectable({
   providedIn: 'root'

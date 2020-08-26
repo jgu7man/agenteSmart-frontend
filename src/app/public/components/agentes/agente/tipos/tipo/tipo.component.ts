@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 import { TipoEntidadModel } from '../tipo.model';
 import { TiposService } from '../tipos.service';
-import { Loading } from '../../../../../../global/loading/loading.service';
+import { Loading } from '../../../../../../Gdev-Tools/loading/loading.service';
 
 @Component({
   selector: 'aSmart-tipo',

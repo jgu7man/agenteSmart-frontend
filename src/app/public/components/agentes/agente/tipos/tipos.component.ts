@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { TipoEntidadModel } from '../tipos/tipo.model';
-import { Loading } from '../../../../../global/loading/loading.service';
+import { Loading } from '../../../../../Gdev-Tools/loading/loading.service';
 import { TiposService } from './tipos.service';
 import { Observable } from 'rxjs';
 

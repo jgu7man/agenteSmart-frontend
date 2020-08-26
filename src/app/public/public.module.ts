@@ -14,11 +14,12 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
 
 import { AlertModule } from '../global/alert/alert.module';
-import { ColorThemeModule } from '../global/color-theme/color-theme.module';
-import { ColorDirective } from '../global/color-theme/color.directive';
+import { ColorThemeModule } from '../Gdev-Tools/gdev-color/color-theme.module';
+import { ColorDirective } from '../Gdev-Tools/gdev-color/color.directive';
 
 import { AgentesModule } from './components/agentes/agentes.module';
-import { DirectivesModule } from '../global/directives/directives.module';
+import { GdevResponsiveModule } from '../Gdev-Tools/gdev-responsive/gdev-responsive.module';
+import { GdevTextModule } from '../Gdev-Tools/gdev-text/gdev-text.module';
 
 
 
@@ -41,10 +42,10 @@ import { DirectivesModule } from '../global/directives/directives.module';
     AlertModule,
     ColorThemeModule,
     AgentesModule,
-    DirectivesModule
+    GdevResponsiveModule,
+    GdevTextModule,
   ],
   providers: [
-    ColorDirective
   ]
 })
 export class PublicModule { }

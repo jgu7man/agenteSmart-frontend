@@ -3,12 +3,12 @@ import { AngularFirestore, CollectionReference } from '@angular/fire/firestore';
 import { AuthService, UserInterface } from '../../../../../admin/auth/auth.service';
 import { AlertService } from '../../../../../global/alert/alert.service';
 import { TextService } from '../../../../../services/text.service';
-import { CacheService } from '../../../../../global/cache/cache.service';
+import { CacheService } from '../../../../../Gdev-Tools/gdev-cache/cache.service';
 import { AgentesService } from '../../agentes.service';
 import { CurrentAgenteService } from '../current-agente.service';
 import { IntentModel } from './mensaje.model';
 import { Subject, Observable } from 'rxjs';
-import { Loading } from '../../../../../global/loading/loading.service';
+import { Loading } from '../../../../../Gdev-Tools/loading/loading.service';
 import { Contexto } from '../contextos/contexto.model';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 
@@ -85,7 +85,7 @@ export class MensajesService {
     var mensajesList = []
       const mensajeCol = await ( await this.mensajesCollection() ).get()
       await this._loading.asyncForEach( mensajeCol.docs, mensaje => { mensajesList.push( mensaje.data() ) } )
-      await this._cache.updateData( 'todasMensajesList', mensajesList )
+      await this._cache.updateData( 'todosMensajesList', mensajesList )
     return mensajesList
   }
 

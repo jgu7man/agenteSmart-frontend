@@ -4,7 +4,7 @@ import { UserInterface, AuthService } from '../../../../../admin/auth/auth.servi
 import { AlertService } from '../../../../../global/alert/alert.service';
 import { MensajesService } from '../mensajes/mensajes.service';
 import { IntentModel } from '../mensajes/mensaje.model';
-import { CacheService } from '../../../../../global/cache/cache.service';
+import { CacheService } from '../../../../../Gdev-Tools/gdev-cache/cache.service';
 import { Contexto } from './contexto.model';
 import { CurrentAgenteService } from '../current-agente.service';
 import { take } from 'rxjs/operators';

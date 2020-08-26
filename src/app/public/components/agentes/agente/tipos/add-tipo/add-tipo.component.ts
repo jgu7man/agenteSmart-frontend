@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 import { TipoEntidadModel, Clase } from '../tipo.model';
-import { Loading } from '../../../../../../global/loading/loading.service';
+import { Loading } from '../../../../../../Gdev-Tools/loading/loading.service';
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { TiposService } from '../tipos.service';
 import { MatExpansionPanel } from '@angular/material/expansion';

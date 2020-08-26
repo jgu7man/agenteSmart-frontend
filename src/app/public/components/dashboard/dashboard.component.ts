@@ -3,7 +3,7 @@ import { ResponsiveService } from 'src/app/services/responsive.service';
 import { NAVLINK } from '../navbar/navlink.interface';
 import { DashboardService } from './dashboard.service';
 import { MatDrawer } from '@angular/material/sidenav';
-import { CacheService } from '../../../global/cache/cache.service';
+import { CacheService } from '../../../Gdev-Tools/gdev-cache/cache.service';
 
 @Component({
   selector: 'aSmart-dashboard',

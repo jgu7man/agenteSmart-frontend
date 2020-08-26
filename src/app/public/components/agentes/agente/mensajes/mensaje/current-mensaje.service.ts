@@ -3,9 +3,9 @@ import { CurrentAgenteService } from '../../current-agente.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { IntentModel } from '../mensaje.model';
 import { Observable, Subject } from 'rxjs';
-import { Loading } from '../../../../../../global/loading/loading.service';
+import { Loading } from '../../../../../../Gdev-Tools/loading/loading.service';
 import { switchMap, take } from 'rxjs/operators';
-import { CacheService } from '../../../../../../global/cache/cache.service';
+import { CacheService } from '../../../../../../Gdev-Tools/gdev-cache/cache.service';
 
 @Injectable({
   providedIn: 'root'

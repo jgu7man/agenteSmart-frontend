@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { ParametroMensaje } from '../../../../mensaje.model';
 import { ParametrosService } from '../parametros.service';
-import { Loading } from '../../../../../../../../../global/loading/loading.service';
+import { Loading } from '../../../../../../../../../Gdev-Tools/loading/loading.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({

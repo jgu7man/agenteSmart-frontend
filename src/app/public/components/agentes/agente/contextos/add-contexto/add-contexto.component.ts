@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef, Input } from '@angular/core';
 import { TextService } from '../../../../../../services/text.service';
 import { ContextosService } from '../contextos.service';
-import { Loading } from '../../../../../../global/loading/loading.service';
+import { Loading } from '../../../../../../Gdev-Tools/loading/loading.service';
 import { Contexto } from '../contexto.model';
 
 @Component({

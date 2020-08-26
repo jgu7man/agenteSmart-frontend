@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, ViewEncapsulation, ContentChi
 import { AgentesService } from '../../agentes.service';
 import { ContextosService } from './contextos.service';
 import { ActivatedRoute } from '@angular/router';
-import { Loading } from '../../../../../global/loading/loading.service';
+import { Loading } from '../../../../../Gdev-Tools/loading/loading.service';
 import { TextService } from '../../../../../services/text.service';
 import { AgenteModel } from '../../init-agente/agente.model';
 import { Contexto } from './contexto.model';

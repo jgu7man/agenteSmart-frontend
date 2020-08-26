@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewChecked, AfterViewInit } from '@angular/cor
 import { Router } from '@angular/router';
 import { AgentesService } from './agentes.service';
 import { AgenteModel } from './init-agente/agente.model';
-import { Loading } from '../../../global/loading/loading.service';
+import { Loading } from '../../../Gdev-Tools/loading/loading.service';
 import { AuthService } from '../../../admin/auth/auth.service';
 
 @Component({

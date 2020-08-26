@@ -7,7 +7,7 @@ import { of, Observable, Subject, throwError } from 'rxjs';
 import { switchMap, first, catchError, take } from 'rxjs/operators';
 import { HttpHeaders, HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
 // import * as google from 'googleapis'
-import { Loading } from '../../global/loading/loading.service';
+import { Loading } from '../../Gdev-Tools/loading/loading.service';
 
 // const oauth2Client = new google.auth.OAuth2(
 //   '683912406589-acc9kkbnqu7qgao221kuk6aqanqli01b.apps.googleusercontent.com',

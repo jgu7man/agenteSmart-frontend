@@ -22,7 +22,7 @@ import { DelMensajeDialogComponent } from './del-mensaje-dialog/del-mensaje-dial
 import { MensajesRoutingModule } from './mensajes-routing.module';
 import { RespuestasModule } from '../respuestas/respuestas.module';
 import { TiposModule } from '../tipos/tipos.module';
-import { ColorThemeModule } from '../../../../../global/color-theme/color-theme.module';
+import { ColorThemeModule } from '../../../../../Gdev-Tools/gdev-color/color-theme.module';
 
 
 

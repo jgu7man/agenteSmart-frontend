@@ -3,7 +3,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Clase, TipoEntidadModel } from '../../tipo.model';
 import { TiposService } from '../../tipos.service';
-import { Loading } from '../../../../../../../global/loading/loading.service';
+import { Loading } from '../../../../../../../Gdev-Tools/loading/loading.service';
 
 @Component({
   selector: 'aSmart-add-clase',

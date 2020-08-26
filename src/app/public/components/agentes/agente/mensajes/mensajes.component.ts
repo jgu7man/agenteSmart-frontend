@@ -1,13 +1,13 @@
 import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import {ContextosService } from '../contextos/contextos.service';
 import { ActivatedRoute } from '@angular/router';
-import { Loading } from '../../../../../global/loading/loading.service';
+import { Loading } from '../../../../../Gdev-Tools/loading/loading.service';
 import { TextService } from 'src/app/services/text.service';
 import { AgenteModel } from '../../init-agente/agente.model';
 import { AgentesService } from '../../agentes.service';
 import { MensajesService } from './mensajes.service';
 import { IntentModel } from './mensaje.model';
-import { CacheService } from '../../../../../global/cache/cache.service';
+import { CacheService } from '../../../../../Gdev-Tools/gdev-cache/cache.service';
 import { Contexto } from '../contextos/contexto.model';
 
 @Component({
