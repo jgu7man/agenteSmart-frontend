@@ -1,1 +1,25 @@
-<p>entrada-resp-manager works!</p>
+<div class="container">
+    <div class="row aling-cols">
+        <div class="col s10">
+            <h5>Respuestas</h5>
+        </div>
+        <div class="col s2">
+            <button mat-icon-button (click)="addRespuesta()">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="row" *ngIf="respuestasList.length > 0; else sinRespuestas">
+        <aSmart-respuesta-card
+        *ngFor="let respuesta of respuestasList"
+        [respuesta]="respuesta"
+        ></aSmart-respuesta-card>
+    </div>
+    <ng-template #sinRespuestas>
+        <div class="row">
+            <div class="col s12 center">
+                Aún no has agregado respuestas
+            </div>
+        </div>
+    </ng-template>
+</div>

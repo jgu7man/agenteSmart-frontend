@@ -52,6 +52,9 @@ import { TipoSelectorComponent } from './components/agentes/agente/tipos/tipo-se
 import { ParamValueComponent } from './components/agentes/agente/entradas/entrada/entrada-form/parametros/param-value/param-value.component';
 import { ParamRowComponent } from './components/agentes/agente/entradas/entrada/entrada-form/parametros/param-row/param-row.component';
 import { AddParameterComponent } from './components/agentes/agente/entradas/entrada/entrada-form/parametros/add-parameter/add-parameter.component';
+import { RespuestaCardComponent } from './components/agentes/agente/entradas/entrada/entrada-resp-manager/respuesta-card/respuesta-card.component';
+import { FijaResFormComponent } from './components/agentes/agente/entradas/entrada/entrada-resp-manager/respuesta-card/res-forms/fija-res-form/fija-res-form.component';
+import { CondicionalResFormComponent } from './components/agentes/agente/entradas/entrada/entrada-resp-manager/respuesta-card/res-forms/condicional-res-form/condicional-res-form.component';
 
 
 
@@ -101,6 +104,9 @@ import { AddParameterComponent } from './components/agentes/agente/entradas/entr
     ParamValueComponent,
     ParamRowComponent,
     AddParameterComponent,
+    RespuestaCardComponent,
+    FijaResFormComponent,
+    CondicionalResFormComponent,
   ],
   imports: [
     CommonModule,
