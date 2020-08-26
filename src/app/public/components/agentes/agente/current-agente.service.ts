@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AgenteModel } from '../init-agente/agente.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthService, UserInterface } from '../../../../admin/auth/auth.service';
-import { CacheService } from '../../../../Gdev-Tools/gdev-cache/cache.service';
+import { CacheService } from '../../../../Gdev-Tools/cache/cache.service';
 import { Subject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 

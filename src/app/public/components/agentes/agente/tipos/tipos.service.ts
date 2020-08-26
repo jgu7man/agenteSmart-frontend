@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Loading } from '../../../../../Gdev-Tools/loading/loading.service';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { CacheService } from '../../../../../Gdev-Tools/gdev-cache/cache.service';
+import { CacheService } from '../../../../../Gdev-Tools/cache/cache.service';
 import { CurrentAgenteService } from '../current-agente.service';
 import { TipoEntidadModel, Clase } from './tipo.model';
 import { TextService } from '../../../../../services/text.service';

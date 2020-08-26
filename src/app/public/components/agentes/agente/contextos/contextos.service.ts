@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, CollectionReference } from '@angular/fire/firestore';
 import { UserInterface, AuthService } from '../../../../../admin/auth/auth.service';
-import { AlertService } from '../../../../../global/alert/alert.service';
 import { MensajesService } from '../mensajes/mensajes.service';
 import { IntentModel } from '../mensajes/mensaje.model';
-import { CacheService } from '../../../../../Gdev-Tools/gdev-cache/cache.service';
+import { CacheService } from '../../../../../Gdev-Tools/cache/cache.service';
 import { Contexto } from './contexto.model';
 import { CurrentAgenteService } from '../current-agente.service';
 import { take } from 'rxjs/operators';
+import { GdevAlertaServiceModule } from '../../../../../Gdev-Tools/alerts/gdev-alerta-service.module';
+import { AlertaService } from '../../../../../Gdev-Tools/alerts/alertas.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,7 @@ export class ContextosService {
   contextRef:CollectionReference
   constructor (
     private afs: AngularFirestore,
-    private _alerta: AlertService,
+    private _alerta: AlertaService,
     private _mensajes: MensajesService,
     private _agente: CurrentAgenteService
   ) {
@@ -49,7 +50,7 @@ export class ContextosService {
         let contextNuevo = await ( await this.contextosCollection() ).add( contexto );
         await (await this.contextosCollection()).doc( contextNuevo.id ).update( { id: contextNuevo.id })
       } else {
-        this._alerta.sendAlertMessage('Contexto duplicado')
+        this._alerta.enviarMensajeAlerta('Contexto duplicado')
       }
     } else {
       await (await this.contextosCollection()).doc( contexto.id ).update( contexto )

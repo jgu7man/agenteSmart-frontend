@@ -7,7 +7,7 @@ import { AgenteModel } from '../../init-agente/agente.model';
 import { AgentesService } from '../../agentes.service';
 import { MensajesService } from './mensajes.service';
 import { IntentModel } from './mensaje.model';
-import { CacheService } from '../../../../../Gdev-Tools/gdev-cache/cache.service';
+import { CacheService } from '../../../../../Gdev-Tools/cache/cache.service';
 import { Contexto } from '../contextos/contexto.model';
 
 @Component({

@@ -6,7 +6,7 @@ import { AgenteModel } from '../init-agente/agente.model';
 import { DashboardService } from '../../dashboard/dashboard.service';
 import { NAVLINK } from '../../navbar/navlink.interface';
 import { ResponsiveService } from '../../../../services/responsive.service';
-import { CacheService } from '../../../../Gdev-Tools/gdev-cache/cache.service';
+import { CacheService } from '../../../../Gdev-Tools/cache/cache.service';
 import { CurrentAgenteService } from './current-agente.service';
 
 @Component({

@@ -5,7 +5,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // *Global modules
 import { MaterialModule, } from "./material.module";
 import { FirebaseModule, } from './firebase.module';
-import { AlertModule, } from './global/alert/alert.module';
 
 // *ROOT modules
 import { AppRoutingModule } from './app-routing.module';
@@ -20,11 +19,10 @@ import { AdminModule, } from './admin/admin.module';
 import { AdminRoutingModule, } from "./admin/admin-routing.module";
 import { AuthModule, } from './admin/auth/auth.module';
 import { BrowserModule } from '@angular/platform-browser';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { InterceptorService } from './admin/auth/interceptor.service';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { LoadingModule } from './Gdev-Tools/loading/loading.module';
+import { GdevAlertaServiceModule } from './Gdev-Tools/alerts/gdev-alerta-service.module';
 
 @NgModule({
   declarations: [
@@ -37,7 +35,7 @@ import { LoadingModule } from './Gdev-Tools/loading/loading.module';
     ComunesModule,
     MaterialModule,
     FirebaseModule,
-    AlertModule,
+    GdevAlertaServiceModule,
     PublicModule,
     PublicRoutingModule,
     AdminModule,

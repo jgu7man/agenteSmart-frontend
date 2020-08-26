@@ -1,16 +1,13 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, CollectionReference } from '@angular/fire/firestore';
-import { AuthService, UserInterface } from '../../../../../admin/auth/auth.service';
-import { AlertService } from '../../../../../global/alert/alert.service';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { TextService } from '../../../../../services/text.service';
-import { CacheService } from '../../../../../Gdev-Tools/gdev-cache/cache.service';
-import { AgentesService } from '../../agentes.service';
+import { CacheService } from '../../../../../Gdev-Tools/cache/cache.service';
 import { CurrentAgenteService } from '../current-agente.service';
-import { IntentModel } from './mensaje.model';
-import { Subject, Observable } from 'rxjs';
 import { Loading } from '../../../../../Gdev-Tools/loading/loading.service';
 import { Contexto } from '../contextos/contexto.model';
-import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { GdevAlertaServiceModule } from '../../../../../Gdev-Tools/alerts/gdev-alerta-service.module';
+import { AlertaService } from '../../../../../Gdev-Tools/alerts/alertas.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +19,7 @@ export class MensajesService {
   
   constructor (
     private fs: AngularFirestore,
-    private _alerta: AlertService,
+    private _alerta: AlertaService,
     private _text: TextService,
     private _cache: CacheService,
     private _agente: CurrentAgenteService,
@@ -57,7 +54,7 @@ export class MensajesService {
     const mensajeList = await this.getAllMensajesList()
     if ( mensajeList.includes( name ) ) {
       console.log(name, ' duplicada');
-      this._alerta.sendAlertMessage( 'Mensaje Duplicada' )
+      this._alerta.enviarMensajeAlerta( 'Mensaje Duplicada' )
     } else {
     
 

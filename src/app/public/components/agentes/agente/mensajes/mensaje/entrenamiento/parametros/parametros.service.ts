@@ -2,7 +2,7 @@ import { IntentModel } from '../../../mensaje.model';
 import { Injectable } from '@angular/core';
 import { CurrentAgenteService } from '../../../../current-agente.service';
 import { AngularFirestore, docChanges } from '@angular/fire/firestore';
-import { CacheService } from '../../../../../../../../Gdev-Tools/gdev-cache/cache.service';
+import { CacheService } from '../../../../../../../../Gdev-Tools/cache/cache.service';
 import { ParametroMensaje, FraseEntrenamiento, FraseParte } from '../../../mensaje.model';
 import { CurrentMensajeService } from '../../current-mensaje.service';
 import { Subject, Observer, Observable } from 'rxjs';

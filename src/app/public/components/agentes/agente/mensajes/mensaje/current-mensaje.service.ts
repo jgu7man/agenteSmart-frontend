@@ -5,7 +5,7 @@ import { IntentModel } from '../mensaje.model';
 import { Observable, Subject } from 'rxjs';
 import { Loading } from '../../../../../../Gdev-Tools/loading/loading.service';
 import { switchMap, take } from 'rxjs/operators';
-import { CacheService } from '../../../../../../Gdev-Tools/gdev-cache/cache.service';
+import { CacheService } from '../../../../../../Gdev-Tools/cache/cache.service';
 
 @Injectable({
   providedIn: 'root'

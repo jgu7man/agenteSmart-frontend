@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { ColorService } from '../Gdev-Tools/gdev-color/color.service';
+import { ColorService } from '../Gdev-Tools/color/color.service';
 
 @Component({
   selector: 'aSmart-public',

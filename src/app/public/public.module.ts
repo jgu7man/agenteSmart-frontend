@@ -13,13 +13,12 @@ import { UsuariosComponent } from './components/usuarios/usuarios.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
 
-import { AlertModule } from '../global/alert/alert.module';
-import { ColorThemeModule } from '../Gdev-Tools/gdev-color/color-theme.module';
-import { ColorDirective } from '../Gdev-Tools/gdev-color/color.directive';
+import { ColorThemeModule } from '../Gdev-Tools/color/color-theme.module';
 
 import { AgentesModule } from './components/agentes/agentes.module';
-import { GdevResponsiveModule } from '../Gdev-Tools/gdev-responsive/gdev-responsive.module';
-import { GdevTextModule } from '../Gdev-Tools/gdev-text/gdev-text.module';
+import { GdevResponsiveModule } from '../Gdev-Tools/responsive/gdev-responsive.module';
+import { GdevTextModule } from '../Gdev-Tools/text/gdev-text.module';
+import { GdevAlertaServiceModule } from '../Gdev-Tools/alerts/gdev-alerta-service.module';
 
 
 
@@ -39,7 +38,7 @@ import { GdevTextModule } from '../Gdev-Tools/gdev-text/gdev-text.module';
     AuthModule,
     PublicRoutingModule,
     ComunesModule,
-    AlertModule,
+    GdevAlertaServiceModule,
     ColorThemeModule,
     AgentesModule,
     GdevResponsiveModule,

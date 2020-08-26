@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RespuestasService } from '../../../respuestas.service';
-import { CacheService } from '../../../../../../../../Gdev-Tools/gdev-cache/cache.service';
+import { CacheService } from '../../../../../../../../Gdev-Tools/cache/cache.service';
 
 @Component({
   selector: 'aSmart-condicional-form',

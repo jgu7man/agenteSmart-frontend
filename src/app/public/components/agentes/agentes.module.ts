@@ -14,9 +14,9 @@ import { FormCrearAgenteComponent } from './init-agente/form-crear-agente/form-c
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from 'src/app/material.module';
 import { AgentesRoutingModule } from './agentes-routing.module';
-import { ColorThemeModule } from '../../../Gdev-Tools/gdev-color/color-theme.module';
-import { GdevResponsiveModule } from '../../../Gdev-Tools/gdev-responsive/gdev-responsive.module';
-import { GdevTextModule } from '../../../Gdev-Tools/gdev-text/gdev-text.module';
+import { ColorThemeModule } from '../../../Gdev-Tools/color/color-theme.module';
+import { GdevResponsiveModule } from '../../../Gdev-Tools/responsive/gdev-responsive.module';
+import { GdevTextModule } from '../../../Gdev-Tools/text/gdev-text.module';
 
 
 
