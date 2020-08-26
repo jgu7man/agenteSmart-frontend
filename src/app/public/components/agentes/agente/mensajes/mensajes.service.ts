@@ -6,8 +6,8 @@ import { CurrentAgenteService } from '../current-agente.service';
 import { Loading } from '../../../../../Gdev-Tools/loading/loading.service';
 import { Contexto } from '../contextos/contexto.model';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GdevAlertaServiceModule } from '../../../../../Gdev-Tools/alerts/gdev-alerta-service.module';
-import { AlertaService } from '../../../../../Gdev-Tools/alerts/alertas.service';
+import { GdevAlertServiceModule } from '../../../../../Gdev-Tools/alerts/gdev-alert-service.module';
+import { AlertService } from '../../../../../Gdev-Tools/alerts/alert.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,7 @@ export class MensajesService {
   
   constructor (
     private fs: AngularFirestore,
-    private _alerta: AlertaService,
+    private _alerta: AlertService,
     private _text: TextService,
     private _cache: CacheService,
     private _agente: CurrentAgenteService,
@@ -54,7 +54,7 @@ export class MensajesService {
     const mensajeList = await this.getAllMensajesList()
     if ( mensajeList.includes( name ) ) {
       console.log(name, ' duplicada');
-      this._alerta.enviarMensajeAlerta( 'Mensaje Duplicada' )
+      this._alerta.sendMessageAlert( 'Mensaje Duplicada' )
     } else {
     
 

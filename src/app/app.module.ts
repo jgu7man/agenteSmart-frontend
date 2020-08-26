@@ -22,7 +22,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { LoadingModule } from './Gdev-Tools/loading/loading.module';
-import { GdevAlertaServiceModule } from './Gdev-Tools/alerts/gdev-alerta-service.module';
+import { GdevAlertServiceModule } from './Gdev-Tools/alerts/gdev-alert-service.module';
 
 @NgModule({
   declarations: [
@@ -35,7 +35,7 @@ import { GdevAlertaServiceModule } from './Gdev-Tools/alerts/gdev-alerta-service
     ComunesModule,
     MaterialModule,
     FirebaseModule,
-    GdevAlertaServiceModule,
+    GdevAlertServiceModule,
     PublicModule,
     PublicRoutingModule,
     AdminModule,

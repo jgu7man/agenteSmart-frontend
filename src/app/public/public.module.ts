@@ -18,7 +18,7 @@ import { ColorThemeModule } from '../Gdev-Tools/color/color-theme.module';
 import { AgentesModule } from './components/agentes/agentes.module';
 import { GdevResponsiveModule } from '../Gdev-Tools/responsive/gdev-responsive.module';
 import { GdevTextModule } from '../Gdev-Tools/text/gdev-text.module';
-import { GdevAlertaServiceModule } from '../Gdev-Tools/alerts/gdev-alerta-service.module';
+import { GdevAlertServiceModule } from '../Gdev-Tools/alerts/gdev-alert-service.module';
 
 
 
@@ -38,7 +38,7 @@ import { GdevAlertaServiceModule } from '../Gdev-Tools/alerts/gdev-alerta-servic
     AuthModule,
     PublicRoutingModule,
     ComunesModule,
-    GdevAlertaServiceModule,
+    GdevAlertServiceModule,
     ColorThemeModule,
     AgentesModule,
     GdevResponsiveModule,

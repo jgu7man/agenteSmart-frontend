@@ -7,8 +7,8 @@ import { CacheService } from '../../../../../Gdev-Tools/cache/cache.service';
 import { Contexto } from './contexto.model';
 import { CurrentAgenteService } from '../current-agente.service';
 import { take } from 'rxjs/operators';
-import { GdevAlertaServiceModule } from '../../../../../Gdev-Tools/alerts/gdev-alerta-service.module';
-import { AlertaService } from '../../../../../Gdev-Tools/alerts/alertas.service';
+import { GdevAlertServiceModule } from '../../../../../Gdev-Tools/alerts/gdev-alert-service.module';
+import { AlertService } from '../../../../../Gdev-Tools/alerts/alert.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +22,7 @@ export class ContextosService {
   contextRef:CollectionReference
   constructor (
     private afs: AngularFirestore,
-    private _alerta: AlertaService,
+    private _alerta: AlertService,
     private _mensajes: MensajesService,
     private _agente: CurrentAgenteService
   ) {
@@ -50,7 +50,7 @@ export class ContextosService {
         let contextNuevo = await ( await this.contextosCollection() ).add( contexto );
         await (await this.contextosCollection()).doc( contextNuevo.id ).update( { id: contextNuevo.id })
       } else {
-        this._alerta.enviarMensajeAlerta('Contexto duplicado')
+        this._alerta.sendMessageAlert('Contexto duplicado')
       }
     } else {
       await (await this.contextosCollection()).doc( contexto.id ).update( contexto )
