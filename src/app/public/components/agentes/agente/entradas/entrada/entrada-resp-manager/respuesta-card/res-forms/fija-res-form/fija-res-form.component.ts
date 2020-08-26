@@ -5,6 +5,7 @@ import { Contexto } from '../../../../../../contextos/contexto.model';
 import { ContextosService } from '../../../../../../contextos/contextos.service';
 import { RespuestasService } from '../../../respuestas.service';
 import { CacheService } from '../../../../../../../../../../global/cache/cache.service';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'aSmart-fija-res-form',
@@ -15,6 +16,8 @@ export class FijaResFormComponent implements OnInit {
 
   siguienteEntrada: string
   siguienteContexto: string
+  activateAccion: boolean
+  accion
   
 
   constructor (
@@ -31,6 +34,10 @@ export class FijaResFormComponent implements OnInit {
   async getCurrent() {
     this.siguienteContexto = await this._cache.getDataKey( 'currentContexto' )
     console.log(this.siguienteContexto);
+  }
+
+  switchAction(change: MatSlideToggleChange) {
+    this.activateAccion = change.checked
   }
 
   

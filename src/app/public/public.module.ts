@@ -55,6 +55,9 @@ import { AddParameterComponent } from './components/agentes/agente/entradas/entr
 import { RespuestaCardComponent } from './components/agentes/agente/entradas/entrada/entrada-resp-manager/respuesta-card/respuesta-card.component';
 import { FijaResFormComponent } from './components/agentes/agente/entradas/entrada/entrada-resp-manager/respuesta-card/res-forms/fija-res-form/fija-res-form.component';
 import { CondicionalResFormComponent } from './components/agentes/agente/entradas/entrada/entrada-resp-manager/respuesta-card/res-forms/condicional-res-form/condicional-res-form.component';
+import { GrupoDatosComponent } from './components/agentes/agente/entradas/entrada/entrada-resp-manager/respuesta-card/res-forms/grupo-datos/grupo-datos.component';
+import { BuscarFormComponent } from './components/agentes/agente/entradas/entrada/entrada-resp-manager/respuesta-card/res-forms/buscar-form/buscar-form.component';
+import { BinarioFormComponent } from './components/agentes/agente/entradas/entrada/entrada-resp-manager/respuesta-card/res-forms/binario-form/binario-form.component';
 
 
 
@@ -107,6 +110,9 @@ import { CondicionalResFormComponent } from './components/agentes/agente/entrada
     RespuestaCardComponent,
     FijaResFormComponent,
     CondicionalResFormComponent,
+    GrupoDatosComponent,
+    BuscarFormComponent,
+    BinarioFormComponent,
   ],
   imports: [
     CommonModule,

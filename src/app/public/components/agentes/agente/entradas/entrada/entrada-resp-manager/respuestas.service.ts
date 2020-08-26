@@ -6,6 +6,7 @@ import { Contexto } from '../../../contextos/contexto.model';
 import { CurrentEntradaService } from '../current-entrada.service';
 import { ParametroEntrada } from '../../entrada.model';
 import { CacheService } from '../../../../../../../global/cache/cache.service';
+import { AccionModel } from '../../../acciones/accion.model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,13 @@ export class RespuestasService {
   contextList: Contexto[]
   currentContext: string
   paramList: ParametroEntrada[]
+
+  acciones: AccionModel[] = [
+    { accion: 'guardar', ruta: '' },
+    { accion: 'editar', ruta: '' },
+    { accion: 'buscar', ruta: '' },
+    { accion: 'borrar', ruta: '' },
+  ]
 
   constructor (
     private _entradas: EntradasService,
@@ -40,3 +48,7 @@ export class RespuestasService {
     this.nextEntrada = currentIntenIndex == entradas.length +1 ? '' : entradas[currentIntenIndex + 1].displayName
   }
 }
+
+
+
+

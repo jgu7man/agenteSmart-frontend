@@ -15,7 +15,10 @@ export class RespuestaCardComponent implements OnInit {
   tiposRes: TipoRespuesta[] = [
     { name: '', color: 'grey', icono:'fa-plus'},
     { name: 'fija', color:'#935cff', icono: 'fa-comment-alt'},
-    { name: 'condicional', color: '#42cbff', icono:'fa-code-branch' }
+    { name: 'condicional', color: '#42cbff', icono: 'fa-code-branch' },
+    { name: 'grupo_datos', color: '#26a69a', icono: 'fa-clipboard-list' },
+    { name: 'buscar', color: '#eadb51', icono: 'fa-search' },
+    { name: 'binaria', color: '#3f51b5', icono: 'fa-map-signs' },
   ]
 
   constructor () {
