@@ -9,6 +9,7 @@
         ><i class="fas fa-chevron-circle-down"></i></button>
         <mat-menu #menuProfile="matMenu">
             <button mat-menu-item>Ver perfil</button>
+            <button mat-menu-item [routerLink]="['/dashboard']">Dashboard</button>
             <button mat-menu-item>Cerrar sesión</button>
         </mat-menu>
         
@@ -19,6 +20,6 @@
         <p class="userName"> {{user.displayName}} </p>
     </div>
     <ng-template #unlogged>
-        <aSmart-login-button></aSmart-login-button>
+        <aSmart-login-button (isLogged)="user = $event"></aSmart-login-button>
     </ng-template>
 </mat-toolbar>

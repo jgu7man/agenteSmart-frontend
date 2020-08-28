@@ -27,8 +27,8 @@ export class MensajeHeaderComponent implements OnInit {
   }
   
   async getMensaje() {
-    this._mensaje.currentMensaje$.subscribe( current => {
-      this.mensaje = current.mensaje
+    this._mensaje.currentMensaje$.pipe().subscribe( current => {
+      this.mensaje = current
     })
   }
 

@@ -1,6 +1,6 @@
 <div class="container">
-    <div class="row">
-        <div class="col s12 l6 agente-box" *ngFor="let agente of agentes">
+    <div class="row" *ngIf="_agentes.agentes$ | async; else noAgentes">
+        <div class="col s12 l6 agente-box" *ngFor="let agente of _agentes.agentes$ | async" >
             <mat-card>
                 <mat-card-header> 
                     <div mat-card-avatar 
@@ -21,5 +21,9 @@
                 </mat-card-header>
             </mat-card>
         </div>
+        
     </div>
+            <ng-template #noAgentes>
+                no agentes
+            </ng-template>
 </div>

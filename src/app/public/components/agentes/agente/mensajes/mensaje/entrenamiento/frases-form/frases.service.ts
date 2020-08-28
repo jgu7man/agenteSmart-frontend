@@ -31,22 +31,27 @@ export class FrasesService {
   async addTraningPhrase( frase: FraseEntrenamiento ) {
     try {
 
-      const frasesList = await this.get()
+      var frasesList = await this.get()
+      console.log(frasesList);
       const mensaje = await this._cache.getDataKey( 'currentMensaje' )
       frase.name = Math.random().toString( 36 ).substring( 7 );
       var newFrase = [ frase ];
       console.log( frase );
-      console.log( { mensaje, newFrase } );
-
-      if ( frasesList.length > 0 ) {
+      
+      if ( frasesList ) {
+        console.log( 'update' );
         frasesList.push( frase )
+        mensaje[ 'trainingPhrases' ] = frasesList
         await ( await this.mensajesCollection() ).doc( mensaje.name )
           .update( { trainingPhrases: frasesList } );
       } else {
+        console.log( 'create' );
+        mensaje[ 'trainingPhrases' ] = [frase]
         await ( await this.mensajesCollection() ).doc( mensaje.name )
           .update( { trainingPhrases: [ frase ] } );
       }
 
+      this._cache.updateData('currentMensaje', mensaje)
 
       return 
 
@@ -58,11 +63,10 @@ export class FrasesService {
 
 // READ Frases de entrenamietos
   async get() {
-    const mensaje = await (await this._mensaje.getCurrentMensaje())
-    const frasesList: FraseEntrenamiento[] = await ( await ( await this.mensajesCollection() )
-      .doc( mensaje.name ).get() )
-        .get( 'trainingPhrases' );
-    
+
+    const mensaje = await ( await this._mensaje.getCurrentMensaje() )
+    console.log(mensaje);
+    const frasesList: FraseEntrenamiento[] = mensaje.trainingPhrases
     return frasesList
   }
 

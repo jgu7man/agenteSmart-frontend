@@ -19,15 +19,15 @@ export class EntrenamientoComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getMensaje()
+    // this.getMensaje()
     
   }
 
-  async getMensaje() {
-    this._mensaje.currentMensaje$.subscribe( current => {
-      this.mensaje = current.mensaje
-    })
-  }
+  // async getMensaje() {
+  //   this._mensaje.currentMensaje$.subscribe( current => {
+  //     this.mensaje = current.mensaje
+  //   })
+  // }
   
   onSubmit() {
     

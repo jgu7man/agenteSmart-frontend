@@ -36,16 +36,9 @@ export class AgenteComponent implements OnInit {
 
   async loadAgente() {
 
-    this.agente = await this._cache.getDataKey( 'agente' ) as AgenteModel
+    this.agente = await this._agente.get()
 
-    if ( !this.agente ) {
-      const projectId = this.ruta.snapshot.paramMap.get( 'id' )
-      if ( projectId ) { this._cache.updateData( 'projectId', projectId ) }
-      this._agente.get( projectId ).then( agente => {
-        this.agente = agente
-      })
-      
-    }
+    
   }
 
   agentLinks:NAVLINK[] = [

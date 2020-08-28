@@ -70,9 +70,7 @@ export class ParametrosService {
   async get() {
     this.paramList = []
     this.mensaje = await this._mensaje.getCurrentMensaje()
-    this.paramList = await ( await ( await this.mensajesCollection() )
-      .doc( this.mensaje.name ).get() )
-      .get( 'parameters' );
+    this.paramList = this.mensaje.parameters
 
     return this.paramList
   }

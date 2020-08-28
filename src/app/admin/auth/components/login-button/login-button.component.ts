@@ -1,6 +1,7 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, Output, EventEmitter } from '@angular/core';
 import {MatDialog, MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import { AuthService } from '../../auth.service';
+import { CacheService } from '../../../../Gdev-Tools/cache/cache.service';
 
 @Component({
   selector: 'aSmart-login-button',
@@ -9,12 +10,22 @@ import { AuthService } from '../../auth.service';
 })
 export class LoginButtonComponent implements OnInit {
   private agente = null;
+  @Output() isLogged: EventEmitter<any> = new EventEmitter()
   constructor(
     public dialog: MatDialog,
-    public _auth: AuthService
+    public _auth: AuthService,
+    private _cache: CacheService
   ) { }
 
   ngOnInit() {
+    this._auth.user$.pipe().subscribe( user => {
+      if ( user )
+      {
+        this.isLogged.emit( user )
+        this._cache.updateData('user', user)
+      }
+      
+    })
   }
 
   openDialog(): void {

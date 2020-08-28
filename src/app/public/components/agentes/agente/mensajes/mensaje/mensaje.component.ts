@@ -5,6 +5,7 @@ import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { CurrentMensajeService } from './current-mensaje.service';
 import { Observer, Subscriber, Subscription } from 'rxjs';
+import { Loading } from '../../../../../../Gdev-Tools/loading/loading.service';
 
 @Component({
   selector: 'aSmart-mensaje',
@@ -14,36 +15,44 @@ import { Observer, Subscriber, Subscription } from 'rxjs';
 export class MensajeComponent implements OnInit, OnDestroy {
 
   mensajeName: string
-  mensaje: IntentModel
-  inMensaje: Subscription
+  // mensaje: IntentModel
+  inMensaje$: Subscription
+  updated$: Subscription
   constructor (
     public responsive: ResponsiveService,
     private _route: ActivatedRoute,
     private router: Router,
     private _mensaje: CurrentMensajeService,
     private _dialog: MatDialog,
+    private loading: Loading
   ) {
-    this.mensajeName = this._route.snapshot.paramMap.get( 'name' )
    }
 
   ngOnInit(): void {
-    this.loadMensaje()
-    this.inMensaje =
-    this.router.events.subscribe( ( val ) => {
-      if ( val instanceof NavigationEnd ) {
-        this.mensajeName = this._route.snapshot.paramMap.get( 'name' )
-        this.loadMensaje()
-      }
-    } )
-  }
-  
-  async loadMensaje() {
-    var contexto = this._route.snapshot.queryParamMap.get( 'contexto' )
-    this.mensaje = await this._mensaje.get( this.mensajeName, contexto )
+    // this.loadMensaje()
+    this.updateMensaje()
   }
 
+  updateMensaje() {
+    this.inMensaje$ =
+      this.router.events.subscribe( ( val ) => {
+        if ( val instanceof NavigationEnd ) {
+          // this.loadMensaje()
+          console.log('cambio');
+        }
+      } )
+    
+    this.updated$ = 
+      this._mensaje.updateCurrtentMensaje$.subscribe( updated => {
+        console.log('updated');
+        // this.loadMensaje()
+      })
+  }
+  
+  
+
   ngOnDestroy(): void {
-    this.inMensaje.unsubscribe()
+    this.inMensaje$.unsubscribe()
   }
 
 }

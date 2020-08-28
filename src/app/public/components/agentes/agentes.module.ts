@@ -1,22 +1,55 @@
+import { CondicionalFormComponent } from './agente/respuestas/respuesta-card/res-forms/condicional-form/condicional-form.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MensajesModule } from './agente/mensajes/mensajes.module';
-import { AccionesModule } from './agente/acciones/acciones.module';
-import { ContextosModule } from './agente/contextos/contextos.module';
-import { OpcionesModule } from './agente/opciones/opciones.module';
-import { RespuestasModule } from './agente/respuestas/respuestas.module';
-import { TiposModule } from './agente/tipos/tipos.module';
-import { AgentesComponent } from './agentes.component';
-import { AgenteComponent } from './agente/agente.component';
-import { InitAgenteComponent } from './init-agente/init-agente.component';
-import { FormAgregarAgenteComponent } from './init-agente/form-agregar-agente/form-agregar-agente.component';
-import { FormCrearAgenteComponent } from './init-agente/form-crear-agente/form-crear-agente.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from 'src/app/material.module';
 import { AgentesRoutingModule } from './agentes-routing.module';
 import { ColorThemeModule } from '../../../Gdev-Tools/color/color-theme.module';
 import { GdevResponsiveModule } from '../../../Gdev-Tools/responsive/gdev-responsive.module';
 import { GdevTextModule } from '../../../Gdev-Tools/text/gdev-text.module';
+
+import { AgentesComponent } from './agentes.component';
+import { AgenteComponent } from './agente/agente.component';
+import { InitAgenteComponent } from './init-agente/init-agente.component';
+import { FormAgregarAgenteComponent } from './init-agente/form-agregar-agente/form-agregar-agente.component';
+import { FormCrearAgenteComponent } from './init-agente/form-crear-agente/form-crear-agente.component';
+
+import { AccionesComponent } from './agente/acciones/acciones.component';
+
+import { ContextosComponent } from './agente/contextos/contextos.component';
+import { AddContextoComponent } from './agente/contextos/add-contexto/add-contexto.component';
+import { ContextoComponent } from './agente/contextos/contexto/contexto.component';
+import { MensajesComponent } from './agente/mensajes/mensajes.component';
+import { MensajesListComponent } from './agente/mensajes/mensajes-list/mensajes-list.component';
+import { MensajeComponent } from './agente/mensajes/mensaje/mensaje.component';
+import { EntrenamientoComponent } from './agente/mensajes/mensaje/entrenamiento/entrenamiento.component';
+import { ParametrosComponent } from './agente/mensajes/mensaje/entrenamiento/parametros/parametros.component';
+import { AddParameterComponent } from './agente/mensajes/mensaje/entrenamiento/parametros/add-parameter/add-parameter.component';
+import { ParamRowComponent } from './agente/mensajes/mensaje/entrenamiento/parametros/param-row/param-row.component';
+import { ParamValueComponent } from './agente/mensajes/mensaje/entrenamiento/parametros/param-value/param-value.component';
+import { BreadcumsComponent } from './agente/mensajes/mensaje/entrenamiento/breadcums/breadcums.component';
+import { FrasesFormComponent } from './agente/mensajes/mensaje/entrenamiento/frases-form/frases-form.component';
+import { FraseItemComponent } from './agente/mensajes/mensaje/entrenamiento/frases-form/frase-item/frase-item.component';
+import { FraseParametersComponent } from './agente/mensajes/mensaje/entrenamiento/frases-form/frase-parameters/frase-parameters.component';
+import { PartParameterComponent } from './agente/mensajes/mensaje/entrenamiento/frases-form/frase-parameters/part-parameter/part-parameter.component';
+import { MensajeHeaderComponent } from './agente/mensajes/mensaje/entrenamiento/mensaje-header/mensaje-header.component';
+import { DelMensajeDialogComponent } from './agente/mensajes/del-mensaje-dialog/del-mensaje-dialog.component';
+
+import { OpcionesComponent } from './agente/opciones/opciones.component';
+
+import { RespuestasComponent } from './agente/respuestas/respuestas.component';
+import { RespuestaCardComponent } from './agente/respuestas/respuesta-card/respuesta-card.component';
+import { BuscarFormComponent } from './agente/respuestas/respuesta-card/res-forms/buscar-form/buscar-form.component';
+import { GrupoDatosComponent } from './agente/respuestas/respuesta-card/res-forms/grupo-datos/grupo-datos.component';
+import { PredefinidaFormComponent } from './agente/respuestas/respuesta-card/res-forms/predefinida-form/predefinida-form.component';
+
+import { TiposComponent } from './agente/tipos/tipos.component';
+import { AddTipoComponent } from './agente/tipos/add-tipo/add-tipo.component';
+import { AddClaseComponent } from './agente/tipos/add-tipo/add-clase/add-clase.component';
+import { TipoComponent } from './agente/tipos/tipo/tipo.component';
+import { ClaseItemComponent } from './agente/tipos/tipo/clase-item/clase-item.component';
+import { TipoBodyComponent } from './agente/tipos/tipo/tipo-body/tipo-body.component';
+import { TipoSelectorComponent } from './agente/tipos/tipo-selector/tipo-selector.component';
 
 
 
@@ -27,6 +60,39 @@ import { GdevTextModule } from '../../../Gdev-Tools/text/gdev-text.module';
     InitAgenteComponent,
     FormAgregarAgenteComponent,
     FormCrearAgenteComponent,
+    AccionesComponent,
+    ContextosComponent,
+    AddContextoComponent,
+    ContextoComponent,
+    MensajesComponent,
+    MensajesListComponent,
+    MensajeComponent,
+    EntrenamientoComponent,
+    ParametrosComponent,
+    AddParameterComponent,
+    ParamRowComponent,
+    ParamValueComponent,
+    BreadcumsComponent,
+    FrasesFormComponent,
+    FraseItemComponent,
+    FraseParametersComponent,
+    PartParameterComponent,
+    MensajeHeaderComponent,
+    DelMensajeDialogComponent,
+    OpcionesComponent,
+    RespuestasComponent,
+    RespuestaCardComponent,
+    BuscarFormComponent,
+    CondicionalFormComponent,
+    GrupoDatosComponent,
+    PredefinidaFormComponent,
+    TiposComponent,
+    AddTipoComponent,
+    AddClaseComponent,
+    TipoComponent,
+    ClaseItemComponent,
+    TipoBodyComponent,
+    TipoSelectorComponent,
   ],
   imports: [
     CommonModule,
@@ -34,13 +100,6 @@ import { GdevTextModule } from '../../../Gdev-Tools/text/gdev-text.module';
     FormsModule,
     ReactiveFormsModule,
     MaterialModule,
-    MensajesModule,
-    AccionesModule,
-    ContextosModule,
-    MensajesModule,
-    OpcionesModule,
-    RespuestasModule,
-    TiposModule,
     ColorThemeModule,
     GdevResponsiveModule,
     GdevTextModule,

@@ -8,6 +8,7 @@ import { switchMap, first, catchError, take } from 'rxjs/operators';
 import { HttpHeaders, HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
 // import * as google from 'googleapis'
 import { Loading } from '../../Gdev-Tools/loading/loading.service';
+import { CacheService } from '../../Gdev-Tools/cache/cache.service';
 
 // const oauth2Client = new google.auth.OAuth2(
 //   '683912406589-acc9kkbnqu7qgao221kuk6aqanqli01b.apps.googleusercontent.com',
@@ -30,6 +31,7 @@ export class AuthService {
     private router: Router,
     private _http: HttpClient,
     private loading: Loading,
+    private _cache: CacheService
     ) {
       
 
@@ -45,21 +47,19 @@ export class AuthService {
   
   
   async getCurrentUser() {
-    var user = JSON.parse( sessionStorage.getItem( 'aSmart-user' ) )
+    var user = this._cache.getDataKey('user')
     
     if ( !user ) {
       
       var user2 = await this.user$.pipe( take( 1 ) ).toPromise()
-      console.log( user2 );
       if ( !user2 ) {
         this.router.navigate(['/'], {queryParams:{logged: false}})
       } else {
-        sessionStorage.setItem('aSmart-user', JSON.stringify(user2))
+        this._cache.updateData('user', user2)
       }
       return user2
       
     } else {
-      
       return user
     }
   }
@@ -93,11 +93,13 @@ export class AuthService {
     // Si no existe, se agrega fecha de registro
     if (userDoc.exists) {
       var data = { uid, email, displayName, photoURL }
-      userRef.set(data, { merge: true })
+      userRef.set( data, { merge: true } )
+      this._cache.updateData('user', userDoc.data())
       localStorage.setItem('mii', JSON.stringify(userDoc.data()))
     } else {
       var newData = { uid, email, displayName, photoURL, dateRegist }
-      userRef.set(newData, { merge: true })
+      userRef.set( newData, { merge: true } )
+      this._cache.updateData( 'user', newData )
       localStorage.setItem('mii', JSON.stringify(newData))
     }
 

@@ -38,14 +38,29 @@ export class RespuestasService {
 
 
   async initRespData() {
-    this.currentContext = await this._cache.getDataKey('currentContexto')
-    this.currentMensaje = await this._currentMensaje.getCurrentMensaje()
+    var allData = await this._cache.getFullData()
+    this.currentContext = allData['currentContexto']
+    this.currentMensaje = allData['currentMensaje']
+    console.log(this.currentMensaje);
     this.contextList = await this._contextos.getAllContexts()
-    this.mensajesList = await this._mensajes.getAllMensajesList()
+    console.log(this.contextList);
+    this.mensajesList = allData['allMensajesList']
+    console.log(this.mensajesList);
     this.paramList = this.currentMensaje.parameters
+    console.log( this.paramList );
+    await this.getNextMensaje()
+    return
+  }
+
+
+  async getNextMensaje() {
     var mensajes: IntentModel[] = await this._cache.getDataKey( 'mensajesList:' + this.currentContext )
-    var currentIntenIndex = mensajes.findIndex( intent => intent.name == this.currentMensaje.name)
-    this.nextMensaje = currentIntenIndex == mensajes.length +1 ? '' : mensajes[currentIntenIndex + 1].displayName
+    console.log( mensajes , this.currentMensaje );
+    if ( mensajes.length > 0 )
+      var currentIntenIndex = mensajes.findIndex
+        ( intent => intent.name == this.currentMensaje.name );
+
+    this.nextMensaje = currentIntenIndex == mensajes.length - 1 ? '' : mensajes[ currentIntenIndex + 1 ].displayName
   }
 }
 

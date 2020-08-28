@@ -18,7 +18,7 @@ const routes: Routes = [
     path: '', component: PublicComponent, children: [
       {
         path: 'dashboard', component: DashboardComponent, children: [
-          // { path: '', redirectTo: 'agentes' },
+          { path: '', redirectTo: 'agentes', pathMatch:'full' },
           { path: 'agentes', component: AgentesComponent },
           { path: 'crear_agente', component: InitAgenteComponent },
           {
@@ -39,7 +39,8 @@ const routerOptions: ExtraOptions = {
   useHash: false,
   anchorScrolling: 'enabled',
   scrollPositionRestoration: 'disabled',
-  onSameUrlNavigation: 'reload'
+  onSameUrlNavigation: 'reload',
+  paramsInheritanceStrategy: 'always'
 };
 
 @NgModule({

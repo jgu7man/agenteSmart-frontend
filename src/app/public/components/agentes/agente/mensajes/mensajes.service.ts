@@ -8,6 +8,8 @@ import { Contexto } from '../contextos/contexto.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GdevAlertServiceModule } from '../../../../../Gdev-Tools/alerts/gdev-alert-service.module';
 import { AlertService } from '../../../../../Gdev-Tools/alerts/alert.service';
+import { Observable } from 'rxjs';
+import { IntentModel } from './mensaje.model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +17,8 @@ import { AlertService } from '../../../../../Gdev-Tools/alerts/alert.service';
 export class MensajesService {
 
   mensajesPath: string
+  mensajes$ = new Observable<IntentModel[]>()
+  mensajesList: IntentModel[]
   
   
   constructor (
@@ -28,9 +32,9 @@ export class MensajesService {
     private router: Router
   ) {
     
-    }
-    
+  }
   
+
   async mensajesCollection() {
     this.mensajesPath = await this._agente.getPath( 'mensajes' )
     const mensajesRef = this.fs.collection( this.mensajesPath ).ref
@@ -51,15 +55,12 @@ export class MensajesService {
     const name = this._text.normalize( mensajeName.toLowerCase() )
     
     // READ Busca en las mensajes que no esté duplicada
-    const mensajeList = await this.getAllMensajesList()
-    if ( mensajeList.includes( name ) ) {
+    let mensajeDuplicated = this.mensajesList
+    .find(msj => msj.name == name)
+    if ( mensajeDuplicated ) {
       console.log(name, ' duplicada');
       this._alerta.sendMessageAlert( 'Mensaje Duplicada' )
     } else {
-    
-
-
-      
       await (await this.mensajesCollection()).doc( name )
         .set( {
           index: index,
@@ -79,11 +80,14 @@ export class MensajesService {
   // READ ENTRADAS
 
   async getAllMensajesList() {
-    var mensajesList = []
-      const mensajeCol = await ( await this.mensajesCollection() ).get()
-      await this._loading.asyncForEach( mensajeCol.docs, mensaje => { mensajesList.push( mensaje.data() ) } )
-      await this._cache.updateData( 'todosMensajesList', mensajesList )
-    return mensajesList
+    this.mensajesPath = await this._agente.getPath( 'mensajes' )
+    this.mensajes$ = this.fs.collection<IntentModel>( this.mensajesPath ).valueChanges()
+    this.mensajes$.pipe().subscribe( mensajes => {
+      this.mensajesList = mensajes
+      this._cache.updateData( 'allMensajesList', mensajes )
+    })
+    
+    return
   }
 
 

@@ -12,7 +12,6 @@ import { AuthService } from '../../../admin/auth/auth.service';
 })
 export class AgentesComponent implements OnInit, AfterViewInit {
 
-  agentes: AgenteModel[] = []
   constructor (
     public _agentes: AgentesService,
     public router: Router,
@@ -20,7 +19,7 @@ export class AgentesComponent implements OnInit, AfterViewInit {
   ) {}
   
   async ngOnInit() {
-    this.agentes = await this._agentes.loadAgentes()
+    
   }
   
   async ngAfterViewInit() {

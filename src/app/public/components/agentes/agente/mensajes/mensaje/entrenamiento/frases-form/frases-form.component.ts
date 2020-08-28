@@ -68,6 +68,7 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
       this.loading.waitFor( 200 )
       this._frases.addTraningPhrase( NEWPHRASE ).then( () => {
         this.getFrasesEntrenamiento()
+        this.newPhrase = ''
       } )
     }
   }

@@ -1,5 +1,11 @@
-#inputPhrase, #newPhraseInput {
+.newFrase{
     width: 100%;
+    .mat-form-field-wrapper {
+        height: 50px !important;
+        #inputPhrase, #newPhraseInput {
+            width: 100%;
+        }
+    }
 }
 
 .phrases-list:first-child {

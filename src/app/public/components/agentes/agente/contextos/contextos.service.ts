@@ -9,23 +9,30 @@ import { CurrentAgenteService } from '../current-agente.service';
 import { take } from 'rxjs/operators';
 import { GdevAlertServiceModule } from '../../../../../Gdev-Tools/alerts/gdev-alert-service.module';
 import { AlertService } from '../../../../../Gdev-Tools/alerts/alert.service';
+import { Loading } from '../../../../../Gdev-Tools/loading/loading.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ContextosService {
 
-  contexts: string[]
+  contexts: Contexto[]
   user: UserInterface
   agenteId: string
   agentePath
-  contextRef:CollectionReference
+  contextRef: CollectionReference
+  currentContexto$: string
   constructor (
     private afs: AngularFirestore,
     private _alerta: AlertService,
     private _mensajes: MensajesService,
-    private _agente: CurrentAgenteService
+    private _agente: CurrentAgenteService,
+    private _cache: CacheService,
+    private loading: Loading
   ) {
+    this.loading.getRouteQueryParams().subscribe( queryParams => {
+      this.currentContexto$ = queryParams['contexto']
+    })
   }
   
   async contextosCollection() {
@@ -61,15 +68,22 @@ export class ContextosService {
 
   // READ
 
+  async getCurrentContexto() {
+    if ( !this.currentContexto$ ) {
+      this.currentContexto$ = await this._cache.getDataKey( 'currentContexto' )
+      if(!this.currentContexto$) return ''
+    } 
+    return this.currentContexto$
+  }
+  
+
 
   async getOneContext( contexto: Contexto ) {
-    
 
     var contextDoc = await (await this.contextosCollection()).doc( contexto.id ).get()
     var contextGeted: Contexto = contextDoc.data() as Contexto
     
     return contextGeted
-    
   }
 
 
@@ -78,14 +92,14 @@ export class ContextosService {
   
 
   async getAllContexts() {
-    var contextos: Contexto[] = []
-
-    var contextCol = await (await this.contextosCollection()).orderBy('index').get()
-    contextCol.forEach( contexto => {
-      contextos.push(contexto.data() as Contexto)
-    } )
     
-    return contextos
+    this.contexts = []
+    var contextCol = await ( await this.contextosCollection() ).orderBy( 'index' ).get()
+    contextCol.forEach( contexto => {
+      this.contexts.push(contexto.data() as Contexto)
+    } )
+
+    return this.contexts
   }
 
 
