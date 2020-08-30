@@ -1,16 +1,26 @@
 <div class="container">
     <div class="row" *ngIf="_agentes.agentes$ | async; else noAgentes">
+
+        <!-- Si hay agentes -->
         <div class="col s12 l6 agente-box" *ngFor="let agente of _agentes.agentes$ | async" >
             <mat-card>
                 <mat-card-header> 
+                    <!-- Icono del agente -->
                     <div mat-card-avatar 
                     class="avatar-img" 
                     [ngStyle]="{'background-image':'url('+agente.avatarUri+')'}" 
                     [routerLink]="['/dashboard/agente/', agente.projectId]"
-                    alt=""></div>
+                    alt="">
+                    </div>
+
+                    <!-- Nombre del agentes -->
                     <mat-card-title [routerLink]="['/dashboard/agente/', agente.projectId]"
                     >{{agente.displayName}} </mat-card-title>
+
+                    <!-- Descripción -->
                     <mat-card-subtitle> {{agente.description}} </mat-card-subtitle>
+
+                    <!-- Opciones -->
                     <button class="card-menu" mat-button [matMenuTriggerFor]="menu">
                         <i class="fas fa-ellipsis-v"></i>
                     </button>
@@ -18,11 +28,14 @@
                         <button mat-menu-item>Editar</button>
                         <button mat-menu-item>Eliminar</button>
                     </mat-menu>
+
                 </mat-card-header>
             </mat-card>
         </div>
         
     </div>
+
+         <!-- Si no hay agentes -->
             <ng-template #noAgentes>
                 no agentes
             </ng-template>

@@ -1,4 +1,4 @@
-<div id="mensaje-header" *ngIf="mensaje" >
+<div id="mensaje-header" *ngIf="_mensaje.current$ | async as mensaje" >
     <div class="row align-cols">
         <div class="col s2 m1 goback-btn">
             <button mat-button (click)="location.back()" >

@@ -17,7 +17,7 @@ export class MensajeHeaderComponent implements OnInit {
   nameEdited: string
 
   constructor (
-    private _mensaje: CurrentMensajeService,
+    public _mensaje: CurrentMensajeService,
     private _dialog: MatDialog,
     public location: Location
   ) { }
@@ -27,7 +27,7 @@ export class MensajeHeaderComponent implements OnInit {
   }
   
   async getMensaje() {
-    this._mensaje.currentMensaje$.pipe().subscribe( current => {
+    this._mensaje.current$.subscribe( current => {
       this.mensaje = current
     })
   }

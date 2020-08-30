@@ -7,8 +7,9 @@ import { CurrentMensajeService } from '../../current-mensaje.service';
 import { FraseItemComponent } from './frase-item/frase-item.component';
 import { FraseParametersComponent } from './frase-parameters/frase-parameters.component';
 import { MatExpansionPanel } from '@angular/material/expansion';
-import { Subscription } from 'rxjs';
+import { Subscription, from } from 'rxjs';
 import { ParametrosService } from '../parametros/parametros.service';
+import { take, mergeAll, takeLast } from 'rxjs/operators';
 
 @Component({
   selector: 'aSmart-frases-form',
@@ -20,7 +21,6 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   
   addPhraseInput: boolean = false
-  frases: FraseEntrenamiento[]
   newPhrase: string
   phraseParts: FraseParte[] = []
   fraseExpanded: string
@@ -34,14 +34,13 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor (
     private loading: Loading,
-    private _frases: FrasesService,
+    public frases: FrasesService,
     private _params: ParametrosService
   ) { }
 
   ngOnInit(): void {
-    this.getFrasesEntrenamiento()
-    this.listenerParamDeleted = this._params.parameterDeleted$
-    .subscribe(()=>{this.getFrasesEntrenamiento()})
+    // this.listenerParamDeleted = this._params.parameterDeleted$
+    // .subscribe(()=>{this.getFrasesEntrenamiento()})
   }
 
   ngAfterViewInit() {
@@ -62,22 +61,18 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
       const NEWPHRASE: FraseEntrenamiento = {
         type: 'EXAMPLE',
-        parts: this._frases.createParts( this.newPhrase )
+        parts: this.frases.createParts( this.newPhrase )
       }
       console.log( NEWPHRASE );
       this.loading.waitFor( 200 )
-      this._frases.addTraningPhrase( NEWPHRASE ).then( () => {
-        this.getFrasesEntrenamiento()
+      this.frases.addTraningPhrase( NEWPHRASE ).then( () => {
         this.newPhrase = ''
       } )
     }
   }
   
 
-  // READ Frase
-  async getFrasesEntrenamiento() {
-    this.frases = await this._frases.get()
-  }
+  
 
   
 
@@ -94,13 +89,13 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if ( textSelected ) {
       // Select the frase that whas select on
-      const fraseOnEdit = this.frases.find( Frase => Frase.name == frase.name )
-      const fraseOnEditIndex = this.frases.findIndex( Frase => Frase.name == frase.name )
+      const fraseOnEdit = this.frases.frasesList.find( Frase => Frase.name == frase.name )
+      const fraseOnEditIndex = this.frases.frasesList.findIndex( Frase => Frase.name == frase.name )
 
       // Define variables
       var fraseRestructured: FraseEntrenamiento = 
       // Find the part that includes text selected and split it
-      await this._frases.stractSelectedPart(frase, textSelected)
+      await this.frases.stractSelectedPart(frase, textSelected)
       console.log( fraseRestructured);
       
       
@@ -130,7 +125,7 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   
   ngOnDestroy() {
-    this.listenerParamDeleted.unsubscribe()
+    // this.listenerParamDeleted.unsubscribe()
   }
   
 

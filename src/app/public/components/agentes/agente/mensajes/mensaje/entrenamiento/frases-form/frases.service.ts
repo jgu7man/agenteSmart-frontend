@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
-import { FraseEntrenamiento, FraseParte } from '../../../mensaje.model';
+import { FraseEntrenamiento, FraseParte, IntentModel } from '../../../mensaje.model';
 import { CurrentAgenteService } from '../../../../current-agente.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { CurrentMensajeService } from '../../current-mensaje.service';
 import { CacheService } from '../../../../../../../../Gdev-Tools/cache/cache.service';
 import { Loading } from '../../../../../../../../Gdev-Tools/loading/loading.service';
+import { Observable, of, Subject } from 'rxjs';
+import { distinctUntilKeyChanged, pluck, switchMap, tap, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -12,14 +14,36 @@ import { Loading } from '../../../../../../../../Gdev-Tools/loading/loading.serv
 export class FrasesService {
 
   mensajesPath: string
+  list$: Subject<FraseEntrenamiento[]> = new Subject()
+  frasesList: FraseEntrenamiento[]
   constructor (
     private fs:  AngularFirestore,
     private _agente: CurrentAgenteService,
     private _mensaje: CurrentMensajeService,
     private _cache: CacheService,
     private loading: Loading
-  ) { }
+  ) {
+    
 
+    
+    
+    
+    // Get subscriptions
+    this._mensaje.current$.pipe(
+      map<IntentModel, FraseEntrenamiento[]>( mensaje => mensaje.trainingPhrases )
+    ).subscribe( this.list$ )
+    this.list$.subscribe( list => {
+      this.frasesList = list
+    } )
+
+
+
+   }
+
+  
+  
+  
+  
   async mensajesCollection() {
     this.mensajesPath = await this._agente.getPath( `mensajes` )
     const mensajesRef = this.fs.collection( this.mensajesPath ).ref
@@ -31,19 +55,17 @@ export class FrasesService {
   async addTraningPhrase( frase: FraseEntrenamiento ) {
     try {
 
-      var frasesList = await this.get()
-      console.log(frasesList);
       const mensaje = await this._cache.getDataKey( 'currentMensaje' )
       frase.name = Math.random().toString( 36 ).substring( 7 );
       var newFrase = [ frase ];
       console.log( frase );
       
-      if ( frasesList ) {
+      if ( this.frasesList ) {
         console.log( 'update' );
-        frasesList.push( frase )
-        mensaje[ 'trainingPhrases' ] = frasesList
+        this.frasesList.push( frase )
+        mensaje[ 'trainingPhrases' ] = this.frasesList
         await ( await this.mensajesCollection() ).doc( mensaje.name )
-          .update( { trainingPhrases: frasesList } );
+          .update( { trainingPhrases: this.frasesList } );
       } else {
         console.log( 'create' );
         mensaje[ 'trainingPhrases' ] = [frase]
@@ -61,24 +83,17 @@ export class FrasesService {
   }
 
 
-// READ Frases de entrenamietos
-  async get() {
 
-    const mensaje = await ( await this._mensaje.getCurrentMensaje() )
-    console.log(mensaje);
-    const frasesList: FraseEntrenamiento[] = mensaje.trainingPhrases
-    return frasesList
-  }
 
 
   
 
   async updatePhrase( frase: FraseEntrenamiento ) {
     const mensaje = await this._cache.getDataKey( 'currentMensaje' )
-    const phrasesList = await this.get()
-    const phraseToEdit = phrasesList.findIndex( phrase => phrase.name === frase.name )
-    phrasesList[ phraseToEdit ] = frase;
-    ( await this.mensajesCollection() ).doc( mensaje.name ).set( { trainingPhrases: phrasesList }, {merge: true} );
+    const phraseToEdit = this.frasesList.findIndex( phrase => phrase.name === frase.name )
+    console.log(this.frasesList);
+    this.frasesList[ phraseToEdit ] = frase;
+    ( await this.mensajesCollection() ).doc( mensaje.name ).set( { trainingPhrases: this.frasesList }, {merge: true} );
     return
   }
 
@@ -223,11 +238,10 @@ export class FrasesService {
 
   async deletePhrase( frase: FraseEntrenamiento ) {
     const mensaje = await this._cache.getDataKey( 'currentMensaje' )
-    const phrasesList = await this.get()
-    const phraseToDel = phrasesList.findIndex( phrase => phrase.name === frase.name )
-    phrasesList.splice( phraseToDel, 1 );
+    const phraseToDel = this.frasesList.findIndex( phrase => phrase.name === frase.name )
+    this.frasesList.splice( phraseToDel, 1 );
     
-    ( await this.mensajesCollection() ).doc( mensaje.name ).set( { trainingPhrases: phrasesList }, { merge: true } );
+    ( await this.mensajesCollection() ).doc( mensaje.name ).set( { trainingPhrases: this.frasesList }, { merge: true } );
     return
   }
 

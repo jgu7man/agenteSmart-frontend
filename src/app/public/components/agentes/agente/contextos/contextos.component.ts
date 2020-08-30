@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, ViewEncapsulation, ContentChildren, QueryList, ViewChildren } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ViewEncapsulation, ContentChildren, QueryList, ViewChildren, OnDestroy } from '@angular/core';
 import { AgentesService } from '../../agentes.service';
 import { ContextosService } from './contextos.service';
 import { ActivatedRoute } from '@angular/router';
@@ -16,12 +16,12 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
   styleUrls: [ './contextos.component.scss' ],
   encapsulation: ViewEncapsulation.None
 })
-export class ContextosComponent implements OnInit {
+export class ContextosComponent implements OnInit, OnDestroy {
 
   agente: AgenteModel
   switchAddContext: boolean = false
   switchEditContext: boolean = false
-  contextos: Contexto[]
+  list: Contexto[]
   contextToEdit: string
 
   @ViewChild(AddContextoComponent) addContext: AddContextoComponent
@@ -29,9 +29,10 @@ export class ContextosComponent implements OnInit {
   @ViewChildren( ContextoComponent ) contextCols: QueryList<ContextoComponent>
 
   constructor (
-    public _contextos: ContextosService,
+    public contextos: ContextosService,
     private _loading: Loading,
   ) {
+    this.contextos.getAllContexts()
   }
 
   async ngOnInit() {
@@ -57,8 +58,8 @@ export class ContextosComponent implements OnInit {
 
   
   drop( event: CdkDragDrop<any> ) {
-    moveItemInArray( this.contextos, event.previousIndex, event.currentIndex )
-    this._contextos.updateIndex(this.contextos)
+    moveItemInArray( this.list, event.previousIndex, event.currentIndex )
+    this.contextos.updateIndex(this.list)
   }
   
   grabEffect( element ) {
@@ -74,20 +75,22 @@ export class ContextosComponent implements OnInit {
   
 
   async getContextos() {
-    let contextos = await this._contextos.getAllContexts( )
-    this.contextos = contextos.length > 0 ? contextos : undefined
+    // let contextos = await this._contextos.getAllContexts( )
+    // this.contextos = contextos.length > 0 ? contextos : undefined
+  }
+
+  
+
+  ngOnDestroy(): void {
+    this.contextos.unsubscribeAllContext()
   }
 
   
 
   
 
-  
-
-  
-
   toDeleteContext( contexto ) {
-    this._contextos.delContext( contexto ).then( () => {
+    this.contextos.delContext( contexto ).then( () => {
       this.getContextos()
     } )
   }

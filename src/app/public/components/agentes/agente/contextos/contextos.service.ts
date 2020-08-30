@@ -6,22 +6,25 @@ import { IntentModel } from '../mensajes/mensaje.model';
 import { CacheService } from '../../../../../Gdev-Tools/cache/cache.service';
 import { Contexto } from './contexto.model';
 import { CurrentAgenteService } from '../current-agente.service';
-import { take } from 'rxjs/operators';
+import { take, mergeMap, distinctUntilKeyChanged, mergeAll, tap } from 'rxjs/operators';
 import { GdevAlertServiceModule } from '../../../../../Gdev-Tools/alerts/gdev-alert-service.module';
 import { AlertService } from '../../../../../Gdev-Tools/alerts/alert.service';
 import { Loading } from '../../../../../Gdev-Tools/loading/loading.service';
+import { Subject, Observable, Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ContextosService {
 
-  contexts: Contexto[]
   user: UserInterface
   agenteId: string
   agentePath
   contextRef: CollectionReference
   currentContexto$: string
+  contextQuery$: Subject<Contexto> = new Subject()
+  list$: Subject<Contexto[]> = new Subject()
+  list: Contexto[]
   constructor (
     private afs: AngularFirestore,
     private _alerta: AlertService,
@@ -32,7 +35,7 @@ export class ContextosService {
   ) {
     this.loading.getRouteQueryParams().subscribe( queryParams => {
       this.currentContexto$ = queryParams['contexto']
-    })
+    } )
   }
   
   async contextosCollection() {
@@ -90,16 +93,31 @@ export class ContextosService {
   // READ ALL
 
   
+  subscribeAllContext: Subscription
 
   async getAllContexts() {
     
-    this.contexts = []
+     this.subscribeAllContext = this.contextQuery$.pipe(
+      tap( console.log ),
+      distinctUntilKeyChanged( 'contextName' ),
+    ).subscribe( contexto => {
+      this.list.push( contexto )
+      this._cache.updateData( 'allContexts', this.list )
+      console.log( this.list );
+    } )
+    
+    this.list = []
     var contextCol = await ( await this.contextosCollection() ).orderBy( 'index' ).get()
+    console.log(contextCol.size);
     contextCol.forEach( contexto => {
-      this.contexts.push(contexto.data() as Contexto)
+      this.contextQuery$.next( contexto.data() as Contexto )
     } )
 
-    return this.contexts
+    return this.list
+  }
+
+  unsubscribeAllContext() {
+    this.subscribeAllContext.unsubscribe()
   }
 
 

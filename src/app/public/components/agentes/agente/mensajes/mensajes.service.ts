@@ -18,7 +18,7 @@ export class MensajesService {
 
   mensajesPath: string
   mensajes$ = new Observable<IntentModel[]>()
-  mensajesList: IntentModel[]
+  list: IntentModel[]
   
   
   constructor (
@@ -31,7 +31,7 @@ export class MensajesService {
     private _route: ActivatedRoute,
     private router: Router
   ) {
-    
+    this.getAllMensajesList()
   }
   
 
@@ -55,7 +55,9 @@ export class MensajesService {
     const name = this._text.normalize( mensajeName.toLowerCase() )
     
     // READ Busca en las mensajes que no esté duplicada
-    let mensajeDuplicated = this.mensajesList
+    // if ( !this.mensajesList ) this.mensajesList = await this._cache.getDataKey( 'allMensajesList' )
+    
+    let mensajeDuplicated = this.list
     .find(msj => msj.name == name)
     if ( mensajeDuplicated ) {
       console.log(name, ' duplicada');
@@ -82,8 +84,8 @@ export class MensajesService {
   async getAllMensajesList() {
     this.mensajesPath = await this._agente.getPath( 'mensajes' )
     this.mensajes$ = this.fs.collection<IntentModel>( this.mensajesPath ).valueChanges()
-    this.mensajes$.pipe().subscribe( mensajes => {
-      this.mensajesList = mensajes
+    this.mensajes$.subscribe( mensajes => {
+      this.list = mensajes
       this._cache.updateData( 'allMensajesList', mensajes )
     })
     
@@ -93,7 +95,10 @@ export class MensajesService {
 
   async getMensajesListByContexto( contexto: Contexto ) {
     var mensajesList = []
-    const mensajeCol = await ( await this.mensajesCollection() ).where( 'contextos', 'array-contains', contexto.id ).get()
+    const mensajeCol = await ( await this.mensajesCollection() )
+      .where( 'contextos', 'array-contains', contexto.id )
+      .orderBy('index', 'asc')
+      .get()
     
     await this._loading.asyncForEach( mensajeCol.docs, mensaje => { mensajesList.push( mensaje.data() ) } )
     await this._cache.updateData( 'mensajesList:'+contexto.contextName, mensajesList )
@@ -102,7 +107,10 @@ export class MensajesService {
 
   async getMensajesListByContextoName( contextoName: string ) {
     var mensajesList = []
-    const mensajeCol = await ( await this.mensajesCollection() ).where( 'inputContextNames', 'array-contains', contextoName ).get()
+    const mensajeCol = await ( await this.mensajesCollection() )
+      .where( 'inputContextNames', 'array-contains', contextoName )
+      .orderBy( 'index', 'asc' )
+      .get()
     
     await this._loading.asyncForEach( mensajeCol.docs, mensaje => { mensajesList.push( mensaje.data() ) } )
     await this._cache.updateData( 'mensajesList:'+contextoName, mensajesList )

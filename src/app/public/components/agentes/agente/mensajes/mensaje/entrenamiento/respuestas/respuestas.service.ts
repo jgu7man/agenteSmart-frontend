@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { IntentModel, ParametroMensaje } from '../mensajes/mensaje.model';
-import { Contexto } from '../contextos/contexto.model';
-import { AccionModel } from '../acciones/accion.model';
-import { MensajesService } from '../mensajes/mensajes.service';
-import { ContextosService } from '../contextos/contextos.service';
-import { CacheService } from '../../../../../Gdev-Tools/cache/cache.service';
-import { CurrentMensajeService } from '../mensajes/mensaje/current-mensaje.service';
+import { IntentModel, ParametroMensaje } from '../../../mensaje.model';
+import { Contexto } from '../../../../contextos/contexto.model';
+import { AccionModel } from '../../../../acciones/accion.model';
+import { MensajesService } from '../../../mensajes.service';
+import { ContextosService } from '../../../../contextos/contextos.service';
+import { CurrentMensajeService } from '../../current-mensaje.service';
+import { CacheService } from '../../../../../../../../Gdev-Tools/cache/cache.service';
+
 
 
 @Injectable( {
@@ -30,7 +31,7 @@ export class RespuestasService {
   constructor (
     private _mensajes: MensajesService,
     private _contextos: ContextosService,
-    private _currentMensaje: CurrentMensajeService,
+    private _mensaje: CurrentMensajeService,
     private _cache: CacheService
   ) { 
     this.initRespData()
@@ -39,16 +40,16 @@ export class RespuestasService {
 
   async initRespData() {
     var allData = await this._cache.getFullData()
+    this.contextList = allData['allContext']
+    this.mensajesList = allData[ 'allMensajesList' ]
     this.currentContext = allData['currentContexto']
-    this.currentMensaje = allData['currentMensaje']
-    console.log(this.currentMensaje);
-    this.contextList = await this._contextos.getAllContexts()
-    console.log(this.contextList);
-    this.mensajesList = allData['allMensajesList']
-    console.log(this.mensajesList);
-    this.paramList = this.currentMensaje.parameters
-    console.log( this.paramList );
-    await this.getNextMensaje()
+    this._mensaje.current$.subscribe( mensaje => {
+      if ( mensaje ) {
+        this.currentMensaje = mensaje
+        this.paramList = this.currentMensaje.parameters
+        this.getNextMensaje()
+      }
+    })
     return
   }
 

@@ -29,7 +29,10 @@ export class AgentesService {
         this.listenAgentes()    
     }
 
-    listenAgentes() {
+    /**
+     * Establece la suscripción a los agentes
+     */
+    private listenAgentes() {
         this._auth.getCurrentUser().then( user => {
             this.agentes$ = this.afs.collection( 'usuarios' )
                 .doc( user.uid ).collection('agentes').valueChanges()

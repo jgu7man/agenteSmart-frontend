@@ -1,4 +1,4 @@
-import { CondicionalFormComponent } from './agente/respuestas/respuesta-card/res-forms/condicional-form/condicional-form.component';
+import { CondicionalFormComponent } from './agente/mensajes/mensaje/entrenamiento/respuestas/respuesta-card/res-forms/condicional-form/condicional-form.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -19,7 +19,7 @@ import { AccionesComponent } from './agente/acciones/acciones.component';
 import { ContextosComponent } from './agente/contextos/contextos.component';
 import { AddContextoComponent } from './agente/contextos/add-contexto/add-contexto.component';
 import { ContextoComponent } from './agente/contextos/contexto/contexto.component';
-import { MensajesComponent } from './agente/mensajes/mensajes.component';
+import { MensajesByContextoComponent } from './agente/mensajes/mensajes-contexto/mensajes-contexto.component';
 import { MensajesListComponent } from './agente/mensajes/mensajes-list/mensajes-list.component';
 import { MensajeComponent } from './agente/mensajes/mensaje/mensaje.component';
 import { EntrenamientoComponent } from './agente/mensajes/mensaje/entrenamiento/entrenamiento.component';
@@ -37,11 +37,11 @@ import { DelMensajeDialogComponent } from './agente/mensajes/del-mensaje-dialog/
 
 import { OpcionesComponent } from './agente/opciones/opciones.component';
 
-import { RespuestasComponent } from './agente/respuestas/respuestas.component';
-import { RespuestaCardComponent } from './agente/respuestas/respuesta-card/respuesta-card.component';
-import { BuscarFormComponent } from './agente/respuestas/respuesta-card/res-forms/buscar-form/buscar-form.component';
-import { GrupoDatosComponent } from './agente/respuestas/respuesta-card/res-forms/grupo-datos/grupo-datos.component';
-import { PredefinidaFormComponent } from './agente/respuestas/respuesta-card/res-forms/predefinida-form/predefinida-form.component';
+import { RespuestasComponent } from './agente/mensajes/mensaje/entrenamiento/respuestas/respuestas.component';
+import { RespuestaCardComponent } from './agente/mensajes/mensaje/entrenamiento/respuestas/respuesta-card/respuesta-card.component';
+import { BuscarFormComponent } from './agente/mensajes/mensaje/entrenamiento/respuestas/respuesta-card/res-forms/buscar-form/buscar-form.component';
+import { GrupoDatosComponent } from './agente/mensajes/mensaje/entrenamiento/respuestas/respuesta-card/res-forms/grupo-datos/grupo-datos.component';
+import { PredefinidaFormComponent } from './agente/mensajes/mensaje/entrenamiento/respuestas/respuesta-card/res-forms/predefinida-form/predefinida-form.component';
 
 import { TiposComponent } from './agente/tipos/tipos.component';
 import { AddTipoComponent } from './agente/tipos/add-tipo/add-tipo.component';
@@ -50,6 +50,7 @@ import { TipoComponent } from './agente/tipos/tipo/tipo.component';
 import { ClaseItemComponent } from './agente/tipos/tipo/clase-item/clase-item.component';
 import { TipoBodyComponent } from './agente/tipos/tipo/tipo-body/tipo-body.component';
 import { TipoSelectorComponent } from './agente/tipos/tipo-selector/tipo-selector.component';
+import { MensajesComponent } from './agente/mensajes/mensajes.component';
 
 
 
@@ -64,7 +65,7 @@ import { TipoSelectorComponent } from './agente/tipos/tipo-selector/tipo-selecto
     ContextosComponent,
     AddContextoComponent,
     ContextoComponent,
-    MensajesComponent,
+    MensajesByContextoComponent,
     MensajesListComponent,
     MensajeComponent,
     EntrenamientoComponent,
@@ -93,6 +94,7 @@ import { TipoSelectorComponent } from './agente/tipos/tipo-selector/tipo-selecto
     ClaseItemComponent,
     TipoBodyComponent,
     TipoSelectorComponent,
+    MensajesComponent,
   ],
   imports: [
     CommonModule,

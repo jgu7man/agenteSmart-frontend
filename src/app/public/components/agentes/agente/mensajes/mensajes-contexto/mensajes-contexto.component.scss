@@ -1,5 +1,5 @@
 .add-intent {
-    background: #fff;
+    background: transparent;
     border-radius: 5px;
     box-shadow: inset 0px 2px 1px -1px rgba(0, 0, 0, 0.2), inset 0px 1px 1px 0px rgba(0, 0, 0, 0.14), inset 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
     height: 50px;
@@ -19,3 +19,12 @@
     }
 }
 
+::ng-deep.mensajes-list:before {
+    content: "";
+    border-left: solid 1px #202020;
+    left: 50%;
+    position: absolute;
+    height: 100%;
+    display: block;
+    z-index: 1;
+}

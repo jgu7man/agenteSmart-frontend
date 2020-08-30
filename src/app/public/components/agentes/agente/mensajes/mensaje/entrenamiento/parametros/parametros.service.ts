@@ -6,7 +6,7 @@ import { CacheService } from '../../../../../../../../Gdev-Tools/cache/cache.ser
 import { ParametroMensaje, FraseEntrenamiento, FraseParte } from '../../../mensaje.model';
 import { CurrentMensajeService } from '../../current-mensaje.service';
 import { Subject, Observer, Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, startWith } from 'rxjs/operators';
 import { FrasesService } from '../frases-form/frases.service';
 import { Loading } from '../../../../../../../../Gdev-Tools/loading/loading.service';
 
@@ -19,7 +19,8 @@ export class ParametrosService {
   mensaje: IntentModel
   parameterAdded$: Subject<ParametroMensaje> = new Subject()
   parameterDeleted$: Subject<boolean> = new Subject()
-  paramList: ParametroMensaje[]
+  list$: Subject<ParametroMensaje[]> = new Subject()
+  list: ParametroMensaje[]
 
   constructor (
     private fs: AngularFirestore,
@@ -28,7 +29,21 @@ export class ParametrosService {
     private _cache: CacheService,
     private _frases: FrasesService,
     private loading: Loading
-  ) { }
+  ) {
+
+
+
+    // Get subscriptions
+    this._mensaje.current$.pipe(
+      map<IntentModel, ParametroMensaje[]>( mensaje => mensaje.parameters )
+    ).subscribe( this.list$ )
+    this.list$.pipe(
+      startWith([])
+    ).subscribe( list => {
+      this.list = list
+    } )
+
+   }
   
   async mensajesCollection() {
     this.mensajesPath = await this._agente.getPath( `mensajes` )
@@ -43,20 +58,20 @@ export class ParametrosService {
     this.mensaje = await this._cache.getDataKey( 'currentMensaje' )
     param.name = Math.random().toString( 36 ).substring( 7 );
     var newParam = [ param ];
-    var paramList = await this.get()
     
-    if ( !paramList ) {
+    
+    if ( !this.list ) {
       await ( await this.mensajesCollection() ).doc( this.mensaje.name )
         .update( { parameters: [ param ] } );
       this.parameterAdded$.next( param )
 
     } else {
-      let paramStored = paramList.find( parameter => parameter.displayName = param.displayName )
+      let paramStored = this.list.find( parameter => parameter.displayName = param.displayName )
   
       if ( !paramStored ) {
-        paramList.push( param )
+        this.list.push( param )
         await ( await this.mensajesCollection() ).doc( this.mensaje.name )
-          .update( { parameters: paramList } );
+          .update( { parameters: this.list } );
         this.parameterAdded$.next( param );
       }
 
@@ -67,38 +82,31 @@ export class ParametrosService {
   }
 
 
-  async get() {
-    this.paramList = []
-    this.mensaje = await this._mensaje.getCurrentMensaje()
-    this.paramList = this.mensaje.parameters
-
-    return this.paramList
-  }
+  
 
 
   async updateParam( param: ParametroMensaje ) {
-    var paramIndex = this.paramList.findIndex( parameter => parameter.name == param.name )
-    this.paramList[paramIndex] = param
+    var paramIndex = this.list.findIndex( parameter => parameter.name == param.name )
+    this.list[paramIndex] = param
     await ( await this.mensajesCollection() ).doc( this.mensaje.name ).update( {
-      parameters: this.paramList
+      parameters: this.list
     })
   }
 
 
   async deleteParam( param: ParametroMensaje ) {
-    var paramIndex = this.paramList.findIndex( parameter => parameter.name == param.name )
-    this.paramList.splice(paramIndex, 1)
+    var paramIndex = this.list.findIndex( parameter => parameter.name == param.name )
+    this.list.splice(paramIndex, 1)
     await ( await this.mensajesCollection() ).doc( this.mensaje.name ).update( {
-      parameters: this.paramList
+      parameters: this.list
     } ).then( () => {
       this.deleteParamInParts(param.displayName)
     } )
   }
 
   async deleteParamInParts( displayName: string ) {
-    const frasesList = await this._frases.get()
 
-    await this.loading.asyncForEach( frasesList,
+    await this.loading.asyncForEach( this.list,
       async ( frase: FraseEntrenamiento ) => {
       
       return this.loading.asyncForEach( frase.parts,

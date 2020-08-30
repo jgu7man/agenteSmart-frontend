@@ -1,9 +1,6 @@
 import { Component, OnInit, AfterViewChecked, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AgentesService } from './agentes.service';
-import { AgenteModel } from './init-agente/agente.model';
-import { Loading } from '../../../Gdev-Tools/loading/loading.service';
-import { AuthService } from '../../../admin/auth/auth.service';
 
 @Component({
   selector: 'aSmart-agentes',
@@ -15,11 +12,9 @@ export class AgentesComponent implements OnInit, AfterViewInit {
   constructor (
     public _agentes: AgentesService,
     public router: Router,
-    private loading: Loading,
   ) {}
   
   async ngOnInit() {
-    
   }
   
   async ngAfterViewInit() {

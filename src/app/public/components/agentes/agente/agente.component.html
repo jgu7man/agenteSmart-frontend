@@ -1,3 +1,4 @@
+<!-- Barra de información del agente -->
 <nav 
 gdev-color
 [background]="'white'"
@@ -5,6 +6,8 @@ class="agentNav"
 mat-tab-nav-bar 
 mat-align-tabs="end"
 *ngIf="agente">
+
+    <!-- Imagen y nombre -->
     <div class="agentInfo">
         
         <div class="imgAgentAvatar">
@@ -17,6 +20,8 @@ mat-align-tabs="end"
         class="agentName"
         > {{agente.displayName}} </p>
     </div>
+
+    <!-- Secciones del agente -->
     <a mat-tab-link
         [ngStyle]="{'display': _responsive.small ? 'none' : 'inline-flex'}"
         *ngFor="let link of agentLinks"

@@ -26,10 +26,10 @@ export class MensajeComponent implements OnInit, OnDestroy {
     private _dialog: MatDialog,
     private loading: Loading
   ) {
+    this._mensaje.getAsync()
    }
 
   ngOnInit(): void {
-    // this.loadMensaje()
     this.updateMensaje()
   }
 
@@ -37,22 +37,17 @@ export class MensajeComponent implements OnInit, OnDestroy {
     this.inMensaje$ =
       this.router.events.subscribe( ( val ) => {
         if ( val instanceof NavigationEnd ) {
-          // this.loadMensaje()
-          console.log('cambio');
+          this._mensaje.getAsync()
         }
       } )
     
-    this.updated$ = 
-      this._mensaje.updateCurrtentMensaje$.subscribe( updated => {
-        console.log('updated');
-        // this.loadMensaje()
-      })
+    
   }
   
   
 
   ngOnDestroy(): void {
-    this.inMensaje$.unsubscribe()
+    this._mensaje.unsubscribe()
   }
 
 }

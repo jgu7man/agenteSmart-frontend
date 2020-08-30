@@ -10,26 +10,25 @@ import { Observer, Subscription } from 'rxjs';
 })
 export class ParametrosComponent implements OnInit, OnDestroy {
 
-  parametros: ParametroMensaje[]
   listenNewParam$: Subscription
   listenParamDeleted$: Subscription
   switchAddParameter: boolean = false
 
   constructor (
-    private _params: ParametrosService
+    public params: ParametrosService
   ) { }
 
   async ngOnInit() {
     await this.loadParams()
-    this.listenNewParam$ = this._params.parameterAdded$
+    this.listenNewParam$ = this.params.parameterAdded$
       .subscribe( () => { this.loadParams() } )
-    this.listenParamDeleted$ = this._params.parameterDeleted$
+    this.listenParamDeleted$ = this.params.parameterDeleted$
       .subscribe( () => { this.loadParams() })
   }
   
   
   async loadParams() {
-    this.parametros = await this._params.get()
+    
   }
 
   toAddParam() {

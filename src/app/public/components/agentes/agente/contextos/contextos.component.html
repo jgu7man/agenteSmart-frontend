@@ -1,10 +1,17 @@
-<div id="mensajes_container">
-    <div class="row" id="contextos" *ngIf="contextos" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="drop($event)">
-        <div class="col s12 m3 en-Column" cdkDrag cdkDragLockAxis="x"
-         *ngFor="let contexto of contextos; trackBy: trackContextById"
-         strechHeight id="context-{{contexto}}"
-         >
-
+    <div 
+    class="row" 
+    id="contextos" 
+    *ngIf="contextos.list" 
+    cdkDropList 
+    cdkDropListOrientation="horizontal" 
+    (cdkDropListDropped)="drop($event)">
+        <div class="col s12 m3 en-Column" 
+        cdkDrag 
+        cdkDragLockAxis="x"
+        *ngFor="let contexto of contextos.list; trackBy: trackContextById"
+        strechHeight 
+        id="context-{{contexto}}"
+        >
 
             <!-- Titulo de contexto agregado -->
             <div class="row">
@@ -30,7 +37,7 @@
             </div>
             
             <!-- Agregado de mensaje nueva -->
-            <aSmart-mensajes [contexto]="contexto"></aSmart-mensajes>
+            <aSmart-mensajes-by-contexto [contexto]="contexto"></aSmart-mensajes-by-contexto>
             
         </div>
 
@@ -50,7 +57,7 @@
                     <ng-template #addContext>
                         <aSmart-add-contexto 
                         (contextAdded)="getContextos()"
-                        [lastIndex]="contextos.length" 
+                        [lastIndex]="contextos.list.length" 
                         (unfocus)="switchAddContext = false">
                         </aSmart-add-contexto>
                     </ng-template>
@@ -60,4 +67,3 @@
 
         </div>
     </div>
-</div>

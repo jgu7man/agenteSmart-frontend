@@ -1,5 +1,5 @@
 import { Contexto } from '../contextos/contexto.model';
-import { RespuestaMensaje } from '../respuestas/respuestasIntent.model';
+import { RespuestaMensaje } from './mensaje/entrenamiento/respuestas/respuestasIntent.model';
 
 export interface IntentModel {
     index: number,

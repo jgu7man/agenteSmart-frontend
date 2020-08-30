@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RespuestasService } from '../../../respuestas.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { CacheService } from '../../../../../../../../Gdev-Tools/cache/cache.service';
+import { CacheService } from '../../../../../../../../../../../Gdev-Tools/cache/cache.service';
 
 @Component({
   selector: 'aSmart-predefinida',

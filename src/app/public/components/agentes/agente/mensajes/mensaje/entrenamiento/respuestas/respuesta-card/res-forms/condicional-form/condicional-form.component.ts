@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RespuestasService } from '../../../respuestas.service';
-import { CacheService } from '../../../../../../../../Gdev-Tools/cache/cache.service';
+import { CacheService } from '../../../../../../../../../../../Gdev-Tools/cache/cache.service';
 
 @Component({
   selector: 'aSmart-condicional-form',
@@ -22,6 +22,8 @@ export class CondicionalFormComponent implements OnInit {
     { displayText: 'menor que ', operator: '<' },
     { displayText: 'mayor o igual que', operator: '>=' },
     { displayText: 'menor o igual que', operator: '<=' },
+    { displayText: 'existe', operator: '' },
+    { displayText: 'no existe', operator: '!'}
   ]
 
   constructor (

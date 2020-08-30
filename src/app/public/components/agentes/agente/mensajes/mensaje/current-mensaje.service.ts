@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { CurrentAgenteService } from '../../current-agente.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { IntentModel } from '../mensaje.model';
-import { Observable, Subject, of } from 'rxjs';
+import { Observable, Subject, of, Subscription, AsyncSubject, forkJoin } from 'rxjs';
 import { Loading } from '../../../../../../Gdev-Tools/loading/loading.service';
-import { switchMap, take } from 'rxjs/operators';
+import { switchMap, take, distinctUntilKeyChanged, mergeAll, pluck, map, tap } from 'rxjs/operators';
 import { CacheService } from '../../../../../../Gdev-Tools/cache/cache.service';
 
 @Injectable({
@@ -12,8 +12,15 @@ import { CacheService } from '../../../../../../Gdev-Tools/cache/cache.service';
 })
 export class CurrentMensajeService {
 
-  updateCurrtentMensaje$: Subject<CurrentMensaje> = new Subject()
-  currentMensaje$: Observable<IntentModel> = new Observable()
+
+  mensaje$: Observable<IntentModel> = new Observable()
+  current$: Subject<IntentModel> = new Subject()
+  mensajeSub$: Subscription
+
+  currentMensaje: IntentModel
+  paramsSubs$: Subscription
+  queryParamsSubs$: Subscription
+  
   mensajeName: string
   currentContexto: string
   mensajesPath: string
@@ -23,47 +30,45 @@ export class CurrentMensajeService {
     private _cache: CacheService,
     private loading: Loading,
   ) {
-    this.getParams()
-    this.get()
   }
 
   getParams() {
-    this.loading.getRouteParams().subscribe( params => {
-      this.mensajeName = params['name']
+    return forkJoin({
+      [ 'mensajeName' ]: this.loading.getRouteParams()
+        .pipe(pluck('name')),
+      [ 'currentContexto' ]: this.loading.getRouteQueryParams()
+        .pipe(pluck('contexto'))
     } )
-    this.loading.getRouteQueryParams().subscribe( qParams => {
-      this.currentContexto = qParams[ 'contexto' ]
-      this._cache.updateData( 'currentContexto', this.currentContexto )
-    })
   }
   
-
-  async getCurrentMensaje() {
-    let mensaje: IntentModel = await this._cache.getDataKey( 'currentMensaje' )
-    if ( !mensaje ) {
-      let mensajeDoc = await ( await this.mensajesCollection() )
-        .doc( this.mensajeName ).get()
-      mensaje = mensajeDoc.data() as IntentModel
-    }
-    return mensaje
-  }
-    
 
   async mensajesCollection() {
     this.mensajesPath = await this._agente.getPath( 'mensajes' )
     const mensajesRef = this.fs.collection( this.mensajesPath ).ref
     return mensajesRef
   }
+
+
+
   
-  async get() {
-    this.mensajesPath = await this._agente.getPath( 'mensajes' )
-    this.currentMensaje$ =
-      this.fs.collection( this.mensajesPath ).doc<IntentModel>( this.mensajeName )
-        .valueChanges()
-    this.currentMensaje$.pipe().subscribe( doc => {
-      this._cache.updateData('currentMensaje', doc)
-    })
+
+
+  async getAsync() {
+    this.getParams().subscribe( async ( data ) => {
+      this.currentContexto = data.currentContexto 
+      this.mensajeName = data.mensajeName
+      
+      this.mensajesPath = await this._agente.getPath( 'mensajes' )
+      this.mensaje$ = this.fs.collection( this.mensajesPath )
+      .doc<IntentModel>( this.mensajeName ).valueChanges()
+      
+      this.mensajeSub$ = this.mensaje$.subscribe( this.current$ )
+      this.mensaje$.subscribe( mensaje => this._cache.updateData( 'currentMensaje', mensaje ) )
+      
+      this._cache.updateData( 'currentContexto', this.currentContexto )
+    } )
   }
+
 
   async updateMensajeName( mensajeName: string, displayName: string ) {
     await ( await this.mensajesCollection() ).doc( mensajeName ).update( {
@@ -75,6 +80,11 @@ export class CurrentMensajeService {
 
   async delete( mensajeName ) {
     return await ( await this.mensajesCollection() ).doc( mensajeName ).delete()
+  }
+
+
+  unsubscribe() {
+    this.mensajeSub$.unsubscribe()
   }
 }
 
