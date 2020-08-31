@@ -51,6 +51,8 @@ import { ClaseItemComponent } from './agente/tipos/tipo/clase-item/clase-item.co
 import { TipoBodyComponent } from './agente/tipos/tipo/tipo-body/tipo-body.component';
 import { TipoSelectorComponent } from './agente/tipos/tipo-selector/tipo-selector.component';
 import { MensajesComponent } from './agente/mensajes/mensajes.component';
+import { SugerenciasComponent } from './agente/mensajes/mensaje/entrenamiento/respuestas/respuesta-card/res-style/sugerencias/sugerencias.component';
+import { CardComponent } from './agente/mensajes/mensaje/entrenamiento/respuestas/respuesta-card/res-style/card/card.component';
 
 
 
@@ -95,6 +97,8 @@ import { MensajesComponent } from './agente/mensajes/mensajes.component';
     TipoBodyComponent,
     TipoSelectorComponent,
     MensajesComponent,
+    SugerenciasComponent,
+    CardComponent,
   ],
   imports: [
     CommonModule,

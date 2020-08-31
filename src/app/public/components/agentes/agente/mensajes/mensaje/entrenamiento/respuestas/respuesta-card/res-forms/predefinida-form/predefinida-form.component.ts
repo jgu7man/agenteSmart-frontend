@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { RespuestasService } from '../../../respuestas.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { CacheService } from '../../../../../../../../../../../Gdev-Tools/cache/cache.service';
+import { RespuestaModel, FormPredefinida, RespuestaSugerencias, RespuestaCard } from '../../../respuesta.model';
+import { FormGroup } from '@angular/forms';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'aSmart-predefinida',
@@ -10,31 +13,36 @@ import { CacheService } from '../../../../../../../../../../../Gdev-Tools/cache/
 })
 export class PredefinidaFormComponent implements OnInit {
 
-  siguienteMensaje: string
-  siguienteContexto: string
-  activateAccion: boolean
-  accion
-  
+  respPredef: FormPredefinida
+
+  @Output() onRespChanges: EventEmitter<FormPredefinida> = new EventEmitter()
 
   constructor (
     public resService: RespuestasService,
     private _cache: CacheService
   ) {
+    this.respPredef = new FormPredefinida('texto','')
     this.resService.initRespData()
    }
 
   ngOnInit(): void {
-    this.getCurrent()
   }
 
-  async getCurrent() {
-    this.siguienteContexto = await this._cache.getDataKey( 'currentContexto' )
-    console.log(this.siguienteContexto);
+  
+
+  onEstiloRespuesta( estiloSelected: MatSelectChange ) {
+    this.respPredef.estiloRespuesta = estiloSelected.value
+    this.onRespChanges.emit(this.respPredef)
   }
 
-  switchAction(change: MatSlideToggleChange) {
-    this.activateAccion = change.checked
+  catchSugerencias(respuesta: RespuestaSugerencias) {
+    this.respPredef.mensaje = respuesta
   }
+
+  catchCard( respuesta: RespuestaCard ) {
+    this.respPredef.mensaje = respuesta
+  }
+
 
   
 

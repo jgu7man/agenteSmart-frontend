@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { RespuestasService } from '../../../respuestas.service';
+import { CacheService } from '../../../../../../../../../../../Gdev-Tools/cache/cache.service';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { FormBuscar, FormPredefinida } from '../../../respuesta.model';
 
 @Component({
   selector: 'aSmart-buscar-form',
@@ -7,9 +11,28 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BuscarFormComponent implements OnInit {
 
-  constructor() { }
+  paramSelected: string
+  dataBases: any[]
+  dataBaseSelected: string
+  
+  @Output() onRespChanges: EventEmitter<FormPredefinida> = new EventEmitter()
+  respBuscar: FormBuscar
+  constructor (
+    public resService: RespuestasService,
+    private _cache: CacheService
+  ) {
+    this.respBuscar = new FormBuscar('texto', '', this.paramSelected, this.dataBaseSelected)
+   }
 
   ngOnInit(): void {
+  }
+
+
+
+  catchOutputMessage( msg: FormPredefinida ) {
+    this.respBuscar.estiloRespuesta = msg.estiloRespuesta
+    this.respBuscar.mensaje = msg.mensaje
+    this.onRespChanges.emit(this.respBuscar)
   }
 
 }

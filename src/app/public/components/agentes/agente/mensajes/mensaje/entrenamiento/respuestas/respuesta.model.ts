@@ -1,34 +1,47 @@
-export interface RespuestaModel {
-    tipo: 'predefinida' | 'condicional' | 'grupo_datos' | 'buscar' | ''
-    nextIntent: string,
-    inputContext: string
-    outputContext: string,
-    estiloRespuesta: 'texto' | 'sugerencia' | 'card' | RespuestaBinaria
-    form?: FormDirecta | FormCondicional | FormRegistroDatos | FormBuscar 
-    accion?:string
-    id?: string
+export class RespuestaModel {
+    constructor(
+        public tipo: 'predefinida' | 'condicional' | 'grupo_datos' | 'buscar' | '',
+        public nextIntent: string,
+        public inputContext: string,
+        public outputContext: string,
+        public outputMessage: FormPredefinida | FormCondicional | FormRegistroDatos | FormBuscar ,
+        public accion?:string,
+        public id?: string,
+    ) {}
 }
 
-export interface FormDirecta {
-    respuesta: string | RespuestaSugerencias | RespuestaCard 
+export class FormPredefinida {
+    constructor (
+        public estiloRespuesta: 'texto' | 'sugerencias' | 'card' | RespuestaBinaria,
+        public mensaje: string | RespuestaSugerencias | RespuestaCard 
+    ){}
 }
-export interface FormCondicional {
-    respuesta: string | RespuestaSugerencias | RespuestaCard 
-    paramaetro: string,
-    condicion: string,
-    valor: string | number | any[]
+export class FormCondicional {
+    constructor (
+        public estiloRespuesta: 'texto' | 'sugerencias' | 'card' | RespuestaBinaria,
+        public mensaje: string | RespuestaSugerencias | RespuestaCard ,
+        public paramaetro: string,
+        public condicion: string,
+        public valor: string | number | any[]
+    ){}
 }
 
-export interface FormRegistroDatos {
-    respuesta: string | RespuestaSugerencias | RespuestaCard 
-    parametro: string,
-    grupoDatos: string
+export class FormRegistroDatos {
+    constructor (
+        public estiloRespuesta: 'texto' | 'sugerencias' | 'card' | RespuestaBinaria,
+        public mensaje: string | RespuestaSugerencias | RespuestaCard ,
+        public parametro: string,
+        public grupoDatos: string,
+    ){}
 }
 
-export interface FormBuscar {
-    respuesta: string | RespuestaSugerencias | RespuestaCard 
-    parametro: string,
-    rutaDB: string
+export class FormBuscar {
+    constructor (
+        public estiloRespuesta: 'texto' | 'sugerencias' | 'card' | RespuestaBinaria,
+        public mensaje: string | RespuestaSugerencias | RespuestaCard ,
+        public parametro: string,
+        public rutaDB: string
+    ){}
 }
 
 export interface RespuestaBinaria {
@@ -44,8 +57,8 @@ export interface RespuestaSugerencias {
 export interface RespuestaCard {
     body: string,
     titulo: string,
-    imagenURL: string,
-    botones: RespuestaCardButton[] }
+    imagenURL?: string,
+    botones?: RespuestaCardButton[] }
     export interface RespuestaCardButton {
         text: string,
         link: string
