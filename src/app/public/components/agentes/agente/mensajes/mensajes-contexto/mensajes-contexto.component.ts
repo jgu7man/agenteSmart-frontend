@@ -9,6 +9,7 @@ import { MensajesService } from '../mensajes.service';
 import { IntentModel } from '../mensaje.model';
 import { CacheService } from '../../../../../../Gdev-Tools/cache/cache.service';
 import { Contexto } from '../../contextos/contexto.model';
+import { startWith, map, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'aSmart-mensajes-by-contexto',
@@ -29,6 +30,7 @@ export class MensajesByContextoComponent implements OnInit {
   constructor (
     private _loading: Loading,
     private _mensajes: MensajesService,
+    private _cache: CacheService
   ) {
     
    }
@@ -59,7 +61,14 @@ export class MensajesByContextoComponent implements OnInit {
   
 
   async getMensajes() {
-    this.mensajes = await this._mensajes.getMensajesListByContexto( this.contexto)
+    this.mensajes = await this._mensajes.getMensajesListByContexto( this.contexto )
+    let contextosLists = await this._cache.getDataKey( 'contextosLists' )
+    if ( !contextosLists ) {
+      contextosLists = { [ this.contexto.contextName ]: this.mensajes }
+    } else {
+      contextosLists[this.contexto.contextName] = this.mensajes
+    }
+    this._cache.updateData( 'contextosLists', contextosLists)
   }
 
   trackByName( index, intent: IntentModel ) {

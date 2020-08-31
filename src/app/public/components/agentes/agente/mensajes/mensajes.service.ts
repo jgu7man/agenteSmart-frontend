@@ -8,8 +8,9 @@ import { Contexto } from '../contextos/contexto.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GdevAlertServiceModule } from '../../../../../Gdev-Tools/alerts/gdev-alert-service.module';
 import { AlertService } from '../../../../../Gdev-Tools/alerts/alert.service';
-import { Observable } from 'rxjs';
+import { Observable, from, of } from 'rxjs';
 import { IntentModel } from './mensaje.model';
+import { first, map, filter, switchMap, toArray, startWith, retry, retryWhen, repeatWhen, mergeMap, delay, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -84,12 +85,12 @@ export class MensajesService {
   async getAllMensajesList() {
     this.mensajesPath = await this._agente.getPath( 'mensajes' )
     this.mensajes$ = this.fs.collection<IntentModel>( this.mensajesPath ).valueChanges()
-    this.mensajes$.subscribe( mensajes => {
+    this.mensajes$.pipe(startWith([])).subscribe( mensajes => {
       this.list = mensajes
       this._cache.updateData( 'allMensajesList', mensajes )
     })
     
-    return
+    return this.list
   }
 
 
@@ -101,8 +102,21 @@ export class MensajesService {
       .get()
     
     await this._loading.asyncForEach( mensajeCol.docs, mensaje => { mensajesList.push( mensaje.data() ) } )
-    await this._cache.updateData( 'mensajesList:'+contexto.contextName, mensajesList )
     return mensajesList
+  }
+
+  getContextoMensajesList( contextoId: string ) {
+    var whenMsj = this.mensajes$.pipe( first() )
+    return whenMsj.pipe(
+      switchMap( mensajes => mensajes ? 
+        from( this.list ).pipe(
+            filter<IntentModel>( msj => msj.contextos.includes( contextoId ) ),
+            toArray<IntentModel>()
+        ) 
+          : of( null )
+        )
+    )
+    
   }
 
   async getMensajesListByContextoName( contextoName: string ) {
@@ -113,14 +127,13 @@ export class MensajesService {
       .get()
     
     await this._loading.asyncForEach( mensajeCol.docs, mensaje => { mensajesList.push( mensaje.data() ) } )
-    await this._cache.updateData( 'mensajesList:'+contextoName, mensajesList )
     return mensajesList
   }
 
   
 
 
-
+  
   
 
 }

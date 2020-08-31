@@ -39,8 +39,7 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    // this.listenerParamDeleted = this._params.parameterDeleted$
-    // .subscribe(()=>{this.getFrasesEntrenamiento()})
+    
   }
 
   ngAfterViewInit() {

@@ -47,7 +47,7 @@ export class AuthService {
   
   
   async getCurrentUser() {
-    var user = this._cache.getDataKey('user')
+    var user = await this._cache.getDataKey('user')
     
     if ( !user ) {
       
@@ -56,8 +56,8 @@ export class AuthService {
         this.router.navigate(['/'], {queryParams:{logged: false}})
       } else {
         this._cache.updateData('user', user2)
+        return user2
       }
-      return user2
       
     } else {
       return user

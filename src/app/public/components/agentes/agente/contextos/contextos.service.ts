@@ -17,14 +17,16 @@ import { Subject, Observable, Subscription } from 'rxjs';
 })
 export class ContextosService {
 
-  user: UserInterface
-  agenteId: string
-  agentePath
-  contextRef: CollectionReference
+  /** Ruta de los mensajes para acciones del CRUD */
+  private agentePath
+  /** Contexto actualizado optenido de la ruta */
   currentContexto$: string
+  /** Consulta de los contextos de la base de datos */
   contextQuery$: Subject<Contexto> = new Subject()
-  list$: Subject<Contexto[]> = new Subject()
+  /** Lista actualizada de los contextos en orden de aparición (index) */
   list: Contexto[]
+
+
   constructor (
     private afs: AngularFirestore,
     private _alerta: AlertService,
@@ -33,14 +35,21 @@ export class ContextosService {
     private _cache: CacheService,
     private loading: Loading
   ) {
+
+
+    // Obtiene el contexto de la ruta actual
     this.loading.getRouteQueryParams().subscribe( queryParams => {
       this.currentContexto$ = queryParams['contexto']
     } )
+
+
   }
   
-  async contextosCollection() {
-    const contextosPath = await this._agente.getPath( 'contextos' )
-    const contextosRef = this.afs.collection( contextosPath ).ref;
+
+/** Obtiene constante actualizado la ruta del mensaje en curso para los métodos del CRUD */
+  private async contextosCollection() {
+    this.agentePath = await this._agente.getPath( 'contextos' )
+    const contextosRef = this.afs.collection( this.agentePath ).ref;
     return contextosRef
   }
 
@@ -54,8 +63,7 @@ export class ContextosService {
   async setContext( contexto: Contexto ) {
 
     if ( !contexto.id ) {
-      var contextList = await this.getAllContexts()
-      let contextFinded = contextList.find(context => context.contextName === contexto.contextName)
+      let contextFinded = this.list.find(context => context.contextName === contexto.contextName)
       if ( !contextFinded ) {
         let contextNuevo = await ( await this.contextosCollection() ).add( contexto );
         await (await this.contextosCollection()).doc( contextNuevo.id ).update( { id: contextNuevo.id })
@@ -63,6 +71,7 @@ export class ContextosService {
         this._alerta.sendMessageAlert('Contexto duplicado')
       }
     } else {
+      // Crea un nuevo contexto
       await (await this.contextosCollection()).doc( contexto.id ).update( contexto )
     }
     return 
@@ -70,7 +79,7 @@ export class ContextosService {
 
 
   // READ
-
+  /** Obtiene el contexto en curso de la session storage */
   async getCurrentContexto() {
     if ( !this.currentContexto$ ) {
       this.currentContexto$ = await this._cache.getDataKey( 'currentContexto' )
@@ -82,28 +91,25 @@ export class ContextosService {
 
 
   async getOneContext( contexto: Contexto ) {
-
     var contextDoc = await (await this.contextosCollection()).doc( contexto.id ).get()
     var contextGeted: Contexto = contextDoc.data() as Contexto
-    
     return contextGeted
   }
 
 
   // READ ALL
 
-  
-  subscribeAllContext: Subscription
+  /** Se suscribe para optener todos los contexto del agente en curso */
+  private subscribeAllContext: Subscription
 
+  /** Escucha todos los contextos en tiempo real */
   async getAllContexts() {
     
      this.subscribeAllContext = this.contextQuery$.pipe(
-      tap( console.log ),
       distinctUntilKeyChanged( 'contextName' ),
     ).subscribe( contexto => {
       this.list.push( contexto )
       this._cache.updateData( 'allContexts', this.list )
-      console.log( this.list );
     } )
     
     this.list = []
@@ -116,6 +122,7 @@ export class ContextosService {
     return this.list
   }
 
+  /** Se desuscribe cunado la vista de contextos no está en pantalla */
   unsubscribeAllContext() {
     this.subscribeAllContext.unsubscribe()
   }
@@ -124,9 +131,8 @@ export class ContextosService {
   // UPDATE Index
 
 
+  /** Actualiza el orden de los contextos en la vista de contextos */
   async updateIndex( contextos: Contexto[] ) {
-    
-
     contextos.forEach( async (contexto, index) => {
       await (await this.contextosCollection()).doc(contexto.id).update({index:index})
     } )

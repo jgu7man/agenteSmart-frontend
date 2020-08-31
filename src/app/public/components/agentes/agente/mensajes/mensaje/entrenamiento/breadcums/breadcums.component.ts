@@ -16,13 +16,13 @@ export class BreadcumsComponent implements OnInit {
   constructor (
     private _cache: CacheService,
     private _route: ActivatedRoute,
-    private router: Router
   ) {
   }
   
   async ngOnInit() {
-    this.contexto = this._route.snapshot.queryParamMap.get('contexto')
-    this.mensajes = await this._cache.getDataKey( 'mensajesList:' + this.contexto )
+    this.contexto = this._route.snapshot.queryParamMap.get( 'contexto' )
+    if ( this.contexto )
+      this.mensajes = await ( await this._cache.getDataKey( 'contextosLists' ) )[ this.contexto ];
   }
 
 

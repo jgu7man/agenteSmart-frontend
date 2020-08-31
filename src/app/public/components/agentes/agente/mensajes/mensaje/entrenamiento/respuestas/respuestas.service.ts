@@ -6,6 +6,7 @@ import { MensajesService } from '../../../mensajes.service';
 import { ContextosService } from '../../../../contextos/contextos.service';
 import { CurrentMensajeService } from '../../current-mensaje.service';
 import { CacheService } from '../../../../../../../../Gdev-Tools/cache/cache.service';
+import { Loading } from '../../../../../../../../Gdev-Tools/loading/loading.service';
 
 
 
@@ -32,7 +33,8 @@ export class RespuestasService {
     private _mensajes: MensajesService,
     private _contextos: ContextosService,
     private _mensaje: CurrentMensajeService,
-    private _cache: CacheService
+    private _cache: CacheService,
+    private loading: Loading
   ) { 
     this.initRespData()
   }
@@ -55,12 +57,15 @@ export class RespuestasService {
 
 
   async getNextMensaje() {
-    var mensajes: IntentModel[] = await this._cache.getDataKey( 'mensajesList:' + this.currentContext )
-    console.log( mensajes , this.currentMensaje );
+    // await this.loading.waitFor(5000)
+    const contextosList = await this._cache.getDataKey( 'contextosLists' )
+    var mensajes: IntentModel[] = contextosList ?
+     contextosList[ this.currentContext ] : []
     if ( mensajes.length > 0 )
       var currentIntenIndex = mensajes.findIndex
         ( intent => intent.name == this.currentMensaje.name );
 
+    console.log(mensajes);
     this.nextMensaje = currentIntenIndex == mensajes.length - 1 ? '' : mensajes[ currentIntenIndex + 1 ].displayName
   }
 }

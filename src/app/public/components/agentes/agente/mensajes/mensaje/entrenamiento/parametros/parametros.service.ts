@@ -15,11 +15,17 @@ import { Loading } from '../../../../../../../../Gdev-Tools/loading/loading.serv
 })
 export class ParametrosService {
 
+  /** Ruta de los mensajes para actualizaciones */
   mensajesPath: string
+  /**Mensaje en curso */
   mensaje: IntentModel
-  parameterAdded$: Subject<ParametroMensaje> = new Subject()
-  parameterDeleted$: Subject<boolean> = new Subject()
+  /**Informa cuando un parámetro fue agregado en las frases de entrenamiento */
+  public parameterAdded$: Subject<ParametroMensaje> = new Subject()
+  /**Informa cuando un parte de frase de entrenamiento fue borrada y contenía algún parámetro */
+  public parameterDeleted$: Subject<boolean> = new Subject()
+  /**Escucha y actualiza la lista de parámetros del mensaje en curso */
   list$: Subject<ParametroMensaje[]> = new Subject()
+  /**Lista siempre actualizada del Subject list$ */
   list: ParametroMensaje[]
 
   constructor (
@@ -34,18 +40,17 @@ export class ParametrosService {
 
 
     // Get subscriptions
-    this._mensaje.current$.pipe(
-      map<IntentModel, ParametroMensaje[]>( mensaje => mensaje.parameters )
-    ).subscribe( this.list$ )
-    this.list$.pipe(
-      startWith([])
-    ).subscribe( list => {
-      this.list = list
+    this._mensaje.current$.subscribe( mensaje => {
+      this.mensaje = mensaje
+      this.list = mensaje.parameters
     } )
+
 
    }
   
-  async mensajesCollection() {
+  
+  /** Obtiene constante actualizado la ruta del mensaje en curso para los métodos del CRUD */
+  private async mensajesCollection() {
     this.mensajesPath = await this._agente.getPath( `mensajes` )
     const mensajesRef = this.fs.collection( this.mensajesPath ).ref
     return mensajesRef
@@ -94,6 +99,7 @@ export class ParametrosService {
   }
 
 
+ 
   async deleteParam( param: ParametroMensaje ) {
     var paramIndex = this.list.findIndex( parameter => parameter.name == param.name )
     this.list.splice(paramIndex, 1)
@@ -104,11 +110,15 @@ export class ParametrosService {
     } )
   }
 
-  async deleteParamInParts( displayName: string ) {
+  /**
+   * Elimina el parámetro de todas las frases de entrenamiento que lo contengan
+   */
+  private async deleteParamInParts( displayName: string ) {
 
     await this.loading.asyncForEach( this.list,
       async ( frase: FraseEntrenamiento ) => {
       
+        // Busca en las partes donde hay el parámetro eliminado
       return this.loading.asyncForEach( frase.parts,
         ( parte: FraseParte, parteIndex ) => {
         

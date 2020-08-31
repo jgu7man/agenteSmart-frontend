@@ -100,7 +100,13 @@ export class FrasesService {
 
 
   /**
-   * Returns the full frase in a string that represents entity parts with (;) and (=) as value
+   * Retorna la frase completa con acotaciones para definir entidades y parámetros.
+   * 
+   * `;text;`: [texto entre dos punto y coma] parte seleccionada
+   * 
+   * `~` = divide la entidad del parámetro con su valor
+   * 
+   * `=` = divide el parámetro de su valor
    * @example "text ;entityTypeDisplayName=paramValue; text"
    */
   stringifyFullPhrase( phrase: FraseEntrenamiento ): string {
@@ -114,6 +120,8 @@ export class FrasesService {
     return partsString.join( '' )
   }
 
+
+  /** Retorna la frase completa en un string sin acotaciones */
   stringCleanPhrase( phrase: FraseEntrenamiento ): string {
     let partsString: string[] = []
     phrase.parts.forEach( part => {
@@ -123,7 +131,7 @@ export class FrasesService {
   }
 
   /**
-   * Return the parts of a frase that no has entity or not are selected
+   * Retornas las partes de una frase que no tienen entidad o no están seleccionadas en un string limpio
    */
   stringifyUnselectParts( phrase: FraseEntrenamiento ): string {
     let partialString: string[] = []
@@ -215,7 +223,7 @@ export class FrasesService {
 
 
   /**
-   * name
+   * Returna un nuevo arreglo de partes de frase de entrenamiento, separando un texto seleccionado
    */
   public async getTextSelectInPart( textOnSearch: string, textSelected: string ): Promise<FraseParte[]> {
     var parts: FraseParte[] = []

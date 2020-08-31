@@ -1,7 +1,8 @@
 export interface RespuestaModel {
     tipo: 'predefinida' | 'condicional' | 'grupo_datos' | 'buscar' | ''
     nextIntent: string,
-    nextContext: string,
+    inputContext: string
+    outputContext: string,
     estiloRespuesta: 'texto' | 'sugerencia' | 'card' | RespuestaBinaria
     form?: FormDirecta | FormCondicional | FormRegistroDatos | FormBuscar 
     accion?:string

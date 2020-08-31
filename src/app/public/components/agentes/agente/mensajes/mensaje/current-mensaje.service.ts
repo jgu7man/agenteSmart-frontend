@@ -57,13 +57,15 @@ export class CurrentMensajeService {
     this.getParams().subscribe( async ( data ) => {
       this.currentContexto = data.currentContexto 
       this.mensajeName = data.mensajeName
+
+      console.log(this.mensajeName);
       
       this.mensajesPath = await this._agente.getPath( 'mensajes' )
       this.mensaje$ = this.fs.collection( this.mensajesPath )
       .doc<IntentModel>( this.mensajeName ).valueChanges()
       
       this.mensajeSub$ = this.mensaje$.subscribe( this.current$ )
-      this.mensaje$.subscribe( mensaje => this._cache.updateData( 'currentMensaje', mensaje ) )
+      // this.mensaje$.subscribe( mensaje => this._cache.updateData( 'currentMensaje', mensaje ) )
       
       this._cache.updateData( 'currentContexto', this.currentContexto )
     } )
