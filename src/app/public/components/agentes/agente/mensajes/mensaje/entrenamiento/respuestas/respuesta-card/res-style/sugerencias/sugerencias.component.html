@@ -1,18 +1,10 @@
-<div class="row">
-    <div class="col s12">
-        <mat-form-field>
-            <textarea matInput class="resp-input" name="mensaje"  id="mensaje" 
-            cols="30" rows="5" [(ngModel)]="suggests.respuesta"
-            ></textarea>
-        </mat-form-field>
-    </div>
-</div>
+<gdev-reacvtive-dialogbox [text]="suggests.mensaje" (onTextEvent)="onCatchTextMsg($event)"></gdev-reacvtive-dialogbox>
     
 <div class="row">
     <div class="col s12">
         <mat-form-field class="example-chip-list">
           <mat-chip-list #chipList aria-label="Sugerencias">
-            <mat-chip *ngFor="let sugerencia of sugerencias" [selectable]="true"
+            <mat-chip *ngFor="let sugerencia of suggests.sugerencias" [selectable]="true"
             color="primary" [removable]="true" (removed)="remove(sugerencia)">
               {{sugerencia}}
               <mat-icon matChipRemove>cancel</mat-icon>

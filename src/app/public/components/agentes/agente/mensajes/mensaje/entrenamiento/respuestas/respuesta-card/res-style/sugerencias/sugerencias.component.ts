@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, OnDestroy, Input } from '@angular/core';
 import { RespuestaSugerencias } from '../../../respuesta.model';
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
@@ -11,16 +11,21 @@ import { MatChipInputEvent } from '@angular/material/chips';
 export class SugerenciasComponent implements OnInit {
 
   readonly separatorKeysCodes: number[] = [ ENTER, COMMA ];
-  sugerencias: string[] = []
-  suggests: RespuestaSugerencias = {
-    respuesta: '', sugerencias: this.sugerencias
+  @Input() mensaje: string
+  @Input() suggests: RespuestaSugerencias = {
+    mensaje: '', sugerencias: []
   }
-
   @Output() onRespChanges: EventEmitter<RespuestaSugerencias> = new EventEmitter()
 
   constructor () {}
 
   ngOnInit(): void {
+  }
+
+  onCatchTextMsg(text) {
+    this.suggests.mensaje = text
+    console.log(this.suggests);
+    this.onRespChanges.emit(this.suggests)
   }
 
   add( event: MatChipInputEvent ): void {
@@ -29,7 +34,8 @@ export class SugerenciasComponent implements OnInit {
 
     // Add our fruit
     if ( ( value || '' ).trim() ) {
-      this.sugerencias.push( value );
+      this.suggests.sugerencias.push( value );
+      this.onRespChanges.emit(this.suggests)
     }
 
     // Reset the input value
@@ -39,10 +45,11 @@ export class SugerenciasComponent implements OnInit {
   }
 
   remove( sugerencia: string ): void {
-    const index = this.sugerencias.indexOf( sugerencia );
+    const index = this.suggests.sugerencias.indexOf( sugerencia );
 
     if ( index >= 0 ) {
-      this.sugerencias.splice( index, 1 );
+      this.suggests.sugerencias.splice( index, 1 );
+      this.onRespChanges.emit( this.suggests )
     }
   }
 

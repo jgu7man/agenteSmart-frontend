@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { RespuestasService } from '../../../respuestas.service';
 import { CacheService } from '../../../../../../../../../../../Gdev-Tools/cache/cache.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
@@ -12,15 +12,11 @@ import { MatSelectChange } from '@angular/material/select';
 })
 export class CondicionalFormComponent implements OnInit {
 
-  siguienteMensaje: string
-  siguienteContexto: string
   paramSelected: string
   condicionSelected: string
   conditionValue: string = ''
-  activateAccion: boolean
-  accion
 
-  respCondicional: FormCondicional
+  @Input() respCondicional: FormCondicional
   @Output() onRespChanges: EventEmitter<FormPredefinida> = new EventEmitter()
 
   condicionesList: Condition[] = [
@@ -36,27 +32,21 @@ export class CondicionalFormComponent implements OnInit {
 
   constructor (
     public resService: RespuestasService,
-    private _cache: CacheService
   ) {
     this.respCondicional = new FormCondicional('texto','', this.paramSelected, this.condicionSelected,'')
     this.resService.initRespData()
   }
 
   ngOnInit(): void {
-    this.getCurrent()
   }
 
-  async getCurrent() {
-    this.siguienteContexto = await this._cache.getDataKey( 'currentContexto' )
-  }
+  
 
-  switchAction( change: MatSlideToggleChange ) {
-    this.activateAccion = change.checked
-  }
+  
 
   catchOutputMessage( msg: FormPredefinida ) {
     this.respCondicional.estiloRespuesta = msg.estiloRespuesta
-    this.respCondicional.mensaje = msg.mensaje
+    this.respCondicional.respuesta = msg.respuesta
     this.onRespChanges.emit( this.respCondicional )
   }
 

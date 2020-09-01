@@ -1,9 +1,6 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { RespuestasService } from '../../../respuestas.service';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { CacheService } from '../../../../../../../../../../../Gdev-Tools/cache/cache.service';
-import { RespuestaModel, FormPredefinida, RespuestaSugerencias, RespuestaCard } from '../../../respuesta.model';
-import { FormGroup } from '@angular/forms';
+import { FormPredefinida, RespuestaSugerencias, RespuestaCard, FormBuscar, FormCondicional } from '../../../respuesta.model';
 import { MatSelectChange } from '@angular/material/select';
 
 @Component({
@@ -13,37 +10,42 @@ import { MatSelectChange } from '@angular/material/select';
 })
 export class PredefinidaFormComponent implements OnInit {
 
-  respPredef: FormPredefinida
-
+  @Input() outputRes: FormPredefinida 
+ 
   @Output() onRespChanges: EventEmitter<FormPredefinida> = new EventEmitter()
 
   constructor (
     public resService: RespuestasService,
-    private _cache: CacheService
   ) {
-    this.respPredef = new FormPredefinida('texto','')
     this.resService.initRespData()
    }
 
   ngOnInit(): void {
   }
 
+  catchText( text: string ) {
+    console.log(text);
+    this.outputRes.respuesta = text
+    this.onRespChanges.emit(this.outputRes)
+  }
   
-
   onEstiloRespuesta( estiloSelected: MatSelectChange ) {
-    this.respPredef.estiloRespuesta = estiloSelected.value
-    this.onRespChanges.emit(this.respPredef)
+    this.outputRes.estiloRespuesta = estiloSelected.value
+    this.onRespChanges.emit( this.outputRes)
   }
 
-  catchSugerencias(respuesta: RespuestaSugerencias) {
-    this.respPredef.mensaje = respuesta
+  catchSugerencias( respuesta: RespuestaSugerencias ) {
+    this.outputRes.respuesta = respuesta
+    console.log(this.outputRes);
+    this.onRespChanges.emit( this.outputRes )
   }
 
   catchCard( respuesta: RespuestaCard ) {
-    this.respPredef.mensaje = respuesta
+    this.outputRes.respuesta = respuesta
+    this.onRespChanges.emit( this.outputRes )
   }
 
-
+  
   
 
 }

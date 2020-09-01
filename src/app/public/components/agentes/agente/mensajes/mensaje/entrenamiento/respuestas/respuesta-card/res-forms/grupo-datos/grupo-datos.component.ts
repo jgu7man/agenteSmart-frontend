@@ -30,7 +30,7 @@ export class GrupoDatosComponent implements OnInit {
 
   catchOutputMessage( msg: FormPredefinida ) {
     this.resData.estiloRespuesta = msg.estiloRespuesta
-    this.resData.mensaje = msg.mensaje
+    this.resData.respuesta = msg.respuesta
     this.onRespChanges.emit( this.resData )
   }
 

@@ -13,13 +13,13 @@ export class RespuestaModel {
 export class FormPredefinida {
     constructor (
         public estiloRespuesta: 'texto' | 'sugerencias' | 'card' | RespuestaBinaria,
-        public mensaje: string | RespuestaSugerencias | RespuestaCard 
+        public respuesta: string | RespuestaSugerencias | RespuestaCard 
     ){}
 }
 export class FormCondicional {
     constructor (
         public estiloRespuesta: 'texto' | 'sugerencias' | 'card' | RespuestaBinaria,
-        public mensaje: string | RespuestaSugerencias | RespuestaCard ,
+        public respuesta: string | RespuestaSugerencias | RespuestaCard ,
         public paramaetro: string,
         public condicion: string,
         public valor: string | number | any[]
@@ -29,7 +29,7 @@ export class FormCondicional {
 export class FormRegistroDatos {
     constructor (
         public estiloRespuesta: 'texto' | 'sugerencias' | 'card' | RespuestaBinaria,
-        public mensaje: string | RespuestaSugerencias | RespuestaCard ,
+        public respuesta: string | RespuestaSugerencias | RespuestaCard ,
         public parametro: string,
         public grupoDatos: string,
     ){}
@@ -38,7 +38,7 @@ export class FormRegistroDatos {
 export class FormBuscar {
     constructor (
         public estiloRespuesta: 'texto' | 'sugerencias' | 'card' | RespuestaBinaria,
-        public mensaje: string | RespuestaSugerencias | RespuestaCard ,
+        public respuesta: string | RespuestaSugerencias | RespuestaCard ,
         public parametro: string,
         public rutaDB: string
     ){}
@@ -50,7 +50,7 @@ export interface RespuestaBinaria {
 }
 
 export interface RespuestaSugerencias {
-    respuesta: string,
+    mensaje:string
     sugerencias: string[]
 }
 

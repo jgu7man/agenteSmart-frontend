@@ -1,9 +1,12 @@
+import { AlertService } from 'src/app/Gdev-Tools/alerts/alert.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
-import { RespuestaModel, FormPredefinida, FormCondicional, FormRegistroDatos, FormBuscar } from '../respuesta.model';
+import { RespuestaModel, FormPredefinida, FormCondicional, FormRegistroDatos, FormBuscar, RespuestaSugerencias } from '../respuesta.model';
 import { RespuestasService } from '../respuestas.service';
 import { CacheService } from '../../../../../../../../../Gdev-Tools/cache/cache.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { MatDialog } from '@angular/material/dialog';
+import { Loading } from '../../../../../../../../../Gdev-Tools/loading/loading.service';
 
 @Component({
   selector: 'aSmart-respuesta-card',
@@ -18,6 +21,7 @@ export class RespuestaCardComponent implements OnInit {
   siguienteContexto: string
   activateAccion: boolean
   accion
+  switchEditResp: boolean
 
   selectedRes: TipoRespuesta
   tiposRes: TipoRespuesta[] = [
@@ -33,9 +37,12 @@ export class RespuestaCardComponent implements OnInit {
 
   constructor (
     public resService: RespuestasService,
-    private _cache: CacheService
+    private _cache: CacheService,
+    private _alerts: AlertService,
+    private loading: Loading
   ) {
 
+    this.outputMessage = new FormPredefinida('texto', '')
 
     this.respuesta = new RespuestaModel(
       'predefinida',
@@ -50,10 +57,9 @@ export class RespuestaCardComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    // if ( this.respuesta.tipo != '' ) {
-    //   this.setSelectedRes()
-    // }
-    console.log(this.respuesta);
+    console.log(this.tiposRes, this.respuesta.tipo);
+    this.selectedRes = this.tiposRes.find( tipo => tipo.name == this.respuesta.tipo )
+    console.log( this.selectedRes);
     this.getCurrent()
   }
 
@@ -63,24 +69,62 @@ export class RespuestaCardComponent implements OnInit {
   }
 
   onTipoSelected( tipoSelected: MatSelectChange ) {
-    this.selectedRes = this.tiposRes.find( tipo => tipo.name == tipoSelected.value)
+    this.selectedRes = this.tiposRes.find( tipo => tipo.name == tipoSelected.value )
+    this.respuesta.tipo = tipoSelected.value
   }
 
   catchOutputMessage( msg ) {
     this.outputMessage = msg
   }
 
-  
-
-  
 
   async getCurrent() {
     this.siguienteContexto = await this._cache.getDataKey( 'currentContexto' )
-    console.log( this.siguienteContexto );
   }
 
   switchAction( change: MatSlideToggleChange ) {
     this.activateAccion = change.checked
+  }
+
+
+  async validateRespuesta( respuestaObj: RespuestaModel ) {
+    let respuestaClean, output = {}
+    output = { ...respuestaObj.outputMessage }
+    let respuesta = output[ 'respuesta' ]
+    let respEstilo = respuestaObj.outputMessage.estiloRespuesta
+
+
+
+    if ( !respuesta ) {
+      this._alerts.sendMessageAlert( 'Agrega al menos un mensaje de texto' )
+    
+    
+    } else if ( respEstilo == 'sugerencias' &&
+      output[ 'respuesta' ][ 'sugerencias' ].length < 1
+      ) {
+        this._alerts.sendMessageAlert( 'Al menos agrega un par de sugerencias o tal vez mejor quieras utilizar el estilo de respuesta TEXTO' ) 
+      
+      
+    
+    } else {
+      var respuestaKeys = Object.keys( respuestaObj );
+      await this.loading.asyncForEach( respuestaKeys, key => {
+        if ( respuestaObj[ key ] === undefined ) delete respuestaObj[ key ] 
+        return
+      } )
+
+      respuestaClean = { ...respuestaObj }
+      respuestaClean['outputMessage'] = output
+
+      return respuestaClean
+    }
+  }
+
+  async onSave() {
+    this.switchEditResp = false
+    let cleanRespuesta = await this.validateRespuesta( this.respuesta )
+    console.log( cleanRespuesta );
+    this.resService.addRespuesta(cleanRespuesta)
   }
 
 }

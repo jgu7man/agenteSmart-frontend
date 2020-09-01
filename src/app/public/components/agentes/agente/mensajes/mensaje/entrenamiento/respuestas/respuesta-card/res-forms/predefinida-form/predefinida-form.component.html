@@ -6,7 +6,8 @@
     <div class="col s6">
         <mat-select 
         placeholder="Estilo" 
-        [(ngModel)]="respPredef.estiloRespuesta" 
+        [(ngModel)]="outputRes.estiloRespuesta"
+        (selectionChange)="onEstiloRespuesta($event)"
         name="estiloRespuesta">
             <mat-option *ngFor="let estilo of resService.estiloResps" [value]="estilo.name">
                 {{estilo.display}}
@@ -20,16 +21,12 @@
         Respuesta
     </div>
     <div class="col s8">
-        <div [ngSwitch]="respPredef.estiloRespuesta">
+        <div [ngSwitch]="outputRes.estiloRespuesta">
             <div *ngSwitchCase="'texto'">
-                <mat-form-field>
-                    <textarea matInput class="resp-input" name="mensaje"  id="mensaje" 
-                    cols="30" rows="5" [(ngModel)]="respPredef.mensaje"
-                    ></textarea>
-                </mat-form-field>
+                <gdev-reacvtive-dialogbox [text]="outputRes.respuesta" (onTextEvent)="catchText($event)" ></gdev-reacvtive-dialogbox>
             </div>
             <div *ngSwitchCase="'sugerencias'">
-                <aSmart-sugerencias (onRespChanges)="catchSugerencias($event)"></aSmart-sugerencias>
+                <aSmart-sugerencias [mensaje]="outputRes.respuesta" (onRespChanges)="catchSugerencias($event)"></aSmart-sugerencias>
             </div>
             <div *ngSwitchCase="'card'">
                 <aSmart-card></aSmart-card>

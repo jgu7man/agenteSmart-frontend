@@ -3,9 +3,19 @@
     justify-content: space-around;
 }
 
-mat-card-content {
-    padding-left: 2em;
+mat-card {
+    min-height: 5em;
+    transition: all .3s;
+    mat-card-content {
+        padding-left: 2em;
+    }
 }
+
+.card-closed {
+    cursor: pointer;
+    padding-left: 3em;
+}
+
 
 ::ng-deep {
     .resp-input {
@@ -17,11 +27,16 @@ mat-card-content {
     }
 }
 
+.type-icon-closed {
+    top: 0 !important;
+}
+
 .res-type-icon {
+    transition: all .3s;
     display: flex; 
     align-items: center;
     padding: 0;
-    left: 2em;
+    left: 3em;
     position: relative;
     z-index: 2;
     top: 2em;

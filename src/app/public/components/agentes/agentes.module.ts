@@ -53,6 +53,8 @@ import { TipoSelectorComponent } from './agente/tipos/tipo-selector/tipo-selecto
 import { MensajesComponent } from './agente/mensajes/mensajes.component';
 import { SugerenciasComponent } from './agente/mensajes/mensaje/entrenamiento/respuestas/respuesta-card/res-style/sugerencias/sugerencias.component';
 import { CardComponent } from './agente/mensajes/mensaje/entrenamiento/respuestas/respuesta-card/res-style/card/card.component';
+import { ColeccionesComponent } from './agente/colecciones/colecciones.component';
+import { TarjetasComponent } from './agente/tarjetas/tarjetas.component';
 
 
 
@@ -99,6 +101,8 @@ import { CardComponent } from './agente/mensajes/mensaje/entrenamiento/respuesta
     MensajesComponent,
     SugerenciasComponent,
     CardComponent,
+    ColeccionesComponent,
+    TarjetasComponent,
   ],
   imports: [
     CommonModule,

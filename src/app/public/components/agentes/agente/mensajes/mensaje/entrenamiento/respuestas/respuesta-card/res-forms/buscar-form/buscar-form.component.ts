@@ -31,7 +31,7 @@ export class BuscarFormComponent implements OnInit {
 
   catchOutputMessage( msg: FormPredefinida ) {
     this.respBuscar.estiloRespuesta = msg.estiloRespuesta
-    this.respBuscar.mensaje = msg.mensaje
+    this.respBuscar.respuesta = msg.respuesta
     this.onRespChanges.emit(this.respBuscar)
   }
 

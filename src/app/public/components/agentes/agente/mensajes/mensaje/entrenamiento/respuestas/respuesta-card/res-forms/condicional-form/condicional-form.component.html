@@ -47,4 +47,9 @@
 </div>
 
 
-<aSmart-predefinida (onRespChanges)="catchOutputMessage($event)"></aSmart-predefinida>
+<aSmart-predefinida [outputRes]="{
+    mensaje:respCondicional.respuesta, 
+    estiloRespuesta:respCondicional.estiloRespuesta
+}"
+ (onRespChanges)="catchOutputMessage($event)"
+ ></aSmart-predefinida>

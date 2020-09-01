@@ -1,3 +1,4 @@
+import { AlertService } from './../../../../../../../../Gdev-Tools/alerts/alert.service';
 import { Injectable } from '@angular/core';
 import { IntentModel, ParametroMensaje } from '../../../mensaje.model';
 import { Contexto } from '../../../../contextos/contexto.model';
@@ -10,6 +11,8 @@ import { Loading } from '../../../../../../../../Gdev-Tools/loading/loading.serv
 import { CurrentAgenteService } from '../../../../current-agente.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { RespuestaModel } from './respuesta.model';
+import { Subject, Observable, Observer } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 
 
@@ -25,6 +28,8 @@ export class RespuestasService {
   currentContext: string
   paramList: ParametroMensaje[]
   mensajesPath: string
+  respuestasList: Subject<RespuestaModel[]> = new Subject()
+  respuestaAdded: Subject<any> = new Subject()
 
   acciones: AccionModel[] = [
     { accion: 'guardar', ruta: '' },
@@ -46,7 +51,8 @@ export class RespuestasService {
     private _contextos: ContextosService,
     private _mensaje: CurrentMensajeService,
     private _cache: CacheService,
-    private loading: Loading
+    private loading: Loading,
+    private _alerts: AlertService
   ) { 
     this.initRespData()
   }
@@ -77,7 +83,7 @@ export class RespuestasService {
 
 
   async getNextMensaje() {
-    // await this.loading.waitFor(5000)
+    
     const contextosList = await this._cache.getDataKey( 'contextosLists' )
     var mensajes: IntentModel[] = contextosList ?
      contextosList[ this.currentContext ] : []
@@ -85,31 +91,52 @@ export class RespuestasService {
       var currentIntenIndex = mensajes.findIndex
         ( intent => intent.name == this.currentMensaje.name );
 
-    console.log(mensajes);
     this.nextMensaje = currentIntenIndex == mensajes.length - 1 ? '' : mensajes[ currentIntenIndex + 1 ].displayName
   }
 
   async getMensajeResponses() {
+    await this.loading.waitFor( 1000 )
     var mensajeResponses: RespuestaModel[] = []
-    if ( this.currentContext ) {
-      let responses = await  ( await this.responsesPath() ).where( 'inputContext', '==', this.currentContext ).get();
-      responses.forEach(resp => mensajeResponses.push(resp.data() as RespuestaModel))
+    let currentContexto = await this._cache.getDataKey('currentContexto')
+    if ( currentContexto ) {
+      let responses = await ( await this.responsesPath() ).where( 'inputContext', '==', currentContexto ).get();
+      responses.forEach( resp => mensajeResponses.push( resp.data() as RespuestaModel ) )
     }
     return mensajeResponses
   }
 
 
 
-  async addRespuesta(respuesta: RespuestaModel) {
-    (await this.responsesPath())
+  async addRespuesta( respuesta: RespuestaModel ) {
+    const mensajesList: RespuestaModel[] = await this.getMensajeResponses()
+    var predef: boolean
+    // Revisa que no exista una predefinida
+    this.loading.asyncForEach( mensajesList,
+      msj => { if ( msj.tipo == 'predefinida' ) predef = true } );
+    
+    
+    if ( predef ) {
+      this._alerts.sendMessageAlert( 'No puedes agregar más de una respuesta predefinida' );
+    } else if (respuesta.id) {
+      ( await this.responsesPath() ).doc( respuesta.id )
+        .set( respuesta, { merge: true } );
+    } else {
+      let res = await ( await this.responsesPath() ).add( respuesta )
+                await ( await this.responsesPath() ).doc( res.id ).update( { id: res.id } )
+    }
+
+    return this.respuestaAdded.next(true)
+    
   }
 }
+
 
 
 export interface EstiloResp {
   name: string,
   display: string
 }
+
 
 
 
