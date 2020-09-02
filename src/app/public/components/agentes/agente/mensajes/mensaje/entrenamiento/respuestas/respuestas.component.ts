@@ -1,9 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChildren, QueryList } from '@angular/core';
 import { RespuestaModel, FormPredefinida } from './respuesta.model';
 import { RespuestasService } from './respuestas.service';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take, debounceTime, repeat, repeatWhen, expand, tap } from 'rxjs/operators';
+import { RespuestaCardComponent } from './respuesta-card/respuesta-card.component';
+import { Loading } from '../../../../../../../../Gdev-Tools/loading/loading.service';
 
 @Component({
   selector: 'aSmart-respuestas',
@@ -17,8 +19,11 @@ export class RespuestasComponent implements OnInit, OnDestroy {
   nextIntent: string
   newOutputMensaje: FormPredefinida
   resAddedSub: Subscription
+  @ViewChildren(RespuestaCardComponent) cards: QueryList<RespuestaCardComponent>
+
   constructor (
     private _respuestas: RespuestasService,
+    private loading: Loading,
   ) {
     this.newOutputMensaje = new FormPredefinida('texto', '')
    }
@@ -32,14 +37,16 @@ export class RespuestasComponent implements OnInit, OnDestroy {
   async getNextIntent() {
   }
 
-  addRespuesta() {
+  async addRespuesta() {
     this.respuestasList.push(
       new RespuestaModel( '',
-        this._respuestas.nextMensaje,
+        '',
         this._respuestas.currentContext,
         this._respuestas.currentContext,
         this.newOutputMensaje
-        ) )
+      ) )
+    await this.loading.waitFor( 100 )
+    this.cards.last.switchEditResp = true
   }
 
   async getResponses() {

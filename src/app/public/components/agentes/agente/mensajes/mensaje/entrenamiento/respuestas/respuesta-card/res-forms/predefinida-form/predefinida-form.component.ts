@@ -17,7 +17,6 @@ export class PredefinidaFormComponent implements OnInit {
   constructor (
     public resService: RespuestasService,
   ) {
-    this.resService.initRespData()
    }
 
   ngOnInit(): void {

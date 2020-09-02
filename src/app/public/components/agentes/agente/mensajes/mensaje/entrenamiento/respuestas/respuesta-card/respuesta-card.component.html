@@ -1,165 +1,177 @@
-<div class="col 2 res-type-icon" [ngClass]="{'type-icon-closed': !switchEditResp}">
-    <button mat-fab [ngStyle]="{'background': selectedRes.color}" >
-        <i class="fas" [ngClass]="selectedRes.icono"></i>
-    </button>
-</div>
-<div class="col s10">
-    <mat-card [ngClass]="{'card-closed': !switchEditResp}" >
-
-        <ng-container *ngIf="!switchEditResp; else editResp">
-            
-                <div class="row align-cols">
-                    <div class="col s10" (click)="switchEditResp = true">
-                        <b>{{respuesta.nextIntent}}</b>
-                    </div>
-                    <div class="col s2">
-                        <button mat-icon-button [mat-menu-trigger-for]="card">
-                            <i class="fas fa-ellipsis-v"></i>
-                        </button>
-                        <mat-menu #card="matMenu">
-                            <button mat-menu-item>Eliminar</button>
-                        </mat-menu>
-                    </div>
-                </div>
-
-        </ng-container>
-        <ng-template #editResp>
-            
-        
-        
-
-            <div class="row">
-                <div class="col s4 resp-label">
-                    Tipo
-                </div>
-                <div class="col s8">
-                    <mat-select 
-                    placeholder="Tipo de respuesta" name="tipoRes" 
-                    (selectionChange)="onTipoSelected($event)">
-                        <mat-option *ngFor="let tipoRes of tiposRes" [value]="tipoRes.name">
-                            {{tipoRes.display}}
-                        </mat-option>
-                    </mat-select>
-                </div>
-            </div>
-
-            
-
-
-
-        <mat-card-content>
-
-            <div [ngSwitch]="respuesta.tipo">
-                <div *ngSwitchCase="'predefinida'">
-                    <aSmart-predefinida [outputRes]="respuesta.outputMessage" (onRespChanges)="catchOutputMessage($event)"></aSmart-predefinida>
-                </div>
-                <div *ngSwitchCase="'condicional'">
-                    <aSmart-condicional-form [respCondicional]="respuesta.outputMessage" (onRespChanges)="catchOutputMessage($event)"></aSmart-condicional-form>
-                </div>
-                <div *ngSwitchCase="'grupo_datos'">
-                    <aSmart-grupo-datos (onRespChanges)="catchOutputMessage($event)"></aSmart-grupo-datos>
-                </div>
-                <div *ngSwitchCase="'buscar'">
-                    <aSmart-buscar-form (onRespChanges)="catchOutputMessage($event)"></aSmart-buscar-form>
-                </div>
+<div class="respuesta-card">
+    <div class="col 2 res-type-icon" [ngClass]="{'type-icon-closed': !switchEditResp}">
+        <button mat-fab [ngStyle]="{'background': selectedRes.color}" >
+            <i class="fas" [ngClass]="selectedRes.icono"></i>
+        </button>
+    </div>
+    <div class="col s10">
+        <mat-card [ngClass]="{'card-closed': !switchEditResp}" >
+    
+            <ng-container *ngIf="!switchEditResp; else editResp">
                 
-            </div>
-
+                    <div class="row align-cols">
+                        <div class="col s10" (click)="switchEditResp = true">
+                            <div [ngSwitch]="respuesta.tipo">
+                                <div *ngSwitchCase="'condicional'">
+                                    <b>{{respuesta.nextIntent}}</b>
+                                    Si {{respuesta.outputMessage['parametro']}}
+                                    es {{respuesta.outputMessage['condicion']}}
+                                    a {{respuesta.outputMessage['valor']}}
+                                </div>
+                                <div *ngSwitchDefault><b>{{respuesta.nextIntent}}</b></div>
+                            </div>
+                            
+                        </div>
+                        <div class="col s2">
+                            <button mat-icon-button [mat-menu-trigger-for]="card">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <mat-menu #card="matMenu">
+                                <button mat-menu-item>Eliminar</button>
+                            </mat-menu>
+                        </div>
+                    </div>
+    
+            </ng-container>
+            <ng-template #editResp>
+                
             
-
-
             
-
-
-
-
-
-
-
-            <!-- Action -->
-            <div class="row">
-                <div class="col s4 resp-label">
-                    Acción
-                </div>
-                <div class="col s8 right">
-                    <mat-slide-toggle [(ngModel)]="activateAccion">Realizar accion</mat-slide-toggle>
-                </div>
-            </div>
-            <ng-container *ngIf="activateAccion">
+    
                 <div class="row">
-                    <div class="col s4">
+                    <div class="col s4 resp-label">
+                        Tipo
+                    </div>
+                    <div class="col s8">
                         <mat-select 
-                        placeholder="Acción" 
-                        [(ngModel)]="respuesta.accion" 
-                        name="contexto">
-                            <mat-option *ngFor="let action of resService.acciones" [value]="action">
-                                {{action.accion}}
+                        [(ngModel)]="respuesta.tipo"
+                        placeholder="Tipo de respuesta" name="tipoRes" 
+                        (selectionChange)="onTipoSelected($event)">
+                            <mat-option *ngFor="let tipoRes of tiposRes" [value]="tipoRes.name">
+                                {{tipoRes.display}}
                             </mat-option>
                         </mat-select>
                     </div>
-                    <div class="col s8">
-                        <mat-form-field>
-                            <input matInput placeholder="Ruta" class="resp-input">
-                        </mat-form-field>
+                </div>
+    
+                
+    
+    
+    
+            <mat-card-content>
+    
+                <div [ngSwitch]="respuesta.tipo">
+                    <div *ngSwitchCase="'predefinida'">
+                        <aSmart-predefinida [outputRes]="respuesta.outputMessage" (onRespChanges)="catchOutputMessage($event)"></aSmart-predefinida>
+                    </div>
+                    <div *ngSwitchCase="'condicional'">
+                        <aSmart-condicional-form [respCondicional]="respuesta.outputMessage" (onRespChanges)="catchOutputMessage($event)"></aSmart-condicional-form>
+                    </div>
+                    <div *ngSwitchCase="'grupo_datos'">
+                        <aSmart-grupo-datos (onRespChanges)="catchOutputMessage($event)"></aSmart-grupo-datos>
+                    </div>
+                    <div *ngSwitchCase="'buscar'">
+                        <aSmart-buscar-form (onRespChanges)="catchOutputMessage($event)"></aSmart-buscar-form>
+                    </div>
+                    
+                </div>
+    
+                
+    
+    
+                
+    
+    
+    
+    
+    
+    
+    
+                <!-- Action -->
+                <div class="row">
+                    <div class="col s4 resp-label">
+                        Acción
+                    </div>
+                    <div class="col s8 right">
+                        <mat-slide-toggle [(ngModel)]="activateAccion">Realizar accion</mat-slide-toggle>
                     </div>
                 </div>
-            </ng-container>
-
-
-
-
-
-
-            <!-- Select contexto -->
-            <div class="row">
-                <div class="col s4 resp-label">
-                    Contexto
+                <ng-container *ngIf="activateAccion">
+                    <div class="row">
+                        <div class="col s4">
+                            <mat-select 
+                            placeholder="Acción" 
+                            [(ngModel)]="respuesta.accion" 
+                            name="contexto">
+                                <mat-option *ngFor="let action of resService.acciones" [value]="action">
+                                    {{action.accion}}
+                                </mat-option>
+                            </mat-select>
+                        </div>
+                        <div class="col s8">
+                            <mat-form-field>
+                                <input matInput placeholder="Ruta" class="resp-input">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </ng-container>
+    
+    
+    
+    
+    
+    
+                <!-- Select contexto -->
+                <div class="row">
+                    <div class="col s4 resp-label">
+                        Contexto
+                    </div>
+                    <div class="col s8">
+                        <mat-select 
+                        *ngIf="resService.contextList"
+                        placeholder="Siguiente contexto" 
+                        [(ngModel)]="respuesta.outputContext" 
+                        name="contexto">
+                            <mat-option *ngFor="let contexto of resService.contextList" 
+                            [value]="contexto.contextName">
+                                {{contexto.contextName}}
+                            </mat-option>
+                        </mat-select>
+                    </div>
                 </div>
-                <div class="col s8">
-                    <mat-select 
-                    *ngIf="resService.contextList"
-                    placeholder="Siguiente contexto" 
-                    [(ngModel)]="respuesta.outputContext" 
-                    name="contexto">
-                        <mat-option *ngFor="let contexto of resService.contextList" 
-                        [value]="contexto.contextName">
-                            {{contexto.contextName}}
-                        </mat-option>
-                    </mat-select>
+    
+    
+    
+    
+    
+    
+                <!-- Select next mensaje -->
+                <div class="row">
+                    <div class="col s4 resp-label">
+                        Siguiente
+                    </div>
+                    <div class="col s8">
+                        <mat-select 
+                        *ngIf="resService.mensajesList"
+                        placeholder="Siguiente mensaje" 
+                        [(ngModel)]="respuesta.nextIntent" 
+                        name="mensaje">
+                            <mat-option *ngFor="let mensaje of resService.mensajesList" [value]="mensaje.name">
+                                {{mensaje.displayName}}
+                            </mat-option>
+                        </mat-select>
+                    </div>
                 </div>
-            </div>
-
-
-
-
-
-
-            <!-- Select next mensaje -->
-            <div class="row">
-                <div class="col s4 resp-label">
-                    Siguiente
-                </div>
-                <div class="col s8">
-                    <mat-select 
-                    *ngIf="resService.mensajesList"
-                    placeholder="Siguiente mensaje" 
-                    [(ngModel)]="respuesta.nextIntent" 
-                    name="mensaje">
-                        <mat-option *ngFor="let mensaje of resService.mensajesList" [value]="mensaje.name">
-                            {{mensaje.displayName}}
-                        </mat-option>
-                    </mat-select>
-                </div>
-            </div>
-
-
-
-
-        </mat-card-content>
-        <mat-card-actions class="res-actions">
-            <button mat-raised-button (click)="switchEditResp = false">Cerrar</button>
-            <button mat-raised-button color="accent" (click)="onSave()">Guardar</button>
-        </mat-card-actions>
-        </ng-template>
-    </mat-card>
+    
+    
+    
+    
+            </mat-card-content>
+            <mat-card-actions class="res-actions">
+                <button mat-raised-button (click)="switchEditResp = false">Cerrar</button>
+                <button mat-raised-button color="accent" (click)="onSave()">Guardar</button>
+            </mat-card-actions>
+            </ng-template>
+        </mat-card>
+    </div>
 </div>

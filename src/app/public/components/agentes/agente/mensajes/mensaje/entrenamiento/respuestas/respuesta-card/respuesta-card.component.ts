@@ -52,12 +52,10 @@ export class RespuestaCardComponent implements OnInit {
       this.outputMessage
     )
 
-    this.resService.initRespData()
     this.selectedRes = this.tiposRes[0]
    }
 
   ngOnInit(): void {
-    console.log(this.tiposRes, this.respuesta.tipo);
     this.selectedRes = this.tiposRes.find( tipo => tipo.name == this.respuesta.tipo )
     console.log( this.selectedRes);
     this.getCurrent()
@@ -70,6 +68,7 @@ export class RespuestaCardComponent implements OnInit {
 
   onTipoSelected( tipoSelected: MatSelectChange ) {
     this.selectedRes = this.tiposRes.find( tipo => tipo.name == tipoSelected.value )
+    console.log(this.selectedRes);
     this.respuesta.tipo = tipoSelected.value
   }
 
@@ -121,7 +120,6 @@ export class RespuestaCardComponent implements OnInit {
   }
 
   async onSave() {
-    this.switchEditResp = false
     let cleanRespuesta = await this.validateRespuesta( this.respuesta )
     console.log( cleanRespuesta );
     this.resService.addRespuesta(cleanRespuesta)

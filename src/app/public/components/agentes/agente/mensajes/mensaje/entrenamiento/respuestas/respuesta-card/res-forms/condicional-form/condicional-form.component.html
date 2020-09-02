@@ -4,8 +4,9 @@
         Si
     </div>
     <div class="col s8">
-        <mat-select placeholder="parámetro" [(ngModel)]="paramSelected" name="param">
-            <mat-option *ngFor="let param of resService.paramList" [value]="param.name">
+        <mat-select placeholder="parámetro" [(ngModel)]="paramSelected" name="param"
+        (selectionChange)="onParamChange()">
+            <mat-option *ngFor="let param of resService.paramList" [value]="param.displayName">
                 {{param.displayName}}
             </mat-option>
         </mat-select>
@@ -33,18 +34,28 @@
         Valor
     </div>
     <div class="col s8">
-        <mat-form-field>
-            <input 
-            class="resp-input"
-            matInput
-            type="text" 
-            name="conditionValue" 
-            id="conditionValue"
-            [(ngModel)]="conditionValue"
-            >
-        </mat-form-field>
+        <ng-container *ngIf="!isOriginal; else original">
+            <mat-select placeholder="Valor" [(ngModel)]="conditionValue" name="valor">
+                <mat-option *ngFor="let valor of tipoSelected.entities" [value]="valor.value">
+                    {{valor.value}}
+                </mat-option>
+            </mat-select>
+        </ng-container>
+        <ng-template #original>
+            <mat-form-field>
+                <input 
+                class="resp-input"
+                matInput
+                type="text" 
+                name="conditionValue" 
+                id="conditionValue"
+                [(ngModel)]="conditionValue"
+                >
+            </mat-form-field>
+        </ng-template>
     </div>
 </div>
+
 
 
 <aSmart-predefinida [outputRes]="{

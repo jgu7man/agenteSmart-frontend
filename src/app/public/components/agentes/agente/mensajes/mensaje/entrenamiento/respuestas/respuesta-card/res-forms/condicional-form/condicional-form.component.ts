@@ -4,6 +4,9 @@ import { CacheService } from '../../../../../../../../../../../Gdev-Tools/cache/
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { FormCondicional, FormPredefinida } from '../../../respuesta.model';
 import { MatSelectChange } from '@angular/material/select';
+import { ParametroMensaje } from '../../../../../../mensaje.model';
+import { ParametrosService } from '../../../../parametros/parametros.service';
+import { TipoEntidadModel } from '../../../../../../../tipos/tipo.model';
 
 @Component({
   selector: 'aSmart-condicional-form',
@@ -12,9 +15,11 @@ import { MatSelectChange } from '@angular/material/select';
 })
 export class CondicionalFormComponent implements OnInit {
 
-  paramSelected: string
+  paramSelected: string = ''
+  isOriginal: boolean = true
   condicionSelected: string
   conditionValue: string = ''
+  tipoSelected: TipoEntidadModel
 
   @Input() respCondicional: FormCondicional
   @Output() onRespChanges: EventEmitter<FormPredefinida> = new EventEmitter()
@@ -32,15 +37,29 @@ export class CondicionalFormComponent implements OnInit {
 
   constructor (
     public resService: RespuestasService,
+    public _params: ParametrosService
   ) {
     this.respCondicional = new FormCondicional('texto','', this.paramSelected, this.condicionSelected,'')
-    this.resService.initRespData()
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
   }
 
-  
+  getTipos() {
+    
+  }
+
+  onParamChange() {
+    if ( this.paramSelected ) {
+      let value = this._params.getParamByName( this.paramSelected ).value
+      this.isOriginal = value.split( '.' ).length > 1 ? true : false
+      this.tipoSelected = this.resService.tiposList.find(t => t.name == this.paramSelected)
+    } else {
+      this.isOriginal = true
+    }
+  }
+
+ 
 
   
 

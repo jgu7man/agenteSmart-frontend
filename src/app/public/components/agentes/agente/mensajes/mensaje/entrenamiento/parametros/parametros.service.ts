@@ -87,6 +87,11 @@ export class ParametrosService {
   }
 
 
+  getParamByName( name: string ) {
+    return this.list.find(p=> p.displayName == name)
+  }
+
+
   
 
 

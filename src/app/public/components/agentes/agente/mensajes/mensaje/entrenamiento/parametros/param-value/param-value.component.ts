@@ -16,8 +16,12 @@ export class ParamValueComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    let paramSplit = this.paramValue.split( '.' )
+    let original = paramSplit[1]
+    this.valueOptions.push(
+      original ? paramSplit[ 0 ] : this.paramValue + '.orginal'
+    )    
     this.valueOptions.push( this.paramValue )
-    this.valueOptions.push( this.paramValue + '.orginal' )
   }
 
   onSelected(selection: MatSelectChange) {
