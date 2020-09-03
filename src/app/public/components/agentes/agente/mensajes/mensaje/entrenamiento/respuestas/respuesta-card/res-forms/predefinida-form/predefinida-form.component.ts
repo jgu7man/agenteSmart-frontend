@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { RespuestasService } from '../../../respuestas.service';
-import { FormPredefinida, RespuestaSugerencias, RespuestaCard, FormBuscar, FormCondicional } from '../../../respuesta.model';
+import { FormPredefinida, RespuestaSugerencias, RespuestaCard} from '../../../respuesta.model';
 import { MatSelectChange } from '@angular/material/select';
 
 @Component({
@@ -23,7 +23,6 @@ export class PredefinidaFormComponent implements OnInit {
   }
 
   catchText( text: string ) {
-    console.log(text);
     this.outputRes.respuesta = text
     this.onRespChanges.emit(this.outputRes)
   }
@@ -35,7 +34,6 @@ export class PredefinidaFormComponent implements OnInit {
 
   catchSugerencias( respuesta: RespuestaSugerencias ) {
     this.outputRes.respuesta = respuesta
-    console.log(this.outputRes);
     this.onRespChanges.emit( this.outputRes )
   }
 

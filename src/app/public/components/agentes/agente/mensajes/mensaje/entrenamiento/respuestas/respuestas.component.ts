@@ -1,11 +1,9 @@
 import { Component, OnInit, OnDestroy, ViewChildren, QueryList } from '@angular/core';
 import { RespuestaModel, FormPredefinida } from './respuesta.model';
 import { RespuestasService } from './respuestas.service';
-import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { take, debounceTime, repeat, repeatWhen, expand, tap } from 'rxjs/operators';
 import { RespuestaCardComponent } from './respuesta-card/respuesta-card.component';
-import { Loading } from '../../../../../../../../Gdev-Tools/loading/loading.service';
+import { Loading } from 'src/app/Gdev-Tools/loading/loading.service';
 
 @Component({
   selector: 'aSmart-respuestas',
@@ -14,13 +12,18 @@ import { Loading } from '../../../../../../../../Gdev-Tools/loading/loading.serv
 })
 export class RespuestasComponent implements OnInit, OnDestroy {
 
+
+  /** Respuestas obtenidas de la función de obtener respuestas */
   respuestasList: RespuestaModel[] = []
-  currentContext: string
-  nextIntent: string
+  /** Modelo de inicio para crear una nueva respuesta predefinida */
   newOutputMensaje: FormPredefinida
-  resAddedSub: Subscription
+  /** Suscripción a los cambios de la lista de respuestas */
+  respuestasChangesSubs: Subscription
+  /** Lista de componentes de respuestas */
   @ViewChildren(RespuestaCardComponent) cards: QueryList<RespuestaCardComponent>
 
+
+  
   constructor (
     private _respuestas: RespuestasService,
     private loading: Loading,
@@ -30,17 +33,18 @@ export class RespuestasComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getResponses()
-    this.resAddedSub = this._respuestas.respuestaAdded
+    this.respuestasChangesSubs = this._respuestas.onRespuestasChanged
     .subscribe(() =>{this.getResponses()})
   }
   
-  async getNextIntent() {
-  }
-
+  /**
+   * Crea una nueva respuesta en el arreglo de respuestas para iniciar 
+   * con la creación de la misma y la abre por defecto
+   */
   async addRespuesta() {
     this.respuestasList.push(
       new RespuestaModel( '',
-        '',
+        this._respuestas.nextMensaje,
         this._respuestas.currentContext,
         this._respuestas.currentContext,
         this.newOutputMensaje
@@ -49,14 +53,16 @@ export class RespuestasComponent implements OnInit, OnDestroy {
     this.cards.last.switchEditResp = true
   }
 
+  /** Obtiene las respuestas y crea la lista */
   async getResponses() {
     this.respuestasList = await this._respuestas.getMensajeResponses()
-    console.log(this.respuestasList);
   }
 
 
+
+  /** Se desuscribe de los cambios en la lista de respuestas */
   ngOnDestroy() {
-    this.resAddedSub.unsubscribe()
+    this.respuestasChangesSubs.unsubscribe()
   }
 
 }

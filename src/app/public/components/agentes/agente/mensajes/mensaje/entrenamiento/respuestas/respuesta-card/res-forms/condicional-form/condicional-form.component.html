@@ -4,7 +4,7 @@
         Si
     </div>
     <div class="col s8">
-        <mat-select placeholder="parámetro" [(ngModel)]="paramSelected" name="param"
+        <mat-select placeholder="parámetro" [(ngModel)]="condicional.parametro" name="param"
         (selectionChange)="onParamChange()">
             <mat-option *ngFor="let param of resService.paramList" [value]="param.displayName">
                 {{param.displayName}}
@@ -19,8 +19,9 @@
         es
     </div>
     <div class="col s8">
-        <mat-select placeholder="condición" [(ngModel)]="condicionSelected" name="condition">
-            <mat-option *ngFor="let condition of condicionesList" [value]="condition.operator">
+        <mat-select placeholder="condición" [(ngModel)]="condicional.condicion" name="condition"
+        (selectionChange)="onRespChanges.emit(condicional)">
+            <mat-option *ngFor="let condition of condicionesList" [value]="condition.displayText">
                 {{condition.displayText}}
             </mat-option>
         </mat-select>
@@ -35,7 +36,8 @@
     </div>
     <div class="col s8">
         <ng-container *ngIf="!isOriginal; else original">
-            <mat-select placeholder="Valor" [(ngModel)]="conditionValue" name="valor">
+            <mat-select placeholder="Valor" [(ngModel)]="condicional.valor" name="valor"
+            (selectionChange)="onRespChanges.emit(condicional)">
                 <mat-option *ngFor="let valor of tipoSelected.entities" [value]="valor.value">
                     {{valor.value}}
                 </mat-option>
@@ -49,7 +51,7 @@
                 type="text" 
                 name="conditionValue" 
                 id="conditionValue"
-                [(ngModel)]="conditionValue"
+                [(ngModel)]="condicional.valor"
                 >
             </mat-form-field>
         </ng-template>
@@ -58,9 +60,9 @@
 
 
 
-<aSmart-predefinida [outputRes]="{
-    mensaje:respCondicional.respuesta, 
-    estiloRespuesta:respCondicional.estiloRespuesta
+<!-- <aSmart-predefinida [outputRes]="{
+    mensaje:condicional.respuesta, 
+    estiloRespuesta:condicional.estiloRespuesta
 }"
  (onRespChanges)="catchOutputMessage($event)"
- ></aSmart-predefinida>
+ ></aSmart-predefinida> -->

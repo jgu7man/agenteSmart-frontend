@@ -1,19 +1,15 @@
-import { AlertService } from './../../../../../../../../Gdev-Tools/alerts/alert.service';
+import { AlertService } from 'src/app/Gdev-Tools/alerts/alert.service';
 import { Injectable } from '@angular/core';
 import { IntentModel, ParametroMensaje } from '../../../mensaje.model';
 import { Contexto } from '../../../../contextos/contexto.model';
 import { AccionModel } from '../../../../acciones/accion.model';
-import { MensajesService } from '../../../mensajes.service';
-import { ContextosService } from '../../../../contextos/contextos.service';
 import { CurrentMensajeService } from '../../current-mensaje.service';
-import { CacheService } from '../../../../../../../../Gdev-Tools/cache/cache.service';
-import { Loading } from '../../../../../../../../Gdev-Tools/loading/loading.service';
+import { CacheService } from 'src/app/Gdev-Tools/cache/cache.service';
+import { Loading } from 'src/app/Gdev-Tools/loading/loading.service';
 import { CurrentAgenteService } from '../../../../current-agente.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { RespuestaModel } from './respuesta.model';
-import { Subject, Observable, Observer, forkJoin } from 'rxjs';
-import { take } from 'rxjs/operators';
-import { ParametrosService } from '../parametros/parametros.service';
+import { Subject } from 'rxjs';
 import { TiposService } from '../../../../tipos/tipos.service';
 import { TipoEntidadModel } from '../../../../tipos/tipo.model';
 
@@ -24,31 +20,53 @@ import { TipoEntidadModel } from '../../../../tipos/tipo.model';
 } )
 export class RespuestasService {
 
-   mensajesList: IntentModel[]
-   currentMensaje: IntentModel
-   currentMensajeName: string
-   nextMensaje: string
-   contextList: Contexto[]
-   currentContext: string
-   paramList: ParametroMensaje[]
-   mensajesPath: string
-   respuestasList: Subject<RespuestaModel[]> = new Subject()
-   respuestaAdded: Subject<any> = new Subject()
-   tiposList: TipoEntidadModel[]
+   /** @module Respuestas */
 
+   /** Contiene todos los mensajes siempre actualizado */
+   mensajesList: IntentModel[]
+   /** Contiene la lista de contextos siempre actualizada */
+   contextList: Contexto[]
+   /** El mensae en curso de edición */
+   currentMensaje: IntentModel
+   /** El id de mensaje en curso para consultas */
+   currentMensajeName: string
+   /** El siguiente mensaje en el contexto actual
+   * @name nextMensaje
+   */
+   nextMensaje: string
+   /** El contexto actual */
+   currentContext: string
+   /** Contiene la lista de parámetros */
+   paramList: ParametroMensaje[]
+   /** La ruta a la base de datos de los mensajes */
+   mensajesPath: string
+   /** Observable de la lista de respuestas */
+   respuestasList: Subject<RespuestaModel[]> = new Subject()
+   /** Observable de las respuestas cuando se agregó, editó o eliminó alguna respuesta */
+   onRespuestasChanged: Subject<any> = new Subject()
+   /** Contiene la lista de tipos de datos */
+   tiposList: TipoEntidadModel[]
+   /** Contiene el tipo de acciones */
    acciones: AccionModel[] = [
       { accion: 'guardar', ruta: '' },
       { accion: 'editar', ruta: '' },
       { accion: 'buscar', ruta: '' },
       { accion: 'borrar', ruta: '' },
    ]
-
+   /** Lista de tipos de respuesta
+    * @variation `texto` para respuestas de sólo texto.
+    * @variation `sugerencias` para crear un arreglo de sugerencias
+    * @variation `card` para usar una tarjeta de imagen, texto, título y botones
+    * @type {EstiloResp[]}
+    * @memberof RespuestasService
+    */
    estiloResps: EstiloResp[] = [
       { name: 'texto', display: 'Texto' },
       { name: 'sugerencias', display: 'Sugerencias' },
       { name: 'card', display: 'Tarjeta' },
    ]
 
+   
    constructor (
       private _agente: CurrentAgenteService,
       private fs: AngularFirestore,
@@ -61,15 +79,17 @@ export class RespuestasService {
       this.initRespData()
    }
 
-  
 
 
-   /** Obtiene constante actualizado la ruta del mensaje en curso para los métodos del CRUD */
+
+   /** Obtiene constante actualizado la ruta del mensaje en curso para los métodos del CRUD
+    * @returns {string} Referencia de la colección de mensajes en firestore
+    */
    async responsesPath() {
-      
+
       this.loading.waitFor( 100 )
       if ( !this.currentMensajeName ) {
-         this.currentMensajeName = await this._cache.getDataKey('currentMensajeName')
+         this.currentMensajeName = await this._cache.getDataKey( 'currentMensajeName' )
       }
 
       this.mensajesPath = await this._agente.getPath( `mensajes` )
@@ -86,38 +106,50 @@ export class RespuestasService {
       this.contextList = allData[ 'allContexts' ]
       this.mensajesList = allData[ 'allMensajesList' ]
       this.currentContext = allData[ 'currentContexto' ]
-      
+
       this._mensaje.current$.subscribe( mensaje => {
          if ( mensaje ) {
             this.currentMensaje = mensaje
             this.paramList = this.currentMensaje.parameters
             this.getNextMensaje()
-            this.getTipos(mensaje.parameters)
+            this.getTipos( mensaje.parameters )
          }
       } )
 
       return
    }
 
-   async getTipos( paramList: ParametroMensaje[]  ) {
+
+   /** Obtiene los tipos de datos del agente
+    * @return {array} Arreglo de los tipos de datos del agente
+    */
+   async getTipos( paramList: ParametroMensaje[] ) {
       this.tiposList = []
-      await this.loading.asyncForEach( paramList, async( param:ParametroMensaje) => {
-         let tipo = this.tiposList.find( t => t.name == param.displayName )
-         console.log(tipo);
-         if ( !tipo ) {
-            tipo = await this._tipos.getByName( param.displayName )
-            await this.loading.waitFor(100)
-            return this.tiposList.push(tipo)
-         }
-      } )
-      console.log(this.tiposList);
+      await this.loading.asyncForEach( paramList,
+         async ( param: ParametroMensaje ) => {
+            let tipo = this.tiposList.find( t => t.name == param.displayName )
+
+            if ( !tipo ) {
+               tipo = await this._tipos.getByName( param.displayName )
+               await this.loading.waitFor( 100 )
+               return this.tiposList.push( tipo )
+            }
+         } )
+      return this.tiposList
    }
 
 
+   /** 
+    * Obtiene el siguiente mensaje del contexto en curso, 
+    * si es el último mensaje del contexto retorna string vacio.
+    * @return vacio
+    * @see {@link nextMensaje}
+    */
    async getNextMensaje() {
       const contextosList = await this._cache.getDataKey( 'contextosLists' )
       var mensajes: IntentModel[] = contextosList ?
          contextosList[ this.currentContext ] : []
+      
       if ( mensajes.length > 0 )
          var currentIntenIndex = mensajes.findIndex
             ( intent => intent.name == this.currentMensaje.name );
@@ -125,6 +157,13 @@ export class RespuestasService {
       this.nextMensaje = currentIntenIndex == mensajes.length - 1 ? '' : mensajes[ currentIntenIndex + 1 ].displayName
    }
 
+
+
+   /**
+    * Obtiene las respuestas del mensaje en curso y contexto en curso
+    *
+    * @return {Array} Lista de respuestas
+    */
    async getMensajeResponses() {
       var mensajeResponses: RespuestaModel[] = []
       let currentContexto = await this._cache.getDataKey( 'currentContexto' )
@@ -135,29 +174,36 @@ export class RespuestasService {
       return mensajeResponses
    }
 
-   
 
 
 
+
+   /**
+    * Agrega o actualiza respuestas al mensaje en curso
+    *
+    * @param {RespuestaModel} respuesta - El objeto de respuesta
+    * @return {Subject} Aviso al observable de cambios en la lista de respuestas
+    */
    async addRespuesta( respuesta: RespuestaModel ) {
       const mensajesList: RespuestaModel[] = await this.getMensajeResponses()
       var predef: boolean[] = []
+
       // Revisa que no exista una predefinida
       await this.loading.asyncForEach( mensajesList,
-         msj => { if ( msj.tipo == 'predefinida' ) predef.push(true) } );
+         msj => { if ( msj.tipo == 'predefinida' ) predef.push( true ) } );
 
       console.log( respuesta );
-      console.log(predef);
+      console.log( predef );
 
       if ( respuesta.id ) {
          console.log( 'update' );
          ( await this.responsesPath() ).doc( respuesta.id )
             .set( respuesta, { merge: true } );
-         this._alerts.sendFloatNotification('Respuesta actualizada')
+         this._alerts.sendFloatNotification( 'Respuesta actualizada' )
 
       } else {
          console.log( 'create' );
-         if ( predef.length >= 1 && respuesta.tipo == 'predefinida') {
+         if ( predef.length >= 1 && respuesta.tipo == 'predefinida' ) {
             this._alerts.sendMessageAlert( 'No puedes agregar más de una respuesta predefinida' );
          } else {
             let res = await ( await this.responsesPath() ).add( respuesta )
@@ -165,18 +211,32 @@ export class RespuestasService {
          }
       }
 
-      return this.respuestaAdded.next( true )
+      return this.onRespuestasChanged.next( true )
 
    }
 
 
-   delRespuesta( respuestaId: string ) {
 
+   /**
+    * Elimina la respuesta seleccionada
+    *
+    * @param {string} respuestaId - El id de la respuesta a borrar
+    * @return {Subject} Aviso al observable de cambios en la lista de respuestas
+    */
+   async delRespuesta( respuestaId: string ) {
+      await ( await this.responsesPath() ).doc( respuestaId ).delete()
+      return this.onRespuestasChanged.next( true )
    }
 }
 
 
 
+/**
+ * Interface para el arreglo de los estilos de respuestas
+ *
+ * @export
+ * @interface EstiloResp
+ */
 export interface EstiloResp {
    name: string,
    display: string

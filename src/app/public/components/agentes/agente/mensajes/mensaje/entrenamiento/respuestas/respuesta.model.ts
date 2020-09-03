@@ -20,7 +20,7 @@ export class FormCondicional {
     constructor (
         public estiloRespuesta: 'texto' | 'sugerencias' | 'card' | RespuestaBinaria,
         public respuesta: string | RespuestaSugerencias | RespuestaCard ,
-        public paramaetro: string,
+        public parametro: string,
         public condicion: string,
         public valor: string | number | any[]
     ){}

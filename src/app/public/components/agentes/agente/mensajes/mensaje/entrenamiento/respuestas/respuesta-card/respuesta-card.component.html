@@ -13,10 +13,10 @@
                         <div class="col s10" (click)="switchEditResp = true">
                             <div [ngSwitch]="respuesta.tipo">
                                 <div *ngSwitchCase="'condicional'">
-                                    <b>{{respuesta.nextIntent}}</b>
+                                    <b>{{respuesta.nextIntent}}</b><br>
                                     Si {{respuesta.outputMessage['parametro']}}
                                     es {{respuesta.outputMessage['condicion']}}
-                                    a {{respuesta.outputMessage['valor']}}
+                                    {{respuesta.outputMessage['valor']}}
                                 </div>
                                 <div *ngSwitchDefault><b>{{respuesta.nextIntent}}</b></div>
                             </div>
@@ -27,7 +27,7 @@
                                 <i class="fas fa-ellipsis-v"></i>
                             </button>
                             <mat-menu #card="matMenu">
-                                <button mat-menu-item>Eliminar</button>
+                                <button mat-menu-item (click)="resService.delRespuesta(respuesta.id)">Eliminar</button>
                             </mat-menu>
                         </div>
                     </div>
@@ -61,11 +61,10 @@
             <mat-card-content>
     
                 <div [ngSwitch]="respuesta.tipo">
-                    <div *ngSwitchCase="'predefinida'">
-                        <aSmart-predefinida [outputRes]="respuesta.outputMessage" (onRespChanges)="catchOutputMessage($event)"></aSmart-predefinida>
-                    </div>
+                    <!-- <div *ngSwitchCase="'predefinida'">
+                    </div> -->
                     <div *ngSwitchCase="'condicional'">
-                        <aSmart-condicional-form [respCondicional]="respuesta.outputMessage" (onRespChanges)="catchOutputMessage($event)"></aSmart-condicional-form>
+                        <aSmart-condicional-form [condicional]="respuesta.outputMessage" (onRespChanges)="catchOutputMessage($event)"></aSmart-condicional-form>
                     </div>
                     <div *ngSwitchCase="'grupo_datos'">
                         <aSmart-grupo-datos (onRespChanges)="catchOutputMessage($event)"></aSmart-grupo-datos>
@@ -73,6 +72,7 @@
                     <div *ngSwitchCase="'buscar'">
                         <aSmart-buscar-form (onRespChanges)="catchOutputMessage($event)"></aSmart-buscar-form>
                     </div>
+                    <aSmart-predefinida [outputRes]="respuesta.outputMessage" (onRespChanges)="catchOutputMessage($event)"></aSmart-predefinida>
                     
                 </div>
     
