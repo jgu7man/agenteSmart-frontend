@@ -55,6 +55,9 @@ import { SugerenciasComponent } from './agente/mensajes/mensaje/entrenamiento/re
 import { CardComponent } from './agente/mensajes/mensaje/entrenamiento/respuestas/respuesta-card/res-style/card/card.component';
 import { ColeccionesComponent } from './agente/colecciones/colecciones.component';
 import { TarjetasComponent } from './agente/tarjetas/tarjetas.component';
+import { ColeccionComponent } from './agente/colecciones/coleccion/coleccion.component';
+import { AddColeccionComponent } from './agente/colecciones/add-coleccion/add-coleccion.component';
+
 
 
 
@@ -103,6 +106,9 @@ import { TarjetasComponent } from './agente/tarjetas/tarjetas.component';
     CardComponent,
     ColeccionesComponent,
     TarjetasComponent,
+    ColeccionComponent,
+    AddColeccionComponent,
+
   ],
   imports: [
     CommonModule,

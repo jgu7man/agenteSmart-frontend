@@ -1,0 +1,68 @@
+<div class="container">
+    <div class="row">
+        <div class="col s2">
+            <button mat-icon-button
+            (click)="close.emit()">
+                <i class="fas fa-times fa-lg"></i>
+            </button>
+        </div>
+        <div class="col s10">
+            <h5><b>{{coleccion.name}}</b></h5>
+            {{coleccion.tipo}}
+        </div>
+    </div>
+
+    <div class="row" id="data-table">
+        
+        <div class="col s12">
+            <div [ngSwitch]="coleccion.tipo">
+                <div *ngSwitchCase="'busqueda'">
+                    <b>Datos</b>
+                    
+                    <mat-selection-list>
+                        <mat-list-option [checkboxPosition]="'before'" *ngFor="let dato of coleccion.colDatos">
+                            opcion
+                        </mat-list-option>
+                        
+                    </mat-selection-list>
+                    <div class="row" style="width: 100%;">
+                        <div class="col s12 m4">
+                            <mat-form-field>
+                                <mat-label>Identificador</mat-label>
+                                <input matInput
+                                preventSpaces
+                                normalize
+                                [(ngModel)]="newColeccionDato.identificador"
+                                type="text" name="ident" id="ident">
+                            </mat-form-field>
+                        </div>
+                        <div class="col s11 m7">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Valor</mat-label>
+                                <input matInput
+                                [(ngModel)]="newColeccionDato.valor"
+                                    type="text" name="valor" id="valor">
+                            </mat-form-field>
+                        </div>
+                        <div class="col s1">
+                            <button mat-icon-button 
+                            [disabled]="!newColeccionDato.identificador && !newColeccionDato.valor" 
+                            (click)="addDato()">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div *ngSwitchCase="'guardado'">
+                    <b>Datos</b>
+                </div>
+                <div *ngSwitchDefault></div>
+            </div>
+        </div>
+
+    </div>
+
+    
+
+
+</div>

@@ -14,8 +14,6 @@ export class CondicionalFormComponent implements OnInit {
 
   paramSelected: string = ''
   isOriginal: boolean = true
-  condicionSelected: string
-  conditionValue: string = ''
   tipoSelected: TipoEntidadModel
 
   @Input() condicional: FormCondicional
@@ -35,7 +33,6 @@ export class CondicionalFormComponent implements OnInit {
   constructor (
     public resService: RespuestasService,
     public _params: ParametrosService,
-    private loading: Loading
   ) {
     this.condicional = new FormCondicional('texto','', '', '','')
   }
