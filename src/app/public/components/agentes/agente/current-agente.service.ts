@@ -17,6 +17,9 @@ export class CurrentAgenteService {
   currentProjectId: string
   usuario: UserInterface
   agente$: Subject<AgenteModel> = new Subject()
+  mensajesList
+  tipos
+  
 
   constructor (
     private fs: AngularFirestore,

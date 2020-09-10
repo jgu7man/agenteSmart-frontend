@@ -1,0 +1,17 @@
+    <mat-dialog-content>
+        <p class="center">
+            Todos los datos de esta colección se perderán y esta acción es IRREVERTIBLE.
+            <br>
+            ¿Deseas elimarla aún así?
+        </p>
+    </mat-dialog-content>
+    <mat-dialog-actions style="display: flex; justify-content: space-around;">
+        <button mat-raised-button (click)="dialog.close()">
+            Cancelar
+        </button>
+        <button color="warn" mat-raised-button 
+        (click)="dialog.close()"
+        (click)="colecciones.delete(colName)">
+            Aceptar
+        </button>
+    </mat-dialog-actions>

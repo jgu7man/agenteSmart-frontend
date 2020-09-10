@@ -2,7 +2,7 @@ export class ColeccionModel {
     constructor (
         public name: string,
         public tipo: 'guardado' | 'busqueda' | '',
-        public colDatos?: ColeccionDato[],
+        public queryData?: ColeccionDato[],
         public dataGetted?: any[]
     ){}
 }

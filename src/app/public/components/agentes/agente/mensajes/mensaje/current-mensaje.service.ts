@@ -38,7 +38,9 @@ export class CurrentMensajeService {
         .pipe(pluck('name')),
       [ 'currentContexto' ]: this.loading.getRouteQueryParams()
         .pipe(pluck('contexto'))
-    } )
+    } ).pipe(
+      tap(console.log)
+    )
   }
   
 

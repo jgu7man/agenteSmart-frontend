@@ -28,6 +28,7 @@ export class ColeccionesComponent implements OnInit {
   }
 
   onCollectionSelected( selected: MatSelectionListChange ) {
+    if ( this.colPanel.opened ) { this.colPanel.close() }
     this.coleccionSelected = selected.option.value
     this.colPanel.open()
   }

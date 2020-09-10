@@ -55,10 +55,15 @@ export class ColeccionesService {
   }
 
 
-  async addDatoColeccion( coleccion: ColeccionModel) {
+  async updateDataColeccion( coleccion: ColeccionModel) {
     await this.fs.collection( this.coleccionesPath ).ref.doc( coleccion.name )
-      .update( { colDatos: coleccion.colDatos } )
+      .update( { queryData: coleccion.queryData } )
     return 
+  }
+
+  async delete(colName) {
+    await this.fs.collection( this.coleccionesPath ).ref.doc( colName )
+    .delete().then(()=> this.getCollections())
   }
   
 

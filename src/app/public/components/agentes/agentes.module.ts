@@ -57,6 +57,8 @@ import { ColeccionesComponent } from './agente/colecciones/colecciones.component
 import { TarjetasComponent } from './agente/tarjetas/tarjetas.component';
 import { ColeccionComponent } from './agente/colecciones/coleccion/coleccion.component';
 import { AddColeccionComponent } from './agente/colecciones/add-coleccion/add-coleccion.component';
+import { DelColeccionComponent } from './agente/colecciones/del-coleccion/del-coleccion.component';
+import { BusquedaColeccionComponent } from './agente/colecciones/coleccion/busqueda-coleccion/busqueda-coleccion.component';
 
 
 
@@ -108,6 +110,8 @@ import { AddColeccionComponent } from './agente/colecciones/add-coleccion/add-co
     TarjetasComponent,
     ColeccionComponent,
     AddColeccionComponent,
+    DelColeccionComponent,
+    BusquedaColeccionComponent,
 
   ],
   imports: [
