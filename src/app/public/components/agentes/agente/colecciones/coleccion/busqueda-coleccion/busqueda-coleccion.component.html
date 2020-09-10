@@ -46,7 +46,9 @@
                         <i class="fas fa-ellipsis-v"></i>
                     </button>
                     <mat-menu #datoMenu="matMenu">
-                        <button mat-menu-item>Editar</button>
+                        <button mat-menu-item
+                        (click)="onEdit(dato)"
+                        >Editar</button>
                         <button mat-menu-item
                         (click)="deleteOneDato(dato)"
                         >Eliminar</button>

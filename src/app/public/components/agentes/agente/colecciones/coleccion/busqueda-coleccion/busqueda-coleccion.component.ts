@@ -133,6 +133,15 @@ export class BusquedaColeccionComponent implements OnInit {
       
   }
 
+  onEdit(dato: ColeccionDato) {
+    this.newColeccionDato = dato
+    let datoToDel = this.coleccion.queryData
+      .findIndex( d => d.identificador == dato.identificador )
+    if ( datoToDel > -1 ) {
+      this.coleccion.queryData.splice( datoToDel, 1 )
+    }
+  }
+
 
 
 
