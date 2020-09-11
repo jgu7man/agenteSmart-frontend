@@ -59,7 +59,9 @@ import { ColeccionComponent } from './agente/colecciones/coleccion/coleccion.com
 import { AddColeccionComponent } from './agente/colecciones/add-coleccion/add-coleccion.component';
 import { DelColeccionComponent } from './agente/colecciones/del-coleccion/del-coleccion.component';
 import { BusquedaColeccionComponent } from './agente/colecciones/coleccion/busqueda-coleccion/busqueda-coleccion.component';
-
+import { TarjetaEditComponent } from './agente/tarjetas/tarjeta-edit/tarjeta-edit.component';
+import { EstaticaTarjetaComponent } from './agente/tarjetas/estatica-tarjeta/estatica-tarjeta.component';
+import { ColeccionTarjetaComponent } from './agente/tarjetas/coleccion-tarjeta/coleccion-tarjeta.component';
 
 
 
@@ -112,7 +114,9 @@ import { BusquedaColeccionComponent } from './agente/colecciones/coleccion/busqu
     AddColeccionComponent,
     DelColeccionComponent,
     BusquedaColeccionComponent,
-
+    TarjetaEditComponent,
+    EstaticaTarjetaComponent,
+    ColeccionTarjetaComponent,
   ],
   imports: [
     CommonModule,

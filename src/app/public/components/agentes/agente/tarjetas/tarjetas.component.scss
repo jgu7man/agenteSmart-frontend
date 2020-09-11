@@ -1,0 +1,24 @@
+#tarjetas-container {
+    display: flex;
+    flex-flow: row wrap;
+    .tarjeta{
+        margin: 1.5%;
+        width: 44%;
+        cursor: pointer;
+    }
+}
+
+
+
+
+@media screen and (min-width: 800px) {
+    .tarjeta {
+        width: 30% !important;
+    }
+}
+
+@media screen and (max-width: 360px) {
+    .tarjeta {
+        width: 100% !important;
+    }
+}

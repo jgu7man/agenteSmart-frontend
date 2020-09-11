@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { TarjetaEditComponent } from './tarjeta-edit/tarjeta-edit.component';
 
 @Component({
   selector: 'aSmart-tarjetas',
@@ -7,9 +9,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TarjetasComponent implements OnInit {
 
-  constructor() { }
+  constructor (
+    private _dialog: MatDialog
+  ) { }
 
   ngOnInit(): void {
+  }
+
+  addCard() {
+    var editBox = this._dialog
+      .open( TarjetaEditComponent, {
+        minWidth: 350,
+    })
   }
 
 }

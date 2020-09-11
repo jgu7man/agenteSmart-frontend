@@ -1,1 +1,33 @@
-<p>tarjetas works!</p>
+<div class="container">
+    <div class="row">
+        <div class="col s12">
+            <b>Mensajes en Tarjeta</b>
+            <button mat-icon-button (click)="addCard()">
+                <i class="fas fa-plus fa-lg"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col s12" id="tarjetas-container">
+            <mat-card class="tarjeta" (click)="addCard()">
+                <div class="row align-cols">
+                    <div class="col s10">
+                        <b>Tarjeta</b>
+                    </div>
+                    <div class="col s2">
+                        <button mat-icon-button [mat-menu-trigger-for]="tarjetaMenu">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <mat-menu #tarjetaMenu="matMenu">
+                            <button mat-menu-item>Duplicar</button>
+                            <button mat-menu-item>Eliminar</button>
+                        </mat-menu>
+                    </div>
+                </div>
+            </mat-card>
+            
+        </div>
+    </div>
+    
+</div>

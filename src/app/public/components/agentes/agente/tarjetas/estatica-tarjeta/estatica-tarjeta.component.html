@@ -1,0 +1,22 @@
+<mat-card-title>
+    <gdev-reactive-textline
+    [label]="'Titulo'"
+    [text]="contenido.titulo"
+    (onTextEvent)="contenido.titulo = $event"
+    ></gdev-reactive-textline>
+</mat-card-title>
+
+<button mat-raised-button 
+(click)="addImageButton.click()"
+>Agregar Imagen</button>
+<input type="file" class="hide" #addImageButton>
+<img mat-card-image [src]="contenido.imagenURL" accept="image/*">
+
+<mat-card-content>
+    <gdev-reacvtive-dialogbox
+    [label]="'body'"
+    [text]="contenido.body"
+    (onTextEvent)="contenido.body = $event"
+    ></gdev-reacvtive-dialogbox>
+</mat-card-content>
+
