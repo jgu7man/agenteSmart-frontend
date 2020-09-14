@@ -1,7 +1,7 @@
 import { AlertService } from 'src/app/Gdev-Tools/alerts/alert.service';
 import { Injectable } from '@angular/core';
 import { IntentModel, ParametroMensaje } from '../../../mensaje.model';
-import { Contexto } from '../../../../contextos/contexto.model';
+import { ContextoModel } from '../../../../contextos/contexto.model';
 import { AccionModel } from '../../../../acciones/accion.model';
 import { CurrentMensajeService } from '../../current-mensaje.service';
 import { CacheService } from 'src/app/Gdev-Tools/cache/cache.service';
@@ -25,7 +25,7 @@ export class RespuestasService {
    /** Contiene todos los mensajes siempre actualizado */
    mensajesList: IntentModel[]
    /** Contiene la lista de contextos siempre actualizada */
-   contextList: Contexto[]
+   contextList: ContextoModel[]
    /** El mensae en curso de edición */
    currentMensaje: IntentModel
    /** El id de mensaje en curso para consultas */
@@ -68,8 +68,8 @@ export class RespuestasService {
 
    
    constructor (
-      private _agente: CurrentAgenteService,
       private fs: AngularFirestore,
+      private _agente: CurrentAgenteService,
       private _mensaje: CurrentMensajeService,
       private _cache: CacheService,
       private loading: Loading,
@@ -86,15 +86,14 @@ export class RespuestasService {
     * @returns {string} Referencia de la colección de mensajes en firestore
     */
    async responsesPath() {
-
       this.loading.waitFor( 100 )
-      if ( !this.currentMensajeName ) {
-         this.currentMensajeName = await this._cache.getDataKey( 'currentMensajeName' )
-      }
+      // this._mensaje.mensajesPath
 
-      this.mensajesPath = await this._agente.getPath( `mensajes` )
-      const mensajesRef = this.fs.collection( `${ this.mensajesPath }/${ this.currentMensajeName }/respuestas` ).ref
-      return mensajesRef
+      // this.mensajesPath = await this._agente.getPath( `mensajes` )
+      const respuestasRef = this.fs.collection(
+         `${ this._mensaje.mensajesPath }/${ this._mensaje.mensajeName }/respuestas` )
+         .ref
+      return respuestasRef
    }
 
 
@@ -102,10 +101,9 @@ export class RespuestasService {
 
    /** Obtiene la data del mensaje en curso */
    async initRespData() {
-      var allData = await this._cache.getFullData()
-      this.contextList = allData[ 'allContexts' ]
-      this.mensajesList = allData[ 'allMensajesList' ]
-      this.currentContext = allData[ 'currentContexto' ]
+      this.contextList = this._agente.contextosList
+      this.mensajesList = this._agente.mensajesList
+      this.currentContext = this._mensaje.currentContexto
 
       this._mensaje.current$.subscribe( mensaje => {
          if ( mensaje ) {
@@ -114,7 +112,7 @@ export class RespuestasService {
             this.getNextMensaje()
             this.getTipos( mensaje.parameters )
          }
-      } )
+      } )   
 
       return
    }

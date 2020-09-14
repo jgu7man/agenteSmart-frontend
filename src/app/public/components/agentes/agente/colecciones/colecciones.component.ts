@@ -5,6 +5,7 @@ import { ColeccionModel } from './collection.interface';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MatDialog } from '@angular/material/dialog';
 import { AddColeccionComponent } from './add-coleccion/add-coleccion.component';
+import { CurrentAgenteService } from '../current-agente.service';
 
 @Component({
   selector: 'aSmart-colecciones',
@@ -19,7 +20,8 @@ export class ColeccionesComponent implements OnInit {
   @ViewChild('listPanel') listPanel: MatSelectionList
   constructor (
     public colService: ColeccionesService,
-    private _dialog: MatDialog
+    private _dialog: MatDialog,
+    public agente: CurrentAgenteService
   ) {
     this.coleccionSelected = new ColeccionModel( '', '' )
    }

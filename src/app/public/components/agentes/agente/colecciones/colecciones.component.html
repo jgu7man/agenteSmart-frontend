@@ -21,7 +21,7 @@
                     (selectionChange)="onCollectionSelected($event)" 
                     [multiple]="false">
                         <mat-list-option 
-                        *ngFor="let coleccion of colService.coleccionesList"
+                        *ngFor="let coleccion of agente.coleccionesList"
                         [value]="coleccion"
                         >
                             {{coleccion.name}}

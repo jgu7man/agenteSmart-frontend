@@ -5,8 +5,9 @@
         [background]="'dark'"
         [color]="'bg1'"
         [expanded]="onActive(parent.routeId)">
+
         <mat-expansion-panel-header 
-            [routerLink]="[parent.route]">
+            [routerLink]="parent.route ? [parent.route] : []">
             {{parent.name}}
         </mat-expansion-panel-header>
         <div class="collection">

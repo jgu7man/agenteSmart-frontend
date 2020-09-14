@@ -3,11 +3,11 @@
         <div class="col s12">
             <mat-accordion>
                 <aSmart-tipo 
-                *ngFor="let tipo of tiposList" 
+                *ngFor="let tipo of agente.tiposList" 
                 [tipo]="tipo"
                 (tipoDeleted)="onDeleted($event)"
                 ></aSmart-tipo>
-                <aSmart-add-tipo (saved)="onNewTipo()"></aSmart-add-tipo>
+                <aSmart-add-tipo></aSmart-add-tipo>
             </mat-accordion>
         </div>
     </div>

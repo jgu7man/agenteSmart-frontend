@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { CurrentAgenteService } from '../../current-agente.service';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { IntentModel } from '../mensaje.model';
+import { IntentModel, FraseEntrenamiento, ParametroMensaje } from '../mensaje.model';
 import { Observable, Subject, of, Subscription, AsyncSubject, forkJoin } from 'rxjs';
 import { Loading } from '../../../../../../Gdev-Tools/loading/loading.service';
 import { switchMap, take, distinctUntilKeyChanged, mergeAll, pluck, map, tap } from 'rxjs/operators';
 import { CacheService } from '../../../../../../Gdev-Tools/cache/cache.service';
+import { RespuestaModel } from './entrenamiento/respuestas/respuesta.model';
 
 @Injectable({
   providedIn: 'root'
@@ -38,9 +39,7 @@ export class CurrentMensajeService {
         .pipe(pluck('name')),
       [ 'currentContexto' ]: this.loading.getRouteQueryParams()
         .pipe(pluck('contexto'))
-    } ).pipe(
-      tap(console.log)
-    )
+    } )
   }
   
 
@@ -49,8 +48,6 @@ export class CurrentMensajeService {
     const mensajesRef = this.fs.collection( this.mensajesPath ).ref
     return mensajesRef
   }
-
-
   
 
 
@@ -64,11 +61,56 @@ export class CurrentMensajeService {
       
       this.mensajesPath = await this._agente.getPath( 'mensajes' )
       this.mensaje$ = this.fs.collection( this.mensajesPath )
-      .doc<IntentModel>( this.mensajeName ).valueChanges()
+        .doc<IntentModel>( this.mensajeName ).valueChanges()
+      
+      await this.getFrasesList()
+      await this.getParametrosList()
+      await this.getRespuestasList()
       
       this.mensajeSub$ = this.mensaje$.subscribe( this.current$ )
+      this.current$.subscribe( current => {
+        this._cache.updateData( 'currentMensaje', current )
+      })
       
       this._cache.updateData( 'currentContexto', this.currentContexto )
+    } )
+  }
+
+  
+
+  frasesSubs: Subscription
+  frasesList: FraseEntrenamiento[]
+  getFrasesList() {
+    let mensaje = this._cache.getDataKey( 'currentMensaje' );
+    this.frasesList = mensaje.trainingPhrases ? mensaje.trainingPhrases : [];
+    this.frasesSubs = this.current$.subscribe( mensaje => {
+      this.frasesList = mensaje.trainingPhrases
+    })
+  }
+
+  parametrosSubs: Subscription
+  parametrosList: ParametroMensaje[]
+  getParametrosList() {
+    let mensaje = this._cache.getDataKey( 'currentMensaje' )
+    this.parametrosList = mensaje.parameters ? mensaje.parameters : [];
+    this.parametrosSubs = this.current$.subscribe( mensaje => {
+      this.parametrosList = mensaje.parameters
+    })
+  }
+
+
+  respuestasSubs: Subscription
+  respuestasList: RespuestaModel[]
+  async getRespuestasList() {
+    const respuestasPath = await this._agente.getPath( `mensajes/${this.mensajeName}/respuestas` )
+    this.respuestasList = this._cache.getDataKey( 'currentRespuestas' )
+
+    var changes = this.fs.collection<RespuestaModel>( respuestasPath )
+    .valueChanges()
+
+    this.respuestasSubs = changes.subscribe( respuestas => {
+      this.respuestasList = respuestas
+      this._cache.updateData('currentRespuestas', respuestas)
     } )
   }
 

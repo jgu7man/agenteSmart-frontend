@@ -6,6 +6,7 @@ import { CacheService } from '../../../../../Gdev-Tools/cache/cache.service';
 import { switchMap, startWith } from 'rxjs/operators';
 import { Loading } from '../../../../../Gdev-Tools/loading/loading.service';
 import { AlertService } from '../../../../../Gdev-Tools/alerts/alert.service';
+import { CurrentAgenteService } from '../current-agente.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,37 +20,37 @@ export class ColeccionesService {
     private fs: AngularFirestore,
     private _cache: CacheService,
     private _loading: Loading,
-    private _alerts: AlertService
+    private _alerts: AlertService,
+    private _currentAgent: CurrentAgenteService
   ) {
     this.getCollections()
   }
   
   async getCollections() {
-    this.coleccionesList = []
-    var user = await this._cache.getDataKey( 'user' )
-    var agenteId = await this._cache.getDataKey( 'agenteId' )
-    this.coleccionesPath = `usuarios/${ user.uid }/agentes/${ agenteId }/colecciones`
-    var colsDoc = await this.fs.collection(this.coleccionesPath).ref.get()
-    if ( colsDoc.size > 0 ) {
-      await this._loading.asyncForEach( colsDoc.docs,
-        col => { this.coleccionesList.push(col.data()) })
-    }
-    console.log(this.coleccionesList);
-    return this.coleccionesList
+
+    // await this._loading.waitForDataLoaded(
+    //   this._currentAgent.agenteLoaded$
+    // )
+    
+    this.coleccionesList = this._currentAgent.coleccionesList
+    console.log( this.coleccionesList );
+    this.coleccionesPath = await this._currentAgent.getPath('colecciones')
     
   }
 
-
+  
   async addColeccion( coleccion ) {
-    var newCol = this.coleccionesList.find(col => col.name == coleccion.name)
-    console.log(newCol);
+    var newCol = this.coleccionesList
+    .find( col => col.name == coleccion.name );
+    
     if ( newCol ) {
       this._alerts.sendMessageAlert('elige otro nombre por que ese ya existe en tus colecciones')
     } else {
-      newCol = {name: coleccion.name, tipo: coleccion.tipo}
+      newCol = { name: coleccion.name, tipo: coleccion.tipo }
       console.log(newCol);
-      this.fs.collection( this.coleccionesPath ).ref.doc( newCol.name ).set( newCol )
-      .then(() => this.getCollections())
+      this.fs.collection( this._currentAgent.path + '/colecciones' ).ref
+        .doc( newCol.name ).set( newCol )
+      // .then(() => this.getCollections())
     }
     return 
   }
@@ -63,7 +64,7 @@ export class ColeccionesService {
 
   async delete(colName) {
     await this.fs.collection( this.coleccionesPath ).ref.doc( colName )
-    .delete().then(()=> this.getCollections())
+    .delete()
   }
   
 

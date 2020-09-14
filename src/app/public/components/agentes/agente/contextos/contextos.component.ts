@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Loading } from '../../../../../Gdev-Tools/loading/loading.service';
 import { TextService } from '../../../../../services/text.service';
 import { AgenteModel } from '../../init-agente/agente.model';
-import { Contexto } from './contexto.model';
+import { ContextoModel } from './contexto.model';
 import { AddContextoComponent } from './add-contexto/add-contexto.component';
 import { ContextoComponent } from './contexto/contexto.component';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -21,7 +21,7 @@ export class ContextosComponent implements OnInit, OnDestroy {
   agente: AgenteModel
   switchAddContext: boolean = false
   switchEditContext: boolean = false
-  list: Contexto[]
+  list: ContextoModel[]
   contextToEdit: string
 
   @ViewChild(AddContextoComponent) addContext: AddContextoComponent
@@ -39,11 +39,11 @@ export class ContextosComponent implements OnInit, OnDestroy {
     this.getContextos()
   }
 
-  trackContextById( index: number, context: Contexto ) {
+  trackContextById( index: number, context: ContextoModel ) {
     return context.id
   }
 
-  toEdit(contexto: Contexto) {
+  toEdit(contexto: ContextoModel) {
     var column = this.contextCols.find( contextCol => contextCol.contextId == contexto.id )
     column.toEditContext(contexto.contextName)
   }

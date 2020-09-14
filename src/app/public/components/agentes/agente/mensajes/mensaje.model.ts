@@ -1,4 +1,4 @@
-import { Contexto } from '../contextos/contexto.model';
+import { ContextoModel } from '../contextos/contexto.model';
 import { RespuestaMensaje } from './mensaje/entrenamiento/respuestas/respuestasIntent.model';
 
 export interface IntentModel {
@@ -11,7 +11,7 @@ export interface IntentModel {
     inputContextNames?: string[],
     events?: string[],
     action?: string,
-    outputContexts?: Contexto[],
+    outputContexts?: ContextoModel[],
     resetContexts?: boolean,
     parameters?: ParametroMensaje[],
     messages?: RespuestaMensaje[],

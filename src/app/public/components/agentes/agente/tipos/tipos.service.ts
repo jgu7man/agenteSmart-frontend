@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
 export class TiposService {
 
   tiposPath: string
-  tiposList: TipoEntidadModel[]
+  // tiposList: TipoEntidadModel[]
   tiposList$ = new Subject<TipoEntidadModel[]>()
 
   constructor (
@@ -42,7 +42,7 @@ export class TiposService {
 
   async setTipo( tipo: TipoEntidadModel ) {
     tipo.displayName = this._text.normalize( tipo.displayName )
-    const tipoInList: number = this.tiposList.findIndex( Tipo => Tipo.name === tipo.name )
+    const tipoInList: number = this._agente.tiposList.findIndex( Tipo => Tipo.name === tipo.name )
     
     var Tipo = {}
     Tipo = { ...tipo, ...Tipo }
@@ -117,18 +117,18 @@ export class TiposService {
   currentTipo: TipoEntidadModel
   
 
-  async get() {
-    this.tiposList = []
-    const tiposCol = await ( await this.tiposCollection() ).orderBy('displayName', 'asc').get()
-    if ( tiposCol.size > 0 ) {
-      await this.loading.asyncForEach(
-        tiposCol.docs, tipo => {
-          return this.tiposList.push(tipo.data())
-        }
-      )
-    }
-    return this.tiposList
-  }
+  // async get() {
+  //   this.tiposList = []
+  //   const tiposCol = await ( await this.tiposCollection() ).orderBy('displayName', 'asc').get()
+  //   if ( tiposCol.size > 0 ) {
+  //     await this.loading.asyncForEach(
+  //       tiposCol.docs, async tipo => {
+  //         return this.tiposList.push(tipo.data())
+  //       }
+  //     )
+  //   }
+  //   return this.tiposList
+  // }
 
 
   async getByName(name?:string) {

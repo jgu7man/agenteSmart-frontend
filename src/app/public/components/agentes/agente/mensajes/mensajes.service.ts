@@ -4,7 +4,7 @@ import { TextService } from '../../../../../services/text.service';
 import { CacheService } from '../../../../../Gdev-Tools/cache/cache.service';
 import { CurrentAgenteService } from '../current-agente.service';
 import { Loading } from '../../../../../Gdev-Tools/loading/loading.service';
-import { Contexto } from '../contextos/contexto.model';
+import { ContextoModel } from '../contextos/contexto.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GdevAlertServiceModule } from '../../../../../Gdev-Tools/alerts/gdev-alert-service.module';
 import { AlertService } from '../../../../../Gdev-Tools/alerts/alert.service';
@@ -19,7 +19,7 @@ export class MensajesService {
 
   mensajesPath: string
   mensajes$ = new Observable<IntentModel[]>()
-  list: IntentModel[]
+  // list: IntentModel[]
   
   
   constructor (
@@ -58,7 +58,7 @@ export class MensajesService {
     // READ Busca en las mensajes que no esté duplicada
     // if ( !this.mensajesList ) this.mensajesList = await this._cache.getDataKey( 'allMensajesList' )
     
-    let mensajeDuplicated = this.list
+    let mensajeDuplicated = this._agente.mensajesList
     .find(msj => msj.name == name)
     if ( mensajeDuplicated ) {
       console.log(name, ' duplicada');
@@ -84,17 +84,18 @@ export class MensajesService {
 
   async getAllMensajesList() {
     this.mensajesPath = await this._agente.getPath( 'mensajes' )
-    this.mensajes$ = this.fs.collection<IntentModel>( this.mensajesPath ).valueChanges()
-    this.mensajes$.pipe(startWith([])).subscribe( mensajes => {
-      this.list = mensajes
-      this._cache.updateData( 'allMensajesList', mensajes )
-    })
+    // this.mensajes$ = this.fs.collection<IntentModel>( this.mensajesPath ).valueChanges()
+    // this.mensajes$.pipe(startWith([])).subscribe( async mensajes => {
+    //   this.list = mensajes
+    //   this._cache.updateData( 'allMensajesList', mensajes )
+      
+    // })
     
-    return this.list
+    // return this.list
   }
 
 
-  async getMensajesListByContexto( contexto: Contexto ) {
+  async getMensajesListByContexto( contexto: ContextoModel ) {
     var mensajesList = []
     const mensajeCol = await ( await this.mensajesCollection() )
       .where( 'contextos', 'array-contains', contexto.id )
@@ -109,7 +110,7 @@ export class MensajesService {
     var whenMsj = this.mensajes$.pipe( first() )
     return whenMsj.pipe(
       switchMap( mensajes => mensajes ? 
-        from( this.list ).pipe(
+        from( this._agente.mensajesList ).pipe(
             filter<IntentModel>( msj => msj.contextos.includes( contextoId ) ),
             toArray<IntentModel>()
         ) 

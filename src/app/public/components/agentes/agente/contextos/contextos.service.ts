@@ -4,7 +4,7 @@ import { UserInterface, AuthService } from '../../../../../admin/auth/auth.servi
 import { MensajesService } from '../mensajes/mensajes.service';
 import { IntentModel } from '../mensajes/mensaje.model';
 import { CacheService } from '../../../../../Gdev-Tools/cache/cache.service';
-import { Contexto } from './contexto.model';
+import { ContextoModel } from './contexto.model';
 import { CurrentAgenteService } from '../current-agente.service';
 import { take, mergeMap, distinctUntilKeyChanged, mergeAll, tap } from 'rxjs/operators';
 import { GdevAlertServiceModule } from '../../../../../Gdev-Tools/alerts/gdev-alert-service.module';
@@ -22,9 +22,9 @@ export class ContextosService {
   /** Contexto actualizado optenido de la ruta */
   currentContexto$: string
   /** Consulta de los contextos de la base de datos */
-  contextQuery$: Subject<Contexto> = new Subject()
+  contextQuery$: Subject<ContextoModel> = new Subject()
   /** Lista actualizada de los contextos en orden de aparición (index) */
-  list: Contexto[]
+  list: ContextoModel[]
 
 
   constructor (
@@ -60,7 +60,7 @@ export class ContextosService {
   // CREATE
 
   
-  async setContext( contexto: Contexto ) {
+  async setContext( contexto: ContextoModel ) {
 
     if ( !contexto.id ) {
       let contextFinded = this.list.find(context => context.contextName === contexto.contextName)
@@ -90,9 +90,9 @@ export class ContextosService {
   
 
 
-  async getOneContext( contexto: Contexto ) {
+  async getOneContext( contexto: ContextoModel ) {
     var contextDoc = await (await this.contextosCollection()).doc( contexto.id ).get()
-    var contextGeted: Contexto = contextDoc.data() as Contexto
+    var contextGeted: ContextoModel = contextDoc.data() as ContextoModel
     return contextGeted
   }
 
@@ -114,9 +114,12 @@ export class ContextosService {
     
     this.list = []
     var contextCol = await ( await this.contextosCollection() ).orderBy( 'index' ).get()
-    console.log(contextCol.size);
-    contextCol.forEach( contexto => {
-      this.contextQuery$.next( contexto.data() as Contexto )
+    // console.log( contextCol.size );
+    
+    
+      contextCol.forEach( contexto => {
+        this.contextQuery$.next( contexto.data() as ContextoModel )
+        
     } )
 
     return this.list
@@ -132,7 +135,7 @@ export class ContextosService {
 
 
   /** Actualiza el orden de los contextos en la vista de contextos */
-  async updateIndex( contextos: Contexto[] ) {
+  async updateIndex( contextos: ContextoModel[] ) {
     contextos.forEach( async (contexto, index) => {
       await (await this.contextosCollection()).doc(contexto.id).update({index:index})
     } )
@@ -145,7 +148,7 @@ export class ContextosService {
 
 
 
-  async delContext( context:Contexto  ) {
+  async delContext( context:ContextoModel  ) {
     var mensajesPath = await  this._agente.getPath('mensajes')
     const mensajeRef = this.afs.collection(mensajesPath).ref;
       

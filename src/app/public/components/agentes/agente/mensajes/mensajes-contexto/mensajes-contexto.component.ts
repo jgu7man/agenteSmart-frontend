@@ -8,7 +8,7 @@ import { AgentesService } from '../../../agentes.service';
 import { MensajesService } from '../mensajes.service';
 import { IntentModel } from '../mensaje.model';
 import { CacheService } from '../../../../../../Gdev-Tools/cache/cache.service';
-import { Contexto } from '../../contextos/contexto.model';
+import { ContextoModel } from '../../contextos/contexto.model';
 import { startWith, map, tap } from 'rxjs/operators';
 
 @Component({
@@ -24,7 +24,7 @@ export class MensajesByContextoComponent implements OnInit {
   switchAddIntent: boolean = false
   mensajes: IntentModel[]
 
-  @Input() contexto: Contexto
+  @Input() contexto: ContextoModel
   @ViewChild( 'intentNuevo' ) intentNuevo: ElementRef
   
   constructor (

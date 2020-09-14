@@ -2,7 +2,7 @@ import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef, Input }
 import { TextService } from '../../../../../../services/text.service';
 import { ContextosService } from '../contextos.service';
 import { Loading } from '../../../../../../Gdev-Tools/loading/loading.service';
-import { Contexto } from '../contexto.model';
+import { ContextoModel } from '../contexto.model';
 
 @Component({
   selector: 'aSmart-add-contexto',
@@ -34,7 +34,7 @@ export class AddContextoComponent implements OnInit {
   onSetContext() {
     if ( this.newContext ) {
       var newContextName = this._text.normalize( this.newContext )
-      var newContext: Contexto = {contextName: newContextName,lifespanCount:3, index: this.lastIndex}
+      var newContext: ContextoModel = {contextName: newContextName,lifespanCount:3, index: this.lastIndex}
       this._contextos.setContext( newContext )
         .then( () => {
           this.newContext = ''

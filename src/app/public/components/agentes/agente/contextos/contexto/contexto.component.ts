@@ -2,7 +2,7 @@ import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ElementRef }
 import { TextService } from '../../../../../../services/text.service';
 import { ContextosService } from '../contextos.service';
 import { CurrentAgenteService } from '../../current-agente.service';
-import { Contexto } from '../contexto.model';
+import { ContextoModel } from '../contexto.model';
 import { Loading } from '../../../../../../Gdev-Tools/loading/loading.service';
 import { BehaviorSubject } from 'rxjs';
 
@@ -17,7 +17,7 @@ export class ContextoComponent implements OnInit {
 
   
   @Input() contextId: string
-  @Input() contexto: Contexto
+  @Input() contexto: ContextoModel
   editedContext:string = ''
   switchEditContext: boolean = false
   @ViewChild( 'contextEditing' ) contextEditing: ElementRef

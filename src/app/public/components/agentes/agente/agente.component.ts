@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AgentesService } from '../agentes.service';
 import { AuthService } from '../../../../admin/auth/auth.service';
@@ -14,7 +14,7 @@ import { CurrentAgenteService } from './current-agente.service';
   templateUrl: './agente.component.html',
   styleUrls: ['./agente.component.scss']
 })
-export class AgenteComponent implements OnInit {
+export class AgenteComponent implements OnInit, OnDestroy {
 
 
   agente: AgenteModel
@@ -25,7 +25,9 @@ export class AgenteComponent implements OnInit {
     private _dashboard: DashboardService,
     public _responsive: ResponsiveService,
     private _cache: CacheService
-  ) { }
+  ) {
+    // this._agente.getCurrentUrl()
+   }
 
   ngOnInit(): void {
     this.loadAgente()
@@ -48,6 +50,15 @@ export class AgenteComponent implements OnInit {
     { path: 'tarjetas', label: 'Tarjetas', icon: 'fa-images' },
     { path: 'colecciones', label: 'Colecciones', icon: 'fa-folder' },
   ]
+
+  ngOnDestroy() {
+    this._agente.mensajesSubs.unsubscribe()
+    this._agente.tiposSubs.unsubscribe()
+    this._agente.contextosSubs.unsubscribe()
+    this._agente.coleccionesSubs.unsubscribe()
+    this._agente.tarjetasSubs.unsubscribe()
+    console.log('desuscrito');
+  }
 
 }
 
