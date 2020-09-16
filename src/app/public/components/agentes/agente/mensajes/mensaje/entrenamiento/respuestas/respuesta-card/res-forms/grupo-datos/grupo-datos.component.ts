@@ -12,7 +12,7 @@ import { FormPredefinida, FormRegistroDatos } from '../../../respuesta.model';
 export class GrupoDatosComponent implements OnInit {
 
   paramSelected: string
-  dataGroups: any[]
+  // dataGroups: any[]
   dataGroupSelected: string
 
   resData: FormRegistroDatos
@@ -20,7 +20,7 @@ export class GrupoDatosComponent implements OnInit {
   @Output() onRespChanges: EventEmitter<FormPredefinida> = new EventEmitter()
   constructor (
     public resService: RespuestasService,
-    private _cache: CacheService
+    private _cache: CacheService,
   ) {
     this.resData = new FormRegistroDatos('texto','',this.paramSelected, this.dataGroupSelected)
    }
@@ -32,6 +32,12 @@ export class GrupoDatosComponent implements OnInit {
     this.resData.estiloRespuesta = msg.estiloRespuesta
     this.resData.respuesta = msg.respuesta
     this.onRespChanges.emit( this.resData )
+  }
+
+  get KeySpected() {
+    var colSelected = this.resService.coleccionesSaveList
+      .find( col => { col.name === this.dataGroupSelected } );
+    return colSelected ? colSelected.saveKeys : []
   }
 
   

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { TiposService } from '../tipos.service';
+import { CurrentAgenteService } from '../../current-agente.service';
 
 @Component({
   selector: 'aSmart-tipo-selector',
@@ -24,6 +25,7 @@ export class TipoSelectorComponent implements OnInit, OnDestroy {
 
   constructor (
     private _tipos: TiposService,
+    private _agente: CurrentAgenteService
   ) { }
 
   async ngOnInit() {
@@ -37,11 +39,7 @@ export class TipoSelectorComponent implements OnInit, OnDestroy {
   }
 
   async getTipos() {
-    var tiposList = this._tipos.tiposList ?
-      this._tipos.tiposList :
-      await this._tipos.get();
-
-    tiposList.forEach( tipo => {
+    this._agente.tiposList.forEach( tipo => {
       this.tipos.push( tipo.displayName )
     } )
   }

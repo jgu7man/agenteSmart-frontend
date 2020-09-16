@@ -5,6 +5,7 @@ export class RespuestaModel {
         public inputContext: string,
         public outputContext: string,
         public outputMessage: FormPredefinida | FormCondicional | FormRegistroDatos | FormBuscar ,
+        public index: number,
         public accion?:string,
         public id?: string,
     ) {}

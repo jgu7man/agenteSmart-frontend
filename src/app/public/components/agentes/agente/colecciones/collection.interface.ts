@@ -3,11 +3,12 @@ export class ColeccionModel {
         public name: string,
         public tipo: 'guardado' | 'busqueda' | '',
         public queryData?: ColeccionDato[],
+        public saveKeys?: ColeccionDato[],
         public dataGetted?: any[]
     ){}
 }
 
 export interface ColeccionDato {
     identificador: string,
-    valor: string
+    valor?: string
 }

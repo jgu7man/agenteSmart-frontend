@@ -48,7 +48,8 @@ export class RespuestaCardComponent implements OnInit {
       resService.nextMensaje,
       resService.currentContext,
       resService.currentContext,
-      this.outputMessage
+      this.outputMessage,
+      0
     )
 
     // this.selectedRes = this.tiposRes[0]
@@ -111,12 +112,12 @@ export class RespuestaCardComponent implements OnInit {
 
   async onSave() {
     let cleanRespuesta = await this.validateRespuesta( this.respuesta )
-    console.log(cleanRespuesta);
     this.resService.addRespuesta( cleanRespuesta )
     this.respuesta.tipo = ''
     this.respuesta.outputMessage = new FormPredefinida( 'texto', '' )
   }
 
+  
 }
 
 

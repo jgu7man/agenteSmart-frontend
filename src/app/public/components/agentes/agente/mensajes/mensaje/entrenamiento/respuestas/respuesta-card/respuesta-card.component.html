@@ -10,7 +10,7 @@
             <ng-container *ngIf="!switchEditResp; else editResp">
                 
                     <div class="row align-cols">
-                        <div class="col s10" (click)="switchEditResp = true">
+                        <div class="col s10 res-ref" (click)="switchEditResp = true">
                             <div [ngSwitch]="respuesta.tipo">
                                 <div *ngSwitchCase="'condicional'">
                                     <b>{{respuesta.nextIntent}}</b><br>

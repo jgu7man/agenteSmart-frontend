@@ -9,14 +9,18 @@ mat-card {
     min-height: 5em;
     transition: all .3s;
     margin-bottom: 2em;
+    min-width: 350px;
     mat-card-content {
         padding-left: 2em;
     }
 }
 
 .card-closed {
-    cursor: pointer;
+    .res-ref{
+        cursor: pointer;
+    }
     padding-left: 3em;
+    cursor: grab;
 }
 
 

@@ -1,69 +1,70 @@
-    <div 
-    class="row" 
-    id="contextos" 
-    *ngIf="contextos.list" 
-    cdkDropList 
-    cdkDropListOrientation="horizontal" 
-    (cdkDropListDropped)="drop($event)">
-        <div class="col s12 m3 en-Column" 
-        cdkDrag 
-        cdkDragLockAxis="x"
-        *ngFor="let contexto of contextos.list; trackBy: trackContextById"
-        strechHeight 
-        id="context-{{contexto}}"
-        >
+<div 
+class="row" 
+id="contextos" 
+*ngIf="contextos.list" 
+cdkDropList 
+cdkDropListOrientation="horizontal" 
+(cdkDropListDropped)="drop($event)">
+    <div class="col s12 m3 en-Column" 
+    gdev-color
+    [background]="'bg1'"
+    cdkDrag 
+    cdkDragLockAxis="x"
+    *ngFor="let contexto of contextos.list; trackBy: trackContextById"
+    id="context-{{contexto}}"
+    >
 
-            <!-- Titulo de contexto agregado -->
-            <div class="row">
-                <div class="col s10">
-                    <aSmart-contexto 
-                    cdkDragHandle 
-                    class="context-name" 
-                    [contextId]="contexto.id"
-                    [contexto]="contexto" 
-                    (mousedown)="grabEffect($event)" 
-                    (mouseup)="ungrab($event)" 
-                    ></aSmart-contexto>
-                </div>
-                <div class="col s2">
-                    <button mat-button [mat-menu-trigger-for]="contextMenu">
-                        <i class="fas fa-ellipsis-v"></i>
-                    </button>
-                    <mat-menu #contextMenu="matMenu">
-                        <button mat-menu-item (click)="toEdit(contexto)">Editar</button>
-                        <button mat-menu-item (click)="toDeleteContext(contexto)">Eliminar</button>
-                    </mat-menu>
-                </div>
+        <!-- Titulo de contexto agregado -->
+        <div class="row">
+            <div class="col s10">
+                <aSmart-contexto 
+                cdkDragHandle 
+                class="context-name" 
+                [contextId]="contexto.id"
+                [contexto]="contexto" 
+                (mousedown)="grabEffect($event)" 
+                (mouseup)="ungrab($event)" 
+                ></aSmart-contexto>
             </div>
-            
-            <!-- Agregado de mensaje nueva -->
-            <aSmart-mensajes-by-contexto [contexto]="contexto"></aSmart-mensajes-by-contexto>
-            
-        </div>
-
-
-        <!-- Agregado de nuevo contexto -->
-        <div class="col s12 m3 en-Column">
-
-            <div class="row">
-                <div class="col s12">
-                    <ng-container *ngIf="!switchAddContext; else addContext">
-                        <div class="addContexto">
-                            <button mat-button 
-                            (click)="toAddContext()"
-                            >Agregar contexto</button>
-                        </div>
-                    </ng-container>
-                    <ng-template #addContext>
-                        <aSmart-add-contexto 
-                        (contextAdded)="getContextos()"
-                        [lastIndex]="contextos.list.length" 
-                        (unfocus)="switchAddContext = false">
-                        </aSmart-add-contexto>
-                    </ng-template>
-                    
-                </div>
+            <div class="col s2">
+                <button mat-button [mat-menu-trigger-for]="contextMenu">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+                <mat-menu #contextMenu="matMenu">
+                    <button mat-menu-item (click)="toEdit(contexto)">Editar</button>
+                    <button mat-menu-item (click)="toDeleteContext(contexto)">Eliminar</button>
+                </mat-menu>
             </div>
-
         </div>
+        
+        <!-- Agregado de mensaje nueva -->
+        <aSmart-mensajes-by-contexto [contexto]="contexto"></aSmart-mensajes-by-contexto>
+        
     </div>
+
+
+    <!-- Agregado de nuevo contexto -->
+    <div class="col s12 m3 en-Column">
+
+        <div class="row">
+            <div class="col s12">
+                <ng-container *ngIf="!switchAddContext; else addContext">
+                    <div class="addContexto">
+                        <button mat-button 
+                        (click)="toAddContext()"
+                        >Agregar contexto</button>
+                    </div>
+                </ng-container>
+                <ng-template #addContext>
+                    <aSmart-add-contexto 
+                    (contextAdded)="getContextos()"
+                    [lastIndex]="contextos.list.length" 
+                    (unfocus)="switchAddContext = false">
+                    </aSmart-add-contexto>
+                </ng-template>
+                
+            </div>
+        </div>
+
+    </div>
+</div>

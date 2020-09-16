@@ -62,6 +62,7 @@ import { BusquedaColeccionComponent } from './agente/colecciones/coleccion/busqu
 import { TarjetaEditComponent } from './agente/tarjetas/tarjeta-edit/tarjeta-edit.component';
 import { EstaticaTarjetaComponent } from './agente/tarjetas/estatica-tarjeta/estatica-tarjeta.component';
 import { ColeccionTarjetaComponent } from './agente/tarjetas/coleccion-tarjeta/coleccion-tarjeta.component';
+import { GdevIndexModule } from '../../../Gdev-Tools/query-index/gdev-index.module';
 
 
 
@@ -127,6 +128,7 @@ import { ColeccionTarjetaComponent } from './agente/tarjetas/coleccion-tarjeta/c
     ColorThemeModule,
     GdevResponsiveModule,
     GdevTextModule,
+    GdevIndexModule,
   ],
   providers: [
     

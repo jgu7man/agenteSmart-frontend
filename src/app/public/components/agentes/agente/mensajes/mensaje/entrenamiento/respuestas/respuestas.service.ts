@@ -12,6 +12,8 @@ import { RespuestaModel } from './respuesta.model';
 import { Subject } from 'rxjs';
 import { TiposService } from '../../../../tipos/tipos.service';
 import { TipoEntidadModel } from '../../../../tipos/tipo.model';
+import { ColeccionModel } from '../../../../colecciones/collection.interface';
+import { TarjetaModel } from '../../../../tarjetas/tarjeta.model';
 
 
 
@@ -26,6 +28,9 @@ export class RespuestasService {
    mensajesList: IntentModel[]
    /** Contiene la lista de contextos siempre actualizada */
    contextList: ContextoModel[]
+   coleccionesSaveList: ColeccionModel[]
+   coleccionesQueryList: ColeccionModel[]
+   tarjetasList: TarjetaModel[]
    /** El mensae en curso de edición */
    currentMensaje: IntentModel
    /** El id de mensaje en curso para consultas */
@@ -41,7 +46,7 @@ export class RespuestasService {
    /** La ruta a la base de datos de los mensajes */
    mensajesPath: string
    /** Observable de la lista de respuestas */
-   respuestasList: Subject<RespuestaModel[]> = new Subject()
+   respuestasList: RespuestaModel[]
    /** Observable de las respuestas cuando se agregó, editó o eliminó alguna respuesta */
    onRespuestasChanged: Subject<any> = new Subject()
    /** Contiene la lista de tipos de datos */
@@ -101,8 +106,14 @@ export class RespuestasService {
 
    /** Obtiene la data del mensaje en curso */
    async initRespData() {
+      await this._agente.listenAgenteLoaded()
       this.contextList = this._agente.contextosList
       this.mensajesList = this._agente.mensajesList
+      this.coleccionesSaveList = this._agente.coleccionesList
+         .filter( col => col.tipo === 'guardado' );
+      this.coleccionesQueryList = this._agente.coleccionesList
+         .filter( col => col.tipo === 'busqueda' );
+      this.tarjetasList = this._agente.tarjetasList
       this.currentContext = this._mensaje.currentContexto
 
       this._mensaje.current$.subscribe( mensaje => {
@@ -163,13 +174,16 @@ export class RespuestasService {
     * @return {Array} Lista de respuestas
     */
    async getMensajeResponses() {
-      var mensajeResponses: RespuestaModel[] = []
+      this.respuestasList = []
       let currentContexto = await this._cache.getDataKey( 'currentContexto' )
       if ( currentContexto ) {
-         let responses = await ( await this.responsesPath() ).where( 'inputContext', '==', currentContexto ).get();
-         responses.forEach( resp => mensajeResponses.push( resp.data() as RespuestaModel ) )
+         let responses = await ( await this.responsesPath() )
+            .where( 'inputContext', '==', currentContexto )
+            .orderBy( 'index', 'asc' )
+            .get();
+         responses.forEach( resp => this.respuestasList.push( resp.data() as RespuestaModel ) )
       }
-      return mensajeResponses
+      return this.respuestasList
    }
 
 
@@ -184,14 +198,12 @@ export class RespuestasService {
     */
    async addRespuesta( respuesta: RespuestaModel ) {
       const mensajesList: RespuestaModel[] = await this.getMensajeResponses()
-      var predef: boolean[] = []
+      // var predef: boolean[] = []
 
       // Revisa que no exista una predefinida
-      await this.loading.asyncForEach( mensajesList,
-         msj => { if ( msj.tipo == 'predefinida' ) predef.push( true ) } );
+      // await this.loading.asyncForEach( mensajesList,
+      //    msj => { if ( msj.tipo == 'predefinida' ) predef.push( true ) } );
 
-      console.log( respuesta );
-      console.log( predef );
 
       if ( respuesta.id ) {
          console.log( 'update' );
@@ -200,18 +212,20 @@ export class RespuestasService {
          this._alerts.sendFloatNotification( 'Respuesta actualizada' )
 
       } else {
-         console.log( 'create' );
-         if ( predef.length >= 1 && respuesta.tipo == 'predefinida' ) {
-            this._alerts.sendMessageAlert( 'No puedes agregar más de una respuesta predefinida' );
-         } else {
+         // if ( predef.length >= 1 && respuesta.tipo == 'predefinida' ) {
+         //    this._alerts.sendMessageAlert( 'No puedes agregar más de una respuesta predefinida' );
+         // } else {
             let res = await ( await this.responsesPath() ).add( respuesta )
             await ( await this.responsesPath() ).doc( res.id ).update( { id: res.id } )
-         }
+         // }
       }
 
       return this.onRespuestasChanged.next( true )
 
    }
+
+
+   
 
 
 
@@ -222,7 +236,12 @@ export class RespuestasService {
     * @return {Subject} Aviso al observable de cambios en la lista de respuestas
     */
    async delRespuesta( respuestaId: string ) {
-      await ( await this.responsesPath() ).doc( respuestaId ).delete()
+      let resToDel = this.respuestasList
+         .find( res => { res.id === respuestaId } )
+      
+      if ( resToDel ) {
+         await ( await this.responsesPath() ).doc( respuestaId ).delete()
+      }
       return this.onRespuestasChanged.next( true )
    }
 }

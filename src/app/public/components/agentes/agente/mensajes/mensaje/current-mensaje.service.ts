@@ -82,7 +82,7 @@ export class CurrentMensajeService {
   frasesList: FraseEntrenamiento[]
   getFrasesList() {
     let mensaje = this._cache.getDataKey( 'currentMensaje' );
-    this.frasesList = mensaje.trainingPhrases ? mensaje.trainingPhrases : [];
+    this.frasesList = mensaje ? mensaje.trainingPhrases : [];
     this.frasesSubs = this.current$.subscribe( mensaje => {
       this.frasesList = mensaje.trainingPhrases
     })
@@ -92,7 +92,7 @@ export class CurrentMensajeService {
   parametrosList: ParametroMensaje[]
   getParametrosList() {
     let mensaje = this._cache.getDataKey( 'currentMensaje' )
-    this.parametrosList = mensaje.parameters ? mensaje.parameters : [];
+    this.parametrosList = mensaje ? mensaje.parameters : [];
     this.parametrosSubs = this.current$.subscribe( mensaje => {
       this.parametrosList = mensaje.parameters
     })

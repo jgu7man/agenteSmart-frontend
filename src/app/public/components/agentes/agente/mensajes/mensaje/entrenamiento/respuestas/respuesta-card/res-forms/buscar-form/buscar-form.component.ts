@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { RespuestasService } from '../../../respuestas.service';
 import { CacheService } from '../../../../../../../../../../../Gdev-Tools/cache/cache.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
@@ -11,8 +11,10 @@ import { FormBuscar, FormPredefinida } from '../../../respuesta.model';
 })
 export class BuscarFormComponent implements OnInit {
 
+  @Input() response
+
   paramSelected: string
-  dataBases: any[]
+  // dataBases: any[]
   dataBaseSelected: string
   
   @Output() onRespChanges: EventEmitter<FormPredefinida> = new EventEmitter()

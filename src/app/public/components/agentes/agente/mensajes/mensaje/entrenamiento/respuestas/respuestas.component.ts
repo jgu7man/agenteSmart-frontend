@@ -4,6 +4,7 @@ import { RespuestasService } from './respuestas.service';
 import { Subscription } from 'rxjs';
 import { RespuestaCardComponent } from './respuesta-card/respuesta-card.component';
 import { Loading } from 'src/app/Gdev-Tools/loading/loading.service';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'aSmart-respuestas',
@@ -34,7 +35,10 @@ export class RespuestasComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getResponses()
     this.respuestasChangesSubs = this._respuestas.onRespuestasChanged
-    .subscribe(() =>{this.getResponses()})
+      .subscribe( () => {
+        this.getResponses()
+        this.newOutputMensaje = new FormPredefinida( 'texto', '' )
+      } )
   }
   
   /**
@@ -42,12 +46,14 @@ export class RespuestasComponent implements OnInit, OnDestroy {
    * con la creación de la misma y la abre por defecto
    */
   async addRespuesta() {
+    let lastIndex = this.respuestasList.length
     this.respuestasList.push(
       new RespuestaModel( '',
         this._respuestas.nextMensaje,
         this._respuestas.currentContext,
         this._respuestas.currentContext,
-        this.newOutputMensaje
+        this.newOutputMensaje,
+        lastIndex
       ) )
     await this.loading.waitFor( 100 )
     this.cards.last.switchEditResp = true
@@ -56,6 +62,12 @@ export class RespuestasComponent implements OnInit, OnDestroy {
   /** Obtiene las respuestas y crea la lista */
   async getResponses() {
     this.respuestasList = await this._respuestas.getMensajeResponses()
+  }
+
+  
+
+  trackResponseById( index: number, respuesta: RespuestaModel ) {
+    return respuesta.index
   }
 
 

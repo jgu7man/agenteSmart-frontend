@@ -9,12 +9,16 @@
             </button>
         </div>
     </div>
-    <div class="row" *ngIf="respuestasList.length > 0; else sinRespuestas">
-        <aSmart-respuesta-card
-        *ngFor="let respuesta of respuestasList"
-        [respuesta]="respuesta"
-        ></aSmart-respuesta-card>
+    
+    <div class="row respuestasList" *ngIf="respuestasList.length > 0; else sinRespuestas">
+        <div class="respuestaItem"
+        *ngFor="let respuesta of respuestasList; trackBy: trackResponseById">
+            <aSmart-respuesta-card
+            [respuesta]="respuesta"
+            ></aSmart-respuesta-card>
+        </div>
     </div>
+
     <ng-template #sinRespuestas>
         <div class="row">
             <div class="col s12 center">
