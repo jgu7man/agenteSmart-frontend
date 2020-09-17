@@ -1,6 +1,7 @@
 import { RespuestaCard, RespuestaCardButton } from './../mensajes/mensaje/entrenamiento/respuestas/respuesta.model';
 export class TarjetaModel {
     constructor (
+        public name: string,
         public tipoContenido: 'estatico' | 'coleccion' | 'producto' | 'servicio',
         public contenido?: RespuestaCard | string,
         public botones?: RespuestaCardButton[]

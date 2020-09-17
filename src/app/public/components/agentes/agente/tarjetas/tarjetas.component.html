@@ -10,21 +10,37 @@
 
     <div class="row">
         <div class="col s12" id="tarjetas-container">
-            <mat-card class="tarjeta" (click)="addCard()">
+
+            <mat-card 
+            class="tarjeta" 
+            *ngFor="let tarjeta of agente.tarjetasList" >
+
                 <div class="row align-cols">
-                    <div class="col s10">
-                        <b>Tarjeta</b>
+
+                    <div class="col s10" (click)="seeTarjeta(tarjeta)">
+                        <b>{{tarjeta.name}}</b>
                     </div>
+
                     <div class="col s2">
-                        <button mat-icon-button [mat-menu-trigger-for]="tarjetaMenu">
+
+                        <button 
+                        mat-icon-button 
+                        [mat-menu-trigger-for]="tarjetaMenu">
                             <i class="fas fa-ellipsis-v"></i>
                         </button>
+
                         <mat-menu #tarjetaMenu="matMenu">
-                            <button mat-menu-item>Duplicar</button>
-                            <button mat-menu-item>Eliminar</button>
+                            <button mat-menu-item 
+                            (click)="tarjetas.addTarjeta(tarjeta)"
+                            >Duplicar</button>
+
+                            <button mat-menu-item
+                            (click)="tarjetas.deleteTarjeta(tarjeta.name)"
+                            >Eliminar</button>
                         </mat-menu>
                     </div>
                 </div>
+
             </mat-card>
             
         </div>

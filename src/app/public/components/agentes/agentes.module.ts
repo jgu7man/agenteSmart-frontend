@@ -63,6 +63,7 @@ import { TarjetaEditComponent } from './agente/tarjetas/tarjeta-edit/tarjeta-edi
 import { EstaticaTarjetaComponent } from './agente/tarjetas/estatica-tarjeta/estatica-tarjeta.component';
 import { ColeccionTarjetaComponent } from './agente/tarjetas/coleccion-tarjeta/coleccion-tarjeta.component';
 import { GdevIndexModule } from '../../../Gdev-Tools/query-index/gdev-index.module';
+import { AddTarjetaComponent } from './agente/tarjetas/add-tarjeta/add-tarjeta.component';
 
 
 
@@ -118,6 +119,7 @@ import { GdevIndexModule } from '../../../Gdev-Tools/query-index/gdev-index.modu
     TarjetaEditComponent,
     EstaticaTarjetaComponent,
     ColeccionTarjetaComponent,
+    AddTarjetaComponent,
   ],
   imports: [
     CommonModule,

@@ -3,12 +3,13 @@ import { RespuestaCard, RespuestaCardButton } from './../../mensajes/mensaje/ent
 import { TarjetaModel, tipoContenido } from '../tarjeta.model';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { EstaticaTarjetaComponent } from '../estatica-tarjeta/estatica-tarjeta.component';
+import { TarjetasService } from '../tarjetas.service';
 
 @Component({
-  templateUrl: './tarjeta-edit.component.html',
-  styleUrls: ['./tarjeta-edit.component.scss']
+  templateUrl: './add-tarjeta.component.html',
+  styleUrls: ['./add-tarjeta.component.scss']
 })
-export class TarjetaEditComponent implements OnInit {
+export class AddTarjetaComponent implements OnInit {
 
   @ViewChild( EstaticaTarjetaComponent ) estaticaForm: EstaticaTarjetaComponent
 
@@ -18,22 +19,23 @@ export class TarjetaEditComponent implements OnInit {
     { value: 'producto', viewValue: 'Producto' },
     { value: 'servicio', viewValue: 'Servicio' },
   ]
-  
-  nuevoBoton: RespuestaCardButton = {text: '', link:''}
+
+  nuevoBoton: RespuestaCardButton = { text: '', link: '' }
   botones: RespuestaCardButton[] = []
-  
+
+  public tarjeta: TarjetaModel
 
   constructor (
-    @Inject(MAT_DIALOG_DATA) public tarjeta: TarjetaModel,
-    public dialog: MatDialogRef<TarjetaEditComponent>,
+    public dialog: MatDialogRef<AddTarjetaComponent>,
+    private tarjetaServ : TarjetasService
   ) {
-    this.botones = tarjeta.botones
-   }
+    this.tarjeta = new TarjetaModel( '', 'estatico' )
+  }
 
   ngOnInit(): void {
   }
 
-  updateTarjeta(contenido: RespuestaCard) {
+  updateTarjeta( contenido: RespuestaCard ) {
     this.tarjeta.contenido = contenido
   }
 
@@ -45,7 +47,7 @@ export class TarjetaEditComponent implements OnInit {
       this.tarjeta.botones = this.botones
     }
     console.log( this.tarjeta );
-    
+    this.tarjetaServ.addTarjeta(this.tarjeta)
     this.dialog.close()
   }
 
@@ -54,9 +56,7 @@ export class TarjetaEditComponent implements OnInit {
     this.nuevoBoton = { text: '', link: '' }
   }
 
-  delBoton(botonIndex: number) {
-    this.botones.splice(botonIndex, 1)
+  delBoton( botonIndex: number ) {
+    this.botones.splice( botonIndex, 1 )
   }
-
 }
-
