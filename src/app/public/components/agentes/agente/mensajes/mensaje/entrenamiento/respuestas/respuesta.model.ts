@@ -33,6 +33,7 @@ export class FormRegistroDatos {
         public respuesta: string | RespuestaSugerencias | RespuestaCard ,
         public parametro: string,
         public grupoDatos: string,
+        public key: string
     ){}
 }
 

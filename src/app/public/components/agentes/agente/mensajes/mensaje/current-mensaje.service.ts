@@ -53,26 +53,28 @@ export class CurrentMensajeService {
 
   async getAsync() {
     this.getParams().subscribe( async ( data ) => {
-      this.currentContexto = data.currentContexto 
+      this.currentContexto = data.currentContexto
       this.mensajeName = data.mensajeName
-
-      console.log( this.mensajeName );
-      this._cache.updateData('currentMensajeName', this.mensajeName)
       
+      // console.log( this.mensajeName );
+      this._cache.updateData( 'currentMensajeName', this.mensajeName )
+      
+      if ( this.mensajeName ) {
       this.mensajesPath = await this._agente.getPath( 'mensajes' )
-      this.mensaje$ = this.fs.collection( this.mensajesPath )
-        .doc<IntentModel>( this.mensajeName ).valueChanges()
-      
-      await this.getFrasesList()
-      await this.getParametrosList()
-      await this.getRespuestasList()
-      
-      this.mensajeSub$ = this.mensaje$.subscribe( this.current$ )
-      this.current$.subscribe( current => {
-        this._cache.updateData( 'currentMensaje', current )
-      })
-      
-      this._cache.updateData( 'currentContexto', this.currentContexto )
+        this.mensaje$ = this.fs.collection( this.mensajesPath )
+          .doc<IntentModel>( this.mensajeName ).valueChanges()
+
+        await this.getFrasesList()
+        await this.getParametrosList()
+        await this.getRespuestasList()
+
+        this.mensajeSub$ = this.mensaje$.subscribe( this.current$ )
+        this.current$.subscribe( current => {
+          this._cache.updateData( 'currentMensaje', current )
+        } )
+
+        this._cache.updateData( 'currentContexto', this.currentContexto )
+      }
     } )
   }
 

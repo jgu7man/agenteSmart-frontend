@@ -199,7 +199,7 @@ export class CurrentAgenteService {
         .valueChanges()
     
     this.coleccionesSubs = 
-    changes.subscribe( list => {
+      changes.subscribe( list => {
         this.coleccionesList = list
         this._cache.updateData( 'colecciones', list )
     } )

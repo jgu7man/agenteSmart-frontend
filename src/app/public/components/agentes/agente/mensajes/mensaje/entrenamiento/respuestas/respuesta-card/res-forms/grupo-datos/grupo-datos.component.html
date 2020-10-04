@@ -4,8 +4,9 @@
         Parámetro
     </div>
     <div class="col s8">
-        <mat-select placeholder="parámetro" [(ngModel)]="paramSelected" name="param">
-            <mat-option *ngFor="let param of resService.paramList" [value]="param.name">
+        <mat-select placeholder="parámetro" [(ngModel)]="dataForm.parametro" name="param"
+        (selectionChange)="edited.emit(dataForm)">
+            <mat-option *ngFor="let param of mensajeS.parametrosList" [value]="param.displayName">
                 {{param.displayName}}
             </mat-option>
         </mat-select>
@@ -16,11 +17,11 @@
 <!-- Grupo de datos -->
 <div class="row">
     <div class="col s4 resp-label">
-        Grupo
+        En grupo
     </div>
     <div class="col s8">
-        <mat-select placeholder="grupo de datos" [(ngModel)]="dataGroupSelected" name="grupo">
-            <mat-option *ngFor="let group of resService.coleccionesSaveList" [value]="group.name">
+        <mat-select placeholder="grupo de datos" [(ngModel)]="dataForm.grupoDatos" name="grupo" (selectionChange)="edited.emit(dataForm)">
+            <mat-option *ngFor="let group of agenteS.coleccionesList | listFilter:{tipo: 'guardado'}" [value]="group.name">
                 {{group.name}}
             </mat-option>
         </mat-select>
@@ -31,12 +32,12 @@
 <!-- Key to catch -->
 <div class="row">
     <div class="col s4 resp-label">
-        Key
+        es:
     </div>
     <div class="col s8">
-        <mat-select placeholder="Dato esperado" [(ngModel)]="dataGroupSelected" name="key">
-            <mat-option *ngFor="let key of KeySpected" [value]="key.identificador">
-                {{key.identificador}}
+        <mat-select placeholder="Dato esperado" [(ngModel)]="dataForm.key" name="key" (selectionChange)="edited.emit(dataForm)">
+            <mat-option *ngFor="let item of KeySpected" [value]="item.param">
+                {{item.param}}
             </mat-option>
         </mat-select>
     </div>

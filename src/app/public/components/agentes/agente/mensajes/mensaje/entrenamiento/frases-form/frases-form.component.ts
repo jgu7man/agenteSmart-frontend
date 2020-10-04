@@ -100,6 +100,8 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
       
       // Merge the parts
       this.frases[ fraseOnEditIndex ] = fraseRestructured
+
+      this.frases.updatePhrase(fraseRestructured)
       
       this.fraseExpanded = frase.name
       const phraseItemEdited = this.prhaseList.find( Frase => Frase.phraseName == frase.name )

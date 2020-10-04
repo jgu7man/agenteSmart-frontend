@@ -1,13 +1,28 @@
 <div id="tipos-container" class="container">
     <div class="row">
         <div class="col s12">
+            Agregar tipo de dato 
+            <button mat-icon-button
+            (click)="openAdd()">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col s12">
+
             <mat-accordion>
+                
+                <!-- Lista de tipos -->
                 <aSmart-tipo 
                 *ngFor="let tipo of agente.tiposList" 
                 [tipo]="tipo"
-                (tipoDeleted)="onDeleted($event)"
+                [id]="tipo.name"
                 ></aSmart-tipo>
-                <aSmart-add-tipo></aSmart-add-tipo>
+
+                
+                
             </mat-accordion>
         </div>
     </div>

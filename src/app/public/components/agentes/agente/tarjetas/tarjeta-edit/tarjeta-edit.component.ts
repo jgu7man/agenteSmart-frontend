@@ -3,6 +3,9 @@ import { RespuestaCard, RespuestaCardButton } from './../../mensajes/mensaje/ent
 import { TarjetaModel, tipoContenido } from '../tarjeta.model';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { EstaticaTarjetaComponent } from '../estatica-tarjeta/estatica-tarjeta.component';
+import { CurrentAgenteService } from '../../current-agente.service';
+import { MatSelectChange } from '@angular/material/select';
+import { TarjetasService } from '../tarjetas.service';
 
 @Component({
   templateUrl: './tarjeta-edit.component.html',
@@ -26,15 +29,24 @@ export class TarjetaEditComponent implements OnInit {
   constructor (
     @Inject(MAT_DIALOG_DATA) public tarjeta: TarjetaModel,
     public dialog: MatDialogRef<TarjetaEditComponent>,
+    public agenteS: CurrentAgenteService,
+    private tarjetaS: TarjetasService
   ) {
     this.botones = tarjeta.botones
    }
 
   ngOnInit(): void {
+    console.log(this.tarjeta);
   }
 
   updateTarjeta(contenido: RespuestaCard) {
     this.tarjeta.contenido = contenido
+  }
+
+  onColecctionNameSelected( change: MatSelectChange ) {
+    let coleccion = this.agenteS.coleccionesList
+      .find( c => c.name == change.value )
+    this.tarjeta.contenido = coleccion
   }
 
   save() {
@@ -44,7 +56,8 @@ export class TarjetaEditComponent implements OnInit {
     if ( this.botones.length > 0 ) {
       this.tarjeta.botones = this.botones
     }
-    console.log( this.tarjeta );
+
+    this.tarjetaS.saveTarjeta(this.tarjeta)
     
     this.dialog.close()
   }

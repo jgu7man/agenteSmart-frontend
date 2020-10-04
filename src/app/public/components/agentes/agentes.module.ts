@@ -4,9 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from 'src/app/material.module';
 import { AgentesRoutingModule } from './agentes-routing.module';
-import { ColorThemeModule } from '../../../Gdev-Tools/color/color-theme.module';
-import { GdevResponsiveModule } from '../../../Gdev-Tools/responsive/gdev-responsive.module';
-import { GdevTextModule } from '../../../Gdev-Tools/text/gdev-text.module';
+import { GdevToolsModule } from '../../../Gdev-Tools/gdev-tools.module';
 
 import { AgentesComponent } from './agentes.component';
 import { AgenteComponent } from './agente/agente.component';
@@ -62,8 +60,8 @@ import { BusquedaColeccionComponent } from './agente/colecciones/coleccion/busqu
 import { TarjetaEditComponent } from './agente/tarjetas/tarjeta-edit/tarjeta-edit.component';
 import { EstaticaTarjetaComponent } from './agente/tarjetas/estatica-tarjeta/estatica-tarjeta.component';
 import { ColeccionTarjetaComponent } from './agente/tarjetas/coleccion-tarjeta/coleccion-tarjeta.component';
-import { GdevIndexModule } from '../../../Gdev-Tools/query-index/gdev-index.module';
 import { AddTarjetaComponent } from './agente/tarjetas/add-tarjeta/add-tarjeta.component';
+import { GuardadoColeccionComponent } from './agente/colecciones/coleccion/guardado-coleccion/guardado-coleccion.component';
 
 
 
@@ -120,6 +118,7 @@ import { AddTarjetaComponent } from './agente/tarjetas/add-tarjeta/add-tarjeta.c
     EstaticaTarjetaComponent,
     ColeccionTarjetaComponent,
     AddTarjetaComponent,
+    GuardadoColeccionComponent,
   ],
   imports: [
     CommonModule,
@@ -127,10 +126,7 @@ import { AddTarjetaComponent } from './agente/tarjetas/add-tarjeta/add-tarjeta.c
     FormsModule,
     ReactiveFormsModule,
     MaterialModule,
-    ColorThemeModule,
-    GdevResponsiveModule,
-    GdevTextModule,
-    GdevIndexModule,
+    GdevToolsModule
   ],
   providers: [
     

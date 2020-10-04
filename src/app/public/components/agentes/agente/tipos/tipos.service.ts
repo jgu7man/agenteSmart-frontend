@@ -17,6 +17,8 @@ export class TiposService {
   tiposPath: string
   // tiposList: TipoEntidadModel[]
   tiposList$ = new Subject<TipoEntidadModel[]>()
+  // currentTipo: TipoEntidadModel
+  currentClases: Clase[]
 
   constructor (
     private loading: Loading,
@@ -27,7 +29,12 @@ export class TiposService {
     private router: Router
   ) {
     this.tiposCollection()
-   }
+    this.resetCurrentTipo()
+  }
+  
+  resetCurrentTipo() {
+    this.currentClases = []
+  }
 
 
   async tiposCollection() {
@@ -43,15 +50,14 @@ export class TiposService {
   async setTipo( tipo: TipoEntidadModel ) {
     tipo.displayName = this._text.normalize( tipo.displayName )
     const tipoInList: number = this._agente.tiposList.findIndex( Tipo => Tipo.name === tipo.name )
+    Object.keys(tipo).forEach(key => { if (tipo[key] == undefined) delete tipo[key]})
     
-    var Tipo = {}
-    Tipo = { ...tipo, ...Tipo }
     if ( tipoInList < 0 ) {
-      let newTipo = await ( await this.tiposCollection() ).add( Tipo )
+      let newTipo = await ( await this.tiposCollection() ).add( {...tipo} )
       tipo.name = newTipo.id
       newTipo.update( { name: newTipo.id } )
     } else {
-      await ( await this.tiposCollection() ).doc( tipo.name ).set( Tipo, { merge: true } )
+      await ( await this.tiposCollection() ).doc( tipo.name ).set( { ...tipo }, { merge: true } )
     }
     // this.router.navigateByUrl( '../', { skipLocationChange: true } )
     //   .then(()=> this.router.navigate(['tipos']))
@@ -113,8 +119,8 @@ export class TiposService {
 
   // READ TIPOS DE DATOS
 
-  currentTipo$ = new AsyncSubject<TipoEntidadModel>()
-  currentTipo: TipoEntidadModel
+  currentTipo$ = new Observable<TipoEntidadModel>()
+  // currentTipo: TipoEntidadModel
   
 
   // async get() {
@@ -131,13 +137,10 @@ export class TiposService {
   // }
 
 
-  async getByName(name?:string) {
-    this.currentTipo = await ( await ( await this.tiposCollection() )
-      .doc( name ).get() )
-      .data() as TipoEntidadModel;
-    this.currentTipo$.next( this.currentTipo )
-    this.currentTipo$.complete()
-    return this.currentTipo
+  currentTipo( name?: string ): TipoEntidadModel {
+    return name
+      ? this._agente.tiposList.find(t => t.name == name)
+      : new TipoEntidadModel( '', '', 'KIND_LIST', 'AUTO_EXPANSION_MODE_DEFAULT', this.currentClases, false )
   }
 
 

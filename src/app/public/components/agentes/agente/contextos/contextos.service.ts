@@ -7,7 +7,6 @@ import { CacheService } from '../../../../../Gdev-Tools/cache/cache.service';
 import { ContextoModel } from './contexto.model';
 import { CurrentAgenteService } from '../current-agente.service';
 import { take, mergeMap, distinctUntilKeyChanged, mergeAll, tap } from 'rxjs/operators';
-import { GdevAlertServiceModule } from '../../../../../Gdev-Tools/alerts/gdev-alert-service.module';
 import { AlertService } from '../../../../../Gdev-Tools/alerts/alert.service';
 import { Loading } from '../../../../../Gdev-Tools/loading/loading.service';
 import { Subject, Observable, Subscription } from 'rxjs';

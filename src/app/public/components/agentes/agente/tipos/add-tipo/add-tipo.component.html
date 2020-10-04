@@ -1,44 +1,23 @@
-<mat-expansion-panel #addPanel >
-    <mat-expansion-panel-header (click)="toAddTipo()">
-        <ng-container *ngIf="!switchAddInput; else addTipoInput">
-
-            <ng-container *ngIf="!newTipo.displayName; else displayName">
-                Nuevo Tipo
-            </ng-container>
-            <ng-template #displayName>
-                {{newTipo.displayName}}
-            </ng-template>
-            
-        </ng-container>
-
-        <!-- CREATE tipo name -->
-        <ng-template #addTipoInput>
-            <mat-form-field>
-                <input 
-                matInput
-                type="text" 
-                #addInput
-                name="addInput" 
-                id="addInput"
-                [(ngModel)]="newTipo.displayName"
-                (keydown)="delSpaces($event)"
-                (keyup.enter)="newTipo.displayName == '' ? null : onAddTipo()"
-                (keyup.enter)="$event.target.blur()"
-                >
-            </mat-form-field>                            
-        </ng-template>
-    </mat-expansion-panel-header>
-
-
-    <!-- CREATE Tipo body -->
-    <aSmart-tipo-body [tipo]="newTipo"></aSmart-tipo-body>
-
-    <div class="row">
-        <div class="col s12 center" >
-            <button mat-button (click)="toSave()">Guardar</button>
-        </div>
-    </div>
-
-
-
-</mat-expansion-panel>
+<mat-dialog-content>
+    <mat-form-field style="min-width: 100%;">
+        <input 
+        matInput
+        type="text" 
+        #addInput
+        name="addInput" 
+        id="addInput"
+        [(ngModel)]="newTipo.displayName"
+        (keydown)="delSpaces($event)"
+        
+        >
+    </mat-form-field>                            
+</mat-dialog-content>
+<mat-dialog-actions
+style="display: flex; justify-content: space-around;">
+    <button mat-raised-button
+    (click)="cancel()"
+    >Cancelar</button>
+    <button mat-raised-button
+    (click)="onAddTipo()"
+    >Crear</button>
+</mat-dialog-actions>

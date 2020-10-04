@@ -1,4 +1,6 @@
 <div id="tipo-body" *ngIf="tipo">
+    
+    <!-- OPCIONES DE ENTIDAD -->
     <div class="row">
         <div class="col s12" id="tipo-options">
 
@@ -25,12 +27,22 @@
 
         </div>
     </div>
-    
+
+    <!-- TERMINA OPCIONES DE ENTIDAD -->
+
+
+
+
+    <!-- INICIA CLASES CRUD -->
     <div class="row">
         <div class="col s12">
             <h6> Clases del tipo de dato</h6>
 
 
+           
+           
+           
+           
             <!-- UPDATE Clases con sinónimos -->
             <mat-card *ngIf="tipo.kind == 'KIND_MAP'; else lista">
                 <mat-card-content>
@@ -46,7 +58,7 @@
                             <div class="row">
                                 <aSmart-clase-item 
                                 (claseDeleted)="refresh()"
-                                (closeClaseEdit)="toEditClase($event)"
+                                (claseEdited)="toEditClase($event)"
                                 [clase]="clase" 
                                 [claseId]="clase.value" 
                                 [tipo]="tipo"
@@ -66,7 +78,7 @@
                             </li>
                         </ng-template>
                     </ul>
-                    
+                    <!-- TO CREATE -->
                     <ng-container *ngIf="!switchAddClase; else addClase">
                         <button 
                         mat-button 
@@ -79,6 +91,18 @@
 
                 </mat-card-content>
             </mat-card>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
             <!-- UPDATE Clases sin sinónimos -->
@@ -112,11 +136,12 @@
                                     </aSmart-add-clase>    
                                 </li>
                             </ng-template>
+                            
+                            <!-- TO CREATE -->
                             <ng-container *ngIf="!switchAddClase; else addClase">
                                 <button 
                                 mat-button 
                                 (click)="switchAddClase = true"
-                                [disabled]="!tipo.name"
                                 >
                                     Agregar nueva clase
                                 </button>

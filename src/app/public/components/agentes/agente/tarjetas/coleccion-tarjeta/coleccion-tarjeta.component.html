@@ -1,1 +1,15 @@
-<p>coleccion-tarjeta works!</p>
+<mat-card class="mat-elevation-z5">
+    <mat-card-header>
+        <mat-card-title>{{contenido.titulo}}</mat-card-title>
+    </mat-card-header>
+    <img *ngIf="contenido.imagenURL" [src]="contenido.imagenURL['url']" matCardImage>
+    <mat-card-content>
+        {{contenido.body}}
+    </mat-card-content>
+    <mat-card-actions>
+        
+    </mat-card-actions>
+</mat-card>
+
+
+

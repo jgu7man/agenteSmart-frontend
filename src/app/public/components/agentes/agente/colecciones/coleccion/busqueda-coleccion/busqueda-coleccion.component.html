@@ -1,22 +1,22 @@
 <!-- START Interfaz búsqueda -->
 
-    <b>Datos</b>
-    <div class="row">
-        
-        <!-- Seleccionar todos -->
-        <div class="col s6">
-            <mat-checkbox 
-            [checked]="allSelected"
-            (change)="onSelectAll($event)" 
-            color="primary"
-            >Seleccionar todos
+<b>Datos</b>
+<div class="row">
+    
+    <!-- Seleccionar todos -->
+    <div class="col s6">
+        <mat-checkbox 
+        [checked]="allSelected"
+                (change)="onSelectAll($event)" 
+                color="primary"
+                >Seleccionar todos
             </mat-checkbox>
-        </div>
-        
-        <!-- Eliminar grupo -->
-        <div class="col s6" 
-        *ngIf="datosList.selectedOptions.selected.length > 0"
-        style="float:right;display: flex;">
+            </div>
+            
+            <!-- Eliminar grupo -->
+            <div class="col s6" 
+            *ngIf="datosList.selectedOptions.selected.length > 0"
+            style="float:right;display: flex;">
             <button 
             (click)="onDeleteDatos()"
             mat-raised-button color="warn"
@@ -26,73 +26,133 @@
     
     <mat-divider></mat-divider>
     
+    <mat-drawer-container>
     <!-- Datos agregados de búsqueda -->
     <mat-selection-list #datosList 
     (selectionChange)="onSelectedChange()">
-
-    <!-- Item de lista de datos agregados -->
-        <mat-list-option 
-        [checkboxPosition]="'before'" 
-        [value]="dato" 
-        color="primary"
-        *ngFor="let dato of coleccion.queryData">
-            
-            <div class="row align-cols">
-                <div class="col s4"> {{dato.identificador}} </div>
-                <div class="col s7"> {{dato.valor}} </div>
-                
-                <div class="col s1">
-                    <button mat-icon-button [mat-menu-trigger-for]="datoMenu">
-                        <i class="fas fa-ellipsis-v"></i>
-                    </button>
-                    <mat-menu #datoMenu="matMenu">
-                        <button mat-menu-item
-                        (click)="onEdit(dato)"
-                        >Editar</button>
-                        <button mat-menu-item
-                        (click)="deleteOneDato(dato)"
-                        >Eliminar</button>
-                    </mat-menu>
-                </div>
-
-            </div>
-        </mat-list-option>
-    </mat-selection-list>
-    <!-- ENDS Item de dato de búsqueda -->
-
     
-    <!-- START Agregado de nuevo dato de búsqueda -->
-    <div class="row" style="width: 100%;">
+        <!-- Item de lista de datos agregados -->
+            <mat-list-option 
+            [checkboxPosition]="'before'" 
+            [value]="dato" 
+            color="primary"
+            *ngFor="let dato of coleccion.queryData">
+                
+                <div class="row align-cols">
+                    <div class="col s4"> {{dato.identificador}} </div>
+                    <!-- <div class="col s7"> {{dato.valor}} </div> -->
+                    
+                    <div class="col s1">
+                        <button mat-icon-button stopPropagation [mat-menu-trigger-for]="datoMenu">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <mat-menu #datoMenu="matMenu">
+                            <button mat-menu-item
+                            (click)="openEditPanel(dato)"
+                            stopPropagation
+                            >Editar</button>
+                            <button mat-menu-item
+                            (click)="deleteOneDato(dato)"
+                            >Eliminar</button>
+                        </mat-menu>
+                    </div>
+    
+                </div>
+            </mat-list-option>
+        </mat-selection-list>
+        <!-- ENDS Item de dato de búsqueda -->
+    
         
-        <div class="col s12 m4">
-            <mat-form-field>
-                <mat-label>Identificador</mat-label>
-                <input matInput
-                preventSpaces
-                normalize
-                [(ngModel)]="newColeccionDato.identificador"
-                type="text" name="ident" id="ident">
-            </mat-form-field>
-        </div>
-        
-        <div class="col s11 m7">
-            <mat-form-field style="width: 100%;">
-                <mat-label>Valor</mat-label>
-                <input matInput
-                [(ngModel)]="newColeccionDato.valor"
-                    type="text" name="valor" id="valor">
-            </mat-form-field>
-        </div>
-        
-        <div class="col s1">
-            <button mat-icon-button 
-            [disabled]="!newColeccionDato.identificador && !newColeccionDato.valor" 
-            (click)="addDato()">
-                <i class="fas fa-check"></i>
-            </button>
+        <!-- START Agregado de nuevo dato de búsqueda -->
+        <div class="row" style="width: 100%;">
+            
+            <div class="col s12 m4">
+                <mat-form-field>
+                    <mat-label>Identificador</mat-label>
+                    <input matInput
+                    preventSpaces
+                    normalize
+                    [(ngModel)]="newColeccionDato.identificador"
+                    type="text" name="ident" id="ident">
+                </mat-form-field>
+            </div>
+            
+            
+            
+            <div class="col s1">
+                <button mat-icon-button 
+                [disabled]="!newColeccionDato.identificador && !newColeccionDato.body" 
+                (click)="addDato()">
+                    <i class="fas fa-check"></i>
+                </button>
+            </div>
+    
         </div>
 
-    </div>
+        <mat-drawer #busquedaItem="matDrawer">
 
-    <!-- ENDS Agregado de datos -->
-<!-- ENDS Interfaz de Búsqueda -->
+            <div class="col s12 m7">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Contenido</mat-label>
+                    <input matInput required
+                    [(ngModel)]="newColeccionDato.body"
+                        type="text" name="valor" id="valor">
+                </mat-form-field>
+            </div>
+
+            <div class="col s12 m5">
+                <mat-form-field>
+                    <mat-label>Título</mat-label>
+                    <input
+                    matInput
+                    type="text"
+                    [(ngModel)]="newColeccionDato.titulo"
+                    name="title"
+                    >
+                    <mat-hint>Opcional</mat-hint>
+                </mat-form-field>
+            </div>
+
+            <div class="col s9 m6">
+                <gdev-file-uploader 
+                [displayAction]="'Subir imagen'"
+                [folder]="user.uid+'/colecciones/'+coleccion.name"
+                [srcPreview]="newColeccionDato.imagenURL 
+                    ? newColeccionDato.imagenURL['url'] : ''"
+                (imageURL)="newColeccionDato.imagenURL = $event"
+                ></gdev-file-uploader>
+                <mat-hint>Opcional</mat-hint>
+            </div>
+
+            <div class="col s12 m6">
+                
+                <div class="col s12">
+                    <mat-form-field>
+                        <mat-label>Enlace</mat-label>
+                        <input
+                        matInput
+                        type="text"
+                        [(ngModel)]="newColeccionDato.enlace"
+                        name="enlace"
+                        >
+                        <mat-hint>Necesario si existe llamado a la acción</mat-hint>
+                    </mat-form-field>
+                </div>
+                <div class="col s12" style="display: flex; justify-content: space-around;">
+                    <button mat-raised-button
+                    color="primary"
+                    (click)="updateDato(newColeccionDato)"
+                    >Guardar</button>
+                    <button mat-raised-button
+                    (click)="busquedaItem.close()"
+                    >Cerrar</button>
+                </div>
+            </div>
+            
+
+
+        </mat-drawer>
+    
+        <!-- ENDS Agregado de datos -->
+    <!-- ENDS Interfaz de Búsqueda -->
+</mat-drawer-container>

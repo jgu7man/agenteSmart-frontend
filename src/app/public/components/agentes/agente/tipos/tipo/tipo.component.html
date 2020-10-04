@@ -1,4 +1,4 @@
-<mat-expansion-panel (afterExpand)="onExpanded($event)" (afterCollapse)="onExpanded($event)">
+<mat-expansion-panel #tipoPanel (afterCollapse)="onExpanded()" (afterExpand)="onExpanded()" >
     <mat-expansion-panel-header>
         <ng-container *ngIf="!switchEditTipo; else editTipoInput">
             @{{tipo.displayName}}
@@ -13,14 +13,37 @@
                 #editInput
                 name="editInput" 
                 id="editInput"
-                [(ngModel)]="tipo.displayName"
+                [(ngModel)]="tiposService.currentTipo(tipo.name).displayName"
                 (keydown)="delSpaces($event)"
-                (keyup.enter)="tipo.displayName == '' ? null : tiposService.setTipo(tipo)"
-                (keyup.enter)="$event.target.blur()"
                 >
             </mat-form-field>                            
         </ng-template>
     </mat-expansion-panel-header>
-    <aSmart-tipo-body [tipo]="tipo" ></aSmart-tipo-body>
-    <button mat-raised-button [color]="'warn'" (click)="onDeleteTipo()">Eliminar</button>
+    
+    <div class="row">
+        <div class="col s12 m10">
+            <aSmart-tipo-body [tipo]="tipo" (edited)="tipo = $event"></aSmart-tipo-body>
+        </div>
+        <div class="col s12 m2">
+            
+            <button 
+            mat-raised-button 
+            [color]="'primary'" 
+            (click)="tiposService.setTipo(tipo)"
+            >Guardar</button>
+
+            <button 
+            mat-raised-button 
+            [color]="'warn'" 
+            (click)="tiposService.deleteTipo( tipo.name )"
+            >Eliminar</button>
+
+        </div>
+    </div>
+    <!-- Tipo body to update -->
+    
+    <div class="row space-around">
+        
+        
+    </div>
 </mat-expansion-panel>

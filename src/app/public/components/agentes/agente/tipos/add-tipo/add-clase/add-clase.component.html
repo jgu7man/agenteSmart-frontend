@@ -8,8 +8,8 @@
                 id="addClaseItem"
                 matInput
                 [(ngModel)]="newClaseItem"
-                (blur)="newClaseItem ? onAddClase() : null"
-                (keyup.enter)="onAddClase(); $event.target.blur()"
+                (blur)="newClaseItem ? onAddClase($event) : null"
+                (keyup.enter)="onAddClase($event); $event.target.blur()"
             />
         </mat-form-field>
     </div>
@@ -26,8 +26,8 @@
             id="addClaseItem"
             matInput
             [(ngModel)]="newClaseItem"
-            (keyup.enter)="onAddClase(); $event.target.blur()"
-            (keydown.Tab)="onAddClase();false"
+            (keyup.enter)="onAddClase($event); $event.target.blur()"
+            (keydown.Tab)="onAddClase($event);false"
             />
         </mat-form-field>
     </div>
@@ -49,7 +49,7 @@
                     <mat-icon matChipRemove>cancel</mat-icon>
                 </mat-chip>
                 <input
-                    placeholder="nuevo sinónimo: presiona coma (,) o enter para agregar"
+                    placeholder="nuevo sinónimo: presiona coma (,) para agregar"
                     style="max-height: 1em;"
                     #sinonimosInput
                     [disabled]="!switchSinonimosInput"

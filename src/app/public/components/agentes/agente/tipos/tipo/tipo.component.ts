@@ -2,6 +2,7 @@ import { Component, OnInit, Input, ViewChild, ElementRef, Output, EventEmitter }
 import { TipoEntidadModel } from '../tipo.model';
 import { TiposService } from '../tipos.service';
 import { Loading } from '../../../../../../Gdev-Tools/loading/loading.service';
+import { MatExpansionPanel } from '@angular/material/expansion';
 
 @Component({
   selector: 'aSmart-tipo',
@@ -12,8 +13,9 @@ export class TipoComponent implements OnInit {
 
 
   @Input() tipo: TipoEntidadModel
+  @ViewChild('tipoPanel') tipoPanel: MatExpansionPanel
   @ViewChild( 'editInput' ) editInput: ElementRef
-  @Output() tipoDeleted = new EventEmitter<string>()
+  // @Output() tipoDeleted = new EventEmitter<string>()
   switchEditTipo: boolean = false
 
 
@@ -25,14 +27,19 @@ export class TipoComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  async onExpanded( event ) {
-    this.switchEditTipo = !this.switchEditTipo
+  async onExpanded(  ) {
+    this.switchEditTipo = this.tipoPanel.expanded ? true :  false
+    
     await this.loading.waitFor( 200 )
+    
     this.switchEditTipo ?
       this.editInput.nativeElement.focus() :
-      null
-    
+      null;
   }
+
+  // onSave() {
+  //   this.tiposService.setTipo(this.tipo)
+  // }
 
 
   delSpaces( e ) {
@@ -45,10 +52,10 @@ export class TipoComponent implements OnInit {
 
   }
 
-  onDeleteTipo() {
-    this.tiposService.deleteTipo( this.tipo.name )
-      .then(()=> {this.tipoDeleted.emit(this.tipo.name)})
-  }
+  // onDeleteTipo() {
+  //   this.tiposService.deleteTipo( this.tipo.name )
+  //     .then(()=> {this.tipoDeleted.emit(this.tipo.name)})
+  // }
 
   
 

@@ -1,71 +1,108 @@
 <h4 mat-dialog-title>
     {{tarjeta.name}}
 </h4>
-<mat-select placeholder="Tipo de contenido" [(ngModel)]="tarjeta.tipoContenido" name="contenido">
-    <mat-option *ngFor="let contenido of tiposContenido" [value]="contenido.value">
-        {{contenido.viewValue}}
-    </mat-option>
-</mat-select>
-<div [ngSwitch]="tarjeta.tipoContenido">
-    <div *ngSwitchCase="'coleccion'">
-        <mat-select placeholder="Coleccion" [(ngModel)]="tarjeta.contenido" name="col">
+
+<mat-dialog-content>
+    
+    <mat-form-field>
+        <mat-label>Tipo de contenido</mat-label>
+        <mat-select [(ngModel)]="tarjeta.tipoContenido" name="contenido">
+            <mat-option *ngFor="let contenido of tiposContenido" [value]="contenido.value">
+                {{contenido.viewValue}}
+            </mat-option>
         </mat-select>
-    </div>
-    <div *ngSwitchCase="'producto'">
-    </div>
-    <div *ngSwitchCase="'servicio'">
-    </div>
-    <div *ngSwitchCase="'estatico'">
-        <aSmart-estatica-tarjeta [contenido]="tarjeta.contenido"></aSmart-estatica-tarjeta>
-    </div>
-    <div *ngSwitchDefault>
-        <aSmart-estatica-tarjeta></aSmart-estatica-tarjeta>
-    </div>
+    </mat-form-field>
 
-
-    <mat-card-actions>
-        <b>Botones</b> (Opcionales)
-        <div class="botonModel" *ngFor="let btn of botones; index as i">
-            <button mat-raised-button
-            color="primary">
-                {{btn.text}}
-            </button>
-            <button mat-icon-button (click)="delBoton(i)">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="botonForm">
+    <div [ngSwitch]="tarjeta.tipoContenido">
+    
+        <div *ngSwitchCase="'coleccion'">
             <mat-form-field>
-                <input matInput type="text" 
-                name="buttonText" id="buttonText"
-                [(ngModel)]="nuevoBoton.text"
-                placeholder="Texto"
-                >
+                <mat-label>Nombre de la colección</mat-label>
+                <mat-select 
+                placeholder="Elige una colección"
+                (selectionChange)="onColecctionNameSelected($event)"
+                name="col">
+                    <mat-option 
+                    *ngFor="let coleccion of agenteS.coleccionesList | listFilter:{tipo:'busqueda'}" 
+                    [value]="coleccion.name">
+                        {{coleccion.name}}
+                    </mat-option>
+                </mat-select>
             </mat-form-field>
-            <mat-form-field>
-                <input matInput type="text" 
-                name="buttonLink" id="buttonLink"
-                [(ngModel)]="nuevoBoton.link"
-                placeholder="Link"
-                >
-            </mat-form-field>
-            <button mat-icon-button (click)="addBoton()">
-                <i class="fas fa-check"></i>
-            </button>
+            <br> Ejemplo:
+            <aSmart-coleccion-tarjeta 
+            *ngIf="tarjeta.contenido"
+            [contenido]="tarjeta.contenido['queryData'][0]"
+            ></aSmart-coleccion-tarjeta>
         </div>
-    </mat-card-actions>
+    
+        <div *ngSwitchCase="'producto'">
+        </div>
+    
+        <div *ngSwitchCase="'servicio'">
+        </div>
+    
+        <div *ngSwitchCase="'estatico'">
+            <aSmart-estatica-tarjeta 
+            [contenido]="tarjeta.contenido"
+            (edited)="updateTarjeta($event)"
+            ></aSmart-estatica-tarjeta>
+        </div>
+        <div *ngSwitchDefault>
+            <aSmart-estatica-tarjeta
+            [contenido]="tarjeta.contenido"
+            (edited)="updateTarjeta($event)"
+            ></aSmart-estatica-tarjeta>
+        </div>
+    
+    
+        <mat-card-actions>
+            <b>Botones</b> (Opcionales)
+            <div class="botonModel" *ngFor="let btn of botones; index as i">
+                <button mat-raised-button
+                color="primary">
+                    {{btn.text}}
+                </button>
+                <button mat-icon-button (click)="delBoton(i)">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="botonForm">
+                <mat-form-field>
+                    <input matInput type="text" 
+                    name="buttonText" id="buttonText"
+                    [(ngModel)]="nuevoBoton.text"
+                    placeholder="Texto"
+                    >
+                </mat-form-field>
+                <mat-form-field *ngIf="tarjeta.tipoContenido != 'coleccion'">
+                    <input matInput type="text" 
+                    name="buttonLink" id="buttonLink"
+                    [(ngModel)]="nuevoBoton.link"
+                    placeholder="Link"
+                    >
+                </mat-form-field>
+                <button mat-icon-button (click)="addBoton()">
+                    <i class="fas fa-check"></i>
+                </button>
+            </div>
 
-    <mat-card-actions style="display: flex; justify-content: space-around;">
-        <button 
-        (click)="dialog.close()"
-        mat-raised-button>
-            Cerrar
-        </button>
+        </mat-card-actions>
         
-        <button 
-        (click)="save()"
-        mat-raised-button>
-            Guardar
-        </button>
-    </mat-card-actions>
-</div>
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions style="display: flex; justify-content: space-around;">
+    <button 
+    (click)="dialog.close()"
+    mat-raised-button>
+        Cerrar
+    </button>
+    
+    <button 
+    (click)="save()"
+    color="primary"
+    mat-raised-button>
+        Guardar
+    </button>
+</mat-dialog-actions>

@@ -1,8 +1,10 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { RespuestasService } from '../../../respuestas.service';
-import { CacheService } from '../../../../../../../../../../../Gdev-Tools/cache/cache.service';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { FormPredefinida, FormRegistroDatos } from '../../../respuesta.model';
+import { CurrentAgenteService } from '../../../../../../../current-agente.service';
+import { CurrentMensajeService } from '../../../../../current-mensaje.service';
+import { FormRegistroDatos } from '../../../respuesta.model';
+import { BehaviorSubject } from 'rxjs';
+import { distinctUntilKeyChanged, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'aSmart-grupo-datos',
@@ -11,33 +13,41 @@ import { FormPredefinida, FormRegistroDatos } from '../../../respuesta.model';
 })
 export class GrupoDatosComponent implements OnInit {
 
-  paramSelected: string
+  paramSelected: string = ''
   // dataGroups: any[]
-  dataGroupSelected: string
+  dataGroupSelected: string = ''
+  colSelected
+  
+  dataForm: FormRegistroDatos = new FormRegistroDatos( 'texto', '', this.paramSelected, this.dataGroupSelected, '' )
+  
+  private _RegistroDatosForm = new BehaviorSubject<FormRegistroDatos>( this.dataForm );
+  @Input() set RegistroDatosForm( form: FormRegistroDatos )
+    { this._RegistroDatosForm.next( form ); }
+  get RegistroDatosForm() { return this._RegistroDatosForm.getValue()}
+  
+  @Output() edited = new EventEmitter<FormRegistroDatos>();
 
-  resData: FormRegistroDatos
-
-  @Output() onRespChanges: EventEmitter<FormPredefinida> = new EventEmitter()
   constructor (
-    public resService: RespuestasService,
-    private _cache: CacheService,
+    public agenteS: CurrentAgenteService,
+    public mensajeS: CurrentMensajeService
   ) {
-    this.resData = new FormRegistroDatos('texto','',this.paramSelected, this.dataGroupSelected)
+    
    }
 
   ngOnInit(): void {
-  }
-
-  catchOutputMessage( msg: FormPredefinida ) {
-    this.resData.estiloRespuesta = msg.estiloRespuesta
-    this.resData.respuesta = msg.respuesta
-    this.onRespChanges.emit( this.resData )
+    this._RegistroDatosForm.pipe(
+      tap(console.log),
+      distinctUntilKeyChanged('parametro')
+    ).subscribe( form => {
+      console.log(form);
+      this.dataForm = form
+    })
   }
 
   get KeySpected() {
-    var colSelected = this.resService.coleccionesSaveList
-      .find( col => { col.name === this.dataGroupSelected } );
-    return colSelected ? colSelected.saveKeys : []
+    this.colSelected = this.agenteS.coleccionesList
+      .find( col => col.name === this.dataForm.grupoDatos  );
+    return this.colSelected ? this.colSelected.saveKeys : []
   }
 
   

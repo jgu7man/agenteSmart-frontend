@@ -17,7 +17,7 @@ export class CondicionalFormComponent implements OnInit {
   tipoSelected: TipoEntidadModel
 
   @Input() condicional: FormCondicional
-  @Output() onRespChanges: EventEmitter<FormPredefinida> = new EventEmitter()
+  @Output() onRespChanges: EventEmitter<FormCondicional> = new EventEmitter()
 
   condicionesList: Condition[] = [
     { displayText: 'igual a', operator: 'igual' },

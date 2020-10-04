@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdminComponent } from './admin.component';
 import { AdminRoutingModule } from "./admin-routing.module";
-import { GdevAlertServiceModule } from '../Gdev-Tools/alerts/gdev-alert-service.module';
+import { GdevAlertModule } from '../Gdev-Tools/alerts/gdev-alert.module';
 
 
 
@@ -13,7 +13,7 @@ import { GdevAlertServiceModule } from '../Gdev-Tools/alerts/gdev-alert-service.
   imports: [
     CommonModule,
     AdminRoutingModule,
-    GdevAlertServiceModule
+    GdevAlertModule
   ],
 })
 export class AdminModule { }

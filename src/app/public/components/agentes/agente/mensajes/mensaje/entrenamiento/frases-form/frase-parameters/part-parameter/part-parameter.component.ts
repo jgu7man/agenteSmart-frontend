@@ -6,6 +6,7 @@ import { startWith, map } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { ParametrosService } from '../../../parametros/parametros.service';
 import { Loading } from '../../../../../../../../../../Gdev-Tools/loading/loading.service';
+import { FrasesService } from '../../frases.service';
 
 @Component({
   selector: 'aSmart-part-parameter',
@@ -23,10 +24,11 @@ export class PartParameterComponent implements OnInit {
   
   @Output() onDelete = new EventEmitter<any>()
   @Output() paramAdded = new EventEmitter<FraseParte>()
+  @Output() tipoSelected = new EventEmitter<FraseParte>();
 
   constructor (
     private _params: ParametrosService,
-    private loading: Loading
+    private loading: Loading,
   ) { }
 
   ngOnInit(): void {
@@ -41,20 +43,35 @@ export class PartParameterComponent implements OnInit {
   
   onTipoSelected(tipoSelected: string) {
     this.parte.entityType = tipoSelected
+    this.tipoSelected.emit( this.parte )
+    
+    if ( this.paramName ) {
+      var param: ParametroMensaje = {
+        displayName: this.paramName,
+        entityTypeDisplayName: tipoSelected
+      }
+
+      this._params.addParam( param ).then( () => {
+        this.parte.paramName = this.paramName
+      } )
+    }
   }
 
   
   addParameter( event ) {
     event.stopImmediatePropagation()
     var entity = this.parte.entityType
+    this.parte.paramName = this.paramName
+    this.paramAdded.emit( this.parte )
+    
     if ( entity ) {
       var param: ParametroMensaje = {
         displayName: this.paramName,
         entityTypeDisplayName: entity
       }
+
       this._params.addParam( param ).then( () => {
         this.parte.paramName = this.paramName
-        this.paramAdded.emit(this.parte)
       })
     }
   }

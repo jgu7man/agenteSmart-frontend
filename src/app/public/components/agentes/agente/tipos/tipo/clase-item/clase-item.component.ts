@@ -13,7 +13,7 @@ export class ClaseItemComponent implements OnInit {
   @Input() claseId: string
   @Input() clase: Clase
   @Input() tipo: TipoEntidadModel
-  @Output() closeClaseEdit = new EventEmitter<string>()
+  @Output() claseEdited = new EventEmitter<Clase>()
   @Output() claseDeleted = new EventEmitter<boolean>()
 
   constructor (
@@ -30,6 +30,7 @@ export class ClaseItemComponent implements OnInit {
 
   onClaseDone() {
     this.ClaseInput = false
+    this.claseEdited.emit(this.clase)
   }
 
   onDelClase() {

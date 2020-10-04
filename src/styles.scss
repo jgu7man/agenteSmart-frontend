@@ -1,14 +1,14 @@
 
 /* You can add global styles to this file, and also import other style files */
-@import "assets/css/collection.css";
-@import "assets/css/colors.css";
-@import "assets/css/normalize.css";
-@import "assets/css/responsive.css";
-@import "assets/css/shortcuts";
-@import "assets/css/slider.css";
-@import "assets/css/spiner.css";
-@import "assets/css/text.css";
-@import "assets/css/waves-fx.css";
+@import "./app/Gdev-Tools/styles/collection.css";
+@import "./app/Gdev-Tools/styles/colors.css";
+@import "./app/Gdev-Tools/styles/normalize.css";
+@import "./app/Gdev-Tools/styles/responsive.css";
+@import "./app/Gdev-Tools/styles/shortcuts";
+@import "./app/Gdev-Tools/styles/slider.css";
+@import "./app/Gdev-Tools/styles/spiner.css";
+@import "./app/Gdev-Tools/styles/text.css";
+@import "./app/Gdev-Tools/styles/waves-fx.css";
 
 html, body { 
     height: 100%; 
@@ -23,4 +23,20 @@ div::-webkit-scrollbar {
 .align-cols {
     display: flex;
     align-items: center;
+}
+
+button {
+    margin: .25em !important;
+}
+
+mat-card {
+    margin-bottom: 1em;
+}
+
+h4 {
+    font-size: 1.7rem;
+}
+
+h5 {
+    font-size: 1.3rem;
 }

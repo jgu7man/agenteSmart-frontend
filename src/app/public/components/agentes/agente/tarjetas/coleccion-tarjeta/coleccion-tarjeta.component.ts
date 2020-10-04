@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { RespuestaCard } from '../../mensajes/mensaje/entrenamiento/respuestas/respuesta.model';
 
 @Component({
   selector: 'aSmart-coleccion-tarjeta',
@@ -7,9 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ColeccionTarjetaComponent implements OnInit {
 
+  @Input() contenido: RespuestaCard = {
+    titulo: '', body: '', imagenURL: ''
+  }
+
   constructor() { }
 
   ngOnInit(): void {
+    console.log(this.contenido);
   }
 
 }

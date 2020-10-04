@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { TiposService } from '../../../../../tipos/tipos.service';
 import { FraseParte, FraseEntrenamiento } from '../../../../mensaje.model';
 import { FrasesService } from '../frases.service';
 

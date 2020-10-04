@@ -6,11 +6,10 @@ import { CurrentAgenteService } from '../current-agente.service';
 import { Loading } from '../../../../../Gdev-Tools/loading/loading.service';
 import { ContextoModel } from '../contextos/contexto.model';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GdevAlertServiceModule } from '../../../../../Gdev-Tools/alerts/gdev-alert-service.module';
 import { AlertService } from '../../../../../Gdev-Tools/alerts/alert.service';
 import { Observable, from, of } from 'rxjs';
 import { IntentModel } from './mensaje.model';
-import { first, map, filter, switchMap, toArray, startWith, retry, retryWhen, repeatWhen, mergeMap, delay, tap } from 'rxjs/operators';
+import { first,  filter, switchMap, toArray } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'

@@ -15,7 +15,7 @@ export class AddClaseComponent implements OnInit {
   switchSinonimosInput: boolean
   newClaseItem: string
   newClaseSinonimos: string[] = []
-  readonly separatorKeysCodes: number[] = [ ENTER, COMMA ];
+  readonly separatorKeysCodes: number[] = [ COMMA ];
 
   @Input() clase: Clase
   @Input() tipo: TipoEntidadModel
@@ -40,7 +40,8 @@ export class AddClaseComponent implements OnInit {
   }
 
 
-  onAddClase() {
+  onAddClase(event) {
+    event.stopPropagation();
     if ( this.newClaseItem ) {
       this.clase = { value: this.newClaseItem }
     }
@@ -58,6 +59,7 @@ export class AddClaseComponent implements OnInit {
 
   
   addSinonimo( event: MatChipInputEvent ) {
+    
     if ( event.value ) {
       this.newClaseSinonimos.push( event.value.trim() )
       this._tipos.setSinonimo(this.tipo.name,  this.clase.value, event.value, 'add')

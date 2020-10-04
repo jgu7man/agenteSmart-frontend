@@ -4,6 +4,8 @@ import { TarjetaModel, tipoContenido } from '../tarjeta.model';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { EstaticaTarjetaComponent } from '../estatica-tarjeta/estatica-tarjeta.component';
 import { TarjetasService } from '../tarjetas.service';
+import { MatSelectChange } from '@angular/material/select';
+import { CurrentAgenteService } from '../../current-agente.service';
 
 @Component({
   templateUrl: './add-tarjeta.component.html',
@@ -20,6 +22,7 @@ export class AddTarjetaComponent implements OnInit {
     { value: 'servicio', viewValue: 'Servicio' },
   ]
 
+  filterColeccion = {key: 'guardado'}
   nuevoBoton: RespuestaCardButton = { text: '', link: '' }
   botones: RespuestaCardButton[] = []
 
@@ -27,12 +30,23 @@ export class AddTarjetaComponent implements OnInit {
 
   constructor (
     public dialog: MatDialogRef<AddTarjetaComponent>,
-    private tarjetaServ : TarjetasService
+    private tarjetaServ: TarjetasService,
+    public agenteS: CurrentAgenteService
   ) {
-    this.tarjeta = new TarjetaModel( '', 'estatico' )
+    this.tarjeta = new TarjetaModel( '' )
   }
 
   ngOnInit(): void {
+  }
+
+  onTipoContenidoSelected(change: MatSelectChange) {
+    this.tarjeta.tipoContenido = change.value
+  }
+
+  onColecctionNameSelected( change: MatSelectChange ) {
+    let coleccion = this.agenteS.coleccionesList
+      .find(c => c.name == change.value)
+    this.tarjeta.contenido = coleccion
   }
 
   updateTarjeta( contenido: RespuestaCard ) {

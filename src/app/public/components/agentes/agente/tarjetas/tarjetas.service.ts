@@ -34,9 +34,11 @@ export class TarjetasService {
     console.log(tarjeta);
     tarjeta.name = await this._commons.preventDuplicated( tarjeta, list, 'name' )
     console.log(tarjeta.name);
+    
     try {
       await ( await this.tarjetaRef() ).doc( tarjeta.name )
-        .set( {...tarjeta} )
+        .set( { ...tarjeta } )
+      this._alert.sendFloatNotification('Tarjeta creada', 'ok')
         return 
     } catch (error) {
       this._alert.sendError('Ups! Algo salio mal', error)
@@ -49,7 +51,8 @@ export class TarjetasService {
   async saveTarjeta(tarjeta: TarjetaModel) {
     try {
       await( await this.tarjetaRef() ).doc( tarjeta.name )
-        .set( { ...tarjeta }, {merge: true} )
+        .set( { ...tarjeta }, { merge: true } )
+      this._alert.sendFloatNotification('Tarjeta guardada', 'ok')
       return
     } catch ( error ) {
       this._alert.sendError( 'Ups! Algo salio mal', error )

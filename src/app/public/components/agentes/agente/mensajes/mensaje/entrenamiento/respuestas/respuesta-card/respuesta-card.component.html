@@ -67,11 +67,12 @@
                         <aSmart-condicional-form [condicional]="respuesta.outputMessage" (onRespChanges)="catchOutputMessage($event)"></aSmart-condicional-form>
                     </div>
                     <div *ngSwitchCase="'grupo_datos'">
-                        <aSmart-grupo-datos (onRespChanges)="catchOutputMessage($event)"></aSmart-grupo-datos>
+                        <aSmart-grupo-datos [RegistroDatosForm]="respuesta.outputMessage" (edited)="catchOutputMessage($event)"></aSmart-grupo-datos>
                     </div>
                     <div *ngSwitchCase="'buscar'">
-                        <aSmart-buscar-form (onRespChanges)="catchOutputMessage($event)"></aSmart-buscar-form>
+                        <aSmart-buscar-form [BuscarRes]="respuesta.outputMessage" (onRespChanges)="catchOutputMessage($event)"></aSmart-buscar-form>
                     </div>
+
                     <aSmart-predefinida [outputRes]="respuesta.outputMessage" (onRespChanges)="catchOutputMessage($event)"></aSmart-predefinida>
                     
                 </div>
@@ -158,6 +159,9 @@
                         name="mensaje">
                             <mat-option *ngFor="let mensaje of resService.mensajesList" [value]="mensaje.name">
                                 {{mensaje.displayName}}
+                            </mat-option>
+                            <mat-option value="*fin">
+                                Terminar conversación
                             </mat-option>
                         </mat-select>
                     </div>

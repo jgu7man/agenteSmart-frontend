@@ -4,7 +4,7 @@
         Criterio
     </div>
     <div class="col s8">
-        <mat-select placeholder="parámetro" [(ngModel)]="paramSelected" name="param">
+        <mat-select placeholder="parámetro" [(ngModel)]="response.parametro" name="param">
             <mat-option *ngFor="let param of resService.paramList" [value]="param.name">
                 {{param.displayName}}
             </mat-option>
@@ -19,8 +19,8 @@
         Base de datos
     </div>
     <div class="col s8">
-        <mat-select placeholder="Base de datos" [(ngModel)]="dataBaseSelected" name="param">
-            <mat-option *ngFor="let db of resService.coleccionesQueryList" [value]="db.name">
+        <mat-select placeholder="Base de datos" [(ngModel)]="response.rutaDB" name="param">
+            <mat-option *ngFor="let db of agenteS.coleccionesList" [value]="db.name">
                 {{db.name}}
             </mat-option>
         </mat-select>

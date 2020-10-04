@@ -5,6 +5,9 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { AlertService } from '../../../../../../../Gdev-Tools/alerts/alert.service';
 import { ColeccionesService } from '../../colecciones.service';
 import { Loading } from '../../../../../../../Gdev-Tools/loading/loading.service';
+import { CacheService } from '../../../../../../../Gdev-Tools/cache/cache.service';
+import { UserInterface } from '../../../../../../../admin/auth/auth.service';
+import { MatDrawer } from '@angular/material/sidenav';
 
 @Component({
   selector: 'aSmart-busqueda-coleccion',
@@ -20,6 +23,7 @@ export class BusquedaColeccionComponent implements OnInit {
    * @type {MatSelectionList}
    */
   @ViewChild( 'datosList' ) datosList: MatSelectionList
+  @ViewChild('busquedaItem') itemPanel: MatDrawer
   /**
    * Envía la lista de datos editada
    * @type {EventEmitter<any>}
@@ -36,24 +40,25 @@ export class BusquedaColeccionComponent implements OnInit {
   public datosSelectedList: ColeccionDato[] = []
   /** Modelo de dato nuevo */
   public newColeccionDato: ColeccionDato = {
-    identificador: '', valor: ''
+    identificador: '', body: '', titulo: '',
+    imagenURL: '', enlace: ''
   }
+  user: UserInterface
 
 
   constructor (
     private _alerta: AlertService,
     private _colecciones: ColeccionesService,
-    private loading: Loading
+    private loading: Loading,
+    private _cache: CacheService
   ) { }
 
-  ngOnInit(): void {
-    console.log(this.coleccion);
+  async ngOnInit() {
+    this.user = this._cache.getDataKey('user')
   }
 
   /**
    * Agregar dato
-   *
-   * @memberof BusquedaColeccionComponent
    */
   addDato() {
     let newDato
@@ -69,7 +74,46 @@ export class BusquedaColeccionComponent implements OnInit {
       if ( !this.coleccion.queryData ) { this.coleccion.queryData = [] }
       this.coleccion.queryData.push( this.newColeccionDato )
       this._colecciones.updateDataColeccion( this.coleccion )
-        .then( () => { this.newColeccionDato = { identificador: '', valor: '' }})
+        .then( () => { this.newColeccionDato = { identificador: '', body: '' }})
+    }
+  }
+
+  openEditPanel( dato: ColeccionDato ) {
+    console.log(dato);
+    this.newColeccionDato = {
+      identificador: dato.identificador ? dato.identificador : '',
+      body: dato.body ? dato.body : '',
+      titulo: dato.titulo ? dato.titulo : '',
+      imagenURL: dato.imagenURL ? dato.imagenURL : '',
+      enlace: dato.enlace ? dato.enlace : '',
+    }
+    this.itemPanel.open()
+    console.log( this.newColeccionDato);
+  }
+
+  updateDato( body: ColeccionDato ) {
+    try {
+
+      var dato = this.coleccion.queryData.findIndex(
+        d => d.identificador == body.identificador
+      )
+
+      if ( dato >= 0 ) {
+        this.coleccion.queryData[ dato ] = body
+        console.log(this.coleccion);
+        this._colecciones.updateDataColeccion( this.coleccion )
+          .then( () => {
+            this.newColeccionDato = {
+              identificador: '', body: '', titulo: '',
+              imagenURL: '', enlace: ''
+            }
+          } )
+          .then(() => this._alerta.sendFloatNotification('Guardado', 'ok'))
+      }
+
+      this.itemPanel.close()
+    } catch (error) {
+      this._alerta.sendError('Algo salió mal', error)
     }
   }
 
@@ -127,7 +171,9 @@ export class BusquedaColeccionComponent implements OnInit {
 
     this._colecciones.updateDataColeccion( this.coleccion )
       .then( () => {
-        this.newColeccionDato = { identificador: '', valor: '' }
+        this.newColeccionDato = {
+          identificador: '', body: '', titulo: '',
+          imagenURL: '', enlace: '' }
         this.allSelected = false
       } )
       
@@ -152,7 +198,15 @@ export class BusquedaColeccionComponent implements OnInit {
       this.coleccion.queryData.splice( datoToDel, 1 )
     }
     this._colecciones.updateDataColeccion( this.coleccion )
-      .then( () => { this.newColeccionDato = { identificador: '', valor: '' } } )
+      .then( () => {
+        this.newColeccionDato = {
+          identificador: '', body: '', titulo: '',
+          imagenURL: '', enlace: '' } } )
+  }
+
+
+  saveBusquedaItem(itemId) {
+    
   }
 
 }

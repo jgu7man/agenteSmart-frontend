@@ -56,10 +56,20 @@ export class ColeccionesService {
   }
 
 
-  async updateDataColeccion( coleccion: ColeccionModel) {
-    await this.fs.collection( this.coleccionesPath ).ref.doc( coleccion.name )
-      .update( { queryData: coleccion.queryData } )
-    return 
+  async updateDataColeccion( coleccion: ColeccionModel ) {
+    
+    Object.keys( coleccion ).forEach( key => {
+      if ( coleccion[ key ] == undefined ) delete coleccion[ key ] } )
+
+    try {
+      await this.fs.collection( this.coleccionesPath ).ref.doc( coleccion.name )
+        .update( {...coleccion} )
+      this._alerts.sendFloatNotification( 'Colección guardada' )
+      return 
+    } catch ( error ) {
+      console.error(error);
+      this._alerts.sendError('No se pudo guardar', error)
+    }
   }
 
   async delete(colName) {

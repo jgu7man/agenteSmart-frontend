@@ -121,7 +121,7 @@ export class RespuestasService {
             this.currentMensaje = mensaje
             this.paramList = this.currentMensaje.parameters
             this.getNextMensaje()
-            this.getTipos( mensaje.parameters )
+            // this.getTipos( mensaje.parameters )
          }
       } )   
 
@@ -139,7 +139,7 @@ export class RespuestasService {
             let tipo = this.tiposList.find( t => t.name == param.displayName )
 
             if ( !tipo ) {
-               tipo = await this._tipos.getByName( param.displayName )
+               // tipo = await this._tipos.getByName( param.displayName )
                await this.loading.waitFor( 100 )
                return this.tiposList.push( tipo )
             }
