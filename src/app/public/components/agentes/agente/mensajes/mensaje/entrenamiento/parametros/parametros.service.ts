@@ -9,6 +9,7 @@ import { Subject, Observer, Observable } from 'rxjs';
 import { map, switchMap, startWith } from 'rxjs/operators';
 import { FrasesService } from '../frases-form/frases.service';
 import { Loading } from '../../../../../../../../Gdev-Tools/loading/loading.service';
+import { AlertService } from '../../../../../../../../Gdev-Tools/alerts/alert.service';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +35,8 @@ export class ParametrosService {
     private _mensaje: CurrentMensajeService,
     private _cache: CacheService,
     private _frases: FrasesService,
-    private loading: Loading
+    private loading: Loading,
+    private _alerts: AlertService
   ) {
 
 
@@ -60,6 +62,7 @@ export class ParametrosService {
 
   async addParam( param: ParametroMensaje ) {
 
+    console.log(param);
     this.mensaje = await this._cache.getDataKey( 'currentMensaje' )
     param.name = Math.random().toString( 36 ).substring( 7 );
     var newParam = [ param ];
@@ -71,13 +74,18 @@ export class ParametrosService {
       this.parameterAdded$.next( param )
 
     } else {
-      let paramStored = this.list.find( parameter => parameter.displayName = param.displayName )
+      console.log(this.list);
+      let paramStored = this.list.find( parameter => parameter.displayName == param.displayName )
   
+      console.log(paramStored);
       if ( !paramStored ) {
         this.list.push( param )
+        console.log(this.list);
         await ( await this.mensajesCollection() ).doc( this.mensaje.name )
           .update( { parameters: this.list } );
         this.parameterAdded$.next( param );
+      } else {
+        this._alerts.sendMessageAlert('Elige otro nombre para este parámetro')
       }
 
     }

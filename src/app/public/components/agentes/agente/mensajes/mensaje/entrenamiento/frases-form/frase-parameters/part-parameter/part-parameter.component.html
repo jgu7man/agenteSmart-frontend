@@ -7,7 +7,11 @@
 
     <!-- Tipo de dato -->
     <div class="col s3 m3" (click)="toSelectTipo()">
-        <ng-container 
+        <aSmart-tipo-selector 
+        (tipoSelected)="onTipoSelected($event)"
+        [value]="parte.entityType"
+        ></aSmart-tipo-selector>
+        <!-- <ng-container 
         *ngIf="!switchEntitySelector; else entitySelector" >
             
             <ng-container *ngIf="parte.entityType; else newEntity">
@@ -23,11 +27,7 @@
         </ng-container>
 
         <ng-template #entitySelector>
-            <aSmart-tipo-selector 
-            (tipoSelected)="onTipoSelected($event)"
-            [value]="parte.entityType"
-            ></aSmart-tipo-selector>
-        </ng-template>
+        </ng-template> -->
         
     </div>
 
@@ -43,8 +43,8 @@
                 <input 
                 matInput 
                 type="text" 
-                name="param-name" 
-                id="param-name"
+                [name]="paramName" 
+                [id]="paramName"
                 [(ngModel)]="paramName"
                 (keyup.enter)="addParameter($event);"
                 (blur)="paramName ? addParameter($event) : null"

@@ -4,7 +4,7 @@ import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firest
 import { auth } from 'firebase/app'
 import { Router } from '@angular/router';
 import { of, Observable, Subject, throwError } from 'rxjs';
-import { switchMap, first, catchError, take } from 'rxjs/operators';
+import { switchMap, first, catchError, take, tap, debounceTime } from 'rxjs/operators';
 import { HttpHeaders, HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
 // import * as google from 'googleapis'
 import { Loading } from '../../Gdev-Tools/loading/loading.service';
@@ -33,6 +33,7 @@ export class AuthService {
     private loading: Loading,
     private _cache: CacheService
     ) {
+      console.time('user')
       
 
     //? Método para cargar el usuario autenticado de manera asíncrona
@@ -44,23 +45,31 @@ export class AuthService {
     )
    }
 
-  
+  async getAuthUser() {
+    return await new Promise( resolve => {
+      this.user$.pipe( debounceTime( 100 ) )
+        .subscribe( res => resolve( res ) )
+    })
+  }
   
   async getCurrentUser() {
-    var user = await this._cache.getDataKey('user')
-    
-    if ( !user ) {
+    var localUser = this._cache.getDataKey('user')
+    // console.log(localUser);
+    if ( !localUser ) {
       
-      var user2 = await this.user$.pipe( take( 1 ) ).toPromise()
-      if ( !user2 ) {
+      var authUser = await this.getAuthUser()
+      // console.timeLog('user')
+      // console.log(authUser);
+      if ( !authUser ) {
         this.router.navigate(['/'], {queryParams:{logged: false}})
       } else {
-        this._cache.updateData('user', user2)
-        return user2
+        this._cache.updateData('user', authUser)
+        return authUser
       }
       
     } else {
-      return user
+      // console.timeLog( 'user' )
+      return localUser 
     }
   }
   

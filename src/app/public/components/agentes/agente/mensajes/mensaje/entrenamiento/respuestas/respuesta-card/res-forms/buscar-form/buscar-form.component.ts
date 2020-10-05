@@ -38,7 +38,10 @@ export class BuscarFormComponent implements OnInit {
   ngOnInit(): void {
     this._BuscarRes.pipe(
       distinctUntilKeyChanged('parametro')
-    ).subscribe(form => this.response = form)
+    ).subscribe( form => {
+      console.log(form);
+      this.response = form
+    } )
   }
 
 

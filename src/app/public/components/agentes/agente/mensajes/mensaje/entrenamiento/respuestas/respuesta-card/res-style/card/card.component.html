@@ -1,5 +1,10 @@
-<mat-select placeholder="Elige una tarjeta" name="tarjeta" [(ngModel)]="card" (selectionChange)="emitCard($event)" >
-    <mat-option *ngFor="let tarjeta of agenteS.tarjetasList" [value]="tarjeta">
-        {{tarjeta.name}}
+<mat-select
+placeholder="Elige una tarjeta"
+name="tarjeta"
+[(ngModel)]="card.name"
+(selectionChange)="emitCard($event)"
+>
+    <mat-option *ngFor="let tarjeta of agenteS.tarjetasList" [value]="tarjeta.name">
+        {{ tarjeta.name }}
     </mat-option>
 </mat-select>

@@ -60,20 +60,19 @@ export class PartParameterComponent implements OnInit {
   
   addParameter( event ) {
     event.stopImmediatePropagation()
+    
     var entity = this.parte.entityType
     this.parte.paramName = this.paramName
     this.paramAdded.emit( this.parte )
     
-    if ( entity ) {
-      var param: ParametroMensaje = {
-        displayName: this.paramName,
-        entityTypeDisplayName: entity
-      }
-
-      this._params.addParam( param ).then( () => {
-        this.parte.paramName = this.paramName
-      })
+    var param: ParametroMensaje = {
+      displayName: this.paramName,
+      entityTypeDisplayName: entity
     }
+
+    this._params.addParam( param ).then( () => {
+      this.parte.paramName = this.paramName
+    })
   }
 
 

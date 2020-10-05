@@ -1,27 +1,37 @@
 <!-- Parámetro -->
 <div class="row">
-    <div class="col s4 resp-label">
-        Criterio
-    </div>
+    <div class="col s4 resp-label">Criterio</div>
     <div class="col s8">
-        <mat-select placeholder="parámetro" [(ngModel)]="response.parametro" name="param">
-            <mat-option *ngFor="let param of resService.paramList" [value]="param.name">
-                {{param.displayName}}
+        <mat-select
+            (selectionChange)="catchParamSelect($event)"
+            placeholder="parámetro"
+            [(ngModel)]="response.parametro"
+            name="param"
+        >
+            <mat-option
+                *ngFor="let param of resService.paramList"
+                [value]="param.displayName"
+            >
+                {{ param.displayName }}
             </mat-option>
         </mat-select>
     </div>
 </div>
-
-
 <!-- Base de datos -->
 <div class="row">
-    <div class="col s4 resp-label">
-        Base de datos
-    </div>
+    <div class="col s4 resp-label">Base de datos</div>
     <div class="col s8">
-        <mat-select placeholder="Base de datos" [(ngModel)]="response.rutaDB" name="param">
-            <mat-option *ngFor="let db of agenteS.coleccionesList" [value]="db.name">
-                {{db.name}}
+        <mat-select
+            (selectionChange)="catchDBSelect($event)"
+            placeholder="Base de datos"
+            [(ngModel)]="response.rutaDB"
+            name="param"
+        >
+            <mat-option
+                *ngFor="let db of agenteS.coleccionesList"
+                [value]="db.name"
+            >
+                {{ db.name }}
             </mat-option>
         </mat-select>
     </div>

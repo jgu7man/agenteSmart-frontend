@@ -7,21 +7,23 @@ import { CacheService } from '../../../../../../../../Gdev-Tools/cache/cache.ser
 import { Loading } from '../../../../../../../../Gdev-Tools/loading/loading.service';
 import { Observable, of, Subject } from 'rxjs';
 import { distinctUntilKeyChanged, pluck, switchMap, tap, map } from 'rxjs/operators';
+import { AlertService } from '../../../../../../../../Gdev-Tools/alerts/alert.service';
 
-@Injectable({
+@Injectable( {
   providedIn: 'root'
-})
+} )
 export class FrasesService {
 
   mensajesPath: string
   list$: Subject<FraseEntrenamiento[]> = new Subject()
   frasesList: FraseEntrenamiento[]
   constructor (
-    private fs:  AngularFirestore,
+    private fs: AngularFirestore,
     private _agente: CurrentAgenteService,
     private _mensaje: CurrentMensajeService,
     private _cache: CacheService,
-    private loading: Loading
+    private loading: Loading,
+    private alert: AlertService
   ) {
     
 
@@ -38,7 +40,7 @@ export class FrasesService {
 
 
 
-   }
+  }
 
   
   
@@ -68,16 +70,16 @@ export class FrasesService {
           .update( { trainingPhrases: this.frasesList } );
       } else {
         console.log( 'create' );
-        mensaje[ 'trainingPhrases' ] = [frase]
+        mensaje[ 'trainingPhrases' ] = [ frase ]
         await ( await this.mensajesCollection() ).doc( mensaje.name )
           .update( { trainingPhrases: [ frase ] } );
       }
 
-      this._cache.updateData('currentMensaje', mensaje)
+      this._cache.updateData( 'currentMensaje', mensaje )
 
-      return 
+      return
 
-    } catch (error) {
+    } catch ( error ) {
       
     }
   }
@@ -91,9 +93,9 @@ export class FrasesService {
   async updatePhrase( frase: FraseEntrenamiento ) {
     const mensaje = await this._cache.getDataKey( 'currentMensaje' )
     const phraseToEdit = this.frasesList.findIndex( phrase => phrase.name === frase.name )
-    console.log(this.frasesList);
+    console.log( this.frasesList );
     this.frasesList[ phraseToEdit ] = frase;
-    ( await this.mensajesCollection() ).doc( mensaje.name ).set( { trainingPhrases: this.frasesList }, {merge: true} );
+    ( await this.mensajesCollection() ).doc( mensaje.name ).set( { trainingPhrases: this.frasesList }, { merge: true } );
     return
   }
 
@@ -125,9 +127,9 @@ export class FrasesService {
   stringCleanPhrase( phrase: FraseEntrenamiento ): string {
     let partsString: string[] = []
     phrase.parts.forEach( part => {
-      partsString.push(part.text)
+      partsString.push( part.text )
     } )
-    return partsString.join('')
+    return partsString.join( '' )
   }
 
   /**
@@ -138,9 +140,9 @@ export class FrasesService {
     phrase.parts.forEach( part => {
       if ( !part.selected ) {
         partialString.push( part.text )
-      } 
+      }
     } )
-    return partialString.join('')
+    return partialString.join( '' )
   }
 
 
@@ -156,7 +158,7 @@ export class FrasesService {
 
     if ( fraseInParts.length > 1 ) {
       fraseInParts.forEach( ( part ) => {
-        if ( part ) { 
+        if ( part ) {
 
           let partSplited = part.split( '~' )
           if ( partSplited.length > 1 ) {
@@ -193,50 +195,85 @@ export class FrasesService {
   /**
    * Returns parts after find the part that includes the text selected and split it
    */
-  async stractSelectedPart(frase: FraseEntrenamiento, textSelected): Promise<FraseEntrenamiento> {
-    var parts: FraseParte[] = []
-    const cleanFrase = this.stringCleanPhrase( frase )
-
-    // First search
-    await this.loading.asyncForEach( frase.parts, async ( part, index ) => {
-      if ( part.text.includes( textSelected ) ) {
-        frase.parts.splice( index, 1 )
-        parts = await this.getTextSelectInPart(part.text, textSelected)
-      }
-    } )
-    console.log(parts);
-
-    if ( parts.length < 2 ) {
-      if ( cleanFrase.includes( textSelected ) ) {
-        parts = []
-        parts = await this.getTextSelectInPart(cleanFrase, textSelected)
-        frase.parts =  parts
-      }
-    } else {
-      parts = [ ...parts, ...frase.parts ]
-      frase.parts = parts
+  async stractSelectedPart(
+    frase: FraseEntrenamiento, textSelected: string
+  ): Promise<FraseEntrenamiento> {
+    
+    try {
+      
+      // * Convertimos las partes en map para conservar el orden
+      let initialParts: Map<number, FraseParte> = new Map()
+      frase.parts.forEach( ( parte, i ) => { initialParts.set( i, parte ) } )
+      // const cleanFrase = this.stringCleanPhrase( frase )
+      
+      // * First search: Buscamos en las partes el texto seleccionado
+      let partSelected: [ number, FraseParte ];
+      initialParts.forEach( ( p, i ) => {
+        if ( p.text.includes( textSelected ) ) { partSelected = [ i, p ] }
+      } );
+  
+      // * Dividimos la parte encontrada en nuevas partes
+      let newParts: Map<number, FraseParte> = await this.getTextSelectInPart( partSelected[ 1 ].text, textSelected )
+      
+      // // * Se elimina la parte seleccionada
+      // initialParts.delete( partSelected[ 0 ] )
+      
+      // * Sustituimos la parte eliminada 
+      let resultParts: Map<number, FraseParte> = new Map()
+      initialParts.forEach( ( p, i ) => {
+        if ( i < partSelected[ 0 ] ) {
+          // console.log('before part selected ',i);
+          resultParts.set(i, p)
+        } else if ( i == partSelected[ 0 ] ) {
+          // Define nuevos valores para las nuevas partes donde la parte seleccionada se sustituye por el nuevo mapa, basado en el index de la parte seleccionada y sumando el index de la parte nueva. Así si la parte seleccionada es 1 la primera nueva parte será 1+0=1, y sus consecuententes 1+1=2; 1+2=3...
+          newParts.forEach( ( nP, nI ) => {
+            // console.log( 'on part selected ', partSelected[ 0 ] + nI );
+            resultParts.set(partSelected[0]+nI, nP)
+          })
+        } else {
+          // Continua con la asignación de orden a partir de la longitud de la propiedad asignando uno a uno como el último
+          // console.log( 'after part selected ', resultParts.size);
+          resultParts.set(resultParts.size, p)
+        }
+  
+      })
+  
+      // console.log( resultParts );
+      frase.parts = []
+      await this.loading.asyncForEach( resultParts, parte => {
+        return frase.parts.push( parte )
+      })
+      // console.log(frase);
+      return frase
+    
+    
+    } catch ( error ) {
+      console.error( error );
+      this.alert.sendMessageAlert('No se encontró el texto que seleccionaste. Intenta borrar la selección previa e intenta de nuevo')
     }
-
-    console.log(parts);
-    return frase
   }
 
 
   /**
-   * Returna un nuevo arreglo de partes de frase de entrenamiento, separando un texto seleccionado
+   * Returna un nuevo mapa de partes de frase de entrenamiento, separando un texto seleccionado
    */
-  public async getTextSelectInPart( textOnSearch: string, textSelected: string ): Promise<FraseParte[]> {
-    var parts: FraseParte[] = []
+  public async getTextSelectInPart( textOnSearch: string, textSelected: string )
+    : Promise<Map<number, FraseParte>> {
+    
+    var parts: Map<number, FraseParte> = new Map()
     var textReplaced: string, partInParts: string[] = []
 
     textReplaced = textOnSearch.replace( textSelected, `:${ textSelected }:` )
     partInParts = textReplaced.split( ':' )
 
-    partInParts.forEach( ( textPart ) => {
-      if ( textPart ) parts.push( {
-        text: textPart,
-        selected: textPart != textSelected ? false : true
-      } )
+    partInParts.forEach( ( textPart, i ) => {
+      if ( textPart ) {
+        let newPart: FraseParte = {
+          text: textPart,
+          selected: textPart != textSelected ? false : true
+        }
+        parts.set(i, newPart)
+      }
     } )
 
     return parts

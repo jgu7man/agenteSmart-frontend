@@ -34,8 +34,10 @@ export class AgentesService {
      */
     private listenAgentes() {
         this._auth.getCurrentUser().then( user => {
-            this.agentes$ = this.afs.collection( 'usuarios' )
-                .doc( user.uid ).collection('agentes').valueChanges()
+            if ( user ) {
+                this.agentes$ = this.afs.collection( 'usuarios' )
+                    .doc( user.uid ).collection('agentes').valueChanges()
+            }
         })
     }
     

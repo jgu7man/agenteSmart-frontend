@@ -7,6 +7,7 @@ import { Loading } from '../../../../../../Gdev-Tools/loading/loading.service';
 import { switchMap, take, distinctUntilKeyChanged, mergeAll, pluck, map, tap } from 'rxjs/operators';
 import { CacheService } from '../../../../../../Gdev-Tools/cache/cache.service';
 import { RespuestaModel } from './entrenamiento/respuestas/respuesta.model';
+import { AlertService } from '../../../../../../Gdev-Tools/alerts/alert.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class CurrentMensajeService {
   current$: Subject<IntentModel> = new Subject()
   mensajeSub$: Subscription
 
-  currentMensaje: IntentModel
+  current: IntentModel
   paramsSubs$: Subscription
   queryParamsSubs$: Subscription
   
@@ -30,9 +31,11 @@ export class CurrentMensajeService {
     private fs: AngularFirestore,
     private _cache: CacheService,
     private loading: Loading,
+    private _alerts: AlertService
   ) {
   }
 
+  //* PASO 1: Obtienes los parámetros del route
   getParams() {
     return forkJoin({
       [ 'mensajeName' ]: this.loading.getRouteParams()
@@ -43,6 +46,7 @@ export class CurrentMensajeService {
   }
   
 
+  // * PASO 2 Estructura referencia de la base de datos
   async mensajesCollection() {
     this.mensajesPath = await this._agente.getPath( 'mensajes' )
     const mensajesRef = this.fs.collection( this.mensajesPath ).ref
@@ -60,7 +64,8 @@ export class CurrentMensajeService {
       this._cache.updateData( 'currentMensajeName', this.mensajeName )
       
       if ( this.mensajeName ) {
-      this.mensajesPath = await this._agente.getPath( 'mensajes' )
+        
+        this.mensajesPath = await this._agente.getPath( 'mensajes' )
         this.mensaje$ = this.fs.collection( this.mensajesPath )
           .doc<IntentModel>( this.mensajeName ).valueChanges()
 
@@ -114,6 +119,21 @@ export class CurrentMensajeService {
       this.respuestasList = respuestas
       this._cache.updateData('currentRespuestas', respuestas)
     } )
+  }
+
+
+  async update( mensaje: IntentModel ) {
+    Object.keys( mensaje ).forEach( key =>
+    { if ( mensaje[ key ] == undefined ) delete mensaje[ key ] } )
+
+    try {
+      await ( await this.mensajesCollection() ).doc( mensaje.name )
+        .update( { ...mensaje } )
+      this._alerts.sendFloatNotification('Mensaje actualizado')
+    } catch (error) {
+      console.error(error);
+      this._alerts.sendError('No se pudo guardar', error)
+    }
   }
 
 

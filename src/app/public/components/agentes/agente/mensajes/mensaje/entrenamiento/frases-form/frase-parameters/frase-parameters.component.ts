@@ -38,8 +38,10 @@ export class FraseParametersComponent implements OnInit {
     delete this.frase.parts[ index ].entityType
     this.frase.parts[ index ].selected = false
     console.log( this.frase.parts );
+    var restoredPartText = this._frase.stringifyFullPhrase( this.frase )
+    this.frase.parts = this._frase.createParts( restoredPartText )
+    console.log(this.frase);
     this._frase.updatePhrase(this.frase)
-    // var restoredPartText = this._frase.stringifyFullPhrase( this.frase )
     // var newParts = this._frase.createParts( restoredPartText )
     // console.log(newParts);
     

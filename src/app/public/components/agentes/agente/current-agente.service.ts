@@ -60,7 +60,7 @@ export class CurrentAgenteService {
 
 
 
-  async getCurrentProjectId() {
+  getCurrentProjectId() {
     var route = this.activatedRoute.firstChild
     let paramsKeys = Object.keys( route.snapshot.params)
     
@@ -75,11 +75,10 @@ export class CurrentAgenteService {
   }
 
 
-  async getPath( col?) {
-    await this.getCurrentProjectId()
+  async getPath( collection?) {
     this.usuario = await this._auth.getCurrentUser()
-    this.path = `usuarios/${ this.usuario.uid }/agentes/${ this.currentProjectId }`;
-    return !col ? this.path : `${ this.path }/${ col }`;
+    this.path = `usuarios/${ this.usuario.uid }/agentes/${ this.getCurrentProjectId() }`;
+    return !collection ? this.path : `${ this.path }/${ collection }`;
   }
 
   

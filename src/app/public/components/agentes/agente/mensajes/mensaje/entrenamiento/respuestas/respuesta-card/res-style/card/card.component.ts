@@ -34,8 +34,10 @@ export class CardComponent implements OnInit {
     } )
   }
 
-  emitCard(change: MatSelectChange) {
-    this.cardSelected.emit(change.value)
+  emitCard( change: MatSelectChange ) {
+    let tarjetaSelected = this.agenteS.tarjetasList.find( t => t.name == change.value )
+    console.log(tarjetaSelected);
+    this.cardSelected.emit(tarjetaSelected)
   }
 
 }

@@ -82,14 +82,15 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
 
+  /** Obtiene el valor seleccionado al momento de soltar el mouse en la frase de entrenamiento y la transforma en "partes" */
   async onSelect( frase: FraseEntrenamiento ) {
     const textSelected = window.getSelection().toString()
     
 
     if ( textSelected ) {
       // Select the frase that whas select on
-      const fraseOnEdit = this.frases.frasesList.find( Frase => Frase.name == frase.name )
-      const fraseOnEditIndex = this.frases.frasesList.findIndex( Frase => Frase.name == frase.name )
+      const fraseOnEdit = this.frases.frasesList.find( f => f.name == frase.name )
+      const fraseOnEditIndex = this.frases.frasesList.findIndex( f => f.name == frase.name )
 
       // Define variables
       var fraseRestructured: FraseEntrenamiento = 

@@ -4,7 +4,6 @@ import { MatSelectChange } from '@angular/material/select';
 import { RespuestaModel, FormPredefinida, FormCondicional, FormRegistroDatos, FormBuscar } from '../respuesta.model';
 import { RespuestasService } from '../respuestas.service';
 import { CacheService } from 'src/app/Gdev-Tools/cache/cache.service';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { Loading } from 'src/app/Gdev-Tools/loading/loading.service';
 
 @Component({
@@ -36,7 +35,6 @@ export class RespuestaCardComponent implements OnInit {
 
   constructor (
     public resService: RespuestasService,
-    private _cache: CacheService,
     private _alerts: AlertService,
     private loading: Loading
   ) {
@@ -57,7 +55,7 @@ export class RespuestaCardComponent implements OnInit {
 
   ngOnInit(): void {
     this.selectedRes = this.tiposRes.find( tipo => tipo.name == this.respuesta.tipo )
-    // console.log(this.respuesta.outputMessage);
+    console.log(this.respuesta.outputMessage);
     
   }
 
