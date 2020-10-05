@@ -8,6 +8,9 @@ import { switchMap, take, distinctUntilKeyChanged, mergeAll, pluck, map, tap } f
 import { CacheService } from '../../../../../../Gdev-Tools/cache/cache.service';
 import { RespuestaModel } from './entrenamiento/respuestas/respuesta.model';
 import { AlertService } from '../../../../../../Gdev-Tools/alerts/alert.service';
+import { Store } from '@ngrx/store';
+import { MensajeState } from './store/mensaje.state';
+import * as actions from './store/mensaje.actions'
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +34,8 @@ export class CurrentMensajeService {
     private fs: AngularFirestore,
     private _cache: CacheService,
     private loading: Loading,
-    private _alerts: AlertService
+    private _alerts: AlertService,
+    private store: Store<MensajeState>
   ) {
   }
 
@@ -75,6 +79,8 @@ export class CurrentMensajeService {
 
         this.mensajeSub$ = this.mensaje$.subscribe( this.current$ )
         this.current$.subscribe( current => {
+          console.log(current);
+          this.store.dispatch(actions.getData(current))
           this._cache.updateData( 'currentMensaje', current )
         } )
 
@@ -152,6 +158,7 @@ export class CurrentMensajeService {
 
   unsubscribe() {
     this.mensajeSub$.unsubscribe()
+    // this.store.dispatch(actions.resetData())
   }
 }
 

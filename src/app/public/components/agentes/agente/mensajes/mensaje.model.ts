@@ -1,6 +1,20 @@
 import { ContextoModel } from '../contextos/contexto.model';
 import { RespuestaMensaje } from './mensaje/entrenamiento/respuestas/respuestasIntent.model';
 
+export class MensajeModel {
+    
+    constructor (
+        public intent?: IntentModel,
+        public contexto?: string,
+        public indexContexto?: number,
+        public name?: string
+    ) {
+        this.contexto = ''
+        this.indexContexto = 0
+        this.name = intent ? intent.name : ''
+    }
+}
+
 export interface IntentModel {
     index: number,
     name: string,

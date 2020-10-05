@@ -23,6 +23,8 @@
     "@angular/platform-browser-dynamic": "~9.1.7",
     "@angular/router": "~9.1.7",
     "@angular/service-worker": "~9.1.7",
+    "@ngrx/store": "^9.2.0",
+    "@ngrx/store-devtools": "^10.0.0",
     "@types/jquery": "^3.3.34",
     "@types/materialize-css": "^1.0.7",
     "firebase": "^7.14.4",

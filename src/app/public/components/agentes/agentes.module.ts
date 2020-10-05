@@ -126,7 +126,7 @@ import { GuardadoColeccionComponent } from './agente/colecciones/coleccion/guard
     FormsModule,
     ReactiveFormsModule,
     MaterialModule,
-    GdevToolsModule
+    GdevToolsModule,
   ],
   providers: [
     
