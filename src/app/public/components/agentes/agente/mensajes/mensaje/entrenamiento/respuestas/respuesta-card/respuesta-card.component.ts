@@ -55,8 +55,6 @@ export class RespuestaCardComponent implements OnInit {
 
   ngOnInit(): void {
     this.selectedRes = this.tiposRes.find( tipo => tipo.name == this.respuesta.tipo )
-    console.log(this.respuesta.outputMessage);
-    
   }
 
 

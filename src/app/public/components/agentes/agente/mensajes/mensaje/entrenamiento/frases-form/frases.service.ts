@@ -59,8 +59,7 @@ export class FrasesService {
 
       const mensaje = await this._cache.getDataKey( 'currentMensaje' )
       frase.name = Math.random().toString( 36 ).substring( 7 );
-      var newFrase = [ frase ];
-      console.log( frase );
+      // var newFrase = [ frase ];
       
       if ( this.frasesList ) {
         console.log( 'update' );

@@ -97,7 +97,6 @@ export class CrearAgenteService {
 
     console.log(agente);
 
-    // const _Url = "http://localhost:5000/main-agentesmart/us-central1/dialogflow/agentes/create"
 
     let params = {...agente}
     return this._http.post<{}>( _Url, params, {

@@ -27,6 +27,7 @@
         </ng-container>
         <ng-template #tipoSelecter>
             <aSmart-tipo-selector 
+            [id]="param.name"
             [value]="param.entityTypeDisplayName"
             (tipoSelected)="onTipoChanged($event)"
             ></aSmart-tipo-selector>

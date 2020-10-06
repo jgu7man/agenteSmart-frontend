@@ -1,8 +1,8 @@
-import { MensajeModel } from '../../mensaje.model';
+import { MensajeModel, IntentModel } from '../../mensaje.model';
 
 
 export interface MensajeState {
-    mensaje: MensajeModel,
+    mensaje: IntentModel,
     contexto?: string
     indexContexto?: number
 }

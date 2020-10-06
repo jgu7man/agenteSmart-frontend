@@ -10,6 +10,7 @@ import { AlertService } from '../../../../../Gdev-Tools/alerts/alert.service';
 import { Observable, from, of } from 'rxjs';
 import { IntentModel } from './mensaje.model';
 import { first,  filter, switchMap, toArray } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -25,11 +26,8 @@ export class MensajesService {
     private fs: AngularFirestore,
     private _alerta: AlertService,
     private _text: TextService,
-    private _cache: CacheService,
     private _agente: CurrentAgenteService,
     private _loading: Loading,
-    private _route: ActivatedRoute,
-    private router: Router
   ) {
     this.getAllMensajesList()
   }
@@ -72,9 +70,10 @@ export class MensajesService {
         } )
       return true
     }
-
-
   }
+
+
+  
 
 
   
@@ -83,14 +82,6 @@ export class MensajesService {
 
   async getAllMensajesList() {
     this.mensajesPath = await this._agente.getPath( 'mensajes' )
-    // this.mensajes$ = this.fs.collection<IntentModel>( this.mensajesPath ).valueChanges()
-    // this.mensajes$.pipe(startWith([])).subscribe( async mensajes => {
-    //   this.list = mensajes
-    //   this._cache.updateData( 'allMensajesList', mensajes )
-      
-    // })
-    
-    // return this.list
   }
 
 

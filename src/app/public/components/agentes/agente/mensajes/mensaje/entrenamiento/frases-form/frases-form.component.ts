@@ -62,7 +62,6 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
         type: 'EXAMPLE',
         parts: this.frases.createParts( this.newPhrase )
       }
-      console.log( NEWPHRASE );
       this.loading.waitFor( 200 )
       this.frases.addTraningPhrase( NEWPHRASE ).then( () => {
         this.newPhrase = ''

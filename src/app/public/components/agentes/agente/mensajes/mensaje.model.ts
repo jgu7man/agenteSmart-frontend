@@ -16,10 +16,10 @@ export class MensajeModel {
 }
 
 export interface IntentModel {
-    index: number,
-    name: string,
-    displayName: string,
-    webhookState: 'WEBHOOK_STATE_ENABLED_FOR_SLOT_FILLING',
+    index?: number,
+    name?: string,
+    displayName?: string,
+    webhookState?: 'WEBHOOK_STATE_ENABLED_FOR_SLOT_FILLING',
     trainingPhrases?: FraseEntrenamiento[],
     contextos?:string[]
     inputContextNames?: string[],

@@ -5,11 +5,11 @@ export const getData = createAction(
     '[Mensaje] getData',
     props<IntentModel>()
 );
-export const resetData = createAction(
+export const getOutMensaje = createAction(
     '[Mensaje] resetData',
 )
 
-export const saveData = createAction(
-    '[Mensaje] saveData',
+export const changeData = createAction(
+    '[Mensaje] changeData',
     props<IntentModel>()
 )

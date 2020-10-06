@@ -10,6 +10,7 @@
         <aSmart-tipo-selector 
         (tipoSelected)="onTipoSelected($event)"
         [value]="parte.entityType"
+        [id]="parte.paramName"
         ></aSmart-tipo-selector>
         <!-- <ng-container 
         *ngIf="!switchEntitySelector; else entitySelector" >

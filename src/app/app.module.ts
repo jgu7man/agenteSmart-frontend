@@ -23,6 +23,8 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { LoadingModule } from './Gdev-Tools/loading/loading.module';
 import { GdevAlertModule } from './Gdev-Tools/alerts/gdev-alert.module';
+
+// * RX
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { mensajeReducer } from './public/components/agentes/agente/mensajes/mensaje/store/mensaje.reducer';
@@ -47,7 +49,7 @@ import { mensajeReducer } from './public/components/agentes/agente/mensajes/mens
     LoadingModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     StoreModule.forRoot({mensaje: mensajeReducer}, {}),
-    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
+    StoreDevtoolsModule.instrument( { maxAge: 25, logOnly: environment.production } ),
   ],
   providers: [],
   bootstrap: [AppComponent]

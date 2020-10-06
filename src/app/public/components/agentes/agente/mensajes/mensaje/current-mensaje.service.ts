@@ -79,8 +79,7 @@ export class CurrentMensajeService {
 
         this.mensajeSub$ = this.mensaje$.subscribe( this.current$ )
         this.current$.subscribe( current => {
-          console.log(current);
-          this.store.dispatch(actions.getData(current))
+          this.store.dispatch( actions.getData( current ) )
           this._cache.updateData( 'currentMensaje', current )
         } )
 
@@ -143,6 +142,9 @@ export class CurrentMensajeService {
   }
 
 
+
+
+
   async updateMensajeName( mensajeName: string, displayName: string ) {
     await ( await this.mensajesCollection() ).doc( mensajeName ).update( {
       displayName: displayName
@@ -158,7 +160,7 @@ export class CurrentMensajeService {
 
   unsubscribe() {
     this.mensajeSub$.unsubscribe()
-    // this.store.dispatch(actions.resetData())
+    this.store.dispatch(actions.getOutMensaje())
   }
 }
 
