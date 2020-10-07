@@ -1,3 +1,4 @@
+import { AlertService } from './../../../../../../Gdev-Tools/alerts/alert.service';
 import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import {ContextosService } from '../../contextos/contextos.service';
 import { ActivatedRoute } from '@angular/router';
@@ -30,7 +31,8 @@ export class MensajesByContextoComponent implements OnInit {
   constructor (
     private _loading: Loading,
     private _mensajes: MensajesService,
-    private _cache: CacheService
+    private _cache: CacheService,
+    private _alerta: AlertService
   ) {
     
    }
@@ -51,10 +53,30 @@ export class MensajesByContextoComponent implements OnInit {
 
   async onAddIntent(contexto) {
     this.switchAddIntent = false
+   
     if ( this.newIntent ) {
       let lastIndex = this.mensajes.length
-      await this._mensajes.setMensaje( this.newIntent, contexto, lastIndex)
-      this.getMensajes()
+      //
+      try {
+        debugger
+        const newIntent = await this._mensajes.createNewIntent({displayName: this.newIntent});
+
+        if (newIntent) {
+          console.info('Intent Created, response:', newIntent)
+          //se ha creado el intent(regresa un intent completo vacio),
+          // Ejemplo de nombre: projects/prueba-aente/agent/intents/f0b12fde-9600-4e2e-88a7-70861817a358
+          const name = newIntent.name; //formato larguisimo solo ocupamos su ID
+          const resourceID = name.slice(name.lastIndexOf("/") + 1); //formato esperado: f0b12fde-9600-4e2e-88a7-70861817a358
+          //aqui nose que hacer con el resourceID
+          await this._mensajes.setMensaje(resourceID, this.newIntent, lastIndex, contexto )
+
+        }
+      } catch (error) {
+        if (error) {
+          console.error(error)
+          this._alerta.sendFloatNotification("Error creando intent, porfavor vuelva a intentarlo.")
+        }
+      }
     }
   }
 

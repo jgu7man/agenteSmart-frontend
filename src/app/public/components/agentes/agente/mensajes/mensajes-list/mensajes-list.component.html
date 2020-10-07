@@ -30,9 +30,8 @@
                         name="intentName" 
                         id="intentName"
                         #intentNuevo
-                        (keyup.enter)="onAddIntent(contexto.id)"
+                        (keyup.enter)="onAddIntent()"
                         (keyup.Esc)="$event.target.blur()"
-                        (blur)="newIntent == '' ? switchAddIntent = false : onAddIntent(contexto.id)"
                         [(ngModel)]="newIntent"
                         >
                     </mat-form-field>

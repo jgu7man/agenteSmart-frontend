@@ -2,7 +2,9 @@ import { createReducer, on } from '@ngrx/store';
 import * as actions from './mensaje.actions';
 import { MensajeModel } from '../../mensaje.model';
 
-const currentMensaje = JSON.parse( sessionStorage.getItem( 'as-data' ) ).currentMensaje;
+const currentMensaje = JSON.parse(sessionStorage.getItem('as-data'))
+    ? JSON.parse(sessionStorage.getItem('as-data')).currentMensaje
+    : {} ;
 
 export const initialState: MensajeModel = 
 new MensajeModel(currentMensaje, '',0,'')

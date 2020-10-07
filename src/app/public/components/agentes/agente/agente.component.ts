@@ -18,15 +18,19 @@ export class AgenteComponent implements OnInit, OnDestroy {
 
 
   agente: AgenteModel
+  projectId: string
   constructor (
-    private ruta: ActivatedRoute,
     private _agente: CurrentAgenteService,
     private auth: AuthService,
     private _dashboard: DashboardService,
     public _responsive: ResponsiveService,
-    private _cache: CacheService
+    private _cache: CacheService,
+    private _route: ActivatedRoute
   ) {
-    // this._agente.getCurrentUrl()
+    this._route.params.subscribe( params => {
+      console.log(params)
+      this._cache.updateData('projectId', params['id'])
+    })
    }
 
   ngOnInit(): void {

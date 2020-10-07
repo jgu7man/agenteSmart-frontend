@@ -1,5 +1,5 @@
+import { Loading } from 'src/app/Gdev-Tools/loading/loading.service';
 import { Directive, ElementRef, Input, OnInit, AfterViewInit } from '@angular/core';
-import { Loading } from '../../../../../Gdev-Tools/loading/loading.service';
 
 @Directive( {
     selector: '[strechHeight]',

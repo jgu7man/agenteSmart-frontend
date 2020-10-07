@@ -1,15 +1,17 @@
+import { HttpClient } from '@angular/common/http';
+import { Loading } from 'src/app/Gdev-Tools/loading/loading.service';
+import { CacheService } from 'src/app/Gdev-Tools/cache/cache.service';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { TextService } from '../../../../../services/text.service';
-import { CacheService } from '../../../../../Gdev-Tools/cache/cache.service';
 import { CurrentAgenteService } from '../current-agente.service';
-import { Loading } from '../../../../../Gdev-Tools/loading/loading.service';
 import { ContextoModel } from '../contextos/contexto.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '../../../../../Gdev-Tools/alerts/alert.service';
 import { Observable, from, of } from 'rxjs';
 import { IntentModel } from './mensaje.model';
-import { first,  filter, switchMap, toArray } from 'rxjs/operators';
+import { first, filter, switchMap, toArray, pluck, catchError, tap } from 'rxjs/operators';
+import { error } from 'protractor';
 
 @Injectable({
   providedIn: 'root'
@@ -18,10 +20,12 @@ export class MensajesService {
 
   mensajesPath: string
   mensajes$ = new Observable<IntentModel[]>()
+  projectId
   // list: IntentModel[]
   
   
   constructor (
+    private _http: HttpClient,
     private fs: AngularFirestore,
     private _alerta: AlertService,
     private _text: TextService,
@@ -32,8 +36,15 @@ export class MensajesService {
     private router: Router
   ) {
     this.getAllMensajesList()
+    this.getProjectId()
   }
-  
+
+  async getProjectId(){
+      this._loading.getRouteParams().pipe(pluck("id"))
+      .subscribe(obs => {
+        this.projectId = obs
+      }).unsubscribe();
+  }
 
   async mensajesCollection() {
     this.mensajesPath = await this._agente.getPath( 'mensajes' )
@@ -49,10 +60,8 @@ export class MensajesService {
   // CREATE Mensajes
 
 
-  async setMensaje( mensajeName: string, contexto: string, index?:number ) {
+  async setMensaje(name: string, displayName: string, index?:number, contexto?: string,  ) {
     
-
-    const name = this._text.normalize( mensajeName.toLowerCase() )
     
     // READ Busca en las mensajes que no esté duplicada
     // if ( !this.mensajesList ) this.mensajesList = await this._cache.getDataKey( 'allMensajesList' )
@@ -67,10 +76,10 @@ export class MensajesService {
         .set( {
           index: index,
           name: name,
-          displayName: mensajeName,
-          contextos: [ contexto ]
+          displayName: displayName,
+          contextos: contexto ? [ contexto ] : []
         } )
-      return true
+      return this._alerta.sendFloatNotification('Mensaje creado')
     }
 
 
@@ -130,10 +139,34 @@ export class MensajesService {
     return mensajesList
   }
 
-  
+  async createNewIntent(intent: IntentModel) {
+    //Crear un intent nuevo
+    //@params projectId: id del projecto
+    //@param intent: displayname nombre del intent
 
 
-  
+    const projectId: string = this._cache.getDataKey('projectId')
+    //sino se puede hace proxeo de la URL base...
+    const url = 'https://us-central1-main-agentesmart.cloudfunctions.net/dialogflow/intent'
+    const local = "http://localhost:3000/intent"    
+    console.log(projectId)
+    const intentRequest = {
+      projectId,
+      intent,
+    }
+
+    console.log(intent)
+    return new Promise<IntentModel>((resolve, reject) => {
+      this._http.post<IntentModel>(url, intentRequest, { responseType: 'json'})
+      .subscribe( intentCreated => {
+        console.log('IntentCreated:', intentCreated)
+        resolve(intentCreated['result'])
+      }, onError => reject(onError))
+    })
+
+
+  }
+
   
 
 }

@@ -1,3 +1,4 @@
+import { TextService } from './../../../../../Gdev-Tools/text/gdev-text.service';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
@@ -7,7 +8,6 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { UserInterface } from 'src/app/admin/auth/auth.service';
 import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { TextService } from '../../../../../Gdev-Tools/text/gdev-text.service';
 
 interface doc {
   user: string,
@@ -63,7 +63,7 @@ export class CrearAgenteService {
             avatarUri: agente.avatarUri,
             description: agente.description,
             created: new Date(),
-            project: agente.projectId,
+            projectId: agente.projectId,
           } )
 
 
