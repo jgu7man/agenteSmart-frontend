@@ -22,7 +22,7 @@
     <div class="col s12" *ngIf="switchAddParameter">
         <aSmart-add-parameter (closeRow)="switchAddParameter = false" ></aSmart-add-parameter>
     </div>
-    <div class="col s12" *ngIf="params.list" id="params-body">
-        <aSmart-param-row *ngFor="let param of params.list" [param]="param"></aSmart-param-row>
+    <div class="col s12" *ngIf="mensaje.current" id="params-body">
+        <aSmart-param-row *ngFor="let param of mensaje.current.parameters" [param]="param"></aSmart-param-row>
     </div>
 </div>

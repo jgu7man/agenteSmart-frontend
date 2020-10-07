@@ -34,6 +34,7 @@
     "googleapis": "^48.0.0",
     "hammerjs": "^2.0.8",
     "jquery": "^3.5.1",
+    "remote-redux-devtools": "^0.5.16",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"
@@ -45,6 +46,7 @@
     "@types/jasmine": "~3.5.0",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.11.1",
+    "@types/remote-redux-devtools": "^0.5.4",
     "codelyzer": "^5.1.2",
     "jasmine-core": "~3.5.0",
     "jasmine-spec-reporter": "~4.2.1",

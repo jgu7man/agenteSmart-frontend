@@ -10,11 +10,11 @@
 </div>
 <div class="row">
     <div class="col s12">
-        <ul class="phrases-list">
+        <ul class="phrases-list" *ngIf="mensaje.current">
 
 
             <!-- READ Muestra las frases -->
-            <li *ngFor="let frase of frases.list$|async; trackBy:trackByFraseName" 
+            <li *ngFor="let frase of mensaje.current.trainingPhrases; trackBy:trackByFraseName" 
             class="phrase-item"
             (mouseup)="onSelect(frase)"
             >

@@ -16,6 +16,7 @@ export class TipoSelectorComponent implements OnInit, OnDestroy {
   
   
   @Input() value: string
+  @Input() id: any
   
   tipos: string[] = []
   tipoControl = new FormControl();

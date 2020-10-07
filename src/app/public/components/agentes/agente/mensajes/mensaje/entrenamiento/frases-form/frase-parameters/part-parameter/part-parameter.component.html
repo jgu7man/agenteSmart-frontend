@@ -10,25 +10,8 @@
         <aSmart-tipo-selector 
         (tipoSelected)="onTipoSelected($event)"
         [value]="parte.entityType"
+        [id]="parte.paramName"
         ></aSmart-tipo-selector>
-        <!-- <ng-container 
-        *ngIf="!switchEntitySelector; else entitySelector" >
-            
-            <ng-container *ngIf="parte.entityType; else newEntity">
-                {{parte.entityType}}
-            </ng-container>
-            
-            <ng-template #newEntity>
-                <aSmart-tipo-selector 
-                (tipoSelected)="onTipoSelected($event)"
-                ></aSmart-tipo-selector>    
-            </ng-template>
-
-        </ng-container>
-
-        <ng-template #entitySelector>
-        </ng-template> -->
-        
     </div>
 
     <!-- Nombre param -->

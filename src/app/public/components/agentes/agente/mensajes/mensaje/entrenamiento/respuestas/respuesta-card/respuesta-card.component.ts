@@ -55,8 +55,6 @@ export class RespuestaCardComponent implements OnInit {
 
   ngOnInit(): void {
     this.selectedRes = this.tiposRes.find( tipo => tipo.name == this.respuesta.tipo )
-    console.log(this.respuesta.outputMessage);
-    
   }
 
 
@@ -72,7 +70,7 @@ export class RespuestaCardComponent implements OnInit {
 
   /** Recibe los cambios en los formularios hijos como PREDEFINIDA, CODICIONAL, BUSCAR Y GRUPO DE DATOS */
   catchOutputMessage( msg: any ) {
-    console.log(this.outputMessage, msg);
+    // console.log(this.outputMessage, msg);
     this.outputMessage = msg
   }
 

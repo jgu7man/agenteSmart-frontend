@@ -1,25 +1,18 @@
-import { createReducer, on } from '@ngrx/store';
+import { ActionReducerMap, createReducer, on } from '@ngrx/store';
 import * as actions from './mensaje.actions';
-import { MensajeModel } from '../../mensaje.model';
+import { MensajeModel, IntentModel, FraseEntrenamiento, ParametroMensaje } from '../../mensaje.model';
+import { MensajeState } from '../../mensaje.model';
 
-const currentMensaje = JSON.parse(sessionStorage.getItem('as-data'))
-    ? JSON.parse(sessionStorage.getItem('as-data')).currentMensaje
-    : {} ;
 
-export const initialState: MensajeModel = 
-new MensajeModel(currentMensaje, '',0,'')
+export const initialState: MensajeState = new MensajeState()
 
 const _mensajeReducer = createReducer( initialState,
-    on( actions.getData, ( state, mensaje ) => {
-        state.intent = mensaje
-        console.log(state, mensaje);
-        return state
-    } ),
-    on( actions.resetData, ( state ) => {
-        state = new MensajeModel( currentMensaje, '', 0, '' ) 
-        return state
-    })
-);
+    on( actions.setUnsaved, ( state ) => { return { ...state, unsaved: true } } ),
+    on( actions.setSaved, ( state ) => { return { ...state, unsaved: false } } ),
+    on( actions.getOutMensaje, ( state ) => { return {} } ),
+    
+    );
+    
 
 
 export function mensajeReducer( state, action ) {

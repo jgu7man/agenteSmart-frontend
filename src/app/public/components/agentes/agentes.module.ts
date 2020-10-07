@@ -62,6 +62,7 @@ import { EstaticaTarjetaComponent } from './agente/tarjetas/estatica-tarjeta/est
 import { ColeccionTarjetaComponent } from './agente/tarjetas/coleccion-tarjeta/coleccion-tarjeta.component';
 import { AddTarjetaComponent } from './agente/tarjetas/add-tarjeta/add-tarjeta.component';
 import { GuardadoColeccionComponent } from './agente/colecciones/coleccion/guardado-coleccion/guardado-coleccion.component';
+import { HttpClientModule } from '@angular/common/http';
 
 
 
@@ -127,6 +128,7 @@ import { GuardadoColeccionComponent } from './agente/colecciones/coleccion/guard
     ReactiveFormsModule,
     MaterialModule,
     GdevToolsModule,
+    HttpClientModule
   ],
   providers: [
     

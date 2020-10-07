@@ -10,6 +10,7 @@ import { MatExpansionPanel } from '@angular/material/expansion';
 import { Subscription, from } from 'rxjs';
 import { ParametrosService } from '../parametros/parametros.service';
 import { take, mergeAll, takeLast } from 'rxjs/operators';
+import { CurrentAgenteService } from '../../../../current-agente.service';
 
 @Component({
   selector: 'aSmart-frases-form',
@@ -35,6 +36,7 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor (
     private loading: Loading,
     public frases: FrasesService,
+    public mensaje: CurrentMensajeService,
     private _params: ParametrosService
   ) { }
 
@@ -57,12 +59,12 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
   onSetPhrase() {
     this.addPhraseInput = false
     if ( this.newPhrase ) {
-
+      
+      console.log(this.newPhrase);
       const NEWPHRASE: FraseEntrenamiento = {
         type: 'EXAMPLE',
         parts: this.frases.createParts( this.newPhrase )
       }
-      console.log( NEWPHRASE );
       this.loading.waitFor( 200 )
       this.frases.addTraningPhrase( NEWPHRASE ).then( () => {
         this.newPhrase = ''

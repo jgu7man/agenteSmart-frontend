@@ -6,12 +6,10 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { TextService } from '../../../../../services/text.service';
 import { CurrentAgenteService } from '../current-agente.service';
 import { ContextoModel } from '../contextos/contexto.model';
-import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '../../../../../Gdev-Tools/alerts/alert.service';
 import { Observable, from, of } from 'rxjs';
 import { IntentModel } from './mensaje.model';
 import { first, filter, switchMap, toArray, pluck, catchError, tap } from 'rxjs/operators';
-import { error } from 'protractor';
 
 @Injectable({
   providedIn: 'root'
@@ -27,13 +25,11 @@ export class MensajesService {
   constructor (
     private _http: HttpClient,
     private fs: AngularFirestore,
+    private _cache: CacheService,
     private _alerta: AlertService,
     private _text: TextService,
-    private _cache: CacheService,
     private _agente: CurrentAgenteService,
     private _loading: Loading,
-    private _route: ActivatedRoute,
-    private router: Router
   ) {
     this.getAllMensajesList()
     this.getProjectId()
@@ -81,9 +77,10 @@ export class MensajesService {
         } )
       return this._alerta.sendFloatNotification('Mensaje creado')
     }
-
-
   }
+
+
+  
 
 
   
@@ -92,14 +89,6 @@ export class MensajesService {
 
   async getAllMensajesList() {
     this.mensajesPath = await this._agente.getPath( 'mensajes' )
-    // this.mensajes$ = this.fs.collection<IntentModel>( this.mensajesPath ).valueChanges()
-    // this.mensajes$.pipe(startWith([])).subscribe( async mensajes => {
-    //   this.list = mensajes
-    //   this._cache.updateData( 'allMensajesList', mensajes )
-      
-    // })
-    
-    // return this.list
   }
 
 
