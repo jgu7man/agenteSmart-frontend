@@ -5,9 +5,12 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { CurrentMensajeService } from '../../current-mensaje.service';
 import { CacheService } from '../../../../../../../../Gdev-Tools/cache/cache.service';
 import { Loading } from '../../../../../../../../Gdev-Tools/loading/loading.service';
-import { Observable, of, Subject } from 'rxjs';
-import { distinctUntilKeyChanged, pluck, switchMap, tap, map } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 import { AlertService } from '../../../../../../../../Gdev-Tools/alerts/alert.service';
+import { MensajeState } from '../../store/mensaje.state';
+import { Store } from '@ngrx/store';
+import * as actions from '../../store/mensaje.actions'
+import { map, first, debounceTime } from 'rxjs/operators';
 
 @Injectable( {
   providedIn: 'root'
@@ -18,68 +21,60 @@ export class FrasesService {
   list$: Subject<FraseEntrenamiento[]> = new Subject()
   frasesList: FraseEntrenamiento[]
   constructor (
-    private fs: AngularFirestore,
+    // private fs: AngularFirestore,
     private _agente: CurrentAgenteService,
     private _mensaje: CurrentMensajeService,
-    private _cache: CacheService,
     private loading: Loading,
-    private alert: AlertService
+    private alert: AlertService,
+    private store: Store<MensajeState>
   ) {
     
-
-    
-    
-    
-    // Get subscriptions
     this._mensaje.current$.pipe(
-      map<IntentModel, FraseEntrenamiento[]>( mensaje => mensaje.trainingPhrases )
-    ).subscribe( this.list$ )
-    this.list$.subscribe( list => {
-      this.frasesList = list
+      map<IntentModel, FraseEntrenamiento[]>( mensaje => mensaje.trainingPhrases ),
+      debounceTime(1000), first()
+    ).subscribe( frases => {
+      if(!frases) frases = []
+      frases.forEach( frase => {
+        // this.store.dispatch(actions.addFrase({frase}))
+      })
     } )
 
-
-
   }
 
   
   
   
   
-  async mensajesCollection() {
-    this.mensajesPath = await this._agente.getPath( `mensajes` )
-    const mensajesRef = this.fs.collection( this.mensajesPath ).ref
-    return mensajesRef
-  }
+  // async mensajesCollection() {
+  //   this.mensajesPath = await this._agente.getPath( `mensajes` )
+  //   const mensajesRef = this.fs.collection( this.mensajesPath ).ref
+  //   return mensajesRef
+  // }
   
   
   // CREATE Frses de entrenamiento
   async addTraningPhrase( frase: FraseEntrenamiento ) {
     try {
 
-      const mensaje = await this._cache.getDataKey( 'currentMensaje' )
+      this.frasesList = this._mensaje.current.trainingPhrases
       frase.name = Math.random().toString( 36 ).substring( 7 );
-      // var newFrase = [ frase ];
       
-      if ( this.frasesList ) {
+      if ( this._mensaje.current.trainingPhrases.length > 0 ) {
         console.log( 'update' );
-        this.frasesList.push( frase )
-        mensaje[ 'trainingPhrases' ] = this.frasesList
-        await ( await this.mensajesCollection() ).doc( mensaje.name )
-          .update( { trainingPhrases: this.frasesList } );
+        this._mensaje.current.trainingPhrases.push( frase )
+        
       } else {
         console.log( 'create' );
-        mensaje[ 'trainingPhrases' ] = [ frase ]
-        await ( await this.mensajesCollection() ).doc( mensaje.name )
-          .update( { trainingPhrases: [ frase ] } );
+        this._mensaje.current.trainingPhrases = [ frase ]
       }
 
-      this._cache.updateData( 'currentMensaje', mensaje )
+
+      this.store.dispatch(actions.setUnsaved())
 
       return
 
     } catch ( error ) {
-      
+      console.error(error);
     }
   }
 
@@ -88,25 +83,25 @@ export class FrasesService {
 
 
   
-
+  // UPDATE 
   async updatePhrase( frase: FraseEntrenamiento ) {
-    const mensaje = await this._cache.getDataKey( 'currentMensaje' )
-    const phraseToEdit = this.frasesList.findIndex( phrase => phrase.name === frase.name )
-    console.log( this.frasesList );
-    this.frasesList[ phraseToEdit ] = frase;
-    ( await this.mensajesCollection() ).doc( mensaje.name ).set( { trainingPhrases: this.frasesList }, { merge: true } );
-    return
+    try {
+      const mensaje = this._mensaje.current
+      const frasesList = mensaje.trainingPhrases
+      const phraseToEdit = frasesList.findIndex( phrase => phrase.name === frase.name )
+      frasesList[ phraseToEdit ] = frase;
+      this._mensaje.current.trainingPhrases = frasesList
+      return this.store.dispatch( actions.setUnsaved() )
+    } catch (error) {
+      console.error(error);
+      this.alert.sendError('Error', error)
+    }
   }
-
-
 
   /**
    * Retorna la frase completa con acotaciones para definir entidades y parámetros.
-   * 
    * `;text;`: [texto entre dos punto y coma] parte seleccionada
-   * 
    * `~` = divide la entidad del parámetro con su valor
-   * 
    * `=` = divide el parámetro de su valor
    * @example "text ;entityTypeDisplayName=paramValue; text"
    */
@@ -131,9 +126,7 @@ export class FrasesService {
     return partsString.join( '' )
   }
 
-  /**
-   * Retornas las partes de una frase que no tienen entidad o no están seleccionadas en un string limpio
-   */
+  /** * Retornas las partes de una frase que no tienen entidad o no están seleccionadas en un string limpio */
   stringifyUnselectParts( phrase: FraseEntrenamiento ): string {
     let partialString: string[] = []
     phrase.parts.forEach( part => {
@@ -146,9 +139,7 @@ export class FrasesService {
 
 
 
-  /**
-   * Returns a part of a string with the manual format.
-   */
+  /** Returns a part of a string with the manual format. */
   createParts( frase: string ): FraseParte[] {
     const fraseInParts = frase.split( ';' )
     var partes: FraseParte[] = []
@@ -191,9 +182,7 @@ export class FrasesService {
 
 
 
-  /**
-   * Returns parts after find the part that includes the text selected and split it
-   */
+  /** Returns parts after find the part that includes the text selected and split it */
   async stractSelectedPart(
     frase: FraseEntrenamiento, textSelected: string
   ): Promise<FraseEntrenamiento> {
@@ -205,7 +194,7 @@ export class FrasesService {
       frase.parts.forEach( ( parte, i ) => { initialParts.set( i, parte ) } )
       // const cleanFrase = this.stringCleanPhrase( frase )
       
-      // * First search: Buscamos en las partes el texto seleccionado
+      // * Buscamos en las partes el texto seleccionado
       let partSelected: [ number, FraseParte ];
       initialParts.forEach( ( p, i ) => {
         if ( p.text.includes( textSelected ) ) { partSelected = [ i, p ] }
@@ -214,9 +203,7 @@ export class FrasesService {
       // * Dividimos la parte encontrada en nuevas partes
       let newParts: Map<number, FraseParte> = await this.getTextSelectInPart( partSelected[ 1 ].text, textSelected )
       
-      // // * Se elimina la parte seleccionada
-      // initialParts.delete( partSelected[ 0 ] )
-      
+    
       // * Sustituimos la parte eliminada 
       let resultParts: Map<number, FraseParte> = new Map()
       initialParts.forEach( ( p, i ) => {
@@ -253,9 +240,7 @@ export class FrasesService {
   }
 
 
-  /**
-   * Returna un nuevo mapa de partes de frase de entrenamiento, separando un texto seleccionado
-   */
+  /** Returna un nuevo mapa de partes de frase de entrenamiento, separando un texto seleccionado */
   public async getTextSelectInPart( textOnSearch: string, textSelected: string )
     : Promise<Map<number, FraseParte>> {
     
@@ -280,13 +265,21 @@ export class FrasesService {
 
 
 
+  // DELETE
   async deletePhrase( frase: FraseEntrenamiento ) {
-    const mensaje = await this._cache.getDataKey( 'currentMensaje' )
-    const phraseToDel = this.frasesList.findIndex( phrase => phrase.name === frase.name )
-    this.frasesList.splice( phraseToDel, 1 );
-    
-    ( await this.mensajesCollection() ).doc( mensaje.name ).set( { trainingPhrases: this.frasesList }, { merge: true } );
-    return
+    try {
+      const mensaje = this._mensaje.current
+      const frasesList = mensaje.trainingPhrases
+      const phraseToDel = frasesList.findIndex( phrase => phrase.name === frase.name )
+      frasesList.splice( phraseToDel, 1 );
+
+      this._mensaje.current.trainingPhrases = frasesList
+      return this.store.dispatch( actions.setUnsaved() )
+      
+    } catch (error) {
+      console.error(error)
+      this.alert.sendError('Error', error)
+    }
   }
 
 }

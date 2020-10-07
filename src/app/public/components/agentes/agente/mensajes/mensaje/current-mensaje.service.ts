@@ -2,15 +2,16 @@ import { Injectable } from '@angular/core';
 import { CurrentAgenteService } from '../../current-agente.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { IntentModel, FraseEntrenamiento, ParametroMensaje } from '../mensaje.model';
-import { Observable, Subject, of, Subscription, AsyncSubject, forkJoin } from 'rxjs';
+import { Observable, Subject, of, Subscription, forkJoin } from 'rxjs';
 import { Loading } from '../../../../../../Gdev-Tools/loading/loading.service';
-import { switchMap, take, distinctUntilKeyChanged, mergeAll, pluck, map, tap } from 'rxjs/operators';
+import { pluck } from 'rxjs/operators';
 import { CacheService } from '../../../../../../Gdev-Tools/cache/cache.service';
 import { RespuestaModel } from './entrenamiento/respuestas/respuesta.model';
 import { AlertService } from '../../../../../../Gdev-Tools/alerts/alert.service';
 import { Store } from '@ngrx/store';
-import { MensajeState } from './store/mensaje.state';
+import { MensajeState } from '../mensaje.model';
 import * as actions from './store/mensaje.actions'
+// import * as _ from 'lodash';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +24,7 @@ export class CurrentMensajeService {
   mensajeSub$: Subscription
 
   current: IntentModel
+  changes: IntentModel
   paramsSubs$: Subscription
   queryParamsSubs$: Subscription
   
@@ -73,14 +75,14 @@ export class CurrentMensajeService {
         this.mensaje$ = this.fs.collection( this.mensajesPath )
           .doc<IntentModel>( this.mensajeName ).valueChanges()
 
-        await this.getFrasesList()
-        await this.getParametrosList()
+        // await this.getFrasesList()
+        // await this.getParametrosList()
         await this.getRespuestasList()
 
         this.mensajeSub$ = this.mensaje$.subscribe( this.current$ )
         this.current$.subscribe( current => {
-          this.store.dispatch( actions.getData( current ) )
-          this._cache.updateData( 'currentMensaje', current )
+          this.current = current
+          // this._cache.updateData( 'currentMensaje', current )
         } )
 
         this._cache.updateData( 'currentContexto', this.currentContexto )
@@ -90,25 +92,7 @@ export class CurrentMensajeService {
 
   
 
-  frasesSubs: Subscription
-  frasesList: FraseEntrenamiento[]
-  getFrasesList() {
-    let mensaje = this._cache.getDataKey( 'currentMensaje' );
-    this.frasesList = mensaje ? mensaje.trainingPhrases : [];
-    this.frasesSubs = this.current$.subscribe( mensaje => {
-      this.frasesList = mensaje.trainingPhrases
-    })
-  }
-
-  parametrosSubs: Subscription
-  parametrosList: ParametroMensaje[]
-  getParametrosList() {
-    let mensaje = this._cache.getDataKey( 'currentMensaje' )
-    this.parametrosList = mensaje ? mensaje.parameters : [];
-    this.parametrosSubs = this.current$.subscribe( mensaje => {
-      this.parametrosList = mensaje.parameters
-    })
-  }
+  
 
 
   respuestasSubs: Subscription
@@ -127,18 +111,29 @@ export class CurrentMensajeService {
   }
 
 
-  async update( mensaje: IntentModel ) {
-    Object.keys( mensaje ).forEach( key =>
-    { if ( mensaje[ key ] == undefined ) delete mensaje[ key ] } )
+  async update() {
+    this.loading.toggleWaitingBar()
+    Object.keys( this.current ).forEach( key =>
+    { if ( this.current[ key ] == undefined ) delete this.current[ key ] } )
 
     try {
-      await ( await this.mensajesCollection() ).doc( mensaje.name )
-        .update( { ...mensaje } )
+      // TODO Deposite aquí su UPDATE FUNCTION
+      
+
+      
+      await ( await this.mensajesCollection() ).doc( this.current.name )
+      .update( { ...this.current } )
       this._alerts.sendFloatNotification('Mensaje actualizado')
-    } catch (error) {
+      
+      this.store.dispatch(actions.setSaved() )
+      this.loading.toggleWaitingBar()
+      this._alerts.sendFloatNotification('Mensaje guardado')
+    } catch ( error ) {
       console.error(error);
-      this._alerts.sendError('No se pudo guardar', error)
+      this._alerts.sendError( 'No se pudo guardar', error )
+      this.loading.toggleWaitingBar()
     }
+
   }
 
 

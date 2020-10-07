@@ -15,6 +15,13 @@ export class MensajeModel {
     }
 }
 
+export class MensajeState {
+    unsaved?: boolean
+    constructor () {
+        this.unsaved = false
+    }
+}
+
 export interface IntentModel {
     index?: number,
     name?: string,
@@ -38,8 +45,8 @@ export interface IntentModel {
 
 
 export interface FraseEntrenamiento {
-    type: 'EXAMPLE',
-    parts: FraseParte[],
+    type?: 'EXAMPLE',
+    parts?: FraseParte[],
     name?: string,}
     export interface FraseParte {
         text: string,

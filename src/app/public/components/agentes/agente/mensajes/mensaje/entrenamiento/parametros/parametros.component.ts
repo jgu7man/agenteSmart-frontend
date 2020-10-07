@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ParametroMensaje } from '../../../mensaje.model';
 import { ParametrosService } from './parametros.service';
 import { Observer, Subscription } from 'rxjs';
+import { CurrentMensajeService } from '../../current-mensaje.service';
 
 @Component({
   selector: 'aSmart-parametros',
@@ -15,15 +16,16 @@ export class ParametrosComponent implements OnInit, OnDestroy {
   switchAddParameter: boolean = false
 
   constructor (
+    public mensaje: CurrentMensajeService,
     public params: ParametrosService
   ) { }
 
   async ngOnInit() {
-    await this.loadParams()
-    this.listenNewParam$ = this.params.parameterAdded$
-      .subscribe( () => { this.loadParams() } )
-    this.listenParamDeleted$ = this.params.parameterDeleted$
-      .subscribe( () => { this.loadParams() })
+    // await this.loadParams()
+    // this.listenNewParam$ = this.params.parameterAdded$
+    //   .subscribe( () => { this.loadParams() } )
+    // this.listenParamDeleted$ = this.params.parameterDeleted$
+    //   .subscribe( () => { this.loadParams() })
   }
   
   
@@ -37,8 +39,8 @@ export class ParametrosComponent implements OnInit, OnDestroy {
 
   
   ngOnDestroy() {
-    this.listenNewParam$.unsubscribe()
-    this.listenParamDeleted$.unsubscribe()
+    // this.listenNewParam$.unsubscribe()
+    // this.listenParamDeleted$.unsubscribe()
   }
 
 }

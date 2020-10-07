@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, HostListener } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { TextService } from '../../../../../services/text.service';
 import { CacheService } from '../../../../../Gdev-Tools/cache/cache.service';
@@ -122,7 +122,7 @@ export class MensajesService {
   }
 
   
-
+  
 
   
   

@@ -36,10 +36,8 @@ export class GrupoDatosComponent implements OnInit {
 
   ngOnInit(): void {
     this._RegistroDatosForm.pipe(
-      tap(console.log),
       distinctUntilKeyChanged('parametro')
     ).subscribe( form => {
-      console.log(form);
       this.dataForm = form
     })
   }

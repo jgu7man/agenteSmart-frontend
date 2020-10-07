@@ -11,7 +11,7 @@
     (blur)="onTipoSelected($event)"
     >
     <mat-autocomplete #auto="matAutocomplete" 
-    placeholder="Selecciona uno"
+    placeholder="Selecciona uno" showPanel="false"
     (optionSelected)="onTipoSelected($event)">
         <mat-option *ngFor="let tipo of tiposFiltered | async" [value]="tipo">
             @{{tipo}}

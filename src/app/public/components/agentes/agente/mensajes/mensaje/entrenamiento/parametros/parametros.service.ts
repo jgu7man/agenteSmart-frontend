@@ -5,11 +5,14 @@ import { AngularFirestore, docChanges } from '@angular/fire/firestore';
 import { CacheService } from '../../../../../../../../Gdev-Tools/cache/cache.service';
 import { ParametroMensaje, FraseEntrenamiento, FraseParte } from '../../../mensaje.model';
 import { CurrentMensajeService } from '../../current-mensaje.service';
-import { Subject, Observer, Observable } from 'rxjs';
-import { map, switchMap, startWith } from 'rxjs/operators';
+import { Subject} from 'rxjs';
 import { FrasesService } from '../frases-form/frases.service';
 import { Loading } from '../../../../../../../../Gdev-Tools/loading/loading.service';
 import { AlertService } from '../../../../../../../../Gdev-Tools/alerts/alert.service';
+import { MensajeState } from '../../store/mensaje.state';
+import { Store } from '@ngrx/store';
+import * as actions from '../../store/mensaje.actions'
+import { map, debounceTime, first } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -27,24 +30,30 @@ export class ParametrosService {
   /**Escucha y actualiza la lista de parámetros del mensaje en curso */
   list$: Subject<ParametroMensaje[]> = new Subject()
   /**Lista siempre actualizada del Subject list$ */
-  list: ParametroMensaje[]
+  // list: ParametroMensaje[]
 
   constructor (
-    private fs: AngularFirestore,
+    // private fs: AngularFirestore,
     private _agente: CurrentAgenteService,
     private _mensaje: CurrentMensajeService,
-    private _cache: CacheService,
     private _frases: FrasesService,
     private loading: Loading,
-    private _alerts: AlertService
+    private _alerts: AlertService,
+    private store: Store<MensajeState>
   ) {
 
 
 
     // Get subscriptions
-    this._mensaje.current$.subscribe( mensaje => {
-      this.mensaje = mensaje
-      this.list = mensaje.parameters
+    this._mensaje.current$.pipe(
+      map( mensaje => mensaje.parameters ),
+      debounceTime(1000), first()
+    )
+      .subscribe( params => {
+        if ( !params ) params = []
+        params.forEach(param => {
+          // this.store.dispatch(actions.addParam({param}))
+        });
     } )
 
 
@@ -52,37 +61,36 @@ export class ParametrosService {
   
   
   /** Obtiene constante actualizado la ruta del mensaje en curso para los métodos del CRUD */
-  private async mensajesCollection() {
-    this.mensajesPath = await this._agente.getPath( `mensajes` )
-    const mensajesRef = this.fs.collection( this.mensajesPath ).ref
-    return mensajesRef
-  }
+  // private async mensajesCollection() {
+  //   this.mensajesPath = await this._agente.getPath( `mensajes` )
+  //   const mensajesRef = this.fs.collection( this.mensajesPath ).ref
+  //   return mensajesRef
+  // }
 
   // CREATE Parametros
 
   async addParam( param: ParametroMensaje ) {
 
     console.log(param);
-    this.mensaje = await this._cache.getDataKey( 'currentMensaje' )
+    var mensaje = this._mensaje.current
+    var paramList = mensaje.parameters
     param.name = Math.random().toString( 36 ).substring( 7 );
-    var newParam = [ param ];
     
     
-    if ( !this.list ) {
-      await ( await this.mensajesCollection() ).doc( this.mensaje.name )
-        .update( { parameters: [ param ] } );
+    if ( !paramList || paramList.length == 0 ) {
+      paramList = [param]
+      this._mensaje.current.parameters = paramList
+
       this.parameterAdded$.next( param )
 
     } else {
-      console.log(this.list);
-      let paramStored = this.list.find( parameter => parameter.displayName == param.displayName )
+      let paramStored = paramList.find( parameter => parameter.displayName == param.displayName )
   
       console.log(paramStored);
       if ( !paramStored ) {
-        this.list.push( param )
-        console.log(this.list);
-        await ( await this.mensajesCollection() ).doc( this.mensaje.name )
-          .update( { parameters: this.list } );
+        paramList.push( param )
+        // console.log(this.list);
+        this._mensaje.current.parameters = paramList
         this.parameterAdded$.next( param );
       } else {
         this._alerts.sendMessageAlert('Elige otro nombre para este parámetro')
@@ -96,39 +104,54 @@ export class ParametrosService {
 
 
   getParamByName( name: string ) {
-    return this.list.find(p=> p.displayName == name)
+    var paramSelected = this._mensaje.current.parameters.find( p => p.displayName == name )
+    console.log(paramSelected);
+    return paramSelected
   }
 
 
   
 
+  // UPDATE Mensaje Parametro
 
   async updateParam( param: ParametroMensaje ) {
-    var paramIndex = this.list.findIndex( parameter => parameter.name == param.name )
-    this.list[paramIndex] = param
-    await ( await this.mensajesCollection() ).doc( this.mensaje.name ).update( {
-      parameters: this.list
-    })
+    try {
+      var paramList = this._mensaje.current.parameters
+      var paramIndex = paramList.findIndex( parameter => parameter.name == param.name )
+      paramList[ paramIndex ] = param
+      this._mensaje.current.parameters = paramList
+      return this.store.dispatch(actions.setUnsaved())
+    } catch (error) {
+      console.error(error)
+      this._alerts.sendError('Error', error)
+    }
   }
 
 
+
+  // DELETE
  
   async deleteParam( param: ParametroMensaje ) {
-    var paramIndex = this.list.findIndex( parameter => parameter.name == param.name )
-    this.list.splice(paramIndex, 1)
-    await ( await this.mensajesCollection() ).doc( this.mensaje.name ).update( {
-      parameters: this.list
-    } ).then( () => {
-      this.deleteParamInParts(param.displayName)
-    } )
+    try {
+      const paramList = this._mensaje.current.parameters
+      var paramIndex = paramList.findIndex( parameter => parameter.name == param.name )
+      paramList.splice( paramIndex, 1 )
+      this._mensaje.current.parameters = paramList
+      this.deleteParamInParts( param.displayName )
+      return this.store.dispatch(actions.setUnsaved() )
+    } catch (error) {
+      console.error(error)
+      this._alerts.sendError('Error', error)
+    }
   }
 
   /**
    * Elimina el parámetro de todas las frases de entrenamiento que lo contengan
    */
   private async deleteParamInParts( displayName: string ) {
+    const frasesList = this._mensaje.current.trainingPhrases
 
-    await this.loading.asyncForEach( this.list,
+    await this.loading.asyncForEach( frasesList,
       async ( frase: FraseEntrenamiento ) => {
       
         // Busca en las partes donde hay el parámetro eliminado

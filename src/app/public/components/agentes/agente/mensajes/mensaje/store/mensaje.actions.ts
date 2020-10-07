@@ -1,15 +1,6 @@
 import { createAction, props } from "@ngrx/store";
-import { MensajeModel, IntentModel } from '../../mensaje.model';
+import { IntentModel } from '../../mensaje.model';
 
-export const getData = createAction(
-    '[Mensaje] getData',
-    props<IntentModel>()
-);
-export const getOutMensaje = createAction(
-    '[Mensaje] resetData',
-)
-
-export const changeData = createAction(
-    '[Mensaje] changeData',
-    props<IntentModel>()
-)
+export const getOutMensaje = createAction( '[mensaje] getOut' )
+export const setUnsaved = createAction( '[mensaje] unsaved' )
+export const setSaved = createAction( '[mensaje] saved' )

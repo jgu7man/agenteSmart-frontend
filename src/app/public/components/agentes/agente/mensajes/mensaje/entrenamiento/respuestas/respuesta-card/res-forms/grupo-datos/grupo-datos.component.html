@@ -6,7 +6,7 @@
     <div class="col s8">
         <mat-select placeholder="parámetro" [(ngModel)]="dataForm.parametro" name="param"
         (selectionChange)="edited.emit(dataForm)">
-            <mat-option *ngFor="let param of mensajeS.parametrosList" [value]="param.displayName">
+            <mat-option *ngFor="let param of mensajeS.current.parameters" [value]="param.displayName">
                 {{param.displayName}}
             </mat-option>
         </mat-select>

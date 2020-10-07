@@ -5,11 +5,16 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "chrome",
-            "request": "launch",
-            "name": "Launch Chrome against localhost",
-            "url": "http://localhost:4200",
-            "webRoot": "${workspaceFolder}"
-        }
+          "type": "devtools-for-chrome",
+          "request": "launch",
+          "name": "Launch Chrome DevTools",
+          "file": "${workspaceFolder}/index.html"
+      },
+      {
+          "type": "devtools-for-chrome",
+          "request": "attach",
+          "name": "Attach Chrome DevTools",
+          "url": "http://localhost:9222/"
+      }
     ]
 }

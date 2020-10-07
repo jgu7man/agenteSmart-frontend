@@ -44,6 +44,8 @@ export class CondicionalFormComponent implements OnInit {
   onParamChange() {
     if ( this.condicional.parametro ) {
       let value = this._params.getParamByName( this.condicional.parametro ).value
+        ? this._params.getParamByName( this.condicional.parametro ).value
+        : this._params.getParamByName( this.condicional.parametro ).displayName
       this.isOriginal = value.split( '.' ).length > 1 ? true : false
       this.tipoSelected = this.resService.tiposList.find(t => t.name == this.condicional.parametro)
     } else {
