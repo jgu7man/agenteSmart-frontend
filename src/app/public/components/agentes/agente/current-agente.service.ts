@@ -129,8 +129,12 @@ export class CurrentAgenteService {
 
     this.mensajesSubs =
       changes.subscribe( list => {
-        this.mensajesList = list
-        this._cache.updateData( 'mensajes', list )
+        let filteredList = list.map( m => {
+          m.name = m.name.slice( m.name.lastIndexOf( "/" ) + 1 );
+          return m
+        } )
+        this.mensajesList = filteredList
+        // this._cache.updateData( 'mensajes', list )
       } )
 
     var promise = new Promise<IntentModel[]>( ( resolve, reject ) => {

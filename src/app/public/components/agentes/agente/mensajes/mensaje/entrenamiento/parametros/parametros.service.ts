@@ -1,3 +1,4 @@
+import { MensajeState } from './../../../mensaje.model';
 import { IntentModel } from '../../../mensaje.model';
 import { Injectable } from '@angular/core';
 import { CurrentAgenteService } from '../../../../current-agente.service';
@@ -9,7 +10,6 @@ import { Subject} from 'rxjs';
 import { FrasesService } from '../frases-form/frases.service';
 import { Loading } from '../../../../../../../../Gdev-Tools/loading/loading.service';
 import { AlertService } from '../../../../../../../../Gdev-Tools/alerts/alert.service';
-import { MensajeState } from '../../store/mensaje.state';
 import { Store } from '@ngrx/store';
 import * as actions from '../../store/mensaje.actions'
 import { map, debounceTime, first } from 'rxjs/operators';
@@ -46,7 +46,7 @@ export class ParametrosService {
 
     // Get subscriptions
     this._mensaje.current$.pipe(
-      map( mensaje => mensaje.parameters ),
+      map( mensaje => mensaje ?  mensaje.parameters : []),
       debounceTime(1000), first()
     )
       .subscribe( params => {

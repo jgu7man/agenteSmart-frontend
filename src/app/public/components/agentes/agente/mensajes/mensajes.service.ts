@@ -10,6 +10,7 @@ import { AlertService } from '../../../../../Gdev-Tools/alerts/alert.service';
 import { Observable, from, of } from 'rxjs';
 import { IntentModel } from './mensaje.model';
 import { first, filter, switchMap, toArray, pluck, catchError, tap } from 'rxjs/operators';
+import { resolve } from 'dns';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,7 @@ export class MensajesService {
   mensajes$ = new Observable<IntentModel[]>()
   projectId
   // list: IntentModel[]
+  private _url = 'https://us-central1-main-agentesmart.cloudfunctions.net/dialogflow/intent';
   
   
   constructor (
@@ -56,25 +58,23 @@ export class MensajesService {
   // CREATE Mensajes
 
 
-  async setMensaje(name: string, displayName: string, index?:number, contexto?: string,  ) {
-    
+  async setMensaje( newIntent: IntentModel, index?:number, contexto?: string,  ) {
     
     // READ Busca en las mensajes que no esté duplicada
     // if ( !this.mensajesList ) this.mensajesList = await this._cache.getDataKey( 'allMensajesList' )
+    const resourceID = newIntent.name.slice(newIntent.name.lastIndexOf("/") + 1); //formato esperado: f0b12fde-9600-4e2e-88a7-70861817a358
+    
+
+    newIntent = {...newIntent, index: index, contextos: contexto ? [ contexto ] : []}
     
     let mensajeDuplicated = this._agente.mensajesList
-    .find(msj => msj.name == name)
+    .find(msj => msj.name == resourceID)
     if ( mensajeDuplicated ) {
       console.log(name, ' duplicada');
       this._alerta.sendMessageAlert( 'Mensaje Duplicada' )
     } else {
-      await (await this.mensajesCollection()).doc( name )
-        .set( {
-          index: index,
-          name: name,
-          displayName: displayName,
-          contextos: contexto ? [ contexto ] : []
-        } )
+      await (await this.mensajesCollection()).doc( resourceID )
+        .set( newIntent )
       return this._alerta.sendFloatNotification('Mensaje creado')
     }
   }
@@ -136,8 +136,6 @@ export class MensajesService {
 
     const projectId: string = this._cache.getDataKey('projectId')
     //sino se puede hace proxeo de la URL base...
-    const url = 'https://us-central1-main-agentesmart.cloudfunctions.net/dialogflow/intent'
-    const local = "http://localhost:3000/intent"    
     console.log(projectId)
     const intentRequest = {
       projectId,
@@ -146,7 +144,7 @@ export class MensajesService {
 
     console.log(intent)
     return new Promise<IntentModel>((resolve, reject) => {
-      this._http.post<IntentModel>(url, intentRequest, { responseType: 'json'})
+      this._http.post<IntentModel>(this._url, intentRequest, { responseType: 'json'})
       .subscribe( intentCreated => {
         console.log('IntentCreated:', intentCreated)
         resolve(intentCreated['result'])
@@ -156,6 +154,26 @@ export class MensajesService {
 
   }
 
-  
+  async getAllIntents(): Promise<IntentModel[]> {
+    return new Promise((resolve, reject) => {
+      const projectId: string = this._cache.getDataKey('projectId')
 
+      this._http.get(this._url + `/${projectId}`, {
+        responseType: 'json'
+      })
+      .toPromise()
+      .then(response => {
+        console.info('Peticion echa intents:', response)
+        const intents: IntentModel[] = response['result']['intents'];
+        resolve(intents);
+      })
+      .catch(err => {
+        if (err) {
+          console.error('Error tomando todos los intents', err.message)
+          this._alerta.sendError('Un error tomando los intents', err);
+          reject(err)
+        }
+      })
+    })
+  }
 }

@@ -1,3 +1,4 @@
+import { MensajeState } from './../../../mensaje.model';
 import { Injectable } from '@angular/core';
 import { FraseEntrenamiento, FraseParte, IntentModel } from '../../../mensaje.model';
 import { CurrentAgenteService } from '../../../../current-agente.service';
@@ -7,7 +8,6 @@ import { CacheService } from '../../../../../../../../Gdev-Tools/cache/cache.ser
 import { Loading } from '../../../../../../../../Gdev-Tools/loading/loading.service';
 import { Subject } from 'rxjs';
 import { AlertService } from '../../../../../../../../Gdev-Tools/alerts/alert.service';
-import { MensajeState } from '../../store/mensaje.state';
 import { Store } from '@ngrx/store';
 import * as actions from '../../store/mensaje.actions'
 import { map, first, debounceTime } from 'rxjs/operators';
@@ -30,7 +30,7 @@ export class FrasesService {
   ) {
     
     this._mensaje.current$.pipe(
-      map<IntentModel, FraseEntrenamiento[]>( mensaje => mensaje.trainingPhrases ),
+      map<IntentModel, FraseEntrenamiento[]>( mensaje => mensaje ?  mensaje.trainingPhrases : []  ),
       debounceTime(1000), first()
     ).subscribe( frases => {
       if(!frases) frases = []

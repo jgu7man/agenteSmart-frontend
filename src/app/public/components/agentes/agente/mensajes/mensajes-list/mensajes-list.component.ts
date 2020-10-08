@@ -12,19 +12,23 @@ import { CurrentAgenteService } from '../../current-agente.service';
 export class MensajesListComponent implements OnInit {
 
   switchAddIntent: boolean = false
-  newIntent: string = ''
-  
+  newDisplayName: string = ''
+  intents: IntentModel[] = []
+
+
   @Input() contexto
   @ViewChild( 'intentNuevo' ) intentNuevo: ElementRef
-
   constructor (
     private _loading: Loading,
     public mensajes: MensajesService,
     public agente: CurrentAgenteService,
-    private _alerta: AlertService
+    private _alerta: AlertService,
   ) { }
 
-  ngOnInit(): void {
+  async ngOnInit() {
+    //Cargo todo los intents del Agente Actual.
+    this.intents = await this.mensajes.getAllIntents()
+    // console.log('Abemus Intents:', this.intents);
   }
 
   async toAddIntent() {
@@ -35,28 +39,33 @@ export class MensajesListComponent implements OnInit {
 
   async onAddIntent( contexto? ) {
     this.switchAddIntent = false
-    if ( this.newIntent ) {
+    if ( this.newDisplayName ) {
       let lastIndex = this.agente.mensajesList.length
       //
       try {
         console.log('crear')
-        const newIntent = await this.mensajes.createNewIntent({displayName: this.newIntent})
+        const newIntent = await this.mensajes.createNewIntent({displayName: this.newDisplayName})
 
         if (newIntent) {
           console.info('Intent Created, response:', newIntent)
 
           //se ha creado el intent(regresa un intent completo vacio),
-          // Ejemplo de nombre: projects/prueba-aente/agent/intents/f0b12fde-9600-4e2e-88a7-70861817a358
-          const name = newIntent.name; //formato larguisimo solo ocupamos su ID
-          const resourceID = name.slice(name.lastIndexOf("/") + 1); //formato esperado: f0b12fde-9600-4e2e-88a7-70861817a358
+         
           //aqui nose que hacer con el resourceID
-          await this.mensajes.setMensaje(resourceID, this.newIntent, lastIndex )
+          await this.mensajes.setMensaje( newIntent, lastIndex )
 
         }
       } catch (error) {
         if (error) {
           console.error(error)
-          this._alerta.sendFloatNotification("Error creando intent, porfavor vuelva a intentarlo.")
+          switch (error.error.error.code) {
+            case 3:
+              this._alerta.sendFloatNotification("Ya tienes un Intent con ese nombre.")
+              break;
+            default:
+              this._alerta.sendFloatNotification("Error creando intent, porfavor vuelva a intentarlo.")
+              break;
+          }
         }
       }
     }

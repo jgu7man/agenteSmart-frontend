@@ -51,8 +51,8 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
   // CREATE frase
   async toAddPhrase() {
     this.addPhraseInput = true
-    await this.loading.waitFor( 100 )
-    this.newPhraseInput.nativeElement.focus()
+    await this.loading.waitFor( 200 )
+    // this.newPhraseInput.nativeElement.focus()
   }
 
 

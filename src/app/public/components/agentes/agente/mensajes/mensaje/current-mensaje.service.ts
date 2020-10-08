@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CurrentAgenteService } from '../../current-agente.service';
 import { AngularFirestore } from '@angular/fire/firestore';
@@ -11,6 +12,7 @@ import { AlertService } from '../../../../../../Gdev-Tools/alerts/alert.service'
 import { Store } from '@ngrx/store';
 import { MensajeState } from '../mensaje.model';
 import * as actions from './store/mensaje.actions'
+import { url } from 'inspector';
 // import * as _ from 'lodash';
 
 @Injectable({
@@ -22,7 +24,7 @@ export class CurrentMensajeService {
   mensaje$: Observable<IntentModel> = new Observable()
   current$: Subject<IntentModel> = new Subject()
   mensajeSub$: Subscription
-
+  
   current: IntentModel
   changes: IntentModel
   paramsSubs$: Subscription
@@ -31,13 +33,17 @@ export class CurrentMensajeService {
   mensajeName: string
   currentContexto: string
   mensajesPath: string
+
+  private _url = 'https://us-central1-main-agentesmart.cloudfunctions.net/dialogflow/intent';
+
   constructor (
     private _agente: CurrentAgenteService,
     private fs: AngularFirestore,
     private _cache: CacheService,
     private loading: Loading,
     private _alerts: AlertService,
-    private store: Store<MensajeState>
+    private store: Store<MensajeState>,
+    private _http: HttpClient
   ) {
   }
 
@@ -117,13 +123,16 @@ export class CurrentMensajeService {
     { if ( this.current[ key ] == undefined ) delete this.current[ key ] } )
 
     try {
-      // TODO Deposite aquí su UPDATE FUNCTION
-      
+      // REVIEW falta testear esta función de update
+      //sinceramente nose como puedo hacer esto
 
-      
+      const request = await this.updateIntentApiRequest(this.current);
+      if (request) {
+        console.info('Se Actualizo Intent:', request);
+      }
+
       await ( await this.mensajesCollection() ).doc( this.current.name )
       .update( { ...this.current } )
-      this._alerts.sendFloatNotification('Mensaje actualizado')
       
       this.store.dispatch(actions.setSaved() )
       this.loading.toggleWaitingBar()
@@ -134,6 +143,32 @@ export class CurrentMensajeService {
       this.loading.toggleWaitingBar()
     }
 
+  }
+
+  private updateIntentApiRequest(intent: IntentModel): Promise<IntentModel> {
+    // NOTE se debe de saber exactamente que parametros mandar en el body
+    // me refiero más a los types de Dialogflow
+    // LINK https://cloud.google.com/dialogflow/es/docs/reference/rest/v2/projects.agent.intents#resource:-intent
+
+    return new Promise((resolve, reject ) => {
+      
+      this._http.put(this._url, intent, {
+        responseType: "json"
+      }).toPromise()
+      .then( response => {
+        if (response) {
+          console.info('Intent Updateado:', response['result'])
+          resolve(response['result'])
+        }
+      })
+      .catch( err => {
+        if (err) {
+          this._alerts.sendError('No es posible actualizar este intent, intentelo de nuevo, porfavor.', err)
+        }
+        reject(err)
+      })
+      
+    })
   }
 
 
@@ -149,9 +184,34 @@ export class CurrentMensajeService {
 
 
   async delete( mensajeName ) {
+
+    // TODO falta reparar la request 
+    // LINK https://stackoverflow.com/questions/299628/is-an-entity-body-allowed-for-an-http-delete-request#:~:text=The%20latest%20update%20to%20the,implementations%20to%20reject%20the%20request.
+    //Mañana lo cambio por url nada más y así debería quedar y funcionar la petición.
+
     return await ( await this.mensajesCollection() ).doc( mensajeName ).delete()
   }
 
+  private deleteIntentRequest(intentId: string): Promise<any> {
+    // FIXME Aqui falta reparar el BACKEND por motivos puestos en el link de arriba
+    return new Promise((resolve, reject) => {
+      const projectId: string = this._cache.getDataKey('projectId')
+
+      this._http.delete(this._url +`/${intentId}/project/${projectId}`)
+      .toPromise()
+      .then( response => {
+        console.info(response)
+        resolve(response)
+      })
+      .catch( err => {
+        if (err) {
+          this._alerts.sendError('No es posible elimnar intent, intentelo de nuevo, porfavor.', err)
+        }
+        reject(err)
+      })
+
+    })
+  }
 
   unsubscribe() {
     this.mensajeSub$.unsubscribe()

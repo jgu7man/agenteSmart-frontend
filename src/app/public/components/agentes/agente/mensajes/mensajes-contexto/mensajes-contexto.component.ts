@@ -68,7 +68,7 @@ export class MensajesByContextoComponent implements OnInit {
           const name = newIntent.name; //formato larguisimo solo ocupamos su ID
           const resourceID = name.slice(name.lastIndexOf("/") + 1); //formato esperado: f0b12fde-9600-4e2e-88a7-70861817a358
           //aqui nose que hacer con el resourceID
-          await this._mensajes.setMensaje(resourceID, this.newIntent, lastIndex, contexto )
+          await this._mensajes.setMensaje( newIntent, lastIndex, contexto )
 
         }
       } catch (error) {
