@@ -11,6 +11,7 @@ import { AlertService } from '../../../../../../../../Gdev-Tools/alerts/alert.se
 import { Store } from '@ngrx/store';
 import * as actions from '../../store/mensaje.actions'
 import { map, first, debounceTime } from 'rxjs/operators';
+import { TextService } from '../../../../../../../../Gdev-Tools/text/gdev-text.service';
 
 @Injectable( {
   providedIn: 'root'
@@ -26,7 +27,8 @@ export class FrasesService {
     private _mensaje: CurrentMensajeService,
     private loading: Loading,
     private alert: AlertService,
-    private store: Store<MensajeState>
+    private store: Store<MensajeState>,
+    private _text: TextService
   ) {
     
     this._mensaje.current$.pipe(
@@ -157,12 +159,14 @@ export class FrasesService {
               entityType: `@${ partSplited[ 0 ] }`,
               text: param.length > 1 ? param[ 1 ] : param[ 0 ],
               selected: true,
-              paramName: param.length > 1 ? param[ 0 ] : ''
+              paramName: param.length > 1 ? param[ 0 ] : '',
+              alias: this._text.generateRandomText(5),
             } )
           } else if ( partSplited ) {
             partes.push( {
               text: partSplited[ 0 ],
-              selected: false
+              selected: false,
+              alias: this._text.generateRandomText( 5 ),
             } )
           }
         }
@@ -171,7 +175,8 @@ export class FrasesService {
     } else {
       partes.push( {
         text: frase,
-        selected: false
+        selected: false,
+        alias: this._text.generateRandomText( 5 ),
       } )
     }
 
@@ -254,7 +259,8 @@ export class FrasesService {
       if ( textPart ) {
         let newPart: FraseParte = {
           text: textPart,
-          selected: textPart != textSelected ? false : true
+          selected: textPart != textSelected ? false : true,
+          alias: this._text.generateRandomText( 5 ),
         }
         parts.set(i, newPart)
       }

@@ -12,7 +12,6 @@ import { AlertService } from '../../../../../../Gdev-Tools/alerts/alert.service'
 import { Store } from '@ngrx/store';
 import { MensajeState } from '../mensaje.model';
 import * as actions from './store/mensaje.actions'
-import { url } from 'inspector';
 // import * as _ from 'lodash';
 
 @Injectable({
@@ -139,7 +138,7 @@ export class CurrentMensajeService {
       this._alerts.sendFloatNotification('Mensaje guardado')
     } catch ( error ) {
       console.error(error);
-      this._alerts.sendError( 'No se pudo guardar', error )
+      // this._alerts.sendError( 'No se pudo guardar', error )
       this.loading.toggleWaitingBar()
     }
 

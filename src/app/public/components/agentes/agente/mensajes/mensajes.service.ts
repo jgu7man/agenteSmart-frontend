@@ -9,8 +9,7 @@ import { ContextoModel } from '../contextos/contexto.model';
 import { AlertService } from '../../../../../Gdev-Tools/alerts/alert.service';
 import { Observable, from, of } from 'rxjs';
 import { IntentModel } from './mensaje.model';
-import { first, filter, switchMap, toArray, pluck, catchError, tap } from 'rxjs/operators';
-import { resolve } from 'dns';
+import { first, filter, switchMap, toArray, pluck } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
