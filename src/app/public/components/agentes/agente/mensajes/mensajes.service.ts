@@ -9,7 +9,8 @@ import { ContextoModel } from '../contextos/contexto.model';
 import { AlertService } from '../../../../../Gdev-Tools/alerts/alert.service';
 import { Observable, from, of } from 'rxjs';
 import { IntentModel } from './mensaje.model';
-import { first, filter, switchMap, toArray, pluck } from 'rxjs/operators';
+import { first, filter, switchMap, toArray, pluck, delayWhen, map } from 'rxjs/operators';
+import { RespuestaModel } from './mensaje/entrenamiento/respuestas/respuesta.model';
 
 @Injectable({
   providedIn: 'root'
@@ -93,12 +94,16 @@ export class MensajesService {
 
   async getMensajesListByContexto( contexto: ContextoModel ) {
     var mensajesList = []
-    const mensajeCol = await ( await this.mensajesCollection() )
-      .where( 'contextos', 'array-contains', contexto.id )
-      .orderBy('index', 'asc')
-      .get()
     
-    await this._loading.asyncForEach( mensajeCol.docs, mensaje => { mensajesList.push( mensaje.data() ) } )
+    if ( contexto.id ) {
+      const mensajeCol = await ( await this.mensajesCollection() )
+        .where( 'contextos', 'array-contains', contexto.id )
+        .orderBy( 'index', 'asc' )
+        .get()
+
+      await this._loading.asyncForEach( mensajeCol.docs, mensaje => { mensajesList.push( mensaje.data() ) } )
+    }
+
     return mensajesList
   }
 
@@ -174,5 +179,30 @@ export class MensajesService {
         }
       })
     })
+  }
+
+
+
+  async getFollowingMensajes( id: string ) {
+    var following: string[] = []
+    var respuestasCol = await ( await this.mensajesCollection() ).doc( `${ id }` )
+      .collection( 'respuestas' ).get()
+    
+    if ( respuestasCol.size > 0 ) {
+      respuestasCol.forEach( res => {
+        let respuesta = res.data() as RespuestaModel
+        let resStored = following.findIndex( r => r == respuesta.nextIntent )
+        if(resStored < 0) following.push( respuesta.nextIntent )
+      })
+    }
+
+    await new Promise( resolve => {
+      of( following ).pipe(
+        map( f => {
+          if ( f.length == respuestasCol.size ) return true
+        })
+      ).subscribe(fo => resolve(fo))
+    })
+    return following
   }
 }

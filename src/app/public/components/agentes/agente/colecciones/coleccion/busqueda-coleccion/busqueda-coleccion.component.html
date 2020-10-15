@@ -114,13 +114,13 @@
             </div>
 
             <div class="col s9 m6">
-                <gdev-file-uploader 
+                <gdev-image-uploader 
                 [displayAction]="'Subir imagen'"
                 [folder]="user.uid+'/colecciones/'+coleccion.name"
                 [srcPreview]="newColeccionDato.imagenURL 
                     ? newColeccionDato.imagenURL['url'] : ''"
                 (imageURL)="newColeccionDato.imagenURL = $event"
-                ></gdev-file-uploader>
+                ></gdev-image-uploader>
                 <mat-hint>Opcional</mat-hint>
             </div>
 

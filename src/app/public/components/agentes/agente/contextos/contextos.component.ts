@@ -9,6 +9,7 @@ import { ContextoModel } from './contexto.model';
 import { AddContextoComponent } from './add-contexto/add-contexto.component';
 import { ContextoComponent } from './contexto/contexto.component';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CurrentAgenteService } from '../current-agente.service';
 
 @Component({
   selector: 'aSmart-contextos',
@@ -31,6 +32,7 @@ export class ContextosComponent implements OnInit, OnDestroy {
   constructor (
     public contextos: ContextosService,
     private _loading: Loading,
+    public agente_: CurrentAgenteService
   ) {
     this.contextos.getAllContexts()
   }

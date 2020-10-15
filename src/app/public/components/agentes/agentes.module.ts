@@ -63,6 +63,8 @@ import { ColeccionTarjetaComponent } from './agente/tarjetas/coleccion-tarjeta/c
 import { AddTarjetaComponent } from './agente/tarjetas/add-tarjeta/add-tarjeta.component';
 import { GuardadoColeccionComponent } from './agente/colecciones/coleccion/guardado-coleccion/guardado-coleccion.component';
 import { HttpClientModule } from '@angular/common/http';
+import { DiagramElementDirective } from './agente/mensajes/diagram/diagram-element.directive';
+import { MensajesDiagramComponent } from './agente/mensajes/mensajes-diagram/mensajes-diagram.component';
 
 
 
@@ -120,6 +122,8 @@ import { HttpClientModule } from '@angular/common/http';
     ColeccionTarjetaComponent,
     AddTarjetaComponent,
     GuardadoColeccionComponent,
+    DiagramElementDirective,
+    MensajesDiagramComponent,
   ],
   imports: [
     CommonModule,

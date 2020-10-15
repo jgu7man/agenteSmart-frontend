@@ -10,7 +10,7 @@
         <mat-menu #menuProfile="matMenu">
             <button mat-menu-item>Ver perfil</button>
             <button mat-menu-item [routerLink]="['/dashboard']">Dashboard</button>
-            <button mat-menu-item>Cerrar sesión</button>
+            <button mat-menu-item (click)="auth.singOut()">Cerrar sesión</button>
         </mat-menu>
         
         <div class="imgProfileContainer">

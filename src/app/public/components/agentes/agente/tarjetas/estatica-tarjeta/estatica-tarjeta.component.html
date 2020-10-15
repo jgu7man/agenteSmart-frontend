@@ -6,12 +6,12 @@
     ></gdev-reactive-textline>
 </mat-card-title>
 
-<gdev-file-uploader
+<gdev-image-uploader
 [folder]="user.uid+'/tarjetas/'"
 displayAction="Agregar Imagen"
 [srcPreview]="contenido.imagenURL['url']"
 (imageURL)="catchImgURL($event)"
-></gdev-file-uploader>
+></gdev-image-uploader>
 
 <mat-card-content>
     <gdev-reacvtive-dialogbox

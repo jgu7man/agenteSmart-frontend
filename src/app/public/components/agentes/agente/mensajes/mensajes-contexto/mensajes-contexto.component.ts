@@ -11,6 +11,8 @@ import { IntentModel } from '../mensaje.model';
 import { CacheService } from '../../../../../../Gdev-Tools/cache/cache.service';
 import { ContextoModel } from '../../contextos/contexto.model';
 import { startWith, map, tap } from 'rxjs/operators';
+import { DiagramService } from '../diagram/diagram.service';
+import { DiagramProps } from '../diagram/diagram-data.interface';
 
 @Component({
   selector: 'aSmart-mensajes-by-contexto',
@@ -30,9 +32,10 @@ export class MensajesByContextoComponent implements OnInit {
   
   constructor (
     private _loading: Loading,
-    private _mensajes: MensajesService,
+    public mensajes_: MensajesService,
     private _cache: CacheService,
-    private _alerta: AlertService
+    private _alerta: AlertService,
+    public diagram_: DiagramService 
   ) {
     
    }
@@ -59,7 +62,11 @@ export class MensajesByContextoComponent implements OnInit {
       //
       try {
         debugger
-        const newIntent = await this._mensajes.createNewIntent({displayName: this.newIntent});
+        const newIntent = await this.mensajes_.createNewIntent(
+          {
+            displayName: this.newIntent,
+            inputContextNames: lastIndex > 0 ? [contexto] : []
+          } );
 
         if (newIntent) {
           console.info('Intent Created, response:', newIntent)
@@ -68,7 +75,7 @@ export class MensajesByContextoComponent implements OnInit {
           const name = newIntent.name; //formato larguisimo solo ocupamos su ID
           const resourceID = name.slice(name.lastIndexOf("/") + 1); //formato esperado: f0b12fde-9600-4e2e-88a7-70861817a358
           //aqui nose que hacer con el resourceID
-          await this._mensajes.setMensaje( newIntent, lastIndex, contexto )
+          await this.mensajes_.setMensaje( newIntent, lastIndex, contexto )
 
         }
       } catch (error) {
@@ -83,7 +90,7 @@ export class MensajesByContextoComponent implements OnInit {
   
 
   async getMensajes() {
-    this.mensajes = await this._mensajes.getMensajesListByContexto( this.contexto )
+    this.mensajes = await this.mensajes_.getMensajesListByContexto( this.contexto )
     let contextosLists = await this._cache.getDataKey( 'contextosLists' )
     if ( !contextosLists ) {
       contextosLists = { [ this.contexto.contextName ]: this.mensajes }
@@ -95,6 +102,13 @@ export class MensajesByContextoComponent implements OnInit {
 
   trackByName( index, intent: IntentModel ) {
     return intent.name
+  }
+
+
+  async setDiagramaData( props: DiagramProps, id ) {
+    this.diagram_.object$.next( { props, id,
+      anchors: await this.mensajes_.getFollowingMensajes( id )
+    })
   }
   
 

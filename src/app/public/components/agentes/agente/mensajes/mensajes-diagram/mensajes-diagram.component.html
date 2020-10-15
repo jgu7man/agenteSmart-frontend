@@ -1,0 +1,12 @@
+<div id="mensajes-diagram" *ngIf="diagram_.objectList.length > 0">
+    <svg class="object" 
+    [attr.height]="windowHeight" [attr.width]="windowWidth">
+
+        <polyline class="connection" 
+        *ngFor="let route of routes"
+        [attr.points]="route" 
+        style="fill:white;stroke:#292f4d;stroke-width:2"
+        />
+
+    </svg>
+</div>

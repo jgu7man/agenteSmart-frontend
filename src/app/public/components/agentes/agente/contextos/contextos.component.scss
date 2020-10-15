@@ -4,16 +4,26 @@
 }
 
 #contextos {
-    margin: 0 1em;
-    display: block;
+    display: flex;
     width: 100%;
     overflow: auto !important;
+    flex-direction: column;
+    top: 0;
+    left: 0;
+    position: relative;
 }
 
 .en-Column {
-    background: #EFF1FE;
-    width: 275px !important ;
-    min-width: 275px;
+    border-bottom: solid 2px #ffffff80;
+    min-height: 70px !important;
+    align-items: center;
+    display: flex;
+    .row {
+        margin: 0;
+        width: 90%;
+        display: flex;
+        align-items: center;
+    }
     .context-name {cursor: grab;}
     .grabbed {cursor: grabbing;}
     .contexto-name {
@@ -46,10 +56,10 @@
 }
 
 
-@media screen and (max-width: 450px) {
-    #contextos{
-        display: flex;
-        flex-direction: row;  
-        overflow: auto !important;  
-    }
-}
+// @media screen and (max-width: 450px) {
+//     #contextos{
+//         display: flex;
+//         flex-direction: row;  
+//         overflow: auto !important;  
+//     }
+// }

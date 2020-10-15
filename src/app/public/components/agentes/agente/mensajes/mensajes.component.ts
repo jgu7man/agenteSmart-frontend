@@ -2,6 +2,7 @@ import { AlertService } from 'src/app/Gdev-Tools/alerts/alert.service';
 import { IntentModel } from './mensaje.model';
 import { Component, OnInit } from '@angular/core';
 import { MensajesService} from './mensajes.service'
+import { CurrentAgenteService } from '../current-agente.service';
 @Component({
   selector: 'aSmart-mensajes',
   templateUrl: './mensajes.component.html',
@@ -11,7 +12,8 @@ export class MensajesComponent implements OnInit {
 
   constructor(
     private _mensaje:MensajesService,
-    private _alerta: AlertService
+    private _alerta: AlertService,
+    public agente_: CurrentAgenteService
   ) { }
 
   ngOnInit(): void {
