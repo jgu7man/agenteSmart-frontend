@@ -19,6 +19,7 @@ import { AgentesModule } from './components/agentes/agentes.module';
 import { GdevResponsiveModule } from '../Gdev-Tools/responsive/gdev-responsive.module';
 import { GdevTextModule } from '../Gdev-Tools/text/gdev-text.module';
 import { GdevAlertModule } from '../Gdev-Tools/alerts/gdev-alert.module';
+import { InventarioModule } from './components/inventario/inventario.module';
 
 
 
@@ -43,6 +44,7 @@ import { GdevAlertModule } from '../Gdev-Tools/alerts/gdev-alert.module';
     AgentesModule,
     GdevResponsiveModule,
     GdevTextModule,
+    InventarioModule,
   ],
   providers: [
   ]

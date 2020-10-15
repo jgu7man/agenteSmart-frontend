@@ -14,6 +14,9 @@ import { MensajeComponent } from './components/agentes/agente/mensajes/mensaje/m
 import { MensajesComponent } from './components/agentes/agente/mensajes/mensajes.component';
 import { ColeccionesComponent } from './components/agentes/agente/colecciones/colecciones.component';
 import { TarjetasComponent } from './components/agentes/agente/tarjetas/tarjetas.component';
+import { ProductsComponent } from './components/inventario/products/products.component';
+import { AddProductComponent } from './components/inventario/products/add-product/add-product.component';
+import { EditProductComponent } from './components/inventario/products/edit-product/edit-product.component';
 
 
 const routes: Routes = [
@@ -22,10 +25,10 @@ const routes: Routes = [
       {
         path: 'dashboard', component: DashboardComponent, children: [
           { path: '', redirectTo: 'agentes', pathMatch:'full' },
+          
           { path: 'agentes', component: AgentesComponent },
           { path: 'crear_agente', component: InitAgenteComponent },
-          {
-            path: 'agente/:id', component: AgenteComponent, children: [
+          { path: 'agente/:id', component: AgenteComponent, children: [
               { path: '', redirectTo: 'mensajes', pathMatch: 'full' },
               { path: 'mensajes', component: MensajesComponent },
               { path: 'mensaje/:name', component: MensajeComponent },
@@ -34,6 +37,12 @@ const routes: Routes = [
               { path: 'colecciones', component: ColeccionesComponent },
               { path: 'opciones', component: OpcionesComponent },
           ] },
+          
+          { path: 'inventario', component: ProductsComponent },
+          { path: 'products/add', component: AddProductComponent },
+          { path: 'products/edit/:id', component: EditProductComponent },
+          
+          
           ]}
         ]}
   ];

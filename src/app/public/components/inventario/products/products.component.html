@@ -1,0 +1,114 @@
+<mat-drawer-container [hasBackdrop]="false">
+	<mat-drawer #currentProduct [mode]="'over'" [position]="'end'">
+		<gdev-edit-product *ngIf="prodSelected" [product]="prodSelected" (closeForm)="onClosePanel()" ></gdev-edit-product>
+	</mat-drawer>
+	<mat-drawer-content>
+		
+		<div id="products">
+			<div class="row" id="productTab">
+				
+				<div class="col s12" id="productsTable">
+					<div class="row">
+
+						<!-- * TÍTULO * -->
+						
+						<div class="col s8 m10"> 
+							<h2>PRODUCTOS</h2>
+						</div>
+						
+						<!-- * OPCIONES DEL PANEL * -->
+
+						<div class="col s2">
+							<button
+							mat-raised-button
+							[color]="'primary'" 
+							class="" 
+							[routerLink]="['../products/add']" 
+							>Agregar</button>
+						</div>
+						
+					</div>
+					<!-- <div class="row" id="sort_menu">
+						<gdev-sort-options *ngIf="categories.length > 0"
+						[sortOptions]="false"
+						[compareOptions]="false"
+						[filterByField]="'categorias'"
+						[fieldTypeValue]="'array'"
+						[fieldValues]="categories">
+						</gdev-sort-options>
+
+					</div> -->
+					<!-- TERMINA CABECERA -->
+						
+
+
+
+						<!-- * TABLA * -->
+						<div class="row"  [class.mat-elevation-z3]="true">
+							<gdev-index-caller
+							style="padding: 1em;"
+							></gdev-index-caller>
+							<div class="col s12">   
+								<mat-selection-list #listPanel [multiple]="false"
+								(selectionChange)="onProdSelected($event)">
+								<mat-list-option style="width: 100%;" [disabled]="true">
+									<div class="row table-headers" style="width: 110%;">
+										<div class="col s2">Imagen</div>
+										<div class="col s4">Referencia</div>
+										<div class="col s3">Sinónimos</div>
+										<div class="col s1">Disp.</div>
+									</div>
+								</mat-list-option>
+								<mat-list-option *ngFor="let product of products" [value]="product">
+									<div class="row align-cols table-body" style="width: 100%;">
+										<div class="col s2 prodImg">
+											<img [src]="product.imagenUrl['url']" [alt]="product.referencia">
+										</div>
+										<div class="col s4">
+											{{product.referencia}}
+										</div>
+										<div class="col s3">
+											<span *ngFor="let sinonimos of product.sinonimos; index as i">
+												{{sinonimos}}<span *ngIf="i != product.sinonimos.length -1">, </span>
+											</span>
+										</div>
+										<div class="col s1 ">
+											<ng-container *ngIf="product.onStock || product.stockCant; else outStock">
+												<ng-container *ngIf="product.stockCant; else disp">
+													{{product.stockCant}}													
+												</ng-container>
+												<ng-template #disp>
+													<i class="fas fa-circle blue-text"></i>
+												</ng-template>
+											</ng-container>
+											<ng-template #outStock>
+												<i class="fas fa-circle grey-text"></i>
+											</ng-template>
+										</div>
+									</div>
+								</mat-list-option>
+							</mat-selection-list>
+							<!-- <gdev-loading-data *ngIf="!products || products.length <= 0"></gdev-loading-data> -->
+						</div>
+
+
+						<div class="col s12" *ngIf="!products">
+							<div class="noCant_container">
+								<i class="far fa-frown fa-3x"></i>
+								<p style="font-size: x-large;">Aun no has agregado productos </p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- TERMINA TABLA -->
+
+
+			</div>
+				
+
+		<!-- TERMINA MARCO -->
+		</div>
+	
+	</mat-drawer-content>
+</mat-drawer-container>
