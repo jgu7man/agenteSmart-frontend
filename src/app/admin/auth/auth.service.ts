@@ -46,13 +46,13 @@ export class AuthService {
    }
 
   async getAuthUser() {
-    return await new Promise( resolve => {
+    return await new Promise<UserInterface>( resolve => {
       this.user$.pipe( debounceTime( 100 ) )
         .subscribe( res => resolve( res ) )
     })
   }
   
-  async getCurrentUser() {
+  async getCurrentUser():Promise<UserInterface> {
     
     var localUser = this._cache.getDataKey('user')
     // console.log(localUser);

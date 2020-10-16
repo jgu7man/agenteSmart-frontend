@@ -8,6 +8,9 @@ import { TextService } from '../../../../../services/text.service';
 import { Subject, Observable, AsyncSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { UsuariosService } from '../../../usuarios/usuarios.service';
+import { AuthService } from '../../../../../admin/auth/auth.service';
+import { AlertService } from '../../../../../Gdev-Tools/alerts/alert.service';
 
 @Injectable({
   providedIn: 'root'
@@ -26,10 +29,13 @@ export class TiposService {
     private _cache: CacheService,
     private _agente: CurrentAgenteService,
     private _text: TextService,
-    private router: Router
+    private router: Router,
+    private _auth: AuthService,
+    private _alerts: AlertService
   ) {
     this.tiposCollection()
     this.resetCurrentTipo()
+    this.updateProductType()
   }
   
   resetCurrentTipo() {
@@ -46,6 +52,8 @@ export class TiposService {
 
   // CREATE TIPOS DE DATOS
   // UPDATE
+
+  // TODO: EntityType Create Function
 
   async setTipo( tipo: TipoEntidadModel ) {
     tipo.displayName = this._text.normalize( tipo.displayName )
@@ -64,6 +72,9 @@ export class TiposService {
     return tipo.name
   }
 
+
+
+  // TODO EntityType update function
 
   async setTipoOption(
     tipoName: string,
@@ -114,11 +125,28 @@ export class TiposService {
   }
 
 
-
+  async updateProductType() {
+    let user = await this._auth.getCurrentUser()
+    var productTypeRef = this.fs.doc(`usuarios/${user.uid}`).ref
+      .collection( 'config_docs' ).doc( 'products_types' )
+    var productTypesDoc = await productTypeRef.get()
+    if ( productTypesDoc.exists ) {
+      try {
+        let productTypes = productTypesDoc.data();
+        console.log(productTypes);
+        ( await this.tiposCollection() ).doc( 'productos' ).set( {...productTypes} , { merge: true } )
+        console.log('Listo');
+      } catch (error) {
+        console.error(error)
+        this._alerts.sendError('Error', error)
+      }
+    }
+  }
 
 
   // READ TIPOS DE DATOS
 
+  // TODO EntityType read function
   currentTipo$ = new Observable<TipoEntidadModel>()
   // currentTipo: TipoEntidadModel
   
@@ -147,6 +175,7 @@ export class TiposService {
   // DELETE Tipos
 
 
+  // TODO EntityType Delete function
 
   async deleteTipo( tipoName: string ) {
     await ( await this.tiposCollection() ).doc( tipoName ).delete()

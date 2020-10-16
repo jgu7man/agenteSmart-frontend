@@ -3,8 +3,8 @@ import { AgenteModel } from '../init-agente/agente.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthService, UserInterface } from '../../../../admin/auth/auth.service';
 import { CacheService } from '../../../../Gdev-Tools/cache/cache.service';
-import { Subject, Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { take, filter, map, pluck, tap, scan, count } from 'rxjs/operators';
+import { Subject, Observable, BehaviorSubject, Subscription, merge, zip, of } from 'rxjs';
+import { take, filter, map, pluck, tap, scan, count, mergeAll, mergeMap, concatAll } from 'rxjs/operators';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { IntentModel } from './mensajes/mensaje.model';
 import { ContextoModel } from './contextos/contexto.model';
@@ -169,7 +169,14 @@ export class CurrentAgenteService {
     var changes = this.fs.collection<TipoEntidadModel>( path )
       .valueChanges()
     
-    this.tiposSubs = changes.subscribe( list => {
+
+    var system = this.fs.collection<TipoEntidadModel>( 'global_config/agentes/systemEntites' )
+      .valueChanges()
+    
+    
+    this.tiposSubs = of( changes, system ).pipe(
+      concatAll()
+    ).subscribe( list => {
       this.tiposList = list
       this._cache.updateData('tipos', list)
     })
