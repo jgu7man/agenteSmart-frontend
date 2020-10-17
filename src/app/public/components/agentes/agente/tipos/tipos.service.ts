@@ -1,3 +1,5 @@
+import { AlertService } from 'src/app/Gdev-Tools/alerts/alert.service';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Loading } from '../../../../../Gdev-Tools/loading/loading.service';
 import { AngularFirestore } from '@angular/fire/firestore';
@@ -20,16 +22,22 @@ export class TiposService {
   // currentTipo: TipoEntidadModel
   currentClases: Clase[]
 
+  private _url = 'https://us-central1-main-agentesmart.cloudfunctions.net/dialogflow/entity';
+  private _projectId: String;
+
   constructor (
     private loading: Loading,
     private fs: AngularFirestore,
     private _cache: CacheService,
     private _agente: CurrentAgenteService,
     private _text: TextService,
-    private router: Router
+    private router: Router,
+    private _http: HttpClient,
+    private _alerts: AlertService
   ) {
     this.tiposCollection()
     this.resetCurrentTipo()
+    this._projectId = this._cache.getDataKey('projectId');
   }
   
   resetCurrentTipo() {
@@ -45,7 +53,55 @@ export class TiposService {
 
 
   // CREATE TIPOS DE DATOS
+  // REVIEW POST /entity
+
+  private _postCreateEntity(entityType: TipoEntidadModel): Promise<TipoEntidadModel>{
+    // NOTE POST /entity Necesitas enviar un entityType valido
+    // LINK https://googleapis.dev/nodejs/dialogflow/latest/google.cloud.dialogflow.v2.IEntityType.html
+    return new Promise((resolve, reject) => {
+      this._http.post(this._url, entityType, {
+        withCredentials: true,
+        responseType: "json"
+      })
+        .toPromise()
+        .then(result => {
+          console.info("Entity POST Response:", result);
+          if (result['status'] == 201 || result['status'] == 201) {
+            //exito creado
+          }
+          resolve(result['result'])
+        })
+        .catch(err => {
+          if (err) {
+            this._alerts.sendError('No fué posible crear ese Tipo en este momento. Intentelo de nuevo porfavor.', err)
+          }
+          reject(err)
+        })
+    })
+  }
   // UPDATE
+  // REVIEW  PUT /entity 
+  // send a valid EntityType with a Resource name.
+
+  private _putEntityRequest(entityType: TipoEntidadModel) {
+    return new Promise((resolve, reject) => {
+      this._http.put(this._url, entityType)
+       .toPromise()
+        .then(result => {
+          console.info("Entity PUT Response:", result);
+          if (result['status'] == 201) {
+            //exito creado
+            resolve(result)
+          }
+        })
+        .catch(err => {
+          if (err) {
+            this._alerts.sendError('No fué posible crear ese Tipo en este momento. Intentelo de nuevo porfavor.', err)
+          }
+          reject(err)
+        })
+    })
+  }
 
   async setTipo( tipo: TipoEntidadModel ) {
     tipo.displayName = this._text.normalize( tipo.displayName )
@@ -118,6 +174,11 @@ export class TiposService {
 
 
   // READ TIPOS DE DATOS
+  // REVIEW LIST ALL EntityTypes
+  //creo este metodo es silimar al de abajo
+  private getAllEntities(){
+    return this._http.get(`${this._url}/${this._projectId}`)
+  }
 
   currentTipo$ = new Observable<TipoEntidadModel>()
   // currentTipo: TipoEntidadModel
@@ -144,7 +205,26 @@ export class TiposService {
   }
 
 
-  // DELETE Tipos
+  // REVIEW
+  // DELETE review Delete De EntityType
+  private _deleteEntityType(entityId: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+
+      this._http.delete(this._url + `/${this._projectId}/${entityId}`)
+        .toPromise()
+        .then(result => {
+          if (result['status'] == 204) {
+            resolve('done');
+          }
+        })
+        .catch(err => {
+          if (err) {
+            this._alerts.sendError('No es posible elimnar intent, intentelo de nuevo, porfavor.', err)
+          }
+          reject(err)
+        })
+    })
+  }
 
 
 

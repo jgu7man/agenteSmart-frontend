@@ -123,7 +123,6 @@ export class CurrentMensajeService {
 
     try {
       // REVIEW falta testear esta función de update
-      //sinceramente nose como puedo hacer esto
 
       const request = await this.updateIntentApiRequest(this.current);
       if (request) {
@@ -182,17 +181,18 @@ export class CurrentMensajeService {
 
 
 
-  async delete( mensajeName ) {
-
-    // TODO falta reparar la request 
-    // LINK https://stackoverflow.com/questions/299628/is-an-entity-body-allowed-for-an-http-delete-request#:~:text=The%20latest%20update%20to%20the,implementations%20to%20reject%20the%20request.
-    //Mañana lo cambio por url nada más y así debería quedar y funcionar la petición.
+  async delete(mensajeName) {
+    //params intentName (ultima cadena)
+    // REVIEW Falta testear esta función.
+    const request = await this.deleteIntentRequest(mensajeName);
+    if (request) {
+      //No error, intent Borrado
+    }
 
     return await ( await this.mensajesCollection() ).doc( mensajeName ).delete()
   }
 
   private deleteIntentRequest(intentId: string): Promise<any> {
-    // FIXME Aqui falta reparar el BACKEND por motivos puestos en el link de arriba
     return new Promise((resolve, reject) => {
       const projectId: string = this._cache.getDataKey('projectId')
 
