@@ -10,6 +10,7 @@ import { take, mergeMap, distinctUntilKeyChanged, mergeAll, tap } from 'rxjs/ope
 import { AlertService } from '../../../../../Gdev-Tools/alerts/alert.service';
 import { Loading } from '../../../../../Gdev-Tools/loading/loading.service';
 import { Subject, Observable, Subscription } from 'rxjs';
+import { ColorService } from '../../../../../Gdev-Tools/color/color.service';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +33,8 @@ export class ContextosService {
     private _mensajes: MensajesService,
     private _agente: CurrentAgenteService,
     private _cache: CacheService,
-    private loading: Loading
+    private loading: Loading,
+    private _color: ColorService
   ) {
 
 
@@ -62,6 +64,8 @@ export class ContextosService {
 
   
   async setContext( contexto: ContextoModel ) {
+
+    contexto.color = this._color.generateRandomColor()
 
     if ( !contexto.id ) {
       let contextFinded = this.list.find(context => context.contextName === contexto.contextName)

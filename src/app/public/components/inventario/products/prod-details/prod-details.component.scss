@@ -1,0 +1,11 @@
+.collection-item {
+    width: 100%;
+    span {
+        width: 40%;
+        display: inline-block;
+    }
+}
+
+.collection:nth-child(even) {
+    background: #ccc;
+}

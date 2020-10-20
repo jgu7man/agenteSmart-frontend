@@ -3,5 +3,6 @@ export interface ContextoModel {
     lifespanCount: number
     index: number
     parameters?: Object
-    id?: string
+    id?: string,
+    color?: string
 }

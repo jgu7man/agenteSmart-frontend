@@ -3,6 +3,7 @@ import { IntentModel } from './mensaje.model';
 import { Component, OnInit } from '@angular/core';
 import { MensajesService} from './mensajes.service'
 import { CurrentAgenteService } from '../current-agente.service';
+import { CacheService } from '../../../../../Gdev-Tools/cache/cache.service';
 @Component({
   selector: 'aSmart-mensajes',
   templateUrl: './mensajes.component.html',
@@ -11,13 +12,22 @@ import { CurrentAgenteService } from '../current-agente.service';
 export class MensajesComponent implements OnInit {
 
   constructor(
-    private _mensaje:MensajesService,
+    private _mensajes:MensajesService,
     private _alerta: AlertService,
-    public agente_: CurrentAgenteService
+    public agente_: CurrentAgenteService,
+    private _cache: CacheService,
   ) { }
 
-  ngOnInit(): void {
-    this._mensaje.getProjectId()
+  async ngOnInit() {
+    this._mensajes.getProjectId()
+    this.getAllMensajes()
+    this._mensajes.reloadMensajes$.subscribe(() => this.getAllMensajes())
+  }
+  
+  async getAllMensajes() {
+    let mensajesList = await this._mensajes.getAllIntents()
+    console.log(mensajesList);
+    this._cache.updateData( 'allMensajes',mensajesList)
   }
 
   async crearIntent() {
@@ -27,7 +37,7 @@ export class MensajesComponent implements OnInit {
     }
 
     try {
-      const newIntent = await this._mensaje.createNewIntent(intent)
+      const newIntent = await this._mensajes.createNewIntent(intent)
       if (newIntent) {
         //se ha creado el intent(regresa un intent completo vacio),
         // Ejemplo de nombre: projects/prueba-aente/agent/intents/f0b12fde-9600-4e2e-88a7-70861817a358

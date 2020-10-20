@@ -7,7 +7,8 @@ export class MensajeModel {
         public intent?: IntentModel,
         public contexto?: string,
         public indexContexto?: number,
-        public name?: string
+        public name?: string,
+        public displayName?: string
     ) {
         this.contexto = ''
         this.indexContexto = 0

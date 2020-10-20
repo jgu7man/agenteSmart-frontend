@@ -1,0 +1,46 @@
+<p><b>Características del producto</b></p>
+
+<div class="row">
+    <div class="col s5">
+        <mat-form-field>
+            <mat-label>Nombre</mat-label>
+            <input
+            matInput
+            type="text"
+            [(ngModel)]="newDetail.detailName"
+            name="caractName"
+            >
+        </mat-form-field>
+    </div>
+    <div class="col s5">
+        <mat-form-field>
+            <mat-label>Valor</mat-label>
+            <input
+            matInput
+            type="text"
+            [(ngModel)]="newDetail.detailValue"
+            name="caractValue"
+            >
+        </mat-form-field>
+    </div>
+    <div class="col s2">
+        <button mat-icon-button
+            (click)="addCaract()"
+        >
+            <i class="fas fa-check green-text"></i>
+        </button>
+    </div>
+</div>
+
+<div class="row">
+    <ul class="collection bordered">
+        <li class="collection-item" *ngFor="let detail of details">
+            <span><b>{{detail.detailName}}</b></span>
+            <span>{{detail.detailValue}}</span>
+            <button mat-icon-button
+            (click)="deleteCaract(detail.detailValue)">
+                <i class="fas fa-trash red-text"></i>
+            </button>
+        </li>
+    </ul>
+</div>

@@ -1,0 +1,208 @@
+<div class="container" strechHeight>
+    <div class="row align-cols">
+        <div class="col s10">
+            <h2>NUEVO PRODUCTO</h2>
+        </div>
+        <div class="col s2">
+            <button mat-raised-button (click)="location.back()" >REGRESAR</button>
+        </div>
+    </div>
+
+    <form action="#" method="post" onsubmit="return false" #addProduct="ngForm" autocomplete="off">
+        <!-- * DATOS POR DEFAULT DEL PRODUCTO -->
+        <div class="row">
+            <!-- * CONTENIDO -->
+            <div class="col s12 m6 mat-elevation-z2" id="prodData">
+                <!-- REFERENCIA O NOMBRE DEL PRODUCTO -->
+                <div class="row">
+                    <div class="col s12 ">
+                        <mat-form-field>
+                            <mat-label>Referencia</mat-label>
+                            <input
+                            matInput
+                            type="text"
+                            name="referencia"
+                            #referencia="ngModel"
+                            [(ngModel)]="product.referencia"
+                            required
+                            >
+                            <mat-error *ngIf="referencia.invalid
+                            || (referencia.dirty && referencia.touched)">
+                                Es necesario el nombre (referencia) del producto
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                
+
+                <!-- MANEJO DEL STOCK -->
+                <div class="row align-cols">
+                    <div class="col s6">
+                        <mat-slide-toggle
+                            name="onStock"
+                            [(ngModel)]="product.onStock"
+                            (change)="setStock($event)"
+                            #onStock
+                            >¿En stock?
+                        </mat-slide-toggle>
+                    </div>
+    
+                    <div class="col s6">
+                        <mat-form-field>
+                            <mat-label>Cantidad</mat-label>
+                            <input
+                            matInput
+                            type="number"
+                            name="cantidad"
+                            [(ngModel)]="product.stockCant"
+                            >
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <!-- DESCRIPCIÓN -->
+                <div class="row">
+                    <div class="col s12">
+                        <mat-form-field>
+                            <mat-label>Descripción</mat-label>
+                            <textarea
+                            name="descripcion"
+                            [(ngModel)]="product.descripcion"
+                            #descripcion="ngModel"
+                            matInput
+                            cdkTextareaAutosize
+                            #autosize="cdkTextareaAutosize"
+                            [matTextareaAutosize]="true"
+                            (resizeToFitContent)="(true)"
+                            [cdkAutosizeMinRows]="1"
+                            [cdkAutosizeMaxRows]="8"
+                            id="descripcion"
+                            >
+                            </textarea>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                    <!-- Categorías -->
+                    <!-- <div class="col s12" *ngIf="categories">
+                        <mat-form-field>
+                            <mat-label>Categorías</mat-label>
+                            <mat-select
+                                [multiple]="true"
+                                [(ngModel)]="product.categorias"
+                                name="categorias"
+                            >
+                                <mat-option
+                                    *ngFor="let categoria of categories"
+                                    [value]="categoria.name"
+                                >
+                                    {{ categoria.name }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div> -->
+
+                <div class="row">
+                    <div class="col s9">
+                        <p>Precio general del producto</p>
+                    </div>
+                    <div class="col s3">
+                        <mat-form-field>
+                            <mat-label>Precio</mat-label>
+                            <input
+                            matInput
+                            type="number"
+                            name="precio"
+                            #precio="ngModel"
+                            [(ngModel)]="product.precio"
+                            required
+                            >
+                            <mat-error *ngIf="precio.invalid
+                            || (precio.dirty && precio.touched)">
+                                El precio es necesario
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col s12">
+                        <gdev-prod-details 
+                        [details]="product.detalles ? product.detalles : []" 
+                        (detailsChanged)="product.detalles = $event" 
+                        ></gdev-prod-details>
+                    </div>
+                </div>
+
+            </div>
+                
+
+            <div class="col s12 m6 mat-elevation-z2" >
+                
+                <div class="row">
+                    <!-- * SINÓNIMOS -->
+                    <div class="col s12">
+                        <mat-form-field>
+                            <mat-chip-list #sinonimosList aria-label="Sinónimos de la referencia">
+                                <mat-chip *ngFor="let sinonimo of product.sinonimos" [selectable]="true"
+                                [removable]="true" (removed)="removeSinonimo(sinonimo)">
+                                {{sinonimo}}
+                                <mat-icon matChipRemove>cancel</mat-icon>
+                            </mat-chip>
+                            <input placeholder="Agrega sinónimos"
+                                [matChipInputFor]="sinonimosList"
+                                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                [matChipInputAddOnBlur]="false"
+                                (matChipInputTokenEnd)="addSinonimo($event)">
+                            </mat-chip-list>
+                            <mat-hint>Agrega sinónimos de como es llamado también el producto. Ejemplo: Casa, Hogar, Choza, etc. Sepáralos con una coma</mat-hint>
+                        </mat-form-field>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <!-- * IMAGEN DEL PRODUCTO -->
+                    <div class="col s12">
+                        Sube una imagen de producto, es necesaria
+                        <gdev-image-uploader [folder]="usuario.uid+'/productos'"
+                        (result)="getImageURL($event)"
+                        [srcPreview]="product.imagenUrl"
+                        (itemDeleted)="deleteProductImage($event)"
+                        ></gdev-image-uploader>
+                    </div>
+                </div>
+
+                <!-- GALERÍA
+
+                Puedes agregar más imágenes del producto como galería
+                <gdev-image-uploader [folder]="'productos'"
+                (result)="getImageGallery($event)"
+                [srcGroup]="product.galeria ? product.galeria : []"
+                [multiple]="true"
+                (itemDeleted)="deleteImageGallery($event)"
+                ></gdev-image-uploader> -->
+            </div>
+        </div>
+
+        <div class="row">
+            
+        </div>
+            
+
+        <!-- * BOTÓN DE GUARDADO -->
+
+        <div class="row">
+            <div class="col s12 center">
+                <button
+                    mat-raised-button
+                    color="primary"
+                    (click)="onSubmit()"
+                    [disabled]="!addProduct.form.valid && product.imagenUrl == undefined"
+                >
+                    Guardar
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

@@ -59,7 +59,7 @@ export class FrasesService {
     try {
 
       this.frasesList = this._mensaje.current.trainingPhrases
-      frase.name = Math.random().toString( 36 ).substring( 7 );
+      // frase.name = Math.random().toString( 36 ).substring( 7 );
       
       if ( this._mensaje.current.trainingPhrases.length > 0 ) {
         console.log( 'update' );
@@ -90,7 +90,7 @@ export class FrasesService {
     try {
       const mensaje = this._mensaje.current
       const frasesList = mensaje.trainingPhrases
-      const phraseToEdit = frasesList.findIndex( phrase => phrase.name === frase.name )
+      const phraseToEdit = frasesList.findIndex( phrase => phrase === frase.name )
       frasesList[ phraseToEdit ] = frase;
       this._mensaje.current.trainingPhrases = frasesList
       return this.store.dispatch( actions.setUnsaved() )
@@ -159,14 +159,12 @@ export class FrasesService {
               entityType: `@${ partSplited[ 0 ] }`,
               text: param.length > 1 ? param[ 1 ] : param[ 0 ],
               selected: true,
-              paramName: param.length > 1 ? param[ 0 ] : '',
-              alias: this._text.generateRandomText(5),
+              alias: param.length > 1 ? param[ 0 ] : '',
             } )
           } else if ( partSplited ) {
             partes.push( {
               text: partSplited[ 0 ],
               selected: false,
-              alias: this._text.generateRandomText( 5 ),
             } )
           }
         }
@@ -176,7 +174,6 @@ export class FrasesService {
       partes.push( {
         text: frase,
         selected: false,
-        alias: this._text.generateRandomText( 5 ),
       } )
     }
 

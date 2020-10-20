@@ -1,0 +1,23 @@
+#prodData {
+    padding: 2em;
+    max-width: 48%;
+    margin-right: 2%;
+}
+
+#botonera {
+    display: flex;
+    justify-content: space-around;
+}
+
+h2 {
+    font-size: x-large;
+}
+
+::ng-deep {
+    .mat-tab-body-wrapper {
+        padding: 1em;
+    }
+    .mat-tab-body-content {
+        overflow-x: inherit;
+    }
+}
