@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AgenteModel } from '../agente.model';
 import { CrearAgenteService } from './crear-agente.service';
+import { CacheService } from '../../../../../Gdev-Tools/cache/cache.service';
+import { UserInterface } from '../../../../../admin/auth/auth.service';
 
 @Component({
   selector: 'aSmart-form-crear-agente',
@@ -10,15 +12,21 @@ import { CrearAgenteService } from './crear-agente.service';
 export class FormCrearAgenteComponent implements OnInit {
 
   agente: AgenteModel
+  user: UserInterface
+  folder:string
   constructor(
-    private _agente: CrearAgenteService
+    private _agente: CrearAgenteService,
+    private _cache: CacheService
   ) {
-    this.agente = new AgenteModel('','','es-419','America/New_York','','')
+    this.agente = new AgenteModel( '', '', 'es-419', 'America/New_York', '', '' )
+    this.user = this._cache.getDataKey( 'user' )
   }
   
   
 
   ngOnInit() {
+    console.log( this.user );
+    this.folder = `${this.user.uid}/agentes/`
   }
 
 
@@ -57,11 +65,11 @@ export class FormCrearAgenteComponent implements OnInit {
     {display:'(GMT-9:00) America/Anchorage', value:'America/Anchorage'},
     {display:'(GMT-9:00) US/Alaska', value:'US/Alaska'},
     {display:'(GMT-8:00) America/Los_Angeles', value:'America/Los_Angeles'},
-    {display:'(GMT-7:00) America/Denver', value:'America/Denver'},
-    {display:'(GMT-6:00) America/Chicago', value:'America/Chicago'},
-    {display:'(GMT-5:00) America/New_York', value:'America/New_York'},
-    {display:'(GMT-4:00) America/Barbados', value:'America/Barbados'},
-    {display:'(GMT-3:00) America/Buenos_Aires', value:'America/Buenos_Aires'},
+    {display:'(GMT-7:00) Monterrey/Denver', value:'America/Denver'},
+    {display:'(GMT-6:00) Guatemala/CDMX/Chicago', value:'America/Chicago'},
+    {display:'(GMT-5:00) Lima/Bogotá/New_York/', value:'America/New_York'},
+    {display:'(GMT-4:00) Santiago/La Paz/Barbados', value:'America/Barbados'},
+    {display:'(GMT-3:00) Buenos_Aires/São Paulo', value:'America/Buenos_Aires'},
     {display:'(GMT-2:00) Atlantic/South_Georgia', value:'Atlantic/South_Georgia'},
     {display:'(GMT-1:00) Atlantic/Cape_Verde', value:'Atlantic/Cape_Verde'},
     {display:'(GMT0:00) Africa/Casablanca', value:'Africa/Casablanca'},

@@ -17,7 +17,7 @@ import { CurrentMensajeState } from '../../store/mensaje.state';
 })
 export class MensajeHeaderComponent implements OnInit, OnDestroy {
 
-  mensaje: IntentModel
+  // mensaje: IntentModel
   switchEdit: boolean = false
   nameEdited: string
   
@@ -25,17 +25,18 @@ export class MensajeHeaderComponent implements OnInit, OnDestroy {
   unsaved: boolean
 
   constructor (
-    public _mensaje: CurrentMensajeService,
+    public mensaje_: CurrentMensajeService,
     private _dialog: MatDialog,
     public location: Location,
     public store: Store<CurrentMensajeState>
-  ) { }
+  ) { 
+    this.getMensaje()
+  }
 
   ngOnInit(): void {
-    this.getMensaje()
     this.stateSubs = this.store
       .subscribe( store => {
-        console.log(store, store.state.unsaved);
+        // console.log(store, store.state.unsaved);
         this.unsaved = store.state.unsaved
       } )
   }
@@ -43,31 +44,31 @@ export class MensajeHeaderComponent implements OnInit, OnDestroy {
   
   
   async getMensaje() {
-    this._mensaje.current$.subscribe( current => {
-      this.mensaje = current
-    })
+    console.log('get');
+    // this.mensaje = await this.mensaje_.getAsync()
+    // console.log(this.mensaje);
   }
 
   
 
   toEditName() {
     this.switchEdit = true
-    this.nameEdited = this.mensaje.displayName
+    this.nameEdited = this.mensaje_.current.displayName
   }
 
   
 
   updateDisplayName() {
     this.switchEdit = false
-    this.mensaje.displayName = this.nameEdited
-    this._mensaje.updateMensajeName( this.mensaje.name, this.nameEdited )
+    this.mensaje_.current.displayName = this.nameEdited
+    this.mensaje_.updateMensajeName( this.mensaje_.current.name, this.nameEdited )
     this.nameEdited = undefined
   }
 
   toDelMensaje() {
     var dialog = this._dialog.open( DelMensajeDialogComponent, {
       minWidth: '400px',
-      data: this.mensaje.name
+      data: this.mensaje_.current.name
     } )
 
     dialog.afterClosed().subscribe( () => {

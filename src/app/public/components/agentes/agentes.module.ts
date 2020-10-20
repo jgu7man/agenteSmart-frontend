@@ -65,6 +65,7 @@ import { GuardadoColeccionComponent } from './agente/colecciones/coleccion/guard
 import { HttpClientModule } from '@angular/common/http';
 import { DiagramElementDirective } from './agente/mensajes/diagram/diagram-element.directive';
 import { MensajesDiagramComponent } from './agente/mensajes/mensajes-diagram/mensajes-diagram.component';
+import { CreatingComponent } from './init-agente/creating/creating.component';
 
 
 
@@ -124,6 +125,7 @@ import { MensajesDiagramComponent } from './agente/mensajes/mensajes-diagram/men
     GuardadoColeccionComponent,
     DiagramElementDirective,
     MensajesDiagramComponent,
+    CreatingComponent,
   ],
   imports: [
     CommonModule,
@@ -136,6 +138,7 @@ import { MensajesDiagramComponent } from './agente/mensajes/mensajes-diagram/men
   ],
   providers: [
     
-  ]
+  ],
+  entryComponents: [CreatingComponent]
 })
 export class AgentesModule { }

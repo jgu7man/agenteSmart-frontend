@@ -42,6 +42,10 @@ export class MensajesByContextoComponent implements OnInit {
 
   async ngOnInit() {
     this.getMensajes()
+    this.mensajes_.reloadMensajes$.subscribe( get => {
+      console.log( get );
+      if ( get ) this.getMensajes()
+    } )
   }
 
   
@@ -61,13 +65,15 @@ export class MensajesByContextoComponent implements OnInit {
       let lastIndex = this.mensajes.length
       //
       try {
-        debugger
+        // debugger
         const newIntent = await this.mensajes_.createNewIntent(
           {
             displayName: this.newIntent,
             inputContextNames: lastIndex > 0 ? [contexto] : []
           } );
 
+        
+        console.log(newIntent);
         if (newIntent) {
           console.info('Intent Created, response:', newIntent)
           //se ha creado el intent(regresa un intent completo vacio),

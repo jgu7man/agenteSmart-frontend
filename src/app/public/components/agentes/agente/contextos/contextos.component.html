@@ -9,6 +9,7 @@ cdkDropListOrientation="vertical"
     cdkDrag cdkDragLockAxis="y"
     *ngFor="let contexto of agente_.contextosList | sortBy:'asc':'index'"
     id="context-{{contexto}}"
+    gdev-color [background]="contexto.color"
     >
 
         <!-- Titulo de contexto agregado -->

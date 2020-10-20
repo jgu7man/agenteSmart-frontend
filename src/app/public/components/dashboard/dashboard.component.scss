@@ -1,9 +1,9 @@
 // #dashboard_container {
-//     background: #eff1fe;
+//     overflow-y: auto;
 // }
 
 #dashboard_area {
-    overflow: auto;
+    overflow: auto !important;
 }
 
 
