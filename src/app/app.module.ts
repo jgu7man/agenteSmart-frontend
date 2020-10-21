@@ -29,6 +29,7 @@ import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { mensajeReducer } from './public/components/agentes/agente/mensajes/mensaje/store/mensaje.reducer';
 import { mensajeMap } from './public/components/agentes/agente/mensajes/mensaje/store/mensaje.state';
+import { appReducers } from './app.state';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,7 @@ import { mensajeMap } from './public/components/agentes/agente/mensajes/mensaje/
     AuthModule,
     LoadingModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
-    StoreModule.forRoot(mensajeMap),
+    StoreModule.forRoot(appReducers),
     StoreDevtoolsModule.instrument( { maxAge: 25, logOnly: environment.production } ),
   ],
   providers: [],

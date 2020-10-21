@@ -24,7 +24,7 @@ hasBackdrop="false">
     class="test-chat-btn"
     [background]="'dark'"
     >
-      <button mat-raised-button color="accent" (click)="testChat.toggle()">
+      <button mat-raised-button color="accent" (click)="chat_.toggleChatbox()">
         Probar chat
       </button>
     </mat-toolbar>
@@ -34,8 +34,8 @@ hasBackdrop="false">
 
 
   <!-- Test chat -->
-  <mat-drawer #testChat class="test-chat" mode="over" position="end">
-    Test-chat
+  <mat-drawer #testChat [opened]="chat_.opened | async" class="test-chat" mode="over" position="end">
+    <gdev-chat-container></gdev-chat-container>
   </mat-drawer>
 
 
