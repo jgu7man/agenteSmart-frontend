@@ -22,6 +22,7 @@ import { CacheService } from '../../Gdev-Tools/cache/cache.service';
 export class AuthService {
   
   user$: Observable<any>
+  
   authenticated$: Subject<any> = new Subject()
   
   
@@ -35,7 +36,6 @@ export class AuthService {
     ) {
       console.time('user')
       
-
     //? Método para cargar el usuario autenticado de manera asíncrona
     this.user$ = this.afAuth.authState.pipe(
       switchMap( user => { return user ? 
@@ -46,13 +46,14 @@ export class AuthService {
    }
 
   async getAuthUser() {
-    return await new Promise( resolve => {
+    return await new Promise<UserInterface>( resolve => {
       this.user$.pipe( debounceTime( 100 ) )
         .subscribe( res => resolve( res ) )
     })
   }
   
-  async getCurrentUser() {
+  async getCurrentUser():Promise<UserInterface> {
+    
     var localUser = this._cache.getDataKey('user')
     // console.log(localUser);
     if ( !localUser ) {
@@ -84,7 +85,7 @@ export class AuthService {
 
     // Abre el popup de autenticación
     const provider = new auth.GoogleAuthProvider();
-    var credential = await this.afAuth.auth.signInWithPopup(provider)
+    var credential = await this.afAuth.signInWithPopup(provider)
       
     
       
@@ -103,13 +104,14 @@ export class AuthService {
     if (userDoc.exists) {
       var data = { uid, email, displayName, photoURL }
       userRef.set( data, { merge: true } )
-      this._cache.updateData('user', userDoc.data())
-      localStorage.setItem('mii', JSON.stringify(userDoc.data()))
+      this._cache.updateData( 'user', userDoc.data() )
+      this.router.navigate(['/dashboard'])
+      // localStorage.setItem('mii', JSON.stringify(userDoc.data()))
     } else {
       var newData = { uid, email, displayName, photoURL, dateRegist }
       userRef.set( newData, { merge: true } )
       this._cache.updateData( 'user', newData )
-      localStorage.setItem('mii', JSON.stringify(newData))
+      // localStorage.setItem('mii', JSON.stringify(newData))
     }
 
     
@@ -127,7 +129,7 @@ export class AuthService {
 
     // if (!authed) {
 
-    var credential = await (await this.afAuth.auth.signInWithPopup(provider))
+    var credential = await (await this.afAuth.signInWithPopup(provider))
     
     console.log( credential )
     
@@ -163,8 +165,9 @@ export class AuthService {
   //? Cerrar sesión
 
   async singOut() {
-    await this.afAuth.auth.signOut();
-    localStorage.removeItem('mii')
+    await this.afAuth.signOut();
+    localStorage.removeItem( 'mii' )
+    sessionStorage.removeItem('as-data')
      return this.router.navigate(['/']);
   }
 

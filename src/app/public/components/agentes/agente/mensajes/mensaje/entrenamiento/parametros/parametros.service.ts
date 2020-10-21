@@ -13,6 +13,7 @@ import { AlertService } from '../../../../../../../../Gdev-Tools/alerts/alert.se
 import { Store } from '@ngrx/store';
 import * as actions from '../../store/mensaje.actions'
 import { map, debounceTime, first } from 'rxjs/operators';
+import { TextService } from '../../../../../../../../Gdev-Tools/text/gdev-text.service';
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +40,8 @@ export class ParametrosService {
     private _frases: FrasesService,
     private loading: Loading,
     private _alerts: AlertService,
-    private store: Store<MensajeState>
+    private store: Store<MensajeState>,
+    private _text: TextService
   ) {
 
 
@@ -74,7 +76,7 @@ export class ParametrosService {
     console.log(param);
     var mensaje = this._mensaje.current
     var paramList = mensaje.parameters
-    param.name = Math.random().toString( 36 ).substring( 7 );
+    param.name = this._text.generateColorCode()
     
     
     if ( !paramList || paramList.length == 0 ) {

@@ -1,4 +1,4 @@
-<div class="mat-elevation-z4" id="mensaje-header" *ngIf="_mensaje.current$ | async as mensaje" >
+<div class="mat-elevation-z4" id="mensaje-header" *ngIf="mensaje_.current as mensaje" >
     <div class="row align-cols">
         <div class="col s2 m1 goback-btn">
             <button mat-button (click)="location.back()" >
@@ -10,7 +10,7 @@
         </div>
         <div class="col s2">
             <button style="float: right;" mat-raised-button color="primary"
-            (click)="_mensaje.update()"
+            (click)="mensaje_.update()"
             [disabled]="!unsaved"
             >Guardar</button>
         </div>

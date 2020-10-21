@@ -1,4 +1,3 @@
-import { AlertService } from 'src/app/Gdev-Tools/alerts/alert.service';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Loading } from '../../../../../Gdev-Tools/loading/loading.service';
@@ -10,6 +9,11 @@ import { TextService } from '../../../../../services/text.service';
 import { Subject, Observable, AsyncSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { UsuariosService } from '../../../usuarios/usuarios.service';
+import { AuthService } from '../../../../../admin/auth/auth.service';
+import { AlertService } from '../../../../../Gdev-Tools/alerts/alert.service';
+import { MatDialogRef } from '@angular/material/dialog';
+import { AddTipoComponent } from './add-tipo/add-tipo.component';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +28,8 @@ export class TiposService {
 
   private _url = 'https://us-central1-main-agentesmart.cloudfunctions.net/dialogflow/entity';
   private _projectId: String;
+  
+  _createDialog: MatDialogRef<AddTipoComponent>
 
   constructor (
     private loading: Loading,
@@ -33,11 +39,13 @@ export class TiposService {
     private _text: TextService,
     private router: Router,
     private _http: HttpClient,
-    private _alerts: AlertService
+    private _auth: AuthService,
+    private _alerts: AlertService,
   ) {
     this.tiposCollection()
     this.resetCurrentTipo()
     this._projectId = this._cache.getDataKey('projectId');
+    this.updateProductType()
   }
   
   resetCurrentTipo() {
@@ -72,7 +80,9 @@ export class TiposService {
         })
         .catch(err => {
           if (err) {
-            this._alerts.sendError('No fué posible crear ese Tipo en este momento. Intentelo de nuevo porfavor.', err)
+            this.loading.toggleWaitingSpinner( false )
+            this._createDialog.close()
+            this._alerts.sendError( 'No fué posible crear ese Tipo en este momento. Intentelo de nuevo porfavor.', err )
           }
           reject(err)
         })
@@ -95,6 +105,8 @@ export class TiposService {
         })
         .catch(err => {
           if (err) {
+            this.loading.toggleWaitingSpinner( false )
+            this._createDialog.close()
             this._alerts.sendError('No fué posible crear ese Tipo en este momento. Intentelo de nuevo porfavor.', err)
           }
           reject(err)
@@ -102,23 +114,39 @@ export class TiposService {
     })
   }
 
+  // TODO: EntityType Create Function
+
   async setTipo( tipo: TipoEntidadModel ) {
+    this.loading.toggleWaitingSpinner(true)
+    
     tipo.displayName = this._text.normalize( tipo.displayName )
-    const tipoInList: number = this._agente.tiposList.findIndex( Tipo => Tipo.name === tipo.name )
-    Object.keys(tipo).forEach(key => { if (tipo[key] == undefined) delete tipo[key]})
+    Object.keys( tipo ).forEach(
+      key => { if ( tipo[ key ] == undefined ) delete tipo[ key ] } )
+    const tipoInList: number = this._agente.tiposList.findIndex(
+      Tipo => Tipo.name === tipo.name )
+    
     
     if ( tipoInList < 0 ) {
+      await this._postCreateEntity(tipo)
       let newTipo = await ( await this.tiposCollection() ).add( {...tipo} )
       tipo.name = newTipo.id
-      newTipo.update( { name: newTipo.id } )
+      await newTipo.update( { name: newTipo.id } )
+    
+    
     } else {
+      await this._putEntityRequest(tipo)
       await ( await this.tiposCollection() ).doc( tipo.name ).set( { ...tipo }, { merge: true } )
     }
+
+    this.loading.toggleWaitingSpinner(false)
     // this.router.navigateByUrl( '../', { skipLocationChange: true } )
     //   .then(()=> this.router.navigate(['tipos']))
     return tipo.name
   }
 
+
+
+  // TODO EntityType update function
 
   async setTipoOption(
     tipoName: string,
@@ -169,7 +197,23 @@ export class TiposService {
   }
 
 
-
+  async updateProductType() {
+    let user = await this._auth.getCurrentUser()
+    var productTypeRef = this.fs.doc(`usuarios/${user.uid}`).ref
+      .collection( 'config_docs' ).doc( 'products_types' )
+    var productTypesDoc = await productTypeRef.get()
+    if ( productTypesDoc.exists ) {
+      try {
+        let productTypes = productTypesDoc.data();
+        console.log(productTypes);
+        ( await this.tiposCollection() ).doc( 'productos' ).set( {...productTypes} , { merge: true } )
+        console.log('Listo');
+      } catch (error) {
+        console.error(error)
+        this._alerts.sendError('Error', error)
+      }
+    }
+  }
 
 
   // READ TIPOS DE DATOS
@@ -179,6 +223,7 @@ export class TiposService {
     return this._http.get(`${this._url}/${this._projectId}`)
   }
 
+  // TODO EntityType read function
   currentTipo$ = new Observable<TipoEntidadModel>()
   // currentTipo: TipoEntidadModel
   
@@ -226,6 +271,7 @@ export class TiposService {
   }
 
 
+  // TODO EntityType Delete function
 
   async deleteTipo( tipoName: string ) {
     await ( await this.tiposCollection() ).doc( tipoName ).delete()

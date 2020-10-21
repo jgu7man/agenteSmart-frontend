@@ -59,19 +59,11 @@ export class SidenavComponent implements OnInit {
       },
       {
         name: 'Inventario',
-        route: 'dashboard/inventario',
+        route: 'inventario',
         routeId: 'inventario',
         childs: [
 
         ],
-      },
-      {
-        name: 'Servicios',
-        route: 'dashboard/servicios',
-        routeId: 'servicios',
-        childs: [
-
-        ]
       },
       {
         name: 'Integraciones',

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CurrentAgenteService } from '../../current-agente.service';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { IntentModel, FraseEntrenamiento, ParametroMensaje } from '../mensaje.model';
+import { IntentModel, FraseEntrenamiento, ParametroMensaje, MensajeModel } from '../mensaje.model';
 import { Observable, Subject, of, Subscription, forkJoin } from 'rxjs';
 import { Loading } from '../../../../../../Gdev-Tools/loading/loading.service';
 import { pluck } from 'rxjs/operators';
@@ -13,6 +13,7 @@ import { Store } from '@ngrx/store';
 import { MensajeState } from '../mensaje.model';
 import * as actions from './store/mensaje.actions'
 // import * as _ from 'lodash';
+import { ActivatedRoute } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +43,7 @@ export class CurrentMensajeService {
     private loading: Loading,
     private _alerts: AlertService,
     private store: Store<MensajeState>,
-    private _http: HttpClient
+    private _http: HttpClient,
   ) {
   }
 
@@ -65,31 +66,38 @@ export class CurrentMensajeService {
   }
   
 
+  get allMensajesList():MensajeModel[] {
+    return this._cache.getDataKey( 'allMensajes' )
+  }
+
+  async get() {
+    
+  }
 
   async getAsync() {
-    this.getParams().subscribe( async ( data ) => {
-      this.currentContexto = data.currentContexto
-      this.mensajeName = data.mensajeName
       
-      // console.log( this.mensajeName );
-      this._cache.updateData( 'currentMensajeName', this.mensajeName )
-      
-      if ( this.mensajeName ) {
-        
+      this.getParams().subscribe( async ( data ) => {
+        this.currentContexto = data.currentContexto
+        this.mensajeName = data.mensajeName
         this.mensajesPath = await this._agente.getPath( 'mensajes' )
-        this.mensaje$ = this.fs.collection( this.mensajesPath )
-          .doc<IntentModel>( this.mensajeName ).valueChanges()
-
+        this.current = this.allMensajesList.find(m => m.name == this.mensajeName)
+        
+      if ( this.current ) {
+        
+        // this.mensaje$ = this.fs.collection( this.mensajesPath )
+        //   .doc<IntentModel>( this.mensajeName ).valueChanges()
+        
         // await this.getFrasesList()
         // await this.getParametrosList()
         await this.getRespuestasList()
-
-        this.mensajeSub$ = this.mensaje$.subscribe( this.current$ )
-        this.current$.subscribe( current => {
-          this.current = current
-          // this._cache.updateData( 'currentMensaje', current )
-        } )
-
+        console.log( this.current );
+        this.current$.next(this.current)
+        // this.mensajeSub$ = this.mensaje$.subscribe( this.current$ )
+        // this.current$.subscribe( current => {
+        //   this.current = current
+        //   // this._cache.updateData( 'currentMensaje', current )
+        // } )
+        
         this._cache.updateData( 'currentContexto', this.currentContexto )
       }
     } )
@@ -121,20 +129,24 @@ export class CurrentMensajeService {
     Object.keys( this.current ).forEach( key =>
     { if ( this.current[ key ] == undefined ) delete this.current[ key ] } )
 
+
+
+    console.log(this.current);
     try {
       // REVIEW falta testear esta función de update
 
-      const request = await this.updateIntentApiRequest(this.current);
+      const request = await this.updateIntentApiRequest( this.current );
+      console.log(request);
       if (request) {
         console.info('Se Actualizo Intent:', request);
+        
+        // await ( await this.mensajesCollection() ).doc( this.current.name )
+        // .update( { ...this.current } )
+        
+        this.store.dispatch(actions.setSaved() )
+        this.loading.toggleWaitingBar()
+        this._alerts.sendFloatNotification('Mensaje guardado')
       }
-
-      await ( await this.mensajesCollection() ).doc( this.current.name )
-      .update( { ...this.current } )
-      
-      this.store.dispatch(actions.setSaved() )
-      this.loading.toggleWaitingBar()
-      this._alerts.sendFloatNotification('Mensaje guardado')
     } catch ( error ) {
       console.error(error);
       // this._alerts.sendError( 'No se pudo guardar', error )
@@ -150,24 +162,33 @@ export class CurrentMensajeService {
 
     return new Promise((resolve, reject ) => {
       
-      this._http.put(this._url, {
-        intent: intent,
-        intentView:"INTENT_VIEW_FULL" 
-      }, {
-        responseType: "json"
-      }).toPromise()
-      .then( response => {
-        if (response) {
-          console.info('Intent Updateado:', response['result'])
-          resolve(response['result'])
-        }
-      })
-      .catch( err => {
-        if (err) {
-          this._alerts.sendError('No es posible actualizar este intent, intentelo de nuevo, porfavor.', err)
-        }
-        reject(err)
-      })
+      this._http
+          .put(
+              this._url,
+              {
+                intent: intent,
+                intetnView: 'INTENT_VIEW_FULL',
+              },
+              {
+                responseType: 'json',
+              }
+          )
+          .toPromise()
+          .then((response) => {
+              if (response) {
+                  console.info('Intent Updateado:', response['result']);
+                  resolve(response['result']);
+              }
+          })
+          .catch((err) => {
+              if (err) {
+                  this._alerts.sendError(
+                      'No es posible actualizar este intent, intentelo de nuevo, porfavor.',
+                      err
+                  );
+              }
+              reject(err);
+          });
       
     })
   }
@@ -216,7 +237,7 @@ export class CurrentMensajeService {
   }
 
   unsubscribe() {
-    this.mensajeSub$.unsubscribe()
+    // this.mensajeSub$.unsubscribe()
     this.store.dispatch(actions.getOutMensaje())
   }
 }

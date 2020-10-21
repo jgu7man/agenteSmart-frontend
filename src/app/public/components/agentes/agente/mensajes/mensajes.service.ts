@@ -7,7 +7,7 @@ import { TextService } from '../../../../../services/text.service';
 import { CurrentAgenteService } from '../current-agente.service';
 import { ContextoModel } from '../contextos/contexto.model';
 import { AlertService } from '../../../../../Gdev-Tools/alerts/alert.service';
-import { Observable, from, of } from 'rxjs';
+import { Observable, from, of, Subject } from 'rxjs';
 import { IntentModel } from './mensaje.model';
 import { first, filter, switchMap, toArray, pluck, delayWhen, map } from 'rxjs/operators';
 import { RespuestaModel } from './mensaje/entrenamiento/respuestas/respuesta.model';
@@ -20,6 +20,8 @@ export class MensajesService {
   mensajesPath: string
   mensajes$ = new Observable<IntentModel[]>()
   projectId
+
+  reloadMensajes$ = new Subject<any>()
   // list: IntentModel[]
   private _url = 'https://us-central1-main-agentesmart.cloudfunctions.net/dialogflow/intent';
   
@@ -28,12 +30,11 @@ export class MensajesService {
     private _http: HttpClient,
     private fs: AngularFirestore,
     private _cache: CacheService,
-    private _alerta: AlertService,
+    private _alerts: AlertService,
     private _text: TextService,
     private _agente: CurrentAgenteService,
     private _loading: Loading,
   ) {
-    this.getAllMensajesList()
     this.getProjectId()
   }
 
@@ -57,25 +58,60 @@ export class MensajesService {
   
   // CREATE Mensajes
 
+  /**Crear un intent nuevo
+  *@param projectId id del projecto
+  *@param intent displayname nombre del intent */
+  async createNewIntent( intent: IntentModel ) {
 
+    const projectId: string = this._cache.getDataKey( 'projectId' )
+    //si no se puede hace proxeo de la URL base...
+    console.log( projectId )
+    const intentRequest = { projectId, intent, }
+
+    console.log( intent )
+    return new Promise<IntentModel>( ( resolve, reject ) => {
+      this._http.post( this._url, intentRequest, { responseType: 'json' } )
+        .subscribe( intentCreated => {
+          console.log( 'IntentCreated:', intentCreated[ 'intent' ] )
+          resolve( intentCreated[ 'intent' ] )
+          this.reloadMensajes$.next()
+        }, onError => {
+          this._alerts.sendError( 'Algo falló', onError )
+          reject( onError )
+        } )
+    } )
+
+      ;
+  }
+
+
+  /** Agrega el intent nuevo creado por la API a dialogflow como referencia para la interfaz
+   * @param {IntentModel} newIntent intent creado por la API
+   * @param {number} [index] index en el orden del contexto
+   * @param {string} [contexto] contexto con el que será invocado en la interfaz
+   */
   async setMensaje( newIntent: IntentModel, index?:number, contexto?: string,  ) {
     
-    // READ Busca en las mensajes que no esté duplicada
-    // if ( !this.mensajesList ) this.mensajesList = await this._cache.getDataKey( 'allMensajesList' )
     const resourceID = newIntent.name.slice(newIntent.name.lastIndexOf("/") + 1); //formato esperado: f0b12fde-9600-4e2e-88a7-70861817a358
     
 
-    newIntent = {...newIntent, index: index, contextos: contexto ? [ contexto ] : []}
+    newIntent = {
+      name: newIntent.name,
+      displayName: newIntent.displayName,
+      index: index, contextos: contexto ? [ contexto ] : []
+    }
     
     let mensajeDuplicated = this._agente.mensajesList
     .find(msj => msj.name == resourceID)
+    
+    
     if ( mensajeDuplicated ) {
-      console.log(name, ' duplicada');
-      this._alerta.sendMessageAlert( 'Mensaje Duplicada' )
+      console.log(name, ' duplicado');
+      
     } else {
       await (await this.mensajesCollection()).doc( resourceID )
         .set( newIntent )
-      return this._alerta.sendFloatNotification('Mensaje creado')
+      return this._alerts.sendFloatNotification('Mensaje creado')
     }
   }
 
@@ -87,8 +123,8 @@ export class MensajesService {
 
   // READ ENTRADAS
 
-  async getAllMensajesList() {
-    this.mensajesPath = await this._agente.getPath( 'mensajes' )
+  get allMensajesList() {
+    return this._cache.getDataKey('allMensajes')
   }
 
 
@@ -132,31 +168,7 @@ export class MensajesService {
     return mensajesList
   }
 
-  async createNewIntent(intent: IntentModel) {
-    //Crear un intent nuevo
-    //@params projectId: id del projecto
-    //@param intent: displayname nombre del intent
-
-
-    const projectId: string = this._cache.getDataKey('projectId')
-    //sino se puede hace proxeo de la URL base...
-    console.log(projectId)
-    const intentRequest = {
-      projectId,
-      intent,
-    }
-
-    console.log(intent)
-    return new Promise<IntentModel>((resolve, reject) => {
-      this._http.post<IntentModel>(this._url, intentRequest, { responseType: 'json'})
-      .subscribe( intentCreated => {
-        console.log('IntentCreated:', intentCreated)
-        resolve(intentCreated['result'])
-      }, onError => reject(onError))
-    })
-
-
-  }
+  
 
   async getAllIntents(): Promise<IntentModel[]> {
     return new Promise((resolve, reject) => {
@@ -174,7 +186,7 @@ export class MensajesService {
       .catch(err => {
         if (err) {
           console.error('Error tomando todos los intents', err.message)
-          this._alerta.sendError('Un error tomando los intents', err);
+          this._alerts.sendError('Un error tomando los intents', err);
           reject(err)
         }
       })
