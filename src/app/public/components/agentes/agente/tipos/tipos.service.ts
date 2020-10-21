@@ -60,7 +60,6 @@ export class TiposService {
     // LINK https://googleapis.dev/nodejs/dialogflow/latest/google.cloud.dialogflow.v2.IEntityType.html
     return new Promise((resolve, reject) => {
       this._http.post(this._url, entityType, {
-        withCredentials: true,
         responseType: "json"
       })
         .toPromise()

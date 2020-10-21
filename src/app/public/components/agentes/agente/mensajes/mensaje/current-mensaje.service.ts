@@ -150,7 +150,10 @@ export class CurrentMensajeService {
 
     return new Promise((resolve, reject ) => {
       
-      this._http.put(this._url, intent, {
+      this._http.put(this._url, {
+        intent: intent,
+        intentView:"INTENT_VIEW_FULL" 
+      }, {
         responseType: "json"
       }).toPromise()
       .then( response => {
