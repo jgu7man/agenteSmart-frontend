@@ -4,6 +4,7 @@ import { NAVLINK } from '../navbar/navlink.interface';
 import { DashboardService } from './dashboard.service';
 import { MatDrawer } from '@angular/material/sidenav';
 import { CacheService } from '../../../Gdev-Tools/cache/cache.service';
+import { ChatService } from '../../../Gdev-Tools/chat/components/chat.service';
 
 @Component({
   selector: 'aSmart-dashboard',
@@ -19,7 +20,8 @@ export class DashboardComponent implements OnInit {
   constructor (
     public responsive: ResponsiveService,
     public dashboard: DashboardService,
-    private _cache: CacheService
+    private _cache: CacheService,
+    public chat_: ChatService,
   ) { }
 
   ngOnInit() {

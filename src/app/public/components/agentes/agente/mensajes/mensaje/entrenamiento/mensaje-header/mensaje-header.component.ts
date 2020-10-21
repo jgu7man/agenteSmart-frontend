@@ -9,6 +9,7 @@ import { MensajeState } from '../../../mensaje.model';
 import { map, switchMap, pluck } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { CurrentMensajeState } from '../../store/mensaje.state';
+import { AppState } from '../../../../../../../../app.state';
 
 @Component({
   selector: 'aSmart-mensaje-header',
@@ -28,7 +29,7 @@ export class MensajeHeaderComponent implements OnInit, OnDestroy {
     public mensaje_: CurrentMensajeService,
     private _dialog: MatDialog,
     public location: Location,
-    public store: Store<CurrentMensajeState>
+    public store: Store<AppState>
   ) { 
     this.getMensaje()
   }
@@ -36,8 +37,8 @@ export class MensajeHeaderComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.stateSubs = this.store
       .subscribe( store => {
-        // console.log(store, store.state.unsaved);
-        this.unsaved = store.state.unsaved
+        // console.log(store);
+        this.unsaved = store.editIntent.unsaved
       } )
   }
 
