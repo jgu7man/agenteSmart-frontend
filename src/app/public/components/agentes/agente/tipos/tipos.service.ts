@@ -67,7 +67,7 @@ export class TiposService {
     // NOTE POST /entity Necesitas enviar un entityType valido
     // LINK https://googleapis.dev/nodejs/dialogflow/latest/google.cloud.dialogflow.v2.IEntityType.html
     return new Promise((resolve, reject) => {
-      this._http.post(this._url, entityType, {
+      this._http.post(this._url, {entityType, languagueCode: "es"}, {
         responseType: "json"
       })
         .toPromise()
@@ -94,7 +94,7 @@ export class TiposService {
 
   private _putEntityRequest(entityType: TipoEntidadModel) {
     return new Promise((resolve, reject) => {
-      this._http.put(this._url, entityType)
+      this._http.put(this._url, {entityType})
        .toPromise()
         .then(result => {
           console.info("Entity PUT Response:", result);
