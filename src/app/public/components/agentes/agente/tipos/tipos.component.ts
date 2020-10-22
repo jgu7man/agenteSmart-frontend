@@ -20,13 +20,16 @@ export class TiposComponent implements OnInit {
 
 
   constructor (
-    public tipos: TiposService,
+    public tipos_: TiposService,
     public agente: CurrentAgenteService,
     private _dialog: MatDialog,
     private loading: Loading
   ) { }
 
   ngOnInit(): void {
+    this.tipos_.getAllEntities().subscribe( res => {
+      console.log(res);
+    })
   }
 
 

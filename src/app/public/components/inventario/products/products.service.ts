@@ -80,12 +80,12 @@ export class GdevStoreProductsService {
             } else {
                 console.log('No existen tipos');
                 let newTipo: TipoEntidadModel = new TipoEntidadModel(
-                    name,
                     referencia,
                     'KIND_MAP',
                     'AUTO_EXPANSION_MODE_DEFAULT',
                     [ productClase ],
-                    true
+                    true,
+                    name,
                 )
                 
                 console.log(newTipo);

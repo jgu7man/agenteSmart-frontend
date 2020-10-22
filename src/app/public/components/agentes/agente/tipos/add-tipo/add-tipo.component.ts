@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { TipoEntidadModel, Clase } from '../tipo.model';
 import { Loading } from '../../../../../../Gdev-Tools/loading/loading.service';
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { TiposService } from '../tipos.service';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { MatDialogRef } from '@angular/material/dialog';
+import { Subject, Subscription } from 'rxjs';
 
 
 @Component({
@@ -12,23 +13,27 @@ import { MatDialogRef } from '@angular/material/dialog';
   templateUrl: './add-tipo.component.html',
   styleUrls: ['./add-tipo.component.scss']
 })
-export class AddTipoComponent implements OnInit {
+export class AddTipoComponent implements OnInit, OnDestroy {
 
   newTipo: TipoEntidadModel
+  dialgoSubs: Subscription
+  
   
   constructor (
     private dialog: MatDialogRef<AddTipoComponent>,
     public tiposService: TiposService,
   ) {
-    this.newTipo = new TipoEntidadModel( '', '', 'KIND_LIST', 'AUTO_EXPANSION_MODE_UNSPECIFIED', [], false )
+    this.newTipo = new TipoEntidadModel( '', 'KIND_LIST', 'AUTO_EXPANSION_MODE_UNSPECIFIED', [], false )
    }
 
   ngOnInit(): void {
+    this.dialgoSubs = this.tiposService.closeCreateDialog
+      .subscribe( () => { this.dialog.close() })
   }
 
 
   cancel() {
-    this.newTipo = new TipoEntidadModel( '', '', 'KIND_LIST', 'AUTO_EXPANSION_MODE_UNSPECIFIED', [], false )
+    this.newTipo = new TipoEntidadModel(  '', 'KIND_LIST', 'AUTO_EXPANSION_MODE_UNSPECIFIED', [], false )
     this.dialog.close()
   }
 
@@ -52,5 +57,8 @@ export class AddTipoComponent implements OnInit {
 
   }
 
+  ngOnDestroy() {
+    this.dialgoSubs.unsubscribe()
+  }
 
 }
