@@ -20,46 +20,47 @@ import { AddTipoComponent } from './add-tipo/add-tipo.component';
 } )
 export class TiposService {
 
-    tiposPath: string
-    // tiposList: TipoEntidadModel[]
-    tiposList$ = new Subject<TipoEntidadModel[]>()
-    // currentTipo: TipoEntidadModel
-    currentClases: Clase[]
+  tiposPath: string
+  // tiposList: TipoEntidadModel[]
+  tiposList$ = new Subject<TipoEntidadModel[]>()
+  // currentTipo: TipoEntidadModel
+  currentClases: Clase[]
 
-    private _url = 'https://us-central1-main-agentesmart.cloudfunctions.net/dialogflow/entity';
-    private _projectId: String;
-
+  private _url = 'https://us-central1-main-agentesmart.cloudfunctions.net/dialogflow/entity';
+  private _projectId: String;
+  
     closeCreateDialog: Subject<any> = new Subject()
 
+  constructor (
+    private loading: Loading,
+    private fs: AngularFirestore,
+    private _cache: CacheService,
+    private _agente: CurrentAgenteService,
+    private _text: TextService,
+    private router: Router,
+    private _http: HttpClient,
+    private _auth: AuthService,
+    private _alerts: AlertService,
+  ) {
+    this.tiposCollection()
+    this.resetCurrentTipo()
+    this._projectId = this._cache.getDataKey('projectId');
+    this.updateProductType()
+  }
+  
+  resetCurrentTipo() {
+    this.currentClases = []
+  }
 
-    constructor (
-        private loading: Loading,
-        private fs: AngularFirestore,
-        private _cache: CacheService,
-        private _agente: CurrentAgenteService,
-        private _text: TextService,
-        private router: Router,
-        private _http: HttpClient,
-        private _auth: AuthService,
-        private _alerts: AlertService,
-    ) {
-        this.tiposCollection()
-        this.resetCurrentTipo()
-        this._projectId = this._cache.getDataKey( 'projectId' );
-        this.updateProductType()
-    }
 
-    resetCurrentTipo() {
-        this.currentClases = []
-    }
+  async tiposCollection() {
+    this.tiposPath = await this._agente.getPath( 'tipos' )
+    const tiposRef = this.fs.collection( this.tiposPath ).ref
+    return tiposRef
+  }
 
 
-    async tiposCollection() {
-        this.tiposPath = await this._agente.getPath( 'tipos' )
-        const tiposRef = this.fs.collection( this.tiposPath ).ref
-        return tiposRef
-    }
-
+ 
 
     // CREATE TIPOS DE DATOS
     // REVIEW POST /entity
