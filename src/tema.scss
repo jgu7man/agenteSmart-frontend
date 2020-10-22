@@ -1,3 +1,4 @@
+@import './as-palette.scss';
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
 @import '~@angular/material/theming';
@@ -9,11 +10,12 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$agenteSmart-primary: mat-palette($mat-indigo, A400, 500, 800);
-$agenteSmart-accent: mat-palette($mat-yellow, 400, 200, 300);
-$agenteSmart-background: map_get($mat-indigo, 50);
+$agenteSmart-primary: mat-palette($as-blueagent,500, 800, A400);
+$agenteSmart-accent: mat-palette($as-yellowagent, 500, 200, 300);
+$agenteSmart-background: map_get($as-blueagent, 100);
 // The warn palette is optional (defaults to red).
 $agenteSmart-warn: mat-palette($mat-red);
+$agenteSmart-foreground: mat-palette($as-darkagent, 400);
 // Create the theme object (a Sass map containing all of the palettes).
 $agenteSmart-theme: mat-light-theme($agenteSmart-primary, $agenteSmart-accent, $agenteSmart-warn);
 // Include theme styles for core and each component used in your app.
@@ -23,3 +25,8 @@ $background: map-get($agenteSmart-theme, background);
 $background: map_merge($background, (background: $agenteSmart-background));
 // $agenteSmart-theme: map_merge($agenteSmart-theme);
 @include angular-material-theme($agenteSmart-theme);
+
+
+p {
+    color:mat-color($agenteSmart-foreground, text)
+}

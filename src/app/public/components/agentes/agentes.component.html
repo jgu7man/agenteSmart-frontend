@@ -8,7 +8,7 @@
                     <!-- Icono del agente -->
                     <div mat-card-avatar 
                     class="avatar-img" 
-                    [ngStyle]="{'background-image':'url('+agente.avatarUri+')'}" 
+                    [ngStyle]="{'background-image':'url('+agente.avatarUri.url+')'}" 
                     [routerLink]="['/dashboard/agente/', agente.projectId]"
                     alt="">
                     </div>
@@ -25,7 +25,9 @@
                         <i class="fas fa-ellipsis-v"></i>
                     </button>
                     <mat-menu #menu="matMenu">
-                        <button mat-menu-item>Editar</button>
+                        <button mat-menu-item
+                        [routerLink]="['/dashboard/editar_agente', agente.projectId]"
+                        >Editar</button>
                         <button mat-menu-item>Eliminar</button>
                     </mat-menu>
 

@@ -1,0 +1,103 @@
+<div class="container">
+    <mat-card>
+        <form action="#"
+              method="post"
+              onsubmit="return false">
+          <div class="row">
+        
+            <!-- Nombre -->
+              <mat-form-field class="col s12">
+                <mat-label>Nombre</mat-label>
+                <input name="nombre"
+                       id="nombre"
+                       matInput
+                       [(ngModel)]="agente.displayName">
+              </mat-form-field>
+        
+          </div>
+          <div class="row">
+            
+            <!-- select de lenguajes -->
+              <mat-form-field  class="col s12 m6">
+                <mat-label>Lenguaje</mat-label>
+                <mat-select name="language"
+                            id="language"
+                            [(ngModel)]="agente.defaultLanguageCode">
+                  <mat-option *ngFor="let lenguaje of agentes_.lenguajes"
+                              [value]="lenguaje.code">
+                    {{lenguaje.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+        
+            <!-- Zona horaria -->
+              <mat-form-field  class="col s12 m6">
+                <mat-label>Zona horaria</mat-label>
+                <mat-select name="timeZone"
+                            id="timeZone"
+                            [(ngModel)]="agente.timeZone">
+                  <mat-option *ngFor="let zona of agentes_.zonasHorarias"
+                              [value]="zona.value">
+                    {{zona.display}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+          
+          </div>
+          <div class="row">
+            
+            <!-- Descripción -->
+              <mat-form-field  class="col s12">
+                <mat-label>Descripción</mat-label>
+                <textarea [(ngModel)]="agente.description"
+                          matInput
+                          name="descripcion"
+                          id="descripcion"
+                          cols="30"
+                          placeholder="Opcional"></textarea>
+              </mat-form-field>
+          
+          </div>
+          <div class="row">
+            
+            <!-- Avatar -->
+            <p><b>Avatar</b></p>
+            <mat-hint>Agrega la URL de una imagen o cárgala. Puede ser el logotipo de tu negocio, por ejemplo. Es opcional</mat-hint>
+              <mat-form-field  class="col s12 m6">
+                <mat-label matTooltip="Imagen o logo de tu agente"
+                           [matTooltipPosition]="'above'">Avatar</mat-label>
+                <input [(ngModel)]="agente.avatarUri.url"
+                       name="avatar"
+                       id="avatar"
+                       matInput
+                       placeholder="https://...">
+              </mat-form-field>
+        
+              <div class="col s12 m6" *ngIf="folder">
+                <gdev-image-uploader
+                [folder]="folder"
+                [prefix]="agente.displayName"
+                [srcPreview]="agente.avatarUri"
+                (result)="catchAvatarURL($event)"
+                ></gdev-image-uploader>
+              </div>
+          
+          </div>
+        
+        
+        
+        
+          
+        
+          <mat-action-row>
+              <button 
+                mat-raised-button
+                color="accent" 
+                (click)="onSubmit()"
+                >Crear
+            </button>
+          </mat-action-row>
+        
+        </form>
+    </mat-card>
+</div>

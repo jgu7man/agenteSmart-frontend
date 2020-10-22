@@ -66,6 +66,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { DiagramElementDirective } from './agente/mensajes/diagram/diagram-element.directive';
 import { MensajesDiagramComponent } from './agente/mensajes/mensajes-diagram/mensajes-diagram.component';
 import { CreatingComponent } from './init-agente/creating/creating.component';
+import { EditAgenteComponent } from './edit-agente/edit-agente.component';
 
 
 
@@ -126,6 +127,7 @@ import { CreatingComponent } from './init-agente/creating/creating.component';
     DiagramElementDirective,
     MensajesDiagramComponent,
     CreatingComponent,
+    EditAgenteComponent,
   ],
   imports: [
     CommonModule,

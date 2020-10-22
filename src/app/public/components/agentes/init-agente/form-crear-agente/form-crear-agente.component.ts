@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AgenteModel } from '../agente.model';
+import { AgenteModel, ImageUri } from '../agente.model';
 import { CrearAgenteService } from './crear-agente.service';
 import { CacheService } from '../../../../../Gdev-Tools/cache/cache.service';
 import { UserInterface } from '../../../../../admin/auth/auth.service';
@@ -13,19 +13,19 @@ export class FormCrearAgenteComponent implements OnInit {
 
   agente: AgenteModel
   user: UserInterface
-  folder:string
+  folder: string
+  avatar: ImageUri = { url:'', alt:''}
   constructor(
     private _agente: CrearAgenteService,
     private _cache: CacheService
   ) {
-    this.agente = new AgenteModel( '', '', 'es-419', 'America/New_York', '', '' )
+    this.agente = new AgenteModel( '', '', 'es-419', 'America/New_York', '', this.avatar )
     this.user = this._cache.getDataKey( 'user' )
   }
   
   
 
   ngOnInit() {
-    console.log( this.user );
     this.folder = `${this.user.uid}/agentes/`
   }
 

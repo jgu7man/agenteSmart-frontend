@@ -1,9 +1,10 @@
 <mat-accordion>
     <mat-expansion-panel
+        class="menu-section"
         *ngFor="let parent of Sidenav"
         gdev-color
         [background]="'dark'"
-        [color]="'bg1'"
+        [color]="'white'"
         [expanded]="onActive(parent.routeId)">
 
         <mat-expansion-panel-header 
@@ -16,7 +17,7 @@
             routerLinkActive="active"
             class="collection-item"
             gdev-color
-            [color]="'bg1'"
+            [color]="'white'"
             [background]="'dark'"
             >{{child.name}}</a>
         </div>

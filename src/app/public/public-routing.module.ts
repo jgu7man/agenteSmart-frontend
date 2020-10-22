@@ -17,6 +17,7 @@ import { TarjetasComponent } from './components/agentes/agente/tarjetas/tarjetas
 import { ProductsComponent } from './components/inventario/products/products.component';
 import { AddProductComponent } from './components/inventario/products/add-product/add-product.component';
 import { EditProductComponent } from './components/inventario/products/edit-product/edit-product.component';
+import { EditAgenteComponent } from './components/agentes/edit-agente/edit-agente.component';
 
 
 const routes: Routes = [
@@ -28,6 +29,7 @@ const routes: Routes = [
           
           { path: 'agentes', component: AgentesComponent },
           { path: 'crear_agente', component: InitAgenteComponent },
+          { path: 'editar_agente/:id', component: EditAgenteComponent },
           { path: 'agente/:id', component: AgenteComponent, children: [
               { path: '', redirectTo: 'mensajes', pathMatch: 'full' },
               { path: 'mensajes', component: MensajesComponent },

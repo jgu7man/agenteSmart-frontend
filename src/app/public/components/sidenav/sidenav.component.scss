@@ -3,6 +3,16 @@ mat-list-item {
     transition: all .3s;
 }
 
+::ng-deep {
+    .menu-section {
+        span, .collection-item {
+            color: #F3F8FF !important;
+
+        }
+    }
+}
+
+
 ::ng-deep .mat-expansion-panel-body {
     padding: 0 5px 16px !important;
     .collection {

@@ -5,10 +5,14 @@ export class AgenteModel {
         public defaultLanguageCode: string,
         public timeZone: string,
         public description?: string,
-        public avatarUri?: string,
-        public agenteId?: string,
+        public avatarUri?: ImageUri,
         public clientToken?: string,
         public developerToken?: string,
     ){}
 
+}
+
+export interface ImageUri {
+    url: string
+    alt: string
 }
