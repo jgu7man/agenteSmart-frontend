@@ -67,7 +67,7 @@ export class TiposService {
     // NOTE POST /entity Necesitas enviar un entityType valido
     // LINK https://googleapis.dev/nodejs/dialogflow/latest/google.cloud.dialogflow.v2.IEntityType.html
     return new Promise((resolve, reject) => {
-      this._http.post(this._url, {entityType, languagueCode: "es"}, {
+      this._http.post(this._url + `/${this._projectId}`, {entityType, languagueCode: "es"}, {
         responseType: "json"
       })
         .toPromise()
@@ -253,7 +253,10 @@ export class TiposService {
   // DELETE review Delete De EntityType
   private _deleteEntityType(entityId: string): Promise<any> {
     return new Promise((resolve, reject) => {
-
+      //elEntity id es el el utlimo pedazo de la uri de NAME del entityType
+      //sino se pasa el id solo y se prefiere pasar todo el name la siguiente variable lo extrae
+      //Ej. EntityType "name": "projects/testproject-a4323/agent/entityTypes/6c7cd0d9-03f9-47f6-803e-dc39d3ffb789",
+      const currentId = entityId.slice(entityId.lastIndexOf('/') + 1, - 1);
       this._http.delete(this._url + `/${this._projectId}/${entityId}`)
         .toPromise()
         .then(result => {
