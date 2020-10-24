@@ -1,49 +1,54 @@
-<mat-expansion-panel #tipoPanel (afterCollapse)="onExpanded()" (afterExpand)="onExpanded()" >
-    <mat-expansion-panel-header>
-        <ng-container *ngIf="!switchEditTipo; else editTipoInput">
-            @{{tipo.displayName}}
-        </ng-container>
-
-        <!-- UPDATE tipo name -->
-        <ng-template #editTipoInput>
+<div class="container" *ngIf="tipos_.currentTipo | async as tipo">
+    <div class="row">
+        <div class="col s1">
+            <button mat-icon-button
+            (click)="onClose()"
+            >
+                <i class="fas fa-times fa-lg"></i>
+            </button>
+        </div>
+        <div class="col s8">
+            
+            <!-- UPDATE tipo name -->
             <mat-form-field>
                 <input 
                 matInput
                 type="text" 
                 #editInput
                 name="editInput" 
-                id="editInput"
-                [(ngModel)]="tiposService.currentTipo(tipo.name).displayName"
+                [(ngModel)]="tipo.body.displayName"
                 (keydown)="delSpaces($event)"
                 >
             </mat-form-field>                            
-        </ng-template>
-    </mat-expansion-panel-header>
-    
-    <div class="row">
-        <div class="col s12 m10">
-            <aSmart-tipo-body [tipo]="tipo" (edited)="tipo = $event"></aSmart-tipo-body>
         </div>
-        <div class="col s12 m2">
-            
+        
+        <div class="col s2">
             <button 
             mat-raised-button 
             [color]="'primary'" 
-            (click)="tiposService.setTipo(tipo)"
+            (click)="onSave()"
+            [disabled]="tipo.saved"
             >Guardar</button>
+            
+        </div>
 
-            <button 
-            mat-raised-button 
-            [color]="'warn'" 
-            (click)="tiposService.deleteTipo( tipo.name )"
-            >Eliminar</button>
-
+        <div class="col s1">
+            <button mat-icon-button [mat-menu-trigger-for]="tipoMenu">
+                <i class="fas fa-ellipsis-v"></i>
+            </button>
+            <mat-menu #tipoMenu="matMenu">
+                <button mat-menu-item>
+                    Eliminar
+                </button>
+            </mat-menu>
         </div>
     </div>
-    <!-- Tipo body to update -->
     
-    <div class="row space-around">
-        
-        
+    <!-- Tipo body to update -->
+    <div class="row">
+        <div class="col s12">
+            <aSmart-tipo-body [tipo]="tipo"></aSmart-tipo-body>
+        </div>
     </div>
-</mat-expansion-panel>
+    
+</div>

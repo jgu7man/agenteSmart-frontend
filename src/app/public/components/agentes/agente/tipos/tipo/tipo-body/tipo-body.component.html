@@ -7,21 +7,21 @@
             <mat-checkbox 
             [color]="'primary'"
             (change)="onKindChange($event)" 
-            [checked]="tipo.kind == 'KIND_MAP'">
+            [checked]="tipo.body.kind == 'KIND_MAP'">
                 Activar sinónimos
             </mat-checkbox>
             
             <mat-checkbox 
             [color]="'primary'"
             (change)="onExpanptionChange($event)" 
-            [checked]="tipo.autoExpansionMode == 'AUTO_EXPANSION_MODE_DEFAULT'">
+            [checked]="tipo.body.autoExpansionMode == 'AUTO_EXPANSION_MODE_DEFAULT'">
                 Auto expansión
             </mat-checkbox>
             
             <mat-checkbox 
             [color]="'primary'"
             (change)="onFuzzyChange($event)"
-            [checked]="tipo.enableFuzzyExtraction" >
+            [checked]="tipo.body.enableFuzzyExtraction" >
                 Activar coincidencia parcial
             </mat-checkbox>
 
@@ -44,7 +44,7 @@
            
            
             <!-- UPDATE Clases con sinónimos -->
-            <mat-card *ngIf="tipo.kind == 'KIND_MAP'; else lista">
+            <mat-card *ngIf="tipo.body.kind == 'KIND_MAP'; else lista">
                 <mat-card-content>
                     <div class="row">
                         <div class="col s3">Clase</div>
@@ -54,10 +54,9 @@
                     <ul class="clase-list collection">
                     
                     <!-- READ CLASES DE TIPO -->
-                        <li class="clase-item collection-item" *ngFor="let clase of tipo.entities; trackBy:trackByName">
+                        <li class="clase-item collection-item" *ngFor="let clase of tipo.body.entities">
                             <div class="row">
                                 <aSmart-clase-item 
-                                (claseDeleted)="refresh()"
                                 (claseEdited)="toEditClase($event)"
                                 [clase]="clase" 
                                 [claseId]="clase.value" 
@@ -72,7 +71,6 @@
                             <li class="clase-item collection-item" [ngClass]="{'collection-item': switchAddClase}">
                                 <aSmart-add-clase 
                                 [tipo]="tipo"
-                                (claseDone)="onClaseAdded($event)"
                                 >
                                 </aSmart-add-clase>    
                             </li>
@@ -113,10 +111,9 @@
 
 
                             <!-- READ CLASES DE TIPO -->
-                            <li class="clase-item collection-item" *ngFor="let clase of tipo.entities; trackBy:trackByName">
+                            <li class="clase-item collection-item" *ngFor="let clase of tipo.body.entities;">
                                 <div class="row">
                                     <aSmart-clase-item 
-                                    (claseDeleted)="refresh()"
                                     (closeClaseEdit)="toEditClase($event)"
                                     [clase]="clase" 
                                     [claseId]="clase.value" 
@@ -131,7 +128,6 @@
                                 <li class="clase-item collection-item" [ngClass]="{'collection-item': switchAddClase}">
                                     <aSmart-add-clase 
                                     [tipo]="tipo"
-                                    (claseDone)="onClaseAdded($event)"
                                     >
                                     </aSmart-add-clase>    
                                 </li>

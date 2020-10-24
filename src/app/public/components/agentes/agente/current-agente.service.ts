@@ -96,7 +96,7 @@ export class CurrentAgenteService {
         .doc( this.currentProjectId ).get();
       
       this.currentAgent = agenteRES.data() as AgenteModel
-      this._cache.updateData( 'agenteId', this.currentAgent.agenteId )
+      this._cache.updateData( 'projectId', this.currentAgent.projectId )
       this._cache.updateData( 'currentAgente', this.currentAgent )
         
       this.currentAgente$.next( this.currentAgent )

@@ -57,12 +57,12 @@ export class CrearAgenteService {
                 agente = { ...agente }
                 console.log( { agente } )
 
-                agente.avatarUri = agente.avatarUri ? agente.avatarUri : 'favicon.ico'
+                agente.avatarUri = agente.avatarUri ? agente.avatarUri : {url:'favicon.ico', alt:''}
                 agente.description = agente.description ? agente.description : `Agente de ${ user.email }`
                 // Transformar id para generar un string único
                 var sufixId = agente.displayName.split( ' ' ).join( '-' ).toLowerCase()
                 agente.projectId = `${ sufixId }-${ this._text.generateRandomText( 6 ) }`
-                console.log( { projectId: agente.agenteId } )
+                console.log( { projectId: agente.projectId } )
 
                 // Guardado a Firestore
                 const userRef = this.afs.collection( 'usuarios' ).ref.doc( user.uid )

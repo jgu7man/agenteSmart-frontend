@@ -1,29 +1,36 @@
-<div id="tipos-container" class="container">
-    <div class="row">
-        <div class="col s12">
-            Agregar tipo de dato 
-            <button mat-icon-button
-            (click)="openAdd()">
-                <i class="fas fa-plus"></i>
-            </button>
+<mat-drawer-container [hasBackdrop]="true">
+    <mat-drawer #currentTipo [mode]="'over'" position="end">
+        <aSmart-tipo [name]="tipoSelected.name"
+        (closePanel)="currentTipo.close()"
+        ></aSmart-tipo>
+
+    </mat-drawer>
+    <mat-drawer-content>
+        <div class="container">
+            <div class="row align-cols">
+                <div class="col s10">
+                    <b>Tipos de dato</b>
+                    <button mat-icon-button (click)="openAdd()">
+                        <i class="fas fa-plus fa-lg"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <mat-selection-list #listPanel
+                    (selectionChange)="onSelected($event)" 
+                    [multiple]="false">
+                        <mat-list-option 
+                        *ngFor="let tipo of tiposList$ | async"
+                        [value]="tipo"
+                        >
+                            {{tipo.body.displayName}}
+                        </mat-list-option>
+                    </mat-selection-list>
+                </div>
+            </div>
         </div>
-    </div>
+    </mat-drawer-content>
+</mat-drawer-container>
 
-    <div class="row">
-        <div class="col s12">
 
-            <mat-accordion>
-                
-                <!-- Lista de tipos -->
-                <aSmart-tipo 
-                *ngFor="let tipo of agente.tiposList" 
-                [tipo]="tipo"
-                [id]="tipo.name"
-                ></aSmart-tipo>
-
-                
-                
-            </mat-accordion>
-        </div>
-    </div>
-</div>

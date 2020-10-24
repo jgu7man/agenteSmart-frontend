@@ -44,6 +44,7 @@ export class AddClaseComponent implements OnInit {
     event.stopPropagation();
     if ( this.newClaseItem ) {
       this.clase = { value: this.newClaseItem }
+      this.newClaseItem = ''
     }
     this._tipos.setClase( this.tipo.name, this.clase ).then( () => {
       if ( this.tipo.kind == 'KIND_MAP' ) {
@@ -72,6 +73,8 @@ export class AddClaseComponent implements OnInit {
     this.newClaseSinonimos.splice( index, 1 )
     this._tipos.setSinonimo( this.tipo.name, this.clase.value, sinonimo, 'del' )
   }
+
+  
 
   
 

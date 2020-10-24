@@ -1,3 +1,5 @@
+<!-- SECTION AGREGAR CLASES SIN SINÓNIMO -->
+
 <ng-container *ngIf="tipo.kind != 'KIND_MAP'; else sinonimos">
     <div class="col s10 m11">
         <mat-form-field>
@@ -16,6 +18,10 @@
 </ng-container>
 
 
+
+
+<!-- SECTION AGREGAR CLASE CON SINÓNIMOS -->
+
 <ng-template #sinonimos>
     <div class="col s3">
         <mat-form-field style="width: 100%;">
@@ -26,11 +32,15 @@
             id="addClaseItem"
             matInput
             [(ngModel)]="newClaseItem"
-            (keyup.enter)="onAddClase($event); $event.target.blur()"
             (keydown.Tab)="onAddClase($event);false"
             />
         </mat-form-field>
     </div>
+
+
+    
+    <!-- * AGREGAR SINÓNIMOS -->
+    
     <div class="col s7 m8">
         <mat-form-field style="width: 100%;">
             <mat-chip-list
@@ -52,7 +62,6 @@
                     placeholder="nuevo sinónimo: presiona coma (,) para agregar"
                     style="max-height: 1em;"
                     #sinonimosInput
-                    [disabled]="!switchSinonimosInput"
                     [matChipInputFor]="newSinonimosList"
                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                     (matChipInputTokenEnd)="addSinonimo($event)"
@@ -61,9 +70,11 @@
         </mat-form-field>
     </div>
 </ng-template>
-        <div class="col s2 m1">
-            <button mat-button (click)="claseDone.emit(true)">
-                <i class="fas fa-check"></i>
-            </button>
-        </div>
+
+
+<div class="col s2 m1">
+    <button mat-button (click)="claseDone.emit(true)">
+        <i class="fas fa-check"></i>
+    </button>
+</div>
 

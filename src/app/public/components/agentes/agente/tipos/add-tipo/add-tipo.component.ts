@@ -41,8 +41,8 @@ export class AddTipoComponent implements OnInit, OnDestroy {
   async onAddTipo() {
     console.log('creando: ', this.newTipo);
     if ( this.newTipo.displayName != '' ) {
-      this.tiposService.setTipo( this.newTipo )
-        .then( name => { this.dialog.close( name ) } )
+      this.tiposService.createTipo( this.newTipo )
+        .then( newTipo => { this.dialog.close( newTipo ) } )
     }
   }
 

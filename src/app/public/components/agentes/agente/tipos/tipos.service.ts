@@ -6,65 +6,107 @@ import { CacheService } from '../../../../../Gdev-Tools/cache/cache.service';
 import { CurrentAgenteService } from '../current-agente.service';
 import { TipoEntidadModel, Clase } from './tipo.model';
 import { TextService } from '../../../../../services/text.service';
-import { Subject, Observable, AsyncSubject } from 'rxjs';
+import { Subject, Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Router } from '@angular/router';
-import { UsuariosService } from '../../../usuarios/usuarios.service';
 import { AuthService } from '../../../../../admin/auth/auth.service';
 import { AlertService } from '../../../../../Gdev-Tools/alerts/alert.service';
-import { MatDialogRef } from '@angular/material/dialog';
-import { AddTipoComponent } from './add-tipo/add-tipo.component';
+import { Store } from '@ngrx/store';
+import { AppState } from 'src/app/app.state';
+import * as actions from './store/tipo.actions'
+import { TipoState } from './store/tipo.state';
 
 @Injectable( {
     providedIn: 'root'
 } )
 export class TiposService {
 
-  tiposPath: string
-  // tiposList: TipoEntidadModel[]
-  tiposList$ = new Subject<TipoEntidadModel[]>()
-  // currentTipo: TipoEntidadModel
-  currentClases: Clase[]
-
-  private _url = 'https://us-central1-main-agentesmart.cloudfunctions.net/dialogflow/entity';
-  private _projectId: String;
+    tiposPath: string
+    tiposList: TipoEntidadModel[] = []
+    
+    private _url = 'https://us-central1-main-agentesmart.cloudfunctions.net/dialogflow/entity';
+    private _projectId: String;
   
     closeCreateDialog: Subject<any> = new Subject()
-
-  constructor (
-    private loading: Loading,
-    private fs: AngularFirestore,
-    private _cache: CacheService,
-    private _agente: CurrentAgenteService,
-    private _text: TextService,
-    private router: Router,
-    private _http: HttpClient,
-    private _auth: AuthService,
-    private _alerts: AlertService,
-  ) {
-    this.tiposCollection()
-    this.resetCurrentTipo()
-    this._projectId = this._cache.getDataKey('projectId');
-    this.updateProductType()
-  }
-  
-  resetCurrentTipo() {
-    this.currentClases = []
-  }
+    currentTipo: Subject<TipoState> = new Subject()
+    currentTipoSubs: Subscription
+    listSubs: Subscription
 
 
-  async tiposCollection() {
-    this.tiposPath = await this._agente.getPath( 'tipos' )
-    const tiposRef = this.fs.collection( this.tiposPath ).ref
-    return tiposRef
-  }
+    constructor (
+        private loading: Loading,
+        private fs: AngularFirestore,
+        private _cache: CacheService,
+        private _agente: CurrentAgenteService,
+        private _text: TextService,
+        private _http: HttpClient,
+        private _auth: AuthService,
+        private _alerts: AlertService,
+        private store: Store<AppState>
+    ) {
+
+        this.tiposCollection()
+        
+        this._projectId = this._cache.getDataKey('projectId');
+        // Se suscribe a la lista de entities en el store
+        this.listenEntityList()
+        // Se suscribe al tipo a editar
+        this.getCurrentTipo()
+    }
+    
+    
+    
+
+    /** Define la ruta de firestore */
+    async tiposCollection() {
+        this.tiposPath = await this._agente.getPath( 'tipos' )
+        const tiposRef = this.fs.collection( this.tiposPath ).ref
+        return tiposRef
+    }
 
 
  
 
     // CREATE TIPOS DE DATOS
-    // REVIEW POST /entity
 
+    /** Prepara la entity para ser creada en el backend, obtiene el ID:name y guarda los datos en firestore */
+    async createTipo( tipo: TipoEntidadModel ) {
+        // Loading animation
+        this.loading.toggleWaitingSpinner( true )
+        // Prepare name
+        let projectId = this._cache.getDataKey( 'projectId' )
+        tipo.displayName = this._text.normalize( tipo.displayName )
+        // clean object
+        Object.keys( tipo ).forEach( key => {
+            if ( tipo[ key ] == undefined ) delete tipo[ key ]
+        } )
+        // search for duplicated
+        const tipoInList: number = this.tiposList
+            .findIndex( Tipo => Tipo.displayName === tipo.displayName )
+
+
+        if ( tipoInList < 0 ) {
+            console.log( 'nueva entity' );
+            let newEntity = await this._postCreateEntity( { ...tipo } )
+            console.log( newEntity );
+
+            const resourceID = newEntity.name.slice( newEntity.name.lastIndexOf( "/" ) + 1 );
+            const newTipo = { ...tipo, name: newEntity.name };
+
+            await ( await this.tiposCollection() ).doc( resourceID ).set( newTipo )
+            this.store.dispatch(actions.addTipo({tipo: newTipo}))
+            
+            this.loading.toggleWaitingSpinner(false);
+            return newTipo
+
+
+        } else {
+            this._alerts.sendMessageAlert( 'No es posible crear entidades duplicadas' )
+        }
+
+    }
+
+
+    /** Crea el entity en el backend */
     private _postCreateEntity( entityType: TipoEntidadModel ): Promise<TipoEntidadModel> {
         // NOTE POST /entity Necesitas enviar un entityType valido
         // LINK https://googleapis.dev/nodejs/dialogflow/latest/google.cloud.dialogflow.v2.IEntityType.html
@@ -93,45 +135,18 @@ export class TiposService {
                 } )
         } )
     }
+
+
+    
+
+
+
     // UPDATE
-    // REVIEW  PUT /entity 
-    // send a valid EntityType with a Resource name.
 
-    private _putEntityRequest( entityType: TipoEntidadModel ) {
-        return new Promise( ( resolve, reject ) => {
-            this._http.put( this._url, { entityType: entityType } )
-                .toPromise()
-                .then( result => {
-                    console.info( "Entity PUT Response:", result );
-                    if ( result[ 'status' ] == 201 ) {
-                        //exito creado
-                        resolve( result )
-                    }
-                } )
-                .catch( err => {
-                    if ( err ) {
-                        this.loading.toggleWaitingSpinner( false )
-                        this._alerts.sendError( 'No fué posible crear ese Tipo en este momento. Intentelo de nuevo porfavor.', err )
-                        this.closeCreateDialog.next()
-                    }
-                    reject( err )
-                } )
-        } )
-    }
-
-    // TODO: EntityType Create Function
-
-    async setTipo( tipo: TipoEntidadModel ) {
+    /** Prepara la entity para ser actualizada en el backend y posterior lo guarda en Firestore */
+    async updateTipo( tipo: TipoEntidadModel ) {
         // Loading animation
         this.loading.toggleWaitingSpinner( true )
-
-
-        // Prepare name
-        let projectId    = this._cache.getDataKey( 'projectId' )
-        tipo.displayName = this._text.normalize( tipo.displayName )
-        
-
-
 
         // clean object
         Object.keys( tipo ).forEach( key => {
@@ -139,36 +154,13 @@ export class TiposService {
         } )
 
 
-
-
-        // search for duplicated
-        const tipoInList: number = this._agente.tiposList
-            .findIndex( Tipo => Tipo.name === tipo.name )
-
-
-        console.log( tipo );
-
-
-        // Create
-        if ( tipoInList < 0 ) {
-            let newEntity = await this._postCreateEntity( {...tipo} )
-            console.log(newEntity);
-            
-            
-            const resourceID = newEntity.name.slice( newEntity.name.lastIndexOf( "/" ) + 1 );
-            await ( await this.tiposCollection() ).doc( resourceID ).set(
-                { ...tipo, name: newEntity.name }
-            )
-
-
-
-
-
-            // update
-        } else {
-            await this._putEntityRequest( tipo )
-            await ( await this.tiposCollection() ).doc( tipo.name ).set( tipo, { merge: true } )
-        }
+        console.log('actualiza entity');
+        const entityEdited = await this._putEntityRequest( tipo )
+        const resourceID = entityEdited[ 'name' ].slice( entityEdited[ 'name' ].lastIndexOf( "/" ) + 1 );
+        console.log(resourceID);
+        await ( await this.tiposCollection() ).doc( resourceID ).set( tipo, { merge: true } )
+        this.loading.toggleWaitingSpinner( false )
+        
 
         // End loading animation
         this.loading.toggleWaitingSpinner( false )
@@ -178,106 +170,142 @@ export class TiposService {
 
 
 
-    // TODO EntityType update function
-
-    async setTipoOption(
-        tipoName: string,
-        option: 'kind' | 'autoExpansionMode' | 'enableFuzzyExtraction',
-        value: string | boolean
-    ) {
-        await ( await this.tiposCollection() ).doc( tipoName ).update( { [ option ]: value } )
+    /** Actualiza la Entity en el backend */
+    private _putEntityRequest( entityType: TipoEntidadModel ) {
+        return new Promise( ( resolve, reject ) => {
+            this._http.put( this._url, { entityType: entityType } )
+                .toPromise()
+                .then( result => {
+                    console.info( "Entity PUT Response:", result );
+                    if ( result[ 'status' ] == "Success" ) {
+                        //exito creado
+                        resolve( result[ 'result' ] )
+                    }
+                } )
+                .catch( err => {
+                    if ( err ) {
+                        this.loading.toggleWaitingSpinner( false )
+                        this._alerts.sendError( 'No fué posible crear ese Tipo en este momento. Intentelo de nuevo por favor.', err )
+                        this.closeCreateDialog.next()
+                    }
+                    reject( err )
+                } )
+        } )
     }
 
 
+    /** Agrega una clase a la entity seleccionada por nombre */
     async setClase( tipoName: string, clase: Clase ) {
-        const tipoDoc = await ( await this.tiposCollection() ).doc( tipoName ).get()
-        const current = tipoDoc.data() as TipoEntidadModel
-        const clasesList = current.entities
-        const claseIndex = clasesList.findIndex( cla => cla.value === clase.value )
+        
+        var current = this.getTipo(tipoName)
+        var clasesList = current.entities
+        var claseIndex = clasesList.findIndex( cla => cla.value === clase.value )
+        console.log({claseIndex});
 
         if ( claseIndex >= 0 ) {
             clasesList[ claseIndex ] = clase
         } else {
-            clasesList.push( clase )
+            clasesList = [...clasesList, clase]
         }
-
-        await ( await this.tiposCollection() ).doc( tipoName ).update( { entities: clasesList } );
+        
+        current = { ...current, entities: clasesList }
+        this.store.dispatch(actions.editTipo({tipo: current}))
+        
         return
     }
 
+    /** Agrega sinónimos a la entity actual */
     async setSinonimo( tipoName, claseValue: string, sinonimo: string, action: 'add' | 'del' ) {
-        const tipoDoc = await ( await this.tiposCollection() ).doc( tipoName ).get()
-        const current = tipoDoc.data() as TipoEntidadModel
-        const clasesList = current.entities
-        const claseIndex = clasesList.findIndex( clase => clase.value === claseValue )
+        
+        var current = this.getTipo( tipoName )
+        var clasesList = current.entities
+        var claseIndex = clasesList.findIndex( clase => clase.value === claseValue )
+        var synonymsList: string[] = clasesList[ claseIndex ][ 'synonyms' ]
+        
 
         if ( action == 'add' ) {
-            if ( !clasesList[ claseIndex ].synonyms ) {
-                clasesList[ claseIndex ][ 'synonyms' ] = []
-            }
-            clasesList[ claseIndex ].synonyms.push( sinonimo )
+            if ( !synonymsList ) { synonymsList = [] }
+            
+            synonymsList = [...synonymsList, sinonimo]
+
         } else {
-            const sinoIndex = clasesList[ claseIndex ].synonyms
-                .findIndex( sino => sino == sinonimo )
-            clasesList[ claseIndex ].synonyms.splice( sinoIndex, 1 )
+            synonymsList = synonymsList.filter(s => s != sinonimo)
         }
 
-
-        await ( await this.tiposCollection() ).doc( tipoName ).update( { entities: clasesList } );
+        current = {...current, entities: clasesList}
+        this.store.dispatch( actions.editTipo( { tipo: current } ) )
         return
 
     }
 
-
+    /** Actualiza la entityType de productos en el agente. Debe dispararse desde la interfaz de productos */
     async updateProductType() {
         let user = await this._auth.getCurrentUser()
         var productTypeRef = this.fs.doc( `usuarios/${ user.uid }` ).ref
             .collection( 'config_docs' ).doc( 'products_types' )
-        var productTypesDoc = await productTypeRef.get()
-        if ( productTypesDoc.exists ) {
-            try {
-                let productTypes = productTypesDoc.data();
-                console.log( productTypes );
-                ( await this.tiposCollection() ).doc( 'productos' ).set( { ...productTypes }, { merge: true } )
-                console.log( 'Listo' );
-            } catch ( error ) {
-                console.error( error )
-                this._alerts.sendError( 'Error', error )
+        
+        try {
+            var productTypesDoc = await productTypeRef.get()
+            if ( productTypesDoc.exists ) {
+
+                let productTypes = productTypesDoc.data() as TipoEntidadModel;
+                if ( !productTypes[ 'created' ] ) {
+                    
+                    await this.createTipo( productTypes )
+                    await productTypeRef.update( { creted: true, saved: true } )
+
+                } else if(!productTypes[ 'saved' ]) {
+                    delete productTypes[ 'created' ]
+                    delete productTypes[ 'saved' ]
+                    
+                    await this.updateTipo(productTypes)
+                    await productTypeRef.update({creted: true, saved: true})
+                    
+                } 
+
+                this._alerts.sendFloatNotification('Tipo de datos de productos actualizada')
             }
+        
+        } catch ( error ) {
+            console.error( error )
+            this._alerts.sendError( 'Error', error )
         }
     }
 
 
     // READ TIPOS DE DATOS
-    // REVIEW LIST ALL EntityTypes
-    //creo este metodo es silimar al de abajo
-    getAllEntities() {
+
+
+    /** Toma entities del backend */
+    getAllEntities(): Observable<any> {
         return this._http.get( `${ this._url }/${ this._projectId }` )
     }
 
-    // TODO EntityType read function
-    currentTipo$ = new Observable<TipoEntidadModel>()
-    // currentTipo: TipoEntidadModel
+    /** Escucha los cambios de los tipos en el storage */
+    listenEntityList() {
+        this.listSubs = this.store.select( 'tipos' )
+            .pipe( map( tiposState => tiposState.map( t => t.body ) ) )
+        .subscribe( tipos => this.tiposList = tipos)
+    }
 
+   
+    /** Toma una entity basado en el name */
+    getTipo(name: string) {
+        return this.tiposList.find(t => t.name == name)
+    }
 
-    // async get() {
-    //   this.tiposList = []
-    //   const tiposCol = await ( await this.tiposCollection() ).orderBy('displayName', 'asc').get()
-    //   if ( tiposCol.size > 0 ) {
-    //     await this.loading.asyncForEach(
-    //       tiposCol.docs, async tipo => {
-    //         return this.tiposList.push(tipo.data())
-    //       }
-    //     )
-    //   }
-    //   return this.tiposList
-    // }
+    /** Está pendiendte de la entity seleccionada en el storage */
+    currentTipo$( ) {
+        return this.store.select( 'tipos' ).pipe( map( tipos => {
+            console.log(tipos);
+            let selected = tipos.find( t => t.selected == true )
+            return selected
+        }) )
+    }
 
-
-    currentTipo( name?: string ): TipoEntidadModel {
-        return name
-            ? this._agente.tiposList.find( t => t.name == name )
-            : new TipoEntidadModel( '', 'KIND_LIST', 'AUTO_EXPANSION_MODE_DEFAULT', this.currentClases, false )
+    /** Regresa como promesa la entity que se abrió en el panel. Se suscribe en tipo.compoenent.ts */
+    getCurrentTipo() {
+        this.currentTipoSubs = this.currentTipo$().subscribe( this.currentTipo )
     }
 
 
@@ -288,7 +316,7 @@ export class TiposService {
         //elEntity id es el el utlimo pedazo de la uri de NAME del entityType
         //sino se pasa el id solo y se prefiere pasar todo el name la siguiente variable lo extrae
         //Ej. EntityType "name": "projects/testproject-a4323/agent/entityTypes/6c7cd0d9-03f9-47f6-803e-dc39d3ffb789",
-        const currentId = entityId.slice(entityId.lastIndexOf('/') + 1, - 1);
+        
         this._http.delete( this._url + `/${ this._projectId }/${ entityId }` )
           .toPromise()
           .then( result => {
@@ -309,23 +337,35 @@ export class TiposService {
     // TODO EntityType Delete function
 
     async deleteTipo( tipoName: string ) {
-        await ( await this.tiposCollection() ).doc( tipoName ).delete()
+        const currentId = tipoName.slice( tipoName.lastIndexOf( '/' ) + 1, - 1 );
+        await this._deleteEntityType( currentId )
+        await ( await this.tiposCollection() ).doc( currentId ).delete()
         return
     }
 
 
     async deleteClase( tipoName: string, claseValue: string, ) {
-        const tipoDoc = await ( await this.tiposCollection() ).doc( tipoName ).get()
-        const current = tipoDoc.data() as TipoEntidadModel
-        const clasesList = current.entities
-        const claseIndex = clasesList.findIndex( clase => clase.value === claseValue )
+        
+        var current = this.getTipo(tipoName)
+        var clasesList = current.entities
+        var claseIndex = clasesList.findIndex( clase => clase.value === claseValue )
+
         if ( claseIndex >= 0 ) {
-            clasesList.splice( claseIndex, 1 )
+            clasesList =  clasesList.filter(c => c.value != claseValue)
         }
 
-        await ( await this.tiposCollection() ).doc( tipoName ).update( { entities: clasesList } );
+        current = {...current, entities: clasesList}
+        this.store.dispatch(actions.editTipo({tipo: current}))
+
+        
         return
 
+    }
+
+
+    unsubscribe() {
+        this.currentTipoSubs.unsubscribe()
+        this.listSubs.unsubscribe()
     }
 
 
