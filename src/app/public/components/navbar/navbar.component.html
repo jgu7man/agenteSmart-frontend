@@ -1,7 +1,10 @@
 <mat-toolbar gdev-color [background]="'dark'" id="navbar" class="mat-elevation-z5">
     <span class="hide-on-large-only mobile-menu" (click)="dashboard.toggleMobileMenu.emit()"> <i class="fas fa-bars    "></i> </span>
-    <span class="app-logo">
-        <img src="/assets/icons/as-bco-h@0.5x.png" alt="Logo Agente Smart">
+    <span class="logo-area">
+        <div class="app-logo">
+            <img src="/assets/icons/as-iso@0.5x.png" alt="Logo Agente Smart">
+        </div>
+        <p class="logo-text">Agente Smart</p>
     </span>
     <span class="espacio"></span>
     <div class="col right user-profile" *ngIf="user; else unlogged">
