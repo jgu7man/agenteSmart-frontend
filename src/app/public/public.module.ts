@@ -21,6 +21,7 @@ import { GdevTextModule } from '../Gdev-Tools/text/gdev-text.module';
 import { GdevAlertModule } from '../Gdev-Tools/alerts/gdev-alert.module';
 import { InventarioModule } from './components/inventario/inventario.module';
 import { GdevToolsModule } from '../Gdev-Tools/gdev-tools.module';
+import { ChatTesterModule } from './components/chat-tester/chat-tester.module';
 
 
 
@@ -42,7 +43,8 @@ import { GdevToolsModule } from '../Gdev-Tools/gdev-tools.module';
     ComunesModule,
     AgentesModule,
     InventarioModule,
-    GdevToolsModule
+    GdevToolsModule,
+    ChatTesterModule
   ],
   providers: [
   ]
