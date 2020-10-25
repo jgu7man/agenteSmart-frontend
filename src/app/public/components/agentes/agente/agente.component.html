@@ -29,6 +29,7 @@ mat-align-tabs="end"
         routerLinkActive="active" 
         #rla="routerLinkActive"
         [active]="rla.isActive">
+        <i class="fas {{link.icon}}"></i> &nbsp;&nbsp;
         {{link.label}}
     </a>
 </nav>

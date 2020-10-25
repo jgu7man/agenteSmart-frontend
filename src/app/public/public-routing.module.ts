@@ -19,47 +19,50 @@ import { AddProductComponent } from './components/inventario/products/add-produc
 import { EditProductComponent } from './components/inventario/products/edit-product/edit-product.component';
 import { EditAgenteComponent } from './components/agentes/edit-agente/edit-agente.component';
 
-
 const routes: Routes = [
-  {
-    path: '', component: PublicComponent, children: [
-      {
-        path: 'dashboard', component: DashboardComponent, children: [
-          { path: '', redirectTo: 'agentes', pathMatch:'full' },
-          
-          { path: 'agentes', component: AgentesComponent },
-          { path: 'crear_agente', component: InitAgenteComponent },
-          { path: 'editar_agente/:id', component: EditAgenteComponent },
-          { path: 'agente/:id', component: AgenteComponent, children: [
-              { path: '', redirectTo: 'mensajes', pathMatch: 'full' },
-              { path: 'mensajes', component: MensajesComponent },
-              { path: 'mensaje/:name', component: MensajeComponent },
-              { path: 'tipos', component: TiposComponent },
-              { path: 'tarjetas', component: TarjetasComponent },
-              { path: 'colecciones', component: ColeccionesComponent },
-              { path: 'opciones', component: OpcionesComponent },
-          ] },
-          
-          { path: 'inventario', component: ProductsComponent },
-          { path: 'products/add', component: AddProductComponent },
-          { path: 'products/edit/:id', component: EditProductComponent },
-          
-          
-          ]}
-        ]}
-  ];
-
+    {
+        path: '', component: PublicComponent, children: [
+            { path: 'dashboard', component: DashboardComponent, children: 
+                [
+                    { path: '', redirectTo: 'agentes', pathMatch: 'full' },
+    
+                    { path: 'agentes', component: AgentesComponent },
+                    { path: 'crear_agente', component: InitAgenteComponent },
+                    { path: 'editar_agente/:id', component: EditAgenteComponent, },
+                    { path: 'agente/:id', component: AgenteComponent, children: 
+                        [
+                            { path: '', redirectTo: 'mensajes',pathMatch: 'full', },
+                            { path: 'mensajes', component: MensajesComponent },
+                            { path: 'mensaje/:name', component: MensajeComponent, },
+                            { path: 'tipos', component: TiposComponent },
+                            { path: 'opciones', component: OpcionesComponent },
+                        ],
+                    },
+                    { path: 'tarjetas', component: TarjetasComponent },
+                    { path: 'colecciones', component: ColeccionesComponent },
+    
+                    { path: 'inventario', component: ProductsComponent },
+                    { path: 'products/add', component: AddProductComponent },
+                    {
+                        path: 'products/edit/:id',
+                        component: EditProductComponent,
+                    },
+                ],
+            },
+        ],
+    },
+];
 
 const routerOptions: ExtraOptions = {
-  useHash: false,
-  anchorScrolling: 'enabled',
-  scrollPositionRestoration: 'disabled',
-  onSameUrlNavigation: 'reload',
-  paramsInheritanceStrategy: 'always'
+    useHash: false,
+    anchorScrolling: 'enabled',
+    scrollPositionRestoration: 'disabled',
+    onSameUrlNavigation: 'reload',
+    paramsInheritanceStrategy: 'always',
 };
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, routerOptions)],
-  exports: [RouterModule]
+    imports: [RouterModule.forRoot(routes, routerOptions)],
+    exports: [RouterModule],
 })
-export class PublicRoutingModule { }
+export class PublicRoutingModule {}

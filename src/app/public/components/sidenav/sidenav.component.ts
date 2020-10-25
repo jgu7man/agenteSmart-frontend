@@ -32,56 +32,20 @@ export class SidenavComponent implements OnInit {
 
   setSidenav() {
     this.Sidenav = [
-      {
-        name: 'Agente',
-        route: undefined,
-        routeId: 'agentes',
-        childs: [
-          {
-            name: 'Crear agente',
-            route: '/dashboard/crear_agente',
-            routeId: 'crear_agente'
-          },
-          {
-            name: 'Agentes creados',
-            route: '/dashboard/agentes',
-            routeId: 'agentes'
-          }
-        ]
-      },
-      {
-        name: 'Clientes',
-        route: 'dashboard/clientes',
-        routeId: 'clientes',
-        childs: [
-
-        ]
-      },
-      {
-        name: 'Inventario',
-        route: 'inventario',
-        routeId: 'inventario',
-        childs: [
-
-        ],
-      },
-      {
-        name: 'Integraciones',
-        route: 'dashboard/integraciones',
-        routeId: 'integraciones',
-        childs: [
-
-        ]
-      },
-      {
-        name: 'Finanzas',
-        route: 'dashboard/finanzas',
-        routeId: 'finanzas',
-        childs: [
-
-        ]
-      }
-    ]
+        {
+            name: 'Agente', route: undefined, routeId: 'agentes',icon: 'fa-project-diagram',  childs:
+                [
+                    { name: 'Crear agente', route: '/dashboard/crear_agente', routeId: 'crear_agente', },
+                    { name: 'Agentes creados', route: '/dashboard/agentes', routeId: 'agentes', },
+                ],
+        },
+        { name: 'Colecciones', route: 'colecciones', routeId: 'clientes', icon:'fa-folder' },
+        { name: 'Tarjetas', route: 'tarjetas', routeId: 'clientes', icon: 'fa-window-restore' },
+        { name: 'Clientes', route: 'clientes', routeId: 'clientes', icon:  'fa-users'},
+        { name: 'Inventario', route: 'inventario', routeId: 'inventario', icon: 'fa-boxes' },
+        { name: 'Integraciones', route: 'integraciones', routeId: 'integraciones', icon: 'fa-plug' },
+        { name: 'Finanzas', route: 'finanzas', routeId: 'finanzas', icon: 'fa-receipt' },
+    ];
   }
 
   
@@ -94,7 +58,8 @@ interface PARENT{
   name: string,
   route: string,
   routeId: string,
-  childs: CHILD[]
+  childs?: CHILD[],
+  icon?: string
 }
 
 interface CHILD {

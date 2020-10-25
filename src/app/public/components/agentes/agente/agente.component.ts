@@ -48,11 +48,11 @@ export class AgenteComponent implements OnInit, OnDestroy {
   }
 
   agentLinks:NAVLINK[] = [
-    { path: 'mensajes', label: 'Mensajes', icon:'fa-sign-in-alt' },
+    { path: 'bienvenida', label: 'Bienvenida', icon: 'fa-filter' },
+    { path: 'mensajes', label: 'Flujo', icon:'fa-sitemap' },
     { path: 'tipos', label: 'Tipos', icon:'fa-exchange-alt' },
-    { path: 'acciones', label: 'Acciones', icon:'fa-hand-scissors' },
-    { path: 'tarjetas', label: 'Tarjetas', icon: 'fa-images' },
-    { path: 'colecciones', label: 'Colecciones', icon: 'fa-folder' },
+    // { path: 'acciones', label: 'Acciones', icon:'fa-hand-scissors' },
+    { path: 'opciones', label: 'Configuración', icon: 'fa-cog' },
   ]
 
   ngOnDestroy() {

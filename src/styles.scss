@@ -24,9 +24,13 @@ div::-webkit-scrollbar {
     display: none;
 }
 
-p, i, mat-card-title, span, input, textarea, button {
+p, i, mat-card-title, span, input, textarea, button, * {
     color: #061326;
     font-family: 'Montserrat', sans-serif;
+}
+
+button {
+    font-family: 'Montserrat', sans-serif !important; 
 }
 
 a {

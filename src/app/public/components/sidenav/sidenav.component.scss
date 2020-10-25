@@ -5,9 +5,17 @@ mat-list-item {
 
 ::ng-deep {
     .menu-section {
+        .mat-expansion-panel-header.amber-text {
+            span{
+                color: goldenrod;
+                font-weight: 700;
+            }
+        }
+        .mat-expansion-indicator::after, .mat-panel-title{
+            color: #F3F8FF;
+        }
         span, .collection-item {
-            color: #F3F8FF !important;
-
+            color: #F3F8FF;
         }
     }
 }
