@@ -1,0 +1,21 @@
+<div id="messages-container" #messagesContainer>
+    <div class="message-globe"
+    [ngClass]="{'this': msg.emiter == 'this', 'that': msg.emiter == 'that'}"
+     *ngFor="let msg of messages">
+     <div [ngSwitch]="messageType(msg.message)">
+         <div *ngSwitchCase="'image'">
+             
+             <span class="message-date">{{formatDate(msg.time)}}</span>
+         </div>
+
+         <div *ngSwitchCase="'quickresponse'">
+             
+         </div>
+
+         <div *ngSwitchDefault>
+             <p>{{msg.message}}</p>
+             <span class="message-date">{{formatDate(msg.time)}}</span>
+         </div>
+     </div>
+    </div>
+</div>

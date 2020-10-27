@@ -22,6 +22,7 @@ import { GdevAlertModule } from '../Gdev-Tools/alerts/gdev-alert.module';
 import { InventarioModule } from './components/inventario/inventario.module';
 import { GdevToolsModule } from '../Gdev-Tools/gdev-tools.module';
 import { ChatTesterModule } from './components/chat-tester/chat-tester.module';
+import { ChatModule } from '../chat/chat.module';
 
 
 
@@ -44,7 +45,8 @@ import { ChatTesterModule } from './components/chat-tester/chat-tester.module';
     AgentesModule,
     InventarioModule,
     GdevToolsModule,
-    ChatTesterModule
+    ChatTesterModule,
+    ChatModule
   ],
   providers: [
   ]

@@ -4,7 +4,7 @@ import { NAVLINK } from '../navbar/navlink.interface';
 import { DashboardService } from './dashboard.service';
 import { MatDrawer } from '@angular/material/sidenav';
 import { CacheService } from '../../../Gdev-Tools/cache/cache.service';
-import { ChatService } from '../../../Gdev-Tools/chat/components/chat.service';
+import { ChatService } from '../../../chat/components/chat.service';
 
 @Component({
   selector: 'aSmart-dashboard',

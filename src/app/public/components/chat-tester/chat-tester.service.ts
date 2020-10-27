@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { ChatService } from '../../../Gdev-Tools/chat/components/chat.service';
+import { ChatService } from '../../../chat/components/chat.service';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
-import { QuickResponse, Image } from '../../../Gdev-Tools/chat/store/chat.model';
+import { QuickResponse, Image } from '../../../chat/store/chat.model';
 
 @Injectable({
     providedIn: 'root',
