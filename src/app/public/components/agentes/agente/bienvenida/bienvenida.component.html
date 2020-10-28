@@ -1,0 +1,65 @@
+<div class="row">
+    <waiting-bar></waiting-bar>
+
+    <!-- * DISEÑO DESKTOP -->
+    <ng-container *ngIf="!responsive.small; else mobileDesing">
+        <div strechHeight class="col s6" id="intent-form">
+            
+            <!-- ENTRENAMIENTO -->
+            <div strechHeight id="mensaje-container">
+                <div class="row mensaje-content">
+
+                    <div id="mensaje-header">
+                        <div class="row align-cols" *ngIf="intent">
+                            <div class="col s10">
+                                <p class="intent-title"> {{intent.displayName}} </p>
+                            </div>
+                            <div class="col s2">
+                                <button style="float: right;" mat-raised-button color="primary"
+                                (click)="mensaje_.update()"
+                                [disabled]="!unsaved"
+                                >Guardar</button>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <aSmart-frases-form></aSmart-frases-form>
+                    <aSmart-parametros></aSmart-parametros>
+                </div>
+            </div>
+
+        </div>
+        <div strechHeight class="col s6" id="resp-manager">
+            <aSmart-respuestas></aSmart-respuestas>
+        </div>
+    </ng-container>
+    
+    <!-- * DISEÑO MOBILE -->
+    <ng-template #mobileDesing>
+        <mat-accordion>
+            <mat-expansion-panel class="intent-panel" [expanded]="true">
+                <mat-expansion-panel-header>
+                    Mensaje
+                </mat-expansion-panel-header>
+               
+                <!-- ENTRENAMIENTO -->
+                <div strechHeight id="mensaje-container">
+                    <div class="row mensaje-content">
+                        <aSmart-frases-form></aSmart-frases-form>
+                        <aSmart-parametros></aSmart-parametros>
+                    </div>
+                </div>
+                
+            </mat-expansion-panel>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    Respuestas
+                </mat-expansion-panel-header>
+                <aSmart-respuestas></aSmart-respuestas>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </ng-template>
+    
+</div>

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { OpcionesAgenteService } from './opciones-agente.service';
 
 @Component({
   selector: 'aSmart-opciones',
@@ -7,7 +8,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class OpcionesComponent implements OnInit {
 
-  constructor() { }
+  constructor (
+    public opciones_: OpcionesAgenteService
+  ) { }
 
   ngOnInit(): void {
   }

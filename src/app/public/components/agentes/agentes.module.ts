@@ -67,6 +67,7 @@ import { DiagramElementDirective } from './agente/mensajes/diagram/diagram-eleme
 import { MensajesDiagramComponent } from './agente/mensajes/mensajes-diagram/mensajes-diagram.component';
 import { CreatingComponent } from './init-agente/creating/creating.component';
 import { EditAgenteComponent } from './edit-agente/edit-agente.component';
+import { BienvenidaComponent } from './agente/bienvenida/bienvenida.component';
 
 
 
@@ -128,6 +129,7 @@ import { EditAgenteComponent } from './edit-agente/edit-agente.component';
     MensajesDiagramComponent,
     CreatingComponent,
     EditAgenteComponent,
+    BienvenidaComponent,
   ],
   imports: [
     CommonModule,

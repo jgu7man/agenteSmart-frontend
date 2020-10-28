@@ -1,12 +1,12 @@
-<div class="row param-row" *ngIf="parte.entityType || parte.selected">
+<div class="row param-row align-cols" *ngIf="parte.entityType || parte.selected">
 
     <!-- Valor -->
-    <div class="col s3 m4">
+    <div class="col s3 m3">
         {{parte.text}}
     </div>
 
     <!-- Tipo de dato -->
-    <div class="col s3 m3" (click)="toSelectTipo()">
+    <div class="col s3 m4" (click)="toSelectTipo()">
         <aSmart-tipo-selector 
         (tipoSelected)="onTipoSelected($event)"
         [value]="parte.entityType"
@@ -15,8 +15,7 @@
     </div>
 
     <!-- Nombre param -->
-    <div class="col s3 m4">
-
+    <div class="col s3 m3">
         <ng-container *ngIf="parte.paramName; else paramInput">
             {{parte.paramName}}
         </ng-container>
@@ -38,7 +37,7 @@
     </div>
 
     <!-- Eliminar parametro -->
-    <div class="col s3 m1 delParam">
+    <div class="col s3 m2 delParam">
         <button mat-icon-button (click)="onDelete.emit()">
             <i class="fas fa-times red-text"></i>
         </button>

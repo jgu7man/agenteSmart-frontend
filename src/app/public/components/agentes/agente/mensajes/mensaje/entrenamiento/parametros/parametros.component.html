@@ -23,6 +23,12 @@
         <aSmart-add-parameter (closeRow)="switchAddParameter = false" ></aSmart-add-parameter>
     </div>
     <div class="col s12" *ngIf="mensaje.current" id="params-body">
+      <ng-container *ngIf="mensaje.current.parameters.length > 0; else noParams">
         <aSmart-param-row *ngFor="let param of mensaje.current.parameters" [param]="param"></aSmart-param-row>
+      </ng-container>
+      <ng-template #noParams>
+        <p class="center">No has agregado parametros</p>        
+      </ng-template>
+      
     </div>
 </div>

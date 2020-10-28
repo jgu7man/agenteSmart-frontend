@@ -86,14 +86,29 @@ export class FrasesService {
 
   
   // UPDATE 
-  async updatePhrase( frase: FraseEntrenamiento ) {
+  async updatePhrase( frase: FraseEntrenamiento, index ) {
     try {
-      const mensaje = this._mensaje.current
-      const frasesList = mensaje.trainingPhrases
-      const phraseToEdit = frasesList.findIndex( phrase => phrase === frase.name )
-      frasesList[ phraseToEdit ] = frase;
-      this._mensaje.current.trainingPhrases = frasesList
+      console.log(this._mensaje.current.trainingPhrases);
+      var mensaje = this._mensaje.current
+      var frasesList = mensaje.trainingPhrases
+      // var phraseToEdit = frasesList.findIndex(phrase => phrase === frase.name)
+      
+      console.log(frase);
+      console.log(frasesList[index]);
+
+      // if (phraseToEdit < 0) {
+      //   console.log('add');
+      //   frasesList = [...frasesList, frase]
+      // } else {
+        console.log('edit');
+        frasesList[ index ] = frase;
+      // }
+
+      console.log(this._mensaje.current.trainingPhrases);
+      console.log(frasesList);
+      // this._mensaje.current.trainingPhrases = frasesList
       return this.store.dispatch( actions.setUnsaved() )
+    
     } catch (error) {
       console.error(error);
       this.alert.sendError('Error', error)

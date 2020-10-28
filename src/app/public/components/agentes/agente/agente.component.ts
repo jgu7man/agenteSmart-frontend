@@ -8,6 +8,8 @@ import { NAVLINK } from '../../navbar/navlink.interface';
 import { ResponsiveService } from '../../../../services/responsive.service';
 import { CacheService } from '../../../../Gdev-Tools/cache/cache.service';
 import { CurrentAgenteService } from './current-agente.service';
+import { MensajesService } from './mensajes/mensajes.service';
+import { IntentModel } from './mensajes/mensaje.model';
 
 @Component({
   selector: 'aSmart-agente',
@@ -19,16 +21,16 @@ export class AgenteComponent implements OnInit, OnDestroy {
 
   agente: AgenteModel
   projectId: string
+  mensajesList: IntentModel
   constructor (
     private _agente: CurrentAgenteService,
-    private auth: AuthService,
     private _dashboard: DashboardService,
     public _responsive: ResponsiveService,
     private _cache: CacheService,
-    private _route: ActivatedRoute
+    private _route: ActivatedRoute,
+    private _mensajes: MensajesService
   ) {
     this._route.params.subscribe( params => {
-      console.log(params)
       this._cache.updateData('projectId', params['id'])
     })
    }
@@ -38,6 +40,8 @@ export class AgenteComponent implements OnInit, OnDestroy {
     if ( this._responsive.small ) {
       this._dashboard.setMobileNavbar(this.agentLinks)
     }
+    // this._agente.getAllIntents().then( res => {console.log( res );} )
+    this._cache.updateData('allMensajes', this.mensajesList);
   }
 
   async loadAgente() {

@@ -70,8 +70,9 @@ export class CurrentMensajeService {
     return this._cache.getDataKey( 'allMensajes' )
   }
 
-  async get() {
-    
+  async setCurrent(current: IntentModel) {
+    this.current = current
+    this.current$.next(this.current)
   }
 
   async getAsync() {
@@ -84,19 +85,11 @@ export class CurrentMensajeService {
         
       if ( this.current ) {
         
-        // this.mensaje$ = this.fs.collection( this.mensajesPath )
-        //   .doc<IntentModel>( this.mensajeName ).valueChanges()
-        
-        // await this.getFrasesList()
-        // await this.getParametrosList()
+       
         await this.getRespuestasList()
         console.log( this.current );
         this.current$.next(this.current)
-        // this.mensajeSub$ = this.mensaje$.subscribe( this.current$ )
-        // this.current$.subscribe( current => {
-        //   this.current = current
-        //   // this._cache.updateData( 'currentMensaje', current )
-        // } )
+       
         
         this._cache.updateData( 'currentContexto', this.currentContexto )
       }
@@ -159,6 +152,9 @@ export class CurrentMensajeService {
     // NOTE se debe de saber exactamente que parametros mandar en el body
     // me refiero más a los types de Dialogflow
     // LINK https://cloud.google.com/dialogflow/es/docs/reference/rest/v2/projects.agent.intents#resource:-intent
+    let projectId = this._cache.getDataKey('projectId')
+    let path = `projects/${projectId}/agent/intents/${intent.name}`
+    intent.name = path
 
     return new Promise((resolve, reject ) => {
       

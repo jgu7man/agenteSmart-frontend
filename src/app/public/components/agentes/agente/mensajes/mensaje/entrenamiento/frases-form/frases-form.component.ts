@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, ViewChildren, QueryList, ViewEncapsulation, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ViewChildren, QueryList, ViewEncapsulation, AfterViewInit, OnDestroy, OnChanges } from '@angular/core';
 import { FraseEntrenamiento, FraseParte } from '../../../mensaje.model';
 import { Loading } from '../../../../../../../../Gdev-Tools/loading/loading.service';
 import { FrasesService } from './frases.service';
@@ -24,7 +24,7 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
   addPhraseInput: boolean = false
   newPhrase: string
   phraseParts: FraseParte[] = []
-  fraseExpanded: string
+  fraseExpanded: number
 
   listenerParamDeleted: Subscription
   
@@ -41,10 +41,20 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    
   }
 
   ngAfterViewInit() {
+  }
+
+  
+
+  get Frases() {
+    if (this.mensaje.current) {
+      // console.log(this.mensaje.current.trainingPhrases);
+      return this.mensaje.current.trainingPhrases
+    } else {
+      return []
+    }
   }
 
   
@@ -68,7 +78,7 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
       this.loading.waitFor( 200 )
       this.frases.addTraningPhrase( NEWPHRASE ).then( () => {
         this.newPhrase = ''
-      } )
+      })
     }
   }
   
@@ -85,14 +95,17 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   /** Obtiene el valor seleccionado al momento de soltar el mouse en la frase de entrenamiento y la transforma en "partes" */
-  async onSelect( frase: FraseEntrenamiento ) {
+  async onSelect(frase: FraseEntrenamiento, index: number) {
+    console.log(frase.parts[1], index);
     const textSelected = window.getSelection().toString()
     
 
     if ( textSelected ) {
       // Select the frase that whas select on
-      const fraseOnEdit = this.frases.frasesList.find( f => f.name == frase.name )
-      const fraseOnEditIndex = this.frases.frasesList.findIndex( f => f.name == frase.name )
+      // const fraseOnEdit = this.frases.frasesList.find( f => f.name == frase.name )
+      // const fraseOnEditIndex = this.frases.frasesList.findIndex(f => f.name == frase.name)
+      
+      // console.log(fraseOnEditIndex);
 
       // Define variables
       var fraseRestructured: FraseEntrenamiento = 
@@ -102,13 +115,14 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
       
       
       // Merge the parts
-      this.frases[ fraseOnEditIndex ] = fraseRestructured
+      // this.frases[ index ] = fraseRestructured
 
-      this.frases.updatePhrase(fraseRestructured)
+      this.frases.updatePhrase(fraseRestructured, index)
       
-      this.fraseExpanded = frase.name
-      const phraseItemEdited = this.prhaseList.find( Frase => Frase.phraseName == frase.name )
-      phraseItemEdited.frase.parts = fraseRestructured.parts
+      this.fraseExpanded = index
+      console.log(this.fraseExpanded);
+      // const phraseItemEdited = this.prhaseList.find( Frase => Frase.phraseName == frase.name )
+      // phraseItemEdited.frase.parts = fraseRestructured.parts
     }
   }
 

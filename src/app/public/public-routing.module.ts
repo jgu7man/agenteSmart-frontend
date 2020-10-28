@@ -18,6 +18,7 @@ import { ProductsComponent } from './components/inventario/products/products.com
 import { AddProductComponent } from './components/inventario/products/add-product/add-product.component';
 import { EditProductComponent } from './components/inventario/products/edit-product/edit-product.component';
 import { EditAgenteComponent } from './components/agentes/edit-agente/edit-agente.component';
+import { BienvenidaComponent } from './components/agentes/agente/bienvenida/bienvenida.component';
 
 const routes: Routes = [
     {
@@ -31,7 +32,8 @@ const routes: Routes = [
                     { path: 'editar_agente/:id', component: EditAgenteComponent, },
                     { path: 'agente/:id', component: AgenteComponent, children: 
                         [
-                            { path: '', redirectTo: 'mensajes',pathMatch: 'full', },
+                            { path: '', redirectTo: 'mensajes', pathMatch: 'full', },
+                            { path: 'bienvenida', component: BienvenidaComponent },
                             { path: 'mensajes', component: MensajesComponent },
                             { path: 'mensaje/:name', component: MensajeComponent, },
                             { path: 'tipos', component: TiposComponent },

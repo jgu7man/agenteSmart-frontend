@@ -3,7 +3,8 @@
     <!-- Display name -->
     <div class="col s3" (click)="toEditDisplayName()">
         <ng-container *ngIf="!switchNameInput; else nameInput">
-            {{param.displayName}}
+            <span [ngStyle]="{'background':params_.getParamColor(param.displayName)}"
+            class="paramName">{{param.displayName}}</span>
         </ng-container>
         <ng-template #nameInput>
             <mat-form-field>

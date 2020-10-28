@@ -7,6 +7,8 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { ParametrosService } from '../../../parametros/parametros.service';
 import { Loading } from '../../../../../../../../../../Gdev-Tools/loading/loading.service';
 import { FrasesService } from '../../frases.service';
+import { MensajesService } from '../../../../../mensajes.service';
+import { CurrentMensajeService } from '../../../../current-mensaje.service';
 
 @Component({
   selector: 'aSmart-part-parameter',
@@ -29,6 +31,7 @@ export class PartParameterComponent implements OnInit {
   constructor (
     private _params: ParametrosService,
     private loading: Loading,
+    private _mensaje: CurrentMensajeService
   ) { }
 
   ngOnInit(): void {
@@ -63,16 +66,23 @@ export class PartParameterComponent implements OnInit {
     
     var entity = this.parte.entityType
     this.parte.paramName = this.paramName
-    this.paramAdded.emit( this.parte )
+    this.paramAdded.emit(this.parte)
     
-    var param: ParametroMensaje = {
-      displayName: this.paramName,
-      entityTypeDisplayName: entity
+    var paramStored = 
+      this._mensaje.current.parameters.find(p => p.displayName == this.paramName)
+    
+    console.log(paramStored);
+    if (!paramStored) {
+      var param: ParametroMensaje = {
+        displayName: this.paramName,
+        entityTypeDisplayName: entity
+      }
+  
+      this._params.addParam( param ).then( () => {
+        this.parte.paramName = this.paramName
+      })
     }
-
-    this._params.addParam( param ).then( () => {
-      this.parte.paramName = this.paramName
-    })
+    
   }
 
 

@@ -1,0 +1,17 @@
+#intent-form {
+    background: #fff;
+    box-shadow: 2px 0px 4px rgba($color: #000000, $alpha: 0.5);
+    padding-bottom: 4em;
+}
+
+.intent-panel {
+    max-height: 70vh;
+}
+.intent-title {
+    font-size: 1.7rem;
+}
+
+#resp-manager {
+    overflow: auto;
+    padding-bottom: 4em;
+}

@@ -98,7 +98,7 @@ export class MensajesService {
     newIntent = {
       name: newIntent.name,
       displayName: newIntent.displayName,
-      index: index, contextos: contexto ? [ contexto ] : []
+      index: index , contextos: contexto ? [ contexto ] : []
     }
     
     let mensajeDuplicated = this._agente.mensajesList
@@ -170,28 +170,7 @@ export class MensajesService {
 
   
 
-  async getAllIntents(): Promise<IntentModel[]> {
-    return new Promise((resolve, reject) => {
-      const projectId: string = this._cache.getDataKey('projectId')
-
-      this._http.get(this._url + `/${projectId}`, {
-        responseType: 'json'
-      })
-      .toPromise()
-      .then(response => {
-        console.info('Peticion echa intents:', response)
-        const intents: IntentModel[] = response['result']['intents'];
-        resolve(intents);
-      })
-      .catch(err => {
-        if (err) {
-          console.error('Error tomando todos los intents', err.message)
-          this._alerts.sendError('Un error tomando los intents', err);
-          reject(err)
-        }
-      })
-    })
-  }
+  
 
 
 

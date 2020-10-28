@@ -11,46 +11,56 @@
 <div class="row">
     <div class="col s12">
         <ul class="phrases-list" *ngIf="mensaje.current">
-
-
+            
             <!-- READ Muestra las frases -->
-            <li *ngFor="let frase of mensaje.current.trainingPhrases; trackBy:trackByFraseName" 
-            class="phrase-item"
-            (mouseup)="onSelect(frase)"
-            >
-                <mat-expansion-panel hideToggle 
-                [disabled]="disableFrase(frase)"
-                [expanded]="frase.name == fraseExpanded">
-                    <mat-expansion-panel-header>
-                        <aSmart-frase-item 
-                        [frase]="frase" 
-                        [phraseName]="frase.name" 
-                        >
-                        </aSmart-frase-item>
-                    </mat-expansion-panel-header>
-                
-                    <aSmart-frase-parameters [frase]="frase"></aSmart-frase-parameters>
-                </mat-expansion-panel>
-            </li>
+
+            <ng-container *ngIf="Frases.length > 0 || addPhraseInput; else noPhrases">
+                <mat-accordion>
+
+                    <li *ngFor="let frase of Frases; index as i" 
+                    class="phrase-item"
+                    (mouseup)="onSelect(frase, i)"
+                    >
+                        <mat-expansion-panel hideToggle 
+                        [disabled]="disableFrase(frase)"
+                        [expanded]="fraseExpanded && i == fraseExpanded">
+                            <mat-expansion-panel-header>
+                                <aSmart-frase-item 
+                                [frase]="frase" 
+                                [phraseName]="frase.name" 
+                                >
+                                </aSmart-frase-item>
+                            </mat-expansion-panel-header>
+                        
+                            <aSmart-frase-parameters [frase]="frase"></aSmart-frase-parameters>
+                        </mat-expansion-panel>
+                    </li>
+
+                </mat-accordion>
+            </ng-container>
+            <ng-template #noPhrases>
+                <li class="phrase-item no-frase" (click)="toAddPhrase()">
+                    Agrega una frase
+                </li>
+            </ng-template>
+            
+            
 
             <!-- CREATE Agregar nueva frase -->
-            <li *ngIf="addPhraseInput">
-                <div class="row">
-                    <div class="col s12">
-                        <mat-form-field class="newFrase">
-                            <input 
-                            matInput
-                            #newPhraseInput
-                            type="text" 
-                            name="newPhraseInput" 
-                            id="newPhraseInput"
-                            (blur)="addPhraseInput = false"
-                            [(ngModel)]="newPhrase"
-                            (keyup.enter)="newPhrase != '' ? onSetPhrase() : addPhraseInput = false"
-                            >
-                        </mat-form-field>
-                    </div>
-                </div>
+            <li *ngIf="addPhraseInput" class="phrase-item">
+                <mat-form-field appearance="outline"  class="newFrase">
+                    <input 
+                    placeholder="Nueva frase de entrenamiento"
+                    matInput
+                    #newPhraseInput
+                    type="text" 
+                    name="newPhraseInput" 
+                    id="newPhraseInput"
+                    (blur)="addPhraseInput = false"
+                    [(ngModel)]="newPhrase"
+                    (keyup.enter)="newPhrase != '' ? onSetPhrase() : addPhraseInput = false"
+                    >
+                </mat-form-field>
             </li>
         </ul>
 

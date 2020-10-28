@@ -297,7 +297,7 @@ export class TiposService {
     /** Está pendiendte de la entity seleccionada en el storage */
     currentTipo$( ) {
         return this.store.select( 'tipos' ).pipe( map( tipos => {
-            console.log(tipos);
+            // console.log(tipos);
             let selected = tipos.find( t => t.selected == true )
             return selected
         }) )

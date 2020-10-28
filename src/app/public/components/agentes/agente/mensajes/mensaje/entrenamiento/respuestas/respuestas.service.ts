@@ -157,13 +157,15 @@ export class RespuestasService {
    async getNextMensaje() {
       const contextosList = await this._cache.getDataKey( 'contextosLists' )
       var mensajes: IntentModel[] = contextosList ?
-         contextosList[ this.currentContext ] : []
+         contextosList[this.currentContext] : []
       
-      if ( mensajes.length > 0 )
+      if (mensajes && mensajes.length > 0) {
+         
          var currentIntenIndex = mensajes.findIndex
             ( intent => intent.name == this.currentMensaje.name );
 
       this.nextMensaje = currentIntenIndex == mensajes.length - 1 ? '' : mensajes[ currentIntenIndex + 1 ].displayName
+      }
    }
 
 

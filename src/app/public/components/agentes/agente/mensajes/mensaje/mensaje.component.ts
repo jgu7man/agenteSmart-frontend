@@ -1,11 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ResponsiveService } from '../../../../../../services/responsive.service';
-import { IntentModel } from '../mensaje.model';
-import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
+import { Router, NavigationEnd } from '@angular/router';
 import { CurrentMensajeService } from './current-mensaje.service';
-import { Observer, Subscriber, Subscription } from 'rxjs';
-import { Loading } from '../../../../../../Gdev-Tools/loading/loading.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'aSmart-mensaje',
@@ -16,17 +13,14 @@ export class MensajeComponent implements OnInit, OnDestroy {
 
   mensajeName: string
   // mensaje: IntentModel
-  inMensaje$: Subscription
-  updated$: Subscription
+  private inMensaje$: Subscription
+
   constructor (
     public responsive: ResponsiveService,
-    private _route: ActivatedRoute,
     private router: Router,
     private _mensaje: CurrentMensajeService,
-    private _dialog: MatDialog,
-    private loading: Loading
   ) {
-    this._mensaje.getAsync()
+      this._mensaje.getAsync()
    }
 
   ngOnInit(): void {
@@ -48,6 +42,7 @@ export class MensajeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this._mensaje.unsubscribe()
+    this.inMensaje$.unsubscribe()
   }
 
 }

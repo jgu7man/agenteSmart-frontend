@@ -27,7 +27,7 @@ export class MensajesListComponent implements OnInit {
 
   async ngOnInit() {
     //Cargo todo los intents del Agente Actual.
-    this.intents = await this.mensajes.getAllIntents()
+    // this.intents = await this.mensajes.getAllIntents()
     // console.log('Abemus Intents:', this.intents);
   }
 

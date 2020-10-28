@@ -25,7 +25,7 @@ export class MensajesComponent implements OnInit {
   }
   
   async getAllMensajes() {
-    let mensajesList = await this._mensajes.getAllIntents()
+    let mensajesList = await this.agente_.getAllIntents()
     console.log(mensajesList);
     this._cache.updateData( 'allMensajes',mensajesList)
   }

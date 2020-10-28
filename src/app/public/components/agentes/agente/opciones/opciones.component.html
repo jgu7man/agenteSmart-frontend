@@ -1,1 +1,43 @@
-<p>opciones works!</p>
+<div class="container">
+    <div class="row">
+        <div class="col s12">
+            <h4>OPCIONES</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col s12 m6">
+            <mat-card></mat-card>
+        </div>
+        <div class="col s12 m6">
+            <mat-card>
+                <h5>DEFULT INTENTS</h5>
+                <mat-divider></mat-divider>
+                <div class="row">
+                    <div class="col s12">
+                        <button mat-button>
+                            Configurar Retroceso
+                        </button>
+                    </div>
+                    <div class="col s12">
+                        <button mat-button
+                        (click)="opciones_.restoreDefaultIntent('Default Welcome Intent')">
+                            Restaurar intent de Bienvenida
+                        </button>
+                    </div>
+                    <div class="col s12">
+                        <button mat-button
+                        (click)="opciones_.restoreDefaultIntent('Default Fallback Intent')">
+                            Restaurar intent de Retroceso
+                        </button>
+                    </div>
+                </div>
+                <mat-divider></mat-divider>
+                <div class="row">
+
+                </div>
+            </mat-card>
+        </div>
+    </div>
+
+</div>

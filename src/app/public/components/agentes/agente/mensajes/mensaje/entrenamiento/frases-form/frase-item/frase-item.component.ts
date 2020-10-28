@@ -2,6 +2,7 @@ import { Component, OnInit, Input, ElementRef, ViewChild, Output, EventEmitter }
 import { FraseEntrenamiento, FraseParte } from '../../../../mensaje.model';
 import { Loading } from '../../../../../../../../../Gdev-Tools/loading/loading.service';
 import { FrasesService } from '../frases.service';
+import { ParametrosService } from '../../parametros/parametros.service';
 
 @Component({
   selector: 'aSmart-frase-item',
@@ -21,7 +22,8 @@ export class FraseItemComponent implements OnInit {
 
   constructor (
     private loading: Loading,
-    private _frases: FrasesService
+    private _frases: FrasesService,
+    public params_: ParametrosService
   ) { }
 
   ngOnInit(): void {
