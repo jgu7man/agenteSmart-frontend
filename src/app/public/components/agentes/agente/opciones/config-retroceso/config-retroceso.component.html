@@ -1,0 +1,25 @@
+<h4 mat-dialog-title>Respuesta de retroceso</h4>
+<p style="text-align: justify;">
+    Configura el mensaje que responderá tu agente en caso de que no pueda entender lo que tu cliente haya solicitado o para lo que aún no esté configurado.
+</p>
+
+<mat-dialog-content>
+    <mat-form-field>
+        <mat-label>Respuesta</mat-label>
+        <textarea matInput 
+        name="dialgbox"  
+        cols="30" rows="5" 
+        [(ngModel)]="outputMessage.respuesta"
+        ></textarea>
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions
+style="display: flex; justify-content: space-around;">
+    <button mat-raised-button
+    (click)="dialog_.close()"
+    >Cancelar</button>
+    <button mat-raised-button
+    (click)="saveRespuesta()"
+    color="primary"
+    >Guardar</button>
+</mat-dialog-actions>

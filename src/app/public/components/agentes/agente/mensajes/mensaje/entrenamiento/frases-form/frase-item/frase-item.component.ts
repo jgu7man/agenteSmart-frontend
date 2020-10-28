@@ -14,7 +14,7 @@ export class FraseItemComponent implements OnInit {
 
   @Input() switchPhraseInput: boolean = false
   @Input() frase: FraseEntrenamiento
-  @Input() phraseName: string
+  @Input() index: number
   @ViewChild( 'inputPhrase' ) inputPhrase: ElementRef
   phraseToEdit: string
 
@@ -57,7 +57,7 @@ export class FraseItemComponent implements OnInit {
       PHRASE.parts = this._frases.createParts( this.phraseToEdit )
 
       console.log( PHRASE );
-      this._frases.updatePhrase( PHRASE )
+      this._frases.updatePhrase( PHRASE, this.index )
 
     }
     

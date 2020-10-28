@@ -68,6 +68,7 @@ import { MensajesDiagramComponent } from './agente/mensajes/mensajes-diagram/men
 import { CreatingComponent } from './init-agente/creating/creating.component';
 import { EditAgenteComponent } from './edit-agente/edit-agente.component';
 import { BienvenidaComponent } from './agente/bienvenida/bienvenida.component';
+import { ConfigRetrocesoComponent } from './agente/opciones/config-retroceso/config-retroceso.component';
 
 
 
@@ -130,6 +131,7 @@ import { BienvenidaComponent } from './agente/bienvenida/bienvenida.component';
     CreatingComponent,
     EditAgenteComponent,
     BienvenidaComponent,
+    ConfigRetrocesoComponent,
   ],
   imports: [
     CommonModule,
@@ -143,6 +145,6 @@ import { BienvenidaComponent } from './agente/bienvenida/bienvenida.component';
   providers: [
     
   ],
-  entryComponents: [CreatingComponent]
+  entryComponents: [CreatingComponent, ConfigRetrocesoComponent]
 })
 export class AgentesModule { }

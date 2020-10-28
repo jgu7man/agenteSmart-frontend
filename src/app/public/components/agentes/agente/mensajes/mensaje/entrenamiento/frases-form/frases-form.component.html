@@ -27,12 +27,12 @@
                             <mat-expansion-panel-header>
                                 <aSmart-frase-item 
                                 [frase]="frase" 
-                                [phraseName]="frase.name" 
+                                [index]="i" 
                                 >
                                 </aSmart-frase-item>
                             </mat-expansion-panel-header>
                         
-                            <aSmart-frase-parameters [frase]="frase"></aSmart-frase-parameters>
+                            <aSmart-frase-parameters [fraseIndex]="i" [frase]="frase"></aSmart-frase-parameters>
                         </mat-expansion-panel>
                     </li>
 

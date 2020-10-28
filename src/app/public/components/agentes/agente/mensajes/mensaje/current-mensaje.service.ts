@@ -149,9 +149,7 @@ export class CurrentMensajeService {
   }
 
   private updateIntentApiRequest(intent: IntentModel): Promise<IntentModel> {
-    // NOTE se debe de saber exactamente que parametros mandar en el body
-    // me refiero más a los types de Dialogflow
-    // LINK https://cloud.google.com/dialogflow/es/docs/reference/rest/v2/projects.agent.intents#resource:-intent
+    
     let projectId = this._cache.getDataKey('projectId')
     let path = `projects/${projectId}/agent/intents/${intent.name}`
     intent.name = path

@@ -7,7 +7,9 @@
 
     <div class="row">
         <div class="col s12 m6">
-            <mat-card></mat-card>
+            <mat-card>
+                <h5>Datos de contacto</h5>                
+            </mat-card>
         </div>
         <div class="col s12 m6">
             <mat-card>
@@ -15,7 +17,8 @@
                 <mat-divider></mat-divider>
                 <div class="row">
                     <div class="col s12">
-                        <button mat-button>
+                        <button mat-button
+                        (click)="openConfigFallback()">
                             Configurar Retroceso
                         </button>
                     </div>

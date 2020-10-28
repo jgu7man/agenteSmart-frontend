@@ -10,6 +10,7 @@ import { FrasesService } from '../frases.service';
 export class FraseParametersComponent implements OnInit {
   
   @Input() frase: FraseEntrenamiento
+  @Input() fraseIndex: number
   @Output() tipoSelected = new EventEmitter<FraseParte>() 
   tipos: string[] = []
   
@@ -25,12 +26,12 @@ export class FraseParametersComponent implements OnInit {
 
   setTipoFrase( parte: FraseParte,  partIndex: number ) {
       this.frase.parts[ partIndex ] = parte
-      this._frase.updatePhrase( this.frase )
+      this._frase.updatePhrase( this.frase, this.fraseIndex )
   }
 
   onParamAdded(parte: FraseParte, index: number) {
     this.frase.parts[ index ] = parte
-    this._frase.updatePhrase(this.frase)
+    this._frase.updatePhrase(this.frase, this.fraseIndex)
   }
 
 
@@ -41,7 +42,7 @@ export class FraseParametersComponent implements OnInit {
     var restoredPartText = this._frase.stringifyFullPhrase( this.frase )
     this.frase.parts = this._frase.createParts( restoredPartText )
     // console.log(this.frase);
-    this._frase.updatePhrase(this.frase)
+    this._frase.updatePhrase(this.frase, this.fraseIndex )
     // var newParts = this._frase.createParts( restoredPartText )
     // console.log(newParts);
     

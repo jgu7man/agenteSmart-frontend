@@ -88,12 +88,7 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
   
 
   // UPDATE FRASE
-  async toEditPhrase( phrase: FraseEntrenamiento ) {
-    const phraseEdit = this.prhaseList.find(frase => frase.phraseName == phrase.name)
-    phraseEdit.toEditPhrase(phrase)
-  }
-
-
+  
   /** Obtiene el valor seleccionado al momento de soltar el mouse en la frase de entrenamiento y la transforma en "partes" */
   async onSelect(frase: FraseEntrenamiento, index: number) {
     console.log(frase.parts[1], index);

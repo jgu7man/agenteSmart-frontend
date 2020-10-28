@@ -13,6 +13,7 @@ import { ColeccionModel } from './colecciones/collection.interface';
 import { TarjetaModel } from './tarjetas/tarjeta.model';
 import { HttpClient } from '@angular/common/http';
 import { AlertService } from '../../../../Gdev-Tools/alerts/alert.service';
+import { Loading } from '../../../../Gdev-Tools/loading/loading.service';
 
 @Injectable({
     providedIn: 'root',
@@ -39,7 +40,8 @@ export class CurrentAgenteService {
         private router: Router,
         private _route: ActivatedRoute,
         private _http: HttpClient,
-        private _alerts: AlertService
+        private _alerts: AlertService,
+        private loading: Loading
     ) {
         this.listenFirstLoad();
         this.getAllIntents()
@@ -78,6 +80,7 @@ export class CurrentAgenteService {
     }
 
     async get() {
+        this.loading.toggleWaitingSpinner(true)
         await this.getCurrentProjectId();
 
         if (this.loads == 1) {
@@ -131,7 +134,7 @@ export class CurrentAgenteService {
             // this._cache.updateData( 'mensajes', list )
         });
 
-        
+        this.loading.toggleWaitingSpinner(false)
     }
 
     contextosList: ContextoModel[] = [];

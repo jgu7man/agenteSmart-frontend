@@ -94,25 +94,18 @@ export class MensajesService {
     
     const resourceID = newIntent.name.slice(newIntent.name.lastIndexOf("/") + 1); //formato esperado: f0b12fde-9600-4e2e-88a7-70861817a358
     
-
-    newIntent = {
+    let intent = {
       name: newIntent.name,
-      displayName: newIntent.displayName,
-      index: index , contextos: contexto ? [ contexto ] : []
+      displayName: newIntent.displayName
     }
+
+    if (index) intent['index'] = index
+    if (contexto) intent['contexto'] = contexto
+
+    await (await this.mensajesCollection()).doc(resourceID).set(intent)
     
-    let mensajeDuplicated = this._agente.mensajesList
-    .find(msj => msj.name == resourceID)
+    return this._alerts.sendFloatNotification('Mensaje creado')
     
-    
-    if ( mensajeDuplicated ) {
-      console.log(name, ' duplicado');
-      
-    } else {
-      await (await this.mensajesCollection()).doc( resourceID )
-        .set( newIntent )
-      return this._alerts.sendFloatNotification('Mensaje creado')
-    }
   }
 
 
