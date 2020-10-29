@@ -2,7 +2,12 @@
   [
     "Spanish (es)",
     "@sys.date-time",
-    "2:30 pm<br>13 de julio<br>abril<br>esta mañana<br>mañana a las 4:30 de la tarde<br>mañana por la tarde",
+    "2:30 pm",
+    "13 de julio",
+    "abril",
+    "esta mañana",
+    "mañana a las 4:30 de la tarde",
+    "mañana por la tarde",
     "\"2018-04-05T14:30:00-06:00\"<br>\"2018-07-13T18:00:00-06:00\"<br>{\"startDate\":\"2018-04-01T12:00:00-06:00\",\"endDate\":\"2018-04-30T12:00:00-06:00\"}<br>{\"startTime\":\"2018-04-06T08:00:00-06:00\",\"endTime\":\"2018-04-06T12:00:00-06:00\"}<br>{\"date_time\":\"2018-04-06T16:30:00-06:00\"}<br>{\"startDateTime\":\"2018-04-06T12:00:00-06:00\",\"endDateTime\":\"2018-04-06T16:00:00-06:00\"}"
   ],
   [

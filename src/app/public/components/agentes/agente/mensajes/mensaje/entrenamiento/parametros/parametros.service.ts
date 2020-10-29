@@ -113,9 +113,8 @@ export class ParametrosService {
         )
     }
     
-    getParamColor(displayName: string): string {
-        if (displayName) {
-            
+    getParamColor(displayName: string | boolean): string {
+        if (typeof displayName == 'string') {
             return this.firestoredParams.length > 0
                 ? this.firestoredParams.find(p => p.displayName == displayName)['color']
                 : '#ffee588c'
@@ -175,17 +174,17 @@ export class ParametrosService {
 
         await this.loading.asyncForEach(
             frasesList,
-            async (frase: FraseEntrenamiento) => {
+            async (frase: FraseEntrenamiento, index) => {
                 // Busca en las partes donde hay el parámetro eliminado
                 return this.loading.asyncForEach(
                     frase.parts,
                     (parte: FraseParte, parteIndex) => {
-                        if (parte.paramName) {
-                            if (parte.paramName == displayName)
+                        if (parte.alias) {
+                            if (parte.alias == displayName)
                                 delete frase.parts[parteIndex].entityType;
-                            delete frase.parts[parteIndex].paramName;
-                            frase.parts[parteIndex].selected = false;
-                            // return this._frases.updatePhrase(frase);
+                            delete frase.parts[parteIndex].alias;
+                            // frase.parts[parteIndex].selected = false;
+                            return this._frases.updatePhrase(frase, index);
                         }
                     }
                 );

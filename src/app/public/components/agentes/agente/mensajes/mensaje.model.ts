@@ -52,10 +52,10 @@ export interface FraseEntrenamiento {
     export interface FraseParte {
         text: string,
         entityType?: string,
-        alias?: string,
+        alias?: string | boolean,
         userDefined?: boolean,
-        selected?: boolean,
-        paramName?: string
+        // selected?: boolean,
+        // paramName?: string
     }
 
 export interface ParametroMensaje {

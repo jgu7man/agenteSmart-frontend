@@ -7,28 +7,46 @@
     </mat-drawer>
     <mat-drawer-content>
         <div class="container">
-            <div class="row align-cols">
-                <div class="col s10">
-                    <b>Colecciones</b>
-                    <button mat-icon-button (click)="openAddDialog()">
-                        <i class="fas fa-plus fa-lg"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col s12">
-                    <mat-selection-list #listPanel
-                    (selectionChange)="onCollectionSelected($event)" 
-                    [multiple]="false">
-                        <mat-list-option 
-                        *ngFor="let coleccion of agente.coleccionesList"
-                        [value]="coleccion"
-                        >
-                            {{coleccion.name}}
-                        </mat-list-option>
-                    </mat-selection-list>
-                </div>
-            </div>
+            
+            <mat-card class="dashboard-section-card">
+                <mat-card-header class="dashboard-section-header">
+                    <mat-card-title class="dashboard-section-title">
+                        <h2>Colecciones</h2>
+                        <button mat-raised-button color="primary" (click)="openAddDialog()">
+                            Agregar
+                        </button>
+                </mat-card-title>
+                <mat-card-subtitle>
+                    Crea listas de información para que tus agentes la tengan a la mano sobre cualquier tema. Aquí también se guardarán los datos que desees que tu agente guarde de tus clientes.
+                </mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+
+                    <ng-container *ngIf="agente.coleccionesList && agente.coleccionesList.length > 0; else empty">
+                        <mat-selection-list #listPanel class="drawer-list"
+                        (selectionChange)="onCollectionSelected($event)" 
+                        [multiple]="false">
+                            <mat-list-option 
+                            *ngFor="let coleccion of agente.coleccionesList"
+                            [value]="coleccion"
+                            >
+                                {{coleccion.name}}
+                            </mat-list-option>
+                        </mat-selection-list>
+                    </ng-container>
+                    <ng-template #empty>
+                        <div class="row">
+                            <div class="col s12 center">
+                                <p class="center grey-text">Aún no tienes colecciones de datos creadas</p>
+                                <i class="fas fa-robot fa-10x grey-text "></i>
+                            </div>
+                        </div>
+                    </ng-template>
+                    
+                    
+                </mat-card-content>
+                
+            </mat-card>
         </div>
     </mat-drawer-content>
 </mat-drawer-container>

@@ -55,7 +55,7 @@ export class PartParameterComponent implements OnInit {
       }
 
       this._params.addParam( param ).then( () => {
-        this.parte.paramName = this.paramName
+        this.parte.alias = this.paramName
       } )
     }
   }
@@ -65,7 +65,7 @@ export class PartParameterComponent implements OnInit {
     event.stopImmediatePropagation()
     
     var entity = this.parte.entityType
-    this.parte.paramName = this.paramName
+    this.parte.alias = this.paramName
     this.paramAdded.emit(this.parte)
     
     var paramStored = 
@@ -79,7 +79,7 @@ export class PartParameterComponent implements OnInit {
       }
   
       this._params.addParam( param ).then( () => {
-        this.parte.paramName = this.paramName
+        this.parte.alias = this.paramName
       })
     }
     

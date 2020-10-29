@@ -69,6 +69,8 @@ import { CreatingComponent } from './init-agente/creating/creating.component';
 import { EditAgenteComponent } from './edit-agente/edit-agente.component';
 import { BienvenidaComponent } from './agente/bienvenida/bienvenida.component';
 import { ConfigRetrocesoComponent } from './agente/opciones/config-retroceso/config-retroceso.component';
+import { DefaultIntentsComponent } from './agente/opciones/default-intents/default-intents.component';
+import { DatosContactoComponent } from './agente/opciones/datos-contacto/datos-contacto.component';
 
 
 
@@ -132,6 +134,8 @@ import { ConfigRetrocesoComponent } from './agente/opciones/config-retroceso/con
     EditAgenteComponent,
     BienvenidaComponent,
     ConfigRetrocesoComponent,
+    DefaultIntentsComponent,
+    DatosContactoComponent,
   ],
   imports: [
     CommonModule,

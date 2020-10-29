@@ -3,17 +3,18 @@ import { AgenteModel } from '../init-agente/agente.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthService, UserInterface } from '../../../../admin/auth/auth.service';
 import { CacheService } from '../../../../Gdev-Tools/cache/cache.service';
-import { Subject, Observable, Subscription, of, BehaviorSubject } from 'rxjs';
-import { filter, concatAll, pluck, tap } from 'rxjs/operators';
+import { Subject, Observable, Subscription, of, BehaviorSubject, zip, forkJoin } from 'rxjs';
+import { filter, concatAll, pluck, tap, map } from 'rxjs/operators';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { IntentModel, MensajeState } from './mensajes/mensaje.model';
 import { ContextoModel } from './contextos/contexto.model';
-import { TipoEntidadModel } from './tipos/tipo.model';
+import { SystemEntitieModel, TipoEntidadModel } from './tipos/tipo.model';
 import { ColeccionModel } from './colecciones/collection.interface';
 import { TarjetaModel } from './tarjetas/tarjeta.model';
 import { HttpClient } from '@angular/common/http';
 import { AlertService } from '../../../../Gdev-Tools/alerts/alert.service';
 import { Loading } from '../../../../Gdev-Tools/loading/loading.service';
+import { SystemEntitiesService } from '../../../../admin/system/system-entities.service';
 
 @Injectable({
     providedIn: 'root',
@@ -23,7 +24,7 @@ export class CurrentAgenteService {
     currentProjectId: string;
     currentAgente$: Subject<AgenteModel> = new Subject();
     path: string;
-
+    
     usuario: UserInterface;
 
     agenteLoaded$: Subject<boolean> = new Subject();
@@ -32,6 +33,7 @@ export class CurrentAgenteService {
     tipos;
     private _url =
         'https://us-central1-main-agentesmart.cloudfunctions.net/dialogflow/intent';
+    systemEntities: SystemEntitieModel[] = []
 
     constructor(
         private fs: AngularFirestore,
@@ -41,8 +43,10 @@ export class CurrentAgenteService {
         private _route: ActivatedRoute,
         private _http: HttpClient,
         private _alerts: AlertService,
-        private loading: Loading
+        private loading: Loading,
+        private _systemEntites: SystemEntitiesService
     ) {
+        this.systemEntities = this._systemEntites.systemEntities
         this.listenFirstLoad();
         this.getAllIntents()
     }
@@ -80,7 +84,6 @@ export class CurrentAgenteService {
     }
 
     async get() {
-        this.loading.toggleWaitingSpinner(true)
         await this.getCurrentProjectId();
 
         if (this.loads == 1) {
@@ -134,7 +137,6 @@ export class CurrentAgenteService {
             // this._cache.updateData( 'mensajes', list )
         });
 
-        this.loading.toggleWaitingSpinner(false)
     }
 
     contextosList: ContextoModel[] = [];
@@ -150,20 +152,20 @@ export class CurrentAgenteService {
             this._cache.updateData('contextos', list);
         });
     }
+    
+    
 
-    tiposList: TipoEntidadModel[];
+    tiposList: (TipoEntidadModel | SystemEntitieModel)[];
     tiposSubs: Subscription;
     async getTiposList() {
         const path = await this.getPath('tipos');
         this.tiposList = this._cache.getDataKey('tipos');
         var changes = this.fs.collection<TipoEntidadModel>(path).valueChanges();
 
-        var system = this.fs
-            .collection<TipoEntidadModel>('global_config/agentes/systemEntites')
-            .valueChanges();
+        var system = of(this.systemEntities)
 
-        this.tiposSubs = of(changes, system)
-            .pipe(concatAll())
+        this.tiposSubs = zip(changes, system)
+            .pipe( map(([userTypes, systemTypes]) => [...userTypes, ...systemTypes]))
             .subscribe((list) => {
                 this.tiposList = list;
                 this._cache.updateData('tipos', list);

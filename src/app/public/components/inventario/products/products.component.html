@@ -4,53 +4,34 @@
 	</mat-drawer>
 	<mat-drawer-content>
 		
-		<div id="products">
+
+		<div class="container" id="products">
 			<div class="row" id="productTab">
-				
-				<div class="col s12" id="productsTable">
-					<div class="row">
 
-						<!-- * TÍTULO * -->
-						
-						<div class="col s8 m10"> 
-							<h2>PRODUCTOS</h2>
-						</div>
-						
-						<!-- * OPCIONES DEL PANEL * -->
+				<div class="col s12">
+					<mat-card class="dashboard-section-card">
+						<mat-card-header class="dashboard-section-header">
+							<mat-card-title class="dashboard-section-title">
+								<h2>PRODUCTOS</h2>
+								<button
+								mat-raised-button
+								[color]="'primary'" 
+								[routerLink]="['../products/add']" 
+								>Agregar</button>
+							</mat-card-title>
+							<mat-card-subtitle>
+								Los productos que agregues a tu inventario podrán ser usados por el agente para que realices ventas.
+							</mat-card-subtitle>
+						</mat-card-header>
+						<mat-card-content>
 
-						<div class="col s2">
-							<button
-							mat-raised-button
-							[color]="'primary'" 
-							class="" 
-							[routerLink]="['../products/add']" 
-							>Agregar</button>
-						</div>
-						
-					</div>
-					<!-- <div class="row" id="sort_menu">
-						<gdev-sort-options *ngIf="categories.length > 0"
-						[sortOptions]="false"
-						[compareOptions]="false"
-						[filterByField]="'categorias'"
-						[fieldTypeValue]="'array'"
-						[fieldValues]="categories">
-						</gdev-sort-options>
-
-					</div> -->
-					<!-- TERMINA CABECERA -->
-						
-
-
-
-						<!-- * TABLA * -->
-						<div class="row"  [class.mat-elevation-z3]="true">
-							<gdev-index-caller
+							<ng-container *ngIf="products && products.length > 0; else empty">
+								<gdev-index-caller
 							style="padding: 1em;"
 							></gdev-index-caller>
-							<div class="col s12">   
-								<mat-selection-list #listPanel [multiple]="false"
-								(selectionChange)="onProdSelected($event)">
+
+							<mat-selection-list #listPanel [multiple]="false"
+							(selectionChange)="onProdSelected($event)">
 								<mat-list-option style="width: 100%;" [disabled]="true">
 									<div class="row table-headers" style="width: 110%;">
 										<div class="col s2">Imagen</div>
@@ -88,26 +69,19 @@
 									</div>
 								</mat-list-option>
 							</mat-selection-list>
-							<!-- <gdev-loading-data *ngIf="!products || products.length <= 0"></gdev-loading-data> -->
-						</div>
-
-
-						<div class="col s12" *ngIf="!products">
-							<div class="noCant_container">
-								<i class="far fa-frown fa-3x"></i>
-								<p style="font-size: x-large;">Aun no has agregado productos </p>
-							</div>
-						</div>
-					</div>
+							</ng-container>
+							<ng-template #empty>
+								<div class="col s12 center">
+                                    <p class="center grey-text">Aún no tienes productos agregados</p>
+                                    <i class="fas fa-robot fa-10x grey-text "></i>
+                                </div>
+							</ng-template>
+							
+						</mat-card-content>
+					</mat-card>
+					
 				</div>
-
-				<!-- TERMINA TABLA -->
-
-
 			</div>
-				
-
-		<!-- TERMINA MARCO -->
 		</div>
 	
 	</mat-drawer-content>

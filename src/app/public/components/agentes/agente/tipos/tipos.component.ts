@@ -9,7 +9,7 @@ import { TipoComponent } from './tipo/tipo.component';
 import { Store } from '@ngrx/store';
 import { TipoState } from './store/tipo.state';
 import * as actions from './store/tipo.actions'
-import { TipoEntidadModel } from './tipo.model';
+import { TipoEntidadModel, SystemEntitieModel } from './tipo.model';
 import { AppState } from '../../../../../app.state';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MatSelectionList, MatSelectionListChange } from '@angular/material/list';
@@ -29,10 +29,11 @@ export class TiposComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild( 'listPanel' ) public listPanel: MatSelectionList 
   backendSubs: Subscription
 
+  
 
   constructor (
     public tipos_: TiposService,
-    public agente: CurrentAgenteService,
+    public agente_: CurrentAgenteService,
     private _dialog: MatDialog,
     private loading: Loading,
     private store: Store<AppState>

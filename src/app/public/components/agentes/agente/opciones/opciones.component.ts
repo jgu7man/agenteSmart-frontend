@@ -18,10 +18,6 @@ export class OpcionesComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  openConfigFallback() {
-    var dialog = this._dialog.open(ConfigRetrocesoComponent, {
-      width: '33%'
-    })
-  }
+  
 
 }

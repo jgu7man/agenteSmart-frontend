@@ -10,6 +10,14 @@ export class TipoEntidadModel {
     ){}
 }
 
+export interface SystemEntitieModel {
+    displayName: string,
+    ejemplos?:SystemEntitieExample[]
+    } export interface SystemEntitieExample {
+        request?: string,
+        result?:string[]
+}
+
 
 export interface Clase {
     value: string,

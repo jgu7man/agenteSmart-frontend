@@ -1,4 +1,4 @@
-<div class="row param-row align-cols" *ngIf="parte.entityType || parte.selected">
+<div class="row param-row align-cols" *ngIf="parte.alias && parte.alias != '' ">
 
     <!-- Valor -->
     <div class="col s3 m3">
@@ -16,23 +16,18 @@
 
     <!-- Nombre param -->
     <div class="col s3 m3">
-        <ng-container *ngIf="parte.paramName; else paramInput">
-            {{parte.paramName}}
-        </ng-container>
-
-        <ng-template #paramInput>
-            <mat-form-field>
-                <input 
-                matInput 
-                type="text" 
-                [name]="paramName" 
-                [id]="paramName"
-                [(ngModel)]="paramName"
-                (keyup.enter)="addParameter($event);"
-                (blur)="paramName ? addParameter($event) : null"
-                >
-            </mat-form-field>
-        </ng-template>
+        
+        <mat-form-field>
+            <input 
+            matInput 
+            type="text" 
+            [name]="paramName" 
+            [id]="paramName"
+            [(ngModel)]="paramName"
+            (keyup.enter)="addParameter($event);"
+            (blur)="paramName ? addParameter($event) : null"
+            >
+        </mat-form-field>
         
     </div>
 

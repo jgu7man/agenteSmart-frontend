@@ -94,14 +94,7 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log(frase.parts[1], index);
     const textSelected = window.getSelection().toString()
     
-
     if ( textSelected ) {
-      // Select the frase that whas select on
-      // const fraseOnEdit = this.frases.frasesList.find( f => f.name == frase.name )
-      // const fraseOnEditIndex = this.frases.frasesList.findIndex(f => f.name == frase.name)
-      
-      // console.log(fraseOnEditIndex);
-
       // Define variables
       var fraseRestructured: FraseEntrenamiento = 
       // Find the part that includes text selected and split it
@@ -109,15 +102,11 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
       console.log( fraseRestructured);
       
       
-      // Merge the parts
-      // this.frases[ index ] = fraseRestructured
-
       this.frases.updatePhrase(fraseRestructured, index)
       
       this.fraseExpanded = index
       console.log(this.fraseExpanded);
-      // const phraseItemEdited = this.prhaseList.find( Frase => Frase.phraseName == frase.name )
-      // phraseItemEdited.frase.parts = fraseRestructured.parts
+      
     }
   }
 
@@ -125,10 +114,10 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
   disableFrase( frase: FraseEntrenamiento ) {
     let someEntity: boolean = false
     frase.parts.forEach( parte => {
-      if (parte.entityType || parte.selected) someEntity = true
-    } )
-    if ( someEntity ) return false
-    else return true
+      if (parte.entityType || parte.alias) someEntity = true
+    })
+    return someEntity ? false : true
+    
   }
 
 

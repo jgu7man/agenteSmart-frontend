@@ -1,5 +1,5 @@
 <mat-drawer-container [hasBackdrop]="true">
-    <mat-drawer #currentTipo [mode]="'over'" position="end">
+    <mat-drawer #currentTipo [mode]="'over'" position="start">
         <aSmart-tipo [name]="tipoSelected.name"
         (closePanel)="currentTipo.close()"
         ></aSmart-tipo>
@@ -7,26 +7,65 @@
     </mat-drawer>
     <mat-drawer-content>
         <div class="container">
-            <div class="row align-cols">
-                <div class="col s10">
-                    <b>Tipos de dato</b>
-                    <button mat-icon-button (click)="openAdd()">
-                        <i class="fas fa-plus fa-lg"></i>
-                    </button>
-                </div>
-            </div>
+            
             <div class="row">
-                <div class="col s12">
-                    <mat-selection-list #listPanel
-                    (selectionChange)="onSelected($event)" 
-                    [multiple]="false">
-                        <mat-list-option 
-                        *ngFor="let tipo of tiposList$ | async"
-                        [value]="tipo"
-                        >
-                            {{tipo.body.displayName}}
-                        </mat-list-option>
-                    </mat-selection-list>
+                <div class="col s12 m6">
+                    <mat-card class="dashboard-section-card">
+                        <mat-card-header class="dashboard-section-header">
+                            <mat-card-title class="dashboard-section-title">
+                                <h2>Tipos de dato</h2>
+                                <button mat-raised-button color="primary" (click)="openAdd()">
+                                    Agregar
+                                </button>
+                            </mat-card-title>
+                            <mat-card-subtitle>
+                                Administra el tipo de datos al que tu agente estará atento en cada interacción.
+                            </mat-card-subtitle>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <mat-selection-list #listPanel class="drawer-list"
+                            (selectionChange)="onSelected($event)" 
+                            [multiple]="false">
+                                <mat-list-option 
+                                *ngFor="let tipo of tiposList$ | async"
+                                [value]="tipo"
+                                >
+                                    {{tipo.body.displayName}}
+                                </mat-list-option>
+                            </mat-selection-list>
+                        </mat-card-content>
+                        
+                    </mat-card>
+                </div>
+                <div class="col s12 m6">
+                    <mat-card>
+                        <mat-card-header>
+                            <mat-card-title>Entitadades del sistema</mat-card-title>
+                            <mat-card-subtitle>
+                                Las entidades del sistema son tipos de datos que el agente sabe reconocer por default. Aquí te dejmos una lista con ejemplos.
+                            </mat-card-subtitle>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <ul class="collection bordered" style="overflow-y: scroll;" strechHeight>
+                                <mat-accordion displayMode="flat">
+                                    <li class="collection-item" *ngFor="let type of agente_.systemEntities">
+                                        <mat-expansion-panel>
+                                            <mat-expansion-panel-header>
+                                                {{type.displayName}}
+                                            </mat-expansion-panel-header>
+                                            <b>Ejemplos:</b>
+                                            <ul class="collection" >
+                                                <li class="collection-item" *ngFor="let example of type.ejemplos">
+                                                    {{example.request}}
+                                                </li>
+                                            </ul>
+                                        </mat-expansion-panel>        
+                                    </li>
+                                </mat-accordion>
+                            </ul>
+                        </mat-card-content>
+                        
+                    </mat-card>
                 </div>
             </div>
         </div>

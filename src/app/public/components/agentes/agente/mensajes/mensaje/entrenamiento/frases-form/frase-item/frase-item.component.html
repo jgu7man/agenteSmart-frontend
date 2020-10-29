@@ -6,15 +6,17 @@
                 <i class="fas fa-quote-right"></i>
             </span>
             <span *ngFor="let part of frase.parts" >
-                <span [ngSwitch]="part.selected">
-                    <span *ngSwitchCase="true" class="selected" 
-                    [ngStyle]="{'background':params_.getParamColor(part.paramName)}">
+
+                <ng-container *ngIf="part.alias; else unSelected">
+                    <span class="selected" 
+                    [ngStyle]="{'background':params_.getParamColor(part.alias)}">
                         {{part.text}}
                     </span>
-                    <span *ngSwitchDefault>
-                        {{part.text}}
-                    </span>
-                </span>
+                 </ng-container>
+                <ng-template #unSelected>
+                    {{part.text}}
+                </ng-template>
+                
             </span>
         </div>
         <div class="col s3">

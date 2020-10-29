@@ -115,9 +115,9 @@ export class FrasesService {
     stringifyFullPhrase(phrase: FraseEntrenamiento): string {
         let partsString: string[] = []
         phrase.parts.forEach(part => {
-            if (!part.paramName) part.paramName = '';
+            if (!part.alias) part.alias = '';
             partsString.push(part.entityType ?
-                `;${part.entityType}~${part.paramName}=${part.text};` : part.text);
+                `;${part.entityType}~${part.alias}=${part.text};` : part.text);
 
         })
         return partsString.join('')
@@ -137,7 +137,7 @@ export class FrasesService {
     stringifyUnselectParts(phrase: FraseEntrenamiento): string {
         let partialString: string[] = []
         phrase.parts.forEach(part => {
-            if (!part.selected) {
+            if (!part.alias) {
                 partialString.push(part.text)
             }
         })
@@ -163,13 +163,11 @@ export class FrasesService {
                         partes.push({
                             entityType: `@${partSplited[0]}`,
                             text: param.length > 1 ? param[1] : param[0],
-                            selected: true,
                             alias: param.length > 1 ? param[0] : '',
                         })
                     } else if (partSplited) {
                         partes.push({
                             text: partSplited[0],
-                            selected: false,
                         })
                     }
                 }
@@ -178,7 +176,6 @@ export class FrasesService {
         } else {
             partes.push({
                 text: frase,
-                selected: false,
             })
         }
 
@@ -201,7 +198,7 @@ export class FrasesService {
             frase.parts.forEach((parte, i) => {initialParts.set(i, parte)})
             // const cleanFrase = this.stringCleanPhrase( frase )
 
-            // * Buscamos en las partes el texto seleccionado
+            // * Buscamos en las partes, el texto seleccionado
             let partSelected: [number, FraseParte];
             initialParts.forEach((p, i) => {
                 if (p.text.includes(textSelected)) {partSelected = [i, p]}
@@ -259,11 +256,11 @@ export class FrasesService {
 
         partInParts.forEach((textPart, i) => {
             if (textPart) {
-                let newPart: FraseParte = {
+                let newPart: FraseParte = { 
                     text: textPart,
-                    selected: textPart != textSelected ? false : true,
-                    alias: this._text.generateRandomText(5),
                 }
+
+                if(textPart == textSelected ) newPart.alias = true
                 parts.set(i, newPart)
             }
         })

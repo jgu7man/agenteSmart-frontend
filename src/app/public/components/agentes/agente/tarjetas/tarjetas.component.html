@@ -1,48 +1,77 @@
 <div class="container">
-    <div class="row">
-        <div class="col s12">
-            <b>Mensajes en Tarjeta</b>
-            <button mat-icon-button (click)="addCard()">
-                <i class="fas fa-plus fa-lg"></i>
-            </button>
-        </div>
-    </div>
-
+    
     <div class="row">
         <div class="col s12" id="tarjetas-container">
-
-            <mat-card 
-            class="tarjeta" 
-            *ngFor="let tarjeta of agente.tarjetasList" >
-
-                <div class="row align-cols">
-
-                    <div class="col s10" (click)="seeTarjeta(tarjeta)">
-                        <b>{{tarjeta.name}}</b>
-                    </div>
-
-                    <div class="col s2">
-
-                        <button 
-                        mat-icon-button 
-                        [mat-menu-trigger-for]="tarjetaMenu">
-                            <i class="fas fa-ellipsis-v"></i>
+            <mat-card class="dashboard-section-card">
+                <mat-card-header class="dashboard-section-header">
+                    <mat-card-title class="dashboard-section-title">
+                        <h2>Mensajes en Tarjeta</h2>
+                        <button mat-raised-button color="primary" (click)="addCard()">
+                            Agregar
                         </button>
+                    </mat-card-title>
+                    <mat-card-subtitle>
+                        Prepara las tarjetas que se mostraran como respuestas del agente
+                    </mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
 
-                        <mat-menu #tarjetaMenu="matMenu">
-                            <button mat-menu-item 
-                            (click)="tarjetas.addTarjeta(tarjeta)"
-                            >Duplicar</button>
+                    <div class="container">
+                        <div class="row">
 
-                            <button mat-menu-item
-                            (click)="tarjetas.deleteTarjeta(tarjeta.name)"
-                            >Eliminar</button>
-                        </mat-menu>
+                            <ng-container *ngIf="agente.tarjetasList && agente.tarjetasList.length > 0; else empty">
+                                <div class="col s4">
+                                        
+                                        <mat-card 
+                                        class="tarjeta" 
+                                        *ngFor="let tarjeta of agente.tarjetasList" >
+                            
+                                            <div class="row align-cols">
+                            
+                                                <div class="col s10" (click)="seeTarjeta(tarjeta)">
+                                                    <b>{{tarjeta.name}}</b>
+                                                </div>
+                            
+                                                <div class="col s2">
+                            
+                                                    <button 
+                                                    mat-icon-button 
+                                                    [mat-menu-trigger-for]="tarjetaMenu">
+                                                        <i class="fas fa-ellipsis-v"></i>
+                                                    </button>
+                            
+                                                    <mat-menu #tarjetaMenu="matMenu">
+                                                        <button mat-menu-item 
+                                                        (click)="tarjetas.addTarjeta(tarjeta)"
+                                                        >Duplicar</button>
+                            
+                                                        <button mat-menu-item
+                                                        (click)="tarjetas.deleteTarjeta(tarjeta.name)"
+                                                        >Eliminar</button>
+                                                    </mat-menu>
+                                                </div>
+                                            </div>
+                            
+                                        </mat-card>
+                                        
+                                    </div>
+                            </ng-container>
+                            <ng-template #empty>
+                                
+                                <div class="col s12 center">
+                                    <p class="center grey-text">Aún no tienes tarjetas creadas</p>
+                                    <i class="fas fa-robot fa-10x grey-text "></i>
+                                </div>
+
+                            </ng-template>
+                    
+                    
+                            
+                        </div>
                     </div>
-                </div>
-
+                </mat-card-content>
             </mat-card>
-            
+
         </div>
     </div>
     

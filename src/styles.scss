@@ -29,8 +29,15 @@ p, i, mat-card-title, span, input, textarea, button, * {
     font-family: 'Montserrat', sans-serif;
 }
 
+button.mat-primary {
+    span {
+        color: #fff;
+    }
+}
+ 
 button {
     font-family: 'Montserrat', sans-serif !important; 
+    margin: .25em !important;
 }
 
 a {
@@ -52,9 +59,7 @@ h2, h4,  h5 {
     align-items: center;
 }
 
-button {
-    margin: .25em !important;
-}
+
 
 mat-card {
     margin-bottom: 1em;
@@ -74,4 +79,26 @@ mat-form-field {
 
 .mat-simple-snackbar span {
     color: goldenrod !important;
+}
+
+
+.dashboard-section-card {
+    width: 100%;
+    .dashboard-section-header {
+        .mat-card-header-text {
+            width: 100%;
+            .dashboard-section-title{
+                display: flex;
+                justify-content: space-between;
+                h2 {
+                    font-size: x-large;
+                }
+                button {
+                    display: flex;
+                    align-self: center;
+                }
+            }
+        }
+    }
+
 }
