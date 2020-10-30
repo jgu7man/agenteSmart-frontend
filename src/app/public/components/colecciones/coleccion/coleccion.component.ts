@@ -1,14 +1,9 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { ColeccionModel, ColeccionDato } from '../collection.interface';
-import { Observable, fromEvent, Subject, Subscription, from } from 'rxjs';
-import { debounceTime, switchMap, pluck, distinctUntilChanged, map, last } from 'rxjs/operators';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { ColeccionModel } from '../collection.interface';
 import { ColeccionesService } from '../colecciones.service';
-import { MatSelectChange } from '@angular/material/select';
-import { AlertService } from '../../../../../../Gdev-Tools/alerts/alert.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DelColeccionComponent } from '../del-coleccion/del-coleccion.component';
-import { MatSelectionList } from '@angular/material/list';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { AlertService } from '../../../../Gdev-Tools/alerts/alert.service';
 
 @Component({
   selector: 'aSmart-coleccion',

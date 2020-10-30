@@ -37,7 +37,7 @@ export class FraseParametersComponent implements OnInit {
 
   onDelPartParam( index: number ) {
     delete this.frase.parts[ index ].entityType
-    this.frase.parts[ index ].selected = false
+    delete this.frase.parts[ index ].alias
     // console.log( this.frase.parts );
     var restoredPartText = this._frase.stringifyFullPhrase( this.frase )
     this.frase.parts = this._frase.createParts( restoredPartText )

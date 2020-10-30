@@ -12,8 +12,8 @@ import { RespuestaModel } from './respuesta.model';
 import { Subject } from 'rxjs';
 import { TiposService } from '../../../../tipos/tipos.service';
 import { TipoEntidadModel } from '../../../../tipos/tipo.model';
-import { ColeccionModel } from '../../../../colecciones/collection.interface';
-import { TarjetaModel } from '../../../../tarjetas/tarjeta.model';
+import { ColeccionModel } from '../../../../../../colecciones/collection.interface';
+import { TarjetaModel } from '../../../../../../tarjetas/tarjeta.model';
 
 
 

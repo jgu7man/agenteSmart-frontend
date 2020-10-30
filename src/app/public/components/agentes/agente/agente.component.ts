@@ -28,7 +28,6 @@ export class AgenteComponent implements OnInit, OnDestroy {
     public _responsive: ResponsiveService,
     private _cache: CacheService,
     private _route: ActivatedRoute,
-    private _mensajes: MensajesService
   ) {
     this._route.params.subscribe( params => {
       this._cache.updateData('projectId', params['id'])

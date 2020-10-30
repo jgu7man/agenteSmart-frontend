@@ -4,7 +4,7 @@ import { CurrentAgenteService } from '../../../../../../../current-agente.servic
 import { MatSelectChange } from '@angular/material/select';
 import { BehaviorSubject } from 'rxjs';
 import { distinctUntilKeyChanged } from 'rxjs/operators';
-import { TarjetaModel } from '../../../../../../../tarjetas/tarjeta.model';
+import { TarjetaModel } from '../../../../../../../../../tarjetas/tarjeta.model';
 
 @Component({
   selector: 'aSmart-card',

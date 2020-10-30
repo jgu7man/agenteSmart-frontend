@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { TarjetaModel } from './tarjeta.model';
-import { CurrentAgenteService } from '../current-agente.service';
 import { AlertService } from 'src/app/Gdev-Tools/alerts/alert.service';
 import { GdevCommonsService } from 'src/app/Gdev-Tools/commons/gdev-commons.service';
+import { CurrentAgenteService } from '../agentes/agente/current-agente.service';
 
 @Injectable({
   providedIn: 'root'

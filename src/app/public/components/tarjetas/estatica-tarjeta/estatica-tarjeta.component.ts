@@ -1,9 +1,8 @@
 import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter, Input } from '@angular/core';
-import { RespuestaCard, RespuestaCardButton } from '../../mensajes/mensaje/entrenamiento/respuestas/respuesta.model';
-import { fromEvent, Observable, zip } from 'rxjs';
-import { pluck, startWith, debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { CacheService } from '../../../../../../Gdev-Tools/cache/cache.service';
-import { UserInterface } from '../../../../../../admin/auth/auth.service';
+import { Observable } from 'rxjs';
+import { RespuestaCard } from '../../agentes/agente/mensajes/mensaje/entrenamiento/respuestas/respuesta.model';
+import { CacheService } from '../../../../Gdev-Tools/cache/cache.service';
+import { UserInterface } from '../../../../admin/auth/auth.service';
 
 @Component({
   selector: 'aSmart-estatica-tarjeta',

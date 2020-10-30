@@ -1,5 +1,5 @@
-import { RespuestaCard, RespuestaCardButton } from './../mensajes/mensaje/entrenamiento/respuestas/respuesta.model';
 import { ColeccionModel } from '../colecciones/collection.interface';
+import { RespuestaCard, RespuestaCardButton } from '../agentes/agente/mensajes/mensaje/entrenamiento/respuestas/respuesta.model';
 export class TarjetaModel {
     constructor (
         public name: string,

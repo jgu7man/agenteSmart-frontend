@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { RespuestaCard } from '../../mensajes/mensaje/entrenamiento/respuestas/respuesta.model';
+import { RespuestaCard } from '../../agentes/agente/mensajes/mensaje/entrenamiento/respuestas/respuesta.model';
 
 @Component({
   selector: 'aSmart-coleccion-tarjeta',

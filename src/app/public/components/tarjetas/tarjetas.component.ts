@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TarjetaEditComponent } from './tarjeta-edit/tarjeta-edit.component';
-import { CurrentAgenteService } from '../current-agente.service';
 import { TarjetaModel } from './tarjeta.model';
 import { AddTarjetaComponent } from './add-tarjeta/add-tarjeta.component';
 import { TarjetasService } from './tarjetas.service';
+import { CurrentAgenteService } from '../agentes/agente/current-agente.service';
 
 @Component({
   selector: 'aSmart-tarjetas',

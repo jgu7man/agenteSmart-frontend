@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
-import { ColeccionModel, ColeccionDato } from './collection.interface';
+import { ColeccionModel } from './collection.interface';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { CacheService } from '../../../../../Gdev-Tools/cache/cache.service';
-import { switchMap, startWith } from 'rxjs/operators';
-import { Loading } from '../../../../../Gdev-Tools/loading/loading.service';
-import { AlertService } from '../../../../../Gdev-Tools/alerts/alert.service';
-import { CurrentAgenteService } from '../current-agente.service';
+import { CacheService } from '../../../Gdev-Tools/cache/cache.service';
+import { Loading } from '../../../Gdev-Tools/loading/loading.service';
+import { AlertService } from '../../../Gdev-Tools/alerts/alert.service';
+import { CurrentAgenteService } from '../agentes/agente/current-agente.service';
 
 @Injectable({
   providedIn: 'root'

@@ -2,12 +2,12 @@ import { Component, OnInit, Input, ViewChild, Output, EventEmitter } from '@angu
 import { ColeccionDato, ColeccionModel } from '../../collection.interface';
 import { MatSelectionList } from '@angular/material/list';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { AlertService } from '../../../../../../../Gdev-Tools/alerts/alert.service';
 import { ColeccionesService } from '../../colecciones.service';
-import { Loading } from '../../../../../../../Gdev-Tools/loading/loading.service';
-import { CacheService } from '../../../../../../../Gdev-Tools/cache/cache.service';
-import { UserInterface } from '../../../../../../../admin/auth/auth.service';
 import { MatDrawer } from '@angular/material/sidenav';
+import { AlertService } from '../../../../../Gdev-Tools/alerts/alert.service';
+import { Loading } from '../../../../../Gdev-Tools/loading/loading.service';
+import { CacheService } from '../../../../../Gdev-Tools/cache/cache.service';
+import { UserInterface } from '../../../../../admin/auth/auth.service';
 
 @Component({
   selector: 'aSmart-busqueda-coleccion',

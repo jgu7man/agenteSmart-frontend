@@ -5,7 +5,7 @@ import { ColeccionModel } from './collection.interface';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MatDialog } from '@angular/material/dialog';
 import { AddColeccionComponent } from './add-coleccion/add-coleccion.component';
-import { CurrentAgenteService } from '../current-agente.service';
+import { CurrentAgenteService } from '../agentes/agente/current-agente.service';
 
 @Component({
   selector: 'aSmart-colecciones',
