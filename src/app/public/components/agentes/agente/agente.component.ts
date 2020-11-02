@@ -40,7 +40,7 @@ export class AgenteComponent implements OnInit, OnDestroy {
       this._dashboard.setMobileNavbar(this.agentLinks)
     }
     // this._agente.getAllIntents().then( res => {console.log( res );} )
-    this._cache.updateData('allMensajes', this.mensajesList);
+    // this._cache.updateData('allMensajes', this.mensajesList);
   }
 
   async loadAgente() {

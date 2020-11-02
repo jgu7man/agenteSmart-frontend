@@ -134,7 +134,7 @@ export class CurrentAgenteService {
             });
             this.mensajesList = filteredList;
             this.mensajesLoaded$.next()
-            // this._cache.updateData( 'mensajes', list )
+            this._cache.updateData( 'mensajes', list )
         });
 
     }
@@ -212,21 +212,5 @@ export class CurrentAgenteService {
 
     
 
-    // async getCollection( collection: string ) {
-    //   const path = await this.getPath( collection )
-    //   var dataArray: any[] = []
-    //   if ( this.loads == 1 ) {
-    //     dataArray = await new Promise( ( resolve, reject ) => {
-
-    //       this.fs.collection<any>( path )
-    //         .valueChanges().subscribe( col => {
-    //           resolve( col )
-    //           this._cache.updateData( collection, col )
-    //       } )
-    //     })
-    //   } else {
-    //     dataArray = await this._cache.getDataKey(collection)
-    //   }
-    //   return dataArray
-    // }
+   
 }

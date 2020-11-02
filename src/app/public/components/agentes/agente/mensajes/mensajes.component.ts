@@ -25,9 +25,12 @@ export class MensajesComponent implements OnInit {
   }
   
   async getAllMensajes() {
-    let mensajesList = await this.agente_.getAllIntents()
-    console.log(mensajesList);
-    this._cache.updateData( 'allMensajes',mensajesList)
+    this.agente_.getAllIntents().subscribe(response => {
+      let mensajesList = response.result.intents
+      console.log(mensajesList);
+      this._cache.updateData( 'allMensajes', mensajesList)
+      
+    })
   }
 
   async crearIntent() {
