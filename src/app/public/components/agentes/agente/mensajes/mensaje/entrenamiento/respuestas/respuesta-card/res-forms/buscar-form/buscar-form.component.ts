@@ -7,6 +7,8 @@ import { BehaviorSubject } from 'rxjs';
 import { distinctUntilKeyChanged } from 'rxjs/operators';
 import { CurrentAgenteService } from '../../../../../../../current-agente.service';
 import { MatSelectChange } from '@angular/material/select';
+import { TarjetaModel } from '../../../../../../../../../tarjetas/tarjeta.model';
+import { AlertService } from '../../../../../../../../../../../Gdev-Tools/alerts/alert.service';
 
 @Component({
   selector: 'aSmart-buscar-form',
@@ -24,14 +26,18 @@ export class BuscarFormComponent implements OnInit {
   paramSelected: string
   // dataBases: any[]
   dataBaseSelected: string
+
+  tarjetas: TarjetaModel[]
   
   @Output() onRespChanges: EventEmitter<FormPredefinida> = new EventEmitter()
   respBuscar: FormBuscar
   constructor (
     public resService: RespuestasService,
     private _cache: CacheService,
-    public agenteS: CurrentAgenteService
+    public agente_: CurrentAgenteService,
+    private _alerts: AlertService
   ) {
+    this.tarjetas = this._cache.getDataKey<TarjetaModel[]>('tarjetas')
     this.respBuscar = new FormBuscar('texto', '', this.paramSelected, this.dataBaseSelected)
    }
 
@@ -44,6 +50,12 @@ export class BuscarFormComponent implements OnInit {
     } )
   }
 
+  validateColeccionOnClick() {
+    
+    if (this.tarjetas.length < 1) {
+      this._alerts.sendMessageAlert('Debes crear una tarjeta primero')
+    }
+  }
 
 
   catchParamSelect( change: MatSelectChange ) {

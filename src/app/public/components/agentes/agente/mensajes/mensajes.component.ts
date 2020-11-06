@@ -3,7 +3,8 @@ import { IntentModel } from './mensaje.model';
 import { Component, OnInit } from '@angular/core';
 import { MensajesService} from './mensajes.service'
 import { CurrentAgenteService } from '../current-agente.service';
-import { CacheService } from '../../../../../Gdev-Tools/cache/cache.service';
+
+
 @Component({
   selector: 'aSmart-mensajes',
   templateUrl: './mensajes.component.html',
@@ -15,23 +16,13 @@ export class MensajesComponent implements OnInit {
     private _mensajes:MensajesService,
     private _alerta: AlertService,
     public agente_: CurrentAgenteService,
-    private _cache: CacheService,
   ) { }
 
   async ngOnInit() {
-    this._mensajes.getProjectId()
-    this.getAllMensajes()
-    this._mensajes.reloadMensajes$.subscribe(() => this.getAllMensajes())
+    
   }
   
-  async getAllMensajes() {
-    this.agente_.getAllIntents().subscribe(response => {
-      let mensajesList = response.result.intents
-      console.log(mensajesList);
-      this._cache.updateData( 'allMensajes', mensajesList)
-      
-    })
-  }
+  
 
   async crearIntent() {
     //aqui pueden ir mas parametros

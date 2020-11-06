@@ -1,75 +1,132 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, CollectionReference } from '@angular/fire/firestore';
 import { TarjetaModel } from './tarjeta.model';
 import { AlertService } from 'src/app/Gdev-Tools/alerts/alert.service';
 import { GdevCommonsService } from 'src/app/Gdev-Tools/commons/gdev-commons.service';
 import { CurrentAgenteService } from '../agentes/agente/current-agente.service';
+import { CacheService } from '../../../Gdev-Tools/cache/cache.service';
+import { UserInterface } from '../../../admin/auth/auth.service';
+import { flatMap } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class TarjetasService {
-
-  agentePath: string
-  constructor (
-    private fs: AngularFirestore,
-    private _agente: CurrentAgenteService,
-    private _alert: AlertService,
-    private _commons: GdevCommonsService
-  ) { }
-
-
-  async tarjetaRef() {
-    this.agentePath = await this._agente.getPath( 'tarjetas' )
-    return this.fs.collection(this.agentePath).ref
-  }
-
-
-  
-
-  // CREATE 
-  async addTarjeta(tarjeta: TarjetaModel) {
-    const list = this._agente.tarjetasList
-
-    console.log(tarjeta);
-    tarjeta.name = await this._commons.preventDuplicated( tarjeta, list, 'name' )
-    console.log(tarjeta.name);
     
-    try {
-      await ( await this.tarjetaRef() ).doc( tarjeta.name )
-        .set( { ...tarjeta } )
-      this._alert.sendFloatNotification('Tarjeta creada', 'ok')
-        return 
-    } catch (error) {
-      this._alert.sendError('Ups! Algo salio mal', error)
+    /** Almacena el usuario en curso */
+    private usuario: UserInterface;
+    /** Almacena la ruta de refrencia en FIRESTORE */
+    private tarjetasPath: string;
+    /** Almacena el array de Tarjetas */
+    public list: TarjetaModel[];
+
+    constructor(
+        private fs: AngularFirestore,
+        private _alert: AlertService,
+        private _commons: GdevCommonsService,
+        private _cache: CacheService
+    ) {
+        this.getTarjetas()
     }
-  }
 
 
-
-  // UPDATE
-  async saveTarjeta(tarjeta: TarjetaModel) {
-    try {
-      await( await this.tarjetaRef() ).doc( tarjeta.name )
-        .set( { ...tarjeta }, { merge: true } )
-      this._alert.sendFloatNotification('Tarjeta guardada', 'ok')
-      return
-    } catch ( error ) {
-      this._alert.sendError( 'Ups! Algo salio mal', error )
+    /**
+     * Genera la referencia de FIRESTORE para manejar las tarjetas
+     * @returns {*}  {Promise<CollectionReference>}
+     */
+    async tarjetaRef():Promise<CollectionReference> {
+        return this.fs.collection(this.tarjetasPath).ref;
     }
-  }
 
+    
+    /**
+     * Genera la ruta para suscribirse a los cambios de las tarjetas en FIRESTORE y retorna la lista
+     * @returns {*}  {Promise<TarjetaModel[]>} Array de tarjetas
+     */
+    async getTarjetas(): Promise<TarjetaModel[]> {
+        this.usuario = await this._cache.getAsyncKey<UserInterface>('user');
+        this.tarjetasPath = `usuarios/${this.usuario.uid}/tarjetas`;
 
-  // DELETE 
-  async deleteTarjeta( tarjetaName: string ) {
-    try {
-      await ( await this.tarjetaRef() ).doc( tarjetaName )
-      .delete()
-    } catch (error) {
-      this._alert.sendError( 'Ups! Algo salio mal', error )
+        this.fs
+            .collection<TarjetaModel>(this.tarjetasPath)
+            .valueChanges()
+            .pipe(
+                flatMap((list) =>
+                    this._cache.updateData<TarjetaModel[]>('tarjetas', list)
+                )
+            )
+            .subscribe();
+
+        this.list = await this._cache.getAsyncKey<TarjetaModel[]>(
+            'tarjetas'
+        );
+        return this.list
     }
-  }
 
-  
+    // CREATE
+    /**
+     * Crea una tarjeta
+     *
+     * @param {TarjetaModel} tarjeta TarjetaModel
+     * @returns {*} void
+     */
+    async addTarjeta(tarjeta: TarjetaModel) {
+        // let list = await this.getTarjetas()
 
+        console.log(tarjeta);
+        Object.keys(tarjeta).forEach(
+            key => {if (tarjeta[key] == undefined) delete tarjeta[key]}
+        )
+        
+        tarjeta.name = await this._commons.preventDuplicated(
+            tarjeta,
+            this.list,
+            'name'
+        );
+        console.log(tarjeta.name);
+
+        try {
+            await (await this.tarjetaRef())
+                .add({...tarjeta}).then(res => {
+                    res.update({id: res.id})
+                })
+            this._alert.sendFloatNotification('Tarjeta creada', 'ok');
+            return;
+        } catch (error) {
+            this._alert.sendError('Ups! Algo salio mal', error);
+        }
+    }
+
+    // UPDATE
+    /**
+     * Guarda los cambios en la tarjeta
+     *
+     * @param {TarjetaModel} tarjeta TarjetaModel
+     * @returns {*} void
+     */
+    async saveTarjeta(tarjeta: TarjetaModel) {
+        try {
+            await (await this.tarjetaRef())
+                .doc(tarjeta.id)
+                .set({ ...tarjeta }, { merge: true });
+            this._alert.sendFloatNotification('Tarjeta guardada', 'ok');
+            return;
+        } catch (error) {
+            this._alert.sendError('Ups! Algo salio mal', error);
+        }
+    }
+
+    // DELETE
+    /**
+     * Elimina la tarjeta de FIRESTORE
+     *
+     * @param {string} tarjetaID identificador de la tarjeta
+     */
+    async deleteTarjeta(tarjetaID: string) {
+        try {
+            await (await this.tarjetaRef()).doc(tarjetaID).delete();
+        } catch (error) {
+            this._alert.sendError('Ups! Algo salio mal', error);
+        }
+    }
 }

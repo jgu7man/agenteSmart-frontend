@@ -21,11 +21,9 @@
             <input 
             matInput 
             type="text" 
-            [name]="paramName" 
-            [id]="paramName"
             [(ngModel)]="paramName"
             (keyup.enter)="addParameter($event);"
-            (blur)="paramName ? addParameter($event) : null"
+            (blur)="parte.alias ? addParameter($event) : null"
             >
         </mat-form-field>
         

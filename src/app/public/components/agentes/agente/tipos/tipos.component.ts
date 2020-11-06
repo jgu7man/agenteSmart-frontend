@@ -13,6 +13,7 @@ import { TipoEntidadModel, SystemEntitieModel } from './tipo.model';
 import { AppState } from '../../../../../app.state';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MatSelectionList, MatSelectionListChange } from '@angular/material/list';
+import { SystemEntitiesService } from '../../../../../admin/system/system-entities.service';
 
 @Component({
   selector: 'aSmart-tipos',
@@ -36,7 +37,8 @@ export class TiposComponent implements OnInit, AfterViewInit, OnDestroy {
     public agente_: CurrentAgenteService,
     private _dialog: MatDialog,
     private loading: Loading,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    public systemEntities_: SystemEntitiesService
   ) {
     this.tipoSelected = new TipoState(new TipoEntidadModel('', 'KIND_LIST', 'AUTO_EXPANSION_MODE_DEFAULT', [], false))
    }

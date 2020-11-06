@@ -3,18 +3,15 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { auth } from 'firebase/app'
 import { Router } from '@angular/router';
-import { of, Observable, Subject, throwError } from 'rxjs';
-import { switchMap, first, catchError, take, tap, debounceTime } from 'rxjs/operators';
-import { HttpHeaders, HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
+import { of, Observable, Subject } from 'rxjs';
+import { switchMap, debounceTime } from 'rxjs/operators';
+import { HttpHeaders, HttpClient } from '@angular/common/http';
 // import * as google from 'googleapis'
 import { Loading } from '../../Gdev-Tools/loading/loading.service';
 import { CacheService } from '../../Gdev-Tools/cache/cache.service';
 
-// const oauth2Client = new google.auth.OAuth2(
-//   '683912406589-acc9kkbnqu7qgao221kuk6aqanqli01b.apps.googleusercontent.com',
-//   'FsTiRJz155vCC0CE3HRu-v0u',
-//   'http://localhost'
-// );
+
+
 
 @Injectable( {
   providedIn: 'root'
@@ -32,17 +29,19 @@ export class AuthService {
     private router: Router,
     private _http: HttpClient,
     private loading: Loading,
-    private _cache: CacheService
+    private _cache: CacheService,
     ) {
       console.time('user')
       
     //? Método para cargar el usuario autenticado de manera asíncrona
     this.user$ = this.afAuth.authState.pipe(
-      switchMap( user => { return user ? 
-          this.afs.doc<UserInterface>(`usuarios/${user.uid}`).valueChanges() :
-          of(null);
+      switchMap(user => { return user ? 
+         this.afs.doc<UserInterface>(`usuarios/${user.uid}`).valueChanges() :
+         of(null);
       })
     )
+    
+    
    }
 
   async getAuthUser() {
@@ -52,26 +51,9 @@ export class AuthService {
     })
   }
   
-  async getCurrentUser():Promise<UserInterface> {
-    
-    var localUser = this._cache.getDataKey('user')
-    // console.log(localUser);
-    if ( !localUser ) {
-      
-      var authUser = await this.getAuthUser()
-      // console.timeLog('user')
-      // console.log(authUser);
-      if ( !authUser ) {
-        this.router.navigate(['/'], {queryParams:{logged: false}})
-      } else {
-        this._cache.updateData('user', authUser)
-        return authUser
-      }
-      
-    } else {
-      // console.timeLog( 'user' )
-      return localUser 
-    }
+  async getCurrentUser(): Promise<UserInterface> {
+    let user = await this._cache.getAsyncKey('user') as UserInterface
+    return user
   }
   
   
@@ -122,38 +104,14 @@ export class AuthService {
   // ? Obtiene token
   async getToken() {
     const provider = new auth.GoogleAuthProvider();
-
-    // var authed = await this.afAuth.authState.pipe(first()).toPromise() ? true : false;
-
-    // console.log({authed})
-
-    // if (!authed) {
-
-    var credential = await (await this.afAuth.signInWithPopup(provider))
     
+    var credential = await (await this.afAuth.signInWithPopup(provider))
     console.log( credential )
     
     var json = await credential.credential.toJSON()
     console.log(json)
     var accessToken = json[ 'oauthAccessToken' ]
     localStorage.setItem('access_token', accessToken)
-
-      // localStorage.setItem('accessToken', accessToken )
-    // } else {
-      
-      // var accessToken = localStorage.getItem('accessToken')
-      // if(!accessToken){
-      //   var credential = await (await this.afAuth.auth.signInWithPopup(provider))
-      //   var json = await credential.credential.toJSON()
-      //   var accessToken = json['oauthAccessToken']
-      //   localStorage.setItem('accessToken', accessToken)
-      // }
-
-    // }
-    // Obtener el token
-    // var token = await this.afAuth.auth.currentUser.getIdTokenResult(false)
-    // console.log(token)
-
 
     console.log({accessToken})
     return 
@@ -172,19 +130,7 @@ export class AuthService {
   }
 
 
-  async googleApis() {
-    // const url = await oauth2Client.generateAuthUrl( {
-    //   access_type: 'offline',
-    //   scope: [
-    //     'https://www.googleapis.com/auth/cloud-platform',
-    //     'https://www.googleapis.com/auth/cloudplatformprojects'
-    //   ]
-    // } );
-
-    // const { tokens } = await oauth2Client.getToken( code )
-    // oauth2Client.setCredentials( tokens );
-    return
-  }
+  
 
 
 

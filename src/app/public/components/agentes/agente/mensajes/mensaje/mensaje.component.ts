@@ -20,7 +20,7 @@ export class MensajeComponent implements OnInit, OnDestroy {
     private router: Router,
     private _mensaje: CurrentMensajeService,
   ) {
-      this._mensaje.getAsync()
+      this._mensaje.getByActivatedRoute()
    }
 
   ngOnInit(): void {
@@ -31,7 +31,7 @@ export class MensajeComponent implements OnInit, OnDestroy {
     this.inMensaje$ =
       this.router.events.subscribe( ( val ) => {
         if ( val instanceof NavigationEnd ) {
-          this._mensaje.getAsync()
+          this._mensaje.getByActivatedRoute()
         }
       } )
     
@@ -43,6 +43,7 @@ export class MensajeComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this._mensaje.unsubscribe()
     this.inMensaje$.unsubscribe()
+    console.log('unsubscribe');
   }
 
 }

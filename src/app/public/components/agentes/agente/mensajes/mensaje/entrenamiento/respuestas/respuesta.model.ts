@@ -1,11 +1,11 @@
 export class RespuestaModel {
     constructor(
-        public tipo: 'predefinida' | 'condicional' | 'grupo_datos' | 'buscar' | '',
-        public nextIntent: string,
-        public inputContext: string,
-        public outputContext: string,
+        public tipo: 'predefinida' | 'condicional' | 'grupo_datos' | 'buscar',
         public outputMessage: FormPredefinida | FormCondicional | FormRegistroDatos | FormBuscar ,
         public index: number,
+        public nextIntent?: string,
+        public inputContext?: string,
+        public outputContext?: string,
         public accion?:string,
         public id?: string,
     ) {}

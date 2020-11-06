@@ -1,43 +1,70 @@
 <div class="respuesta-card">
+
+    <!-- Icono de color para identificar tipo de respuesta -->
     <div class="col 2 res-type-icon" [ngClass]="{'type-icon-closed': !switchEditResp}">
         <button mat-fab [ngStyle]="{'background': selectedRes.color}" >
             <i class="fas" [ngClass]="selectedRes.icono"></i>
         </button>
     </div>
+
+
     <div class="col s10">
         <mat-card [ngClass]="{'card-closed': !switchEditResp}" >
     
+            <!-- TARJETA CERRADA -->
             <ng-container *ngIf="!switchEditResp; else editResp">
                 
+                    <!-- SIGUIENTE MENSAJE -->
                     <div class="row align-cols">
                         <div class="col s10 res-ref" (click)="switchEditResp = true">
+                            
                             <div [ngSwitch]="respuesta.tipo">
-                                <div *ngSwitchCase="'condicional'">
-                                    <b>{{respuesta.nextIntent}}</b><br>
-                                    Si {{respuesta.outputMessage['parametro']}}
-                                    es {{respuesta.outputMessage['condicion']}}
-                                    {{respuesta.outputMessage['valor']}}
-                                </div>
-                                <div *ngSwitchDefault><b>{{respuesta.nextIntent}}</b></div>
+                            
+
+                                <ng-container *ngIf="respuesta.nextIntent; else noNext">
+                                
+                                    <div *ngSwitchCase="'condicional'">
+                                        <b>{{respuesta.nextIntent}}</b><br>
+                                        Si {{respuesta.outputMessage['parametro']}}
+                                        es {{respuesta.outputMessage['condicion']}}
+                                        {{respuesta.outputMessage['valor']}}
+                                    </div>
+                                
+                                    <div *ngSwitchCase="'predefinida'">
+                                        <b>{{respuesta.nextIntent}}</b>
+                                    </div>
+                                
+                                    <div *ngSwitchDefault>
+                                    </div>
+                                </ng-container>
+                            
+                                <!-- SIGUIENTE MENSAJE NO ASIGNADO -->
+                                <ng-template #noNext>
+                                    <span class="grey-text">Asigna el siguiente mensaje</span>                                        
+                                </ng-template>
                             </div>
                             
                         </div>
+                        
+                        <!-- MENÚ DE LA TARJETA -->
                         <div class="col s2">
                             <button mat-icon-button [mat-menu-trigger-for]="card">
                                 <i class="fas fa-ellipsis-v"></i>
                             </button>
                             <mat-menu #card="matMenu">
-                                <button mat-menu-item (click)="resService.delRespuesta(respuesta.id)">Eliminar</button>
+                                <button mat-menu-item (click)="repuestas_.delRespuesta(respuesta.id)">Eliminar</button>
                             </mat-menu>
                         </div>
                     </div>
     
             </ng-container>
+            
+            
+            <!-- TARJETA ABIERTA -->
             <ng-template #editResp>
                 
             
             
-    
                 <div class="row">
                     <div class="col s4 resp-label">
                         Tipo
@@ -61,8 +88,7 @@
             <mat-card-content>
     
                 <div [ngSwitch]="respuesta.tipo">
-                    <!-- <div *ngSwitchCase="'predefinida'">
-                    </div> -->
+                    
                     <div *ngSwitchCase="'condicional'">
                         <aSmart-condicional-form [condicional]="respuesta.outputMessage" (onRespChanges)="catchOutputMessage($event)"></aSmart-condicional-form>
                     </div>
@@ -104,7 +130,7 @@
                             placeholder="Acción" 
                             [(ngModel)]="respuesta.accion" 
                             name="contexto">
-                                <mat-option *ngFor="let action of resService.acciones" [value]="action">
+                                <mat-option *ngFor="let action of repuestas_.acciones" [value]="action">
                                     {{action.accion}}
                                 </mat-option>
                             </mat-select>
@@ -123,24 +149,24 @@
     
     
                 <!-- Select contexto -->
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col s4 resp-label">
                         Contexto
                     </div>
                     <div class="col s8">
                         <mat-select 
-                        *ngIf="resService.contextList"
+                        *ngIf="repuestas_.contextList"
                         placeholder="Siguiente contexto" 
                         [(ngModel)]="respuesta.outputContext" 
                         name="contexto">
-                            <mat-option *ngFor="let contexto of resService.contextList" 
+                            <mat-option *ngFor="let contexto of repuestas_.contextList" 
                             [value]="contexto.contextName">
                                 {{contexto.contextName}}
                             </mat-option>
                         </mat-select>
                     </div>
                 </div>
-    
+     -->
     
     
     
@@ -153,11 +179,10 @@
                     </div>
                     <div class="col s8">
                         <mat-select 
-                        *ngIf="resService.mensajesList"
                         placeholder="Siguiente mensaje" 
                         [(ngModel)]="respuesta.nextIntent" 
                         name="mensaje">
-                            <mat-option *ngFor="let mensaje of resService.mensajesList" [value]="mensaje.name">
+                            <mat-option *ngFor="let mensaje of repuestas_.nextMensaje" [value]="mensaje.name">
                                 {{mensaje.displayName}}
                             </mat-option>
                             <mat-option value="*fin">

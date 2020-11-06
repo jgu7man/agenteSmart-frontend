@@ -1,42 +1,55 @@
     <div class="row">
         <div class="col s12 m4">
-            <b>Parámetros esperados</b>
-            <ul class="collection">
-                <li class="collection-item align-cols" 
-                *ngFor="let item of coleccion.saveKeys">
-                    <div class="col s10">
-                        {{item.param}}
-                    </div>
-                    <div class="col s2">
-                        <button mat-icon-button>
-                            <button mat-icon-button [mat-menu-trigger-for]="ParamMenu">
-                                <i class="fas fa-ellipsis-v"></i>
-                            </button>
-                            <mat-menu #ParamMenu="matMenu">
-                                <button mat-menu-item>
-                                    Editar
+            <div class="row">
+                <div class="col s12">
+                    <b>Parámetros esperados</b>
+                    <ul class="collection">
+                        <li class="collection-item align-cols" 
+                        *ngFor="let item of coleccion.saveKeys">
+                            <div class="col s10">
+                                {{item.param}}
+                            </div>
+                            <div class="col s2">
+                                <button mat-icon-button>
+                                    <button mat-icon-button [mat-menu-trigger-for]="ParamMenu">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                    <mat-menu #ParamMenu="matMenu">
+                                        <button mat-menu-item>
+                                            Editar
+                                        </button>
+                                        <button mat-menu-item>
+                                            Eliminar
+                                        </button>
+                                    </mat-menu>
                                 </button>
-                                <button mat-menu-item>
-                                    Eliminar
-                                </button>
-                            </mat-menu>
-                        </button>
-                    </div>
-                </li>
-                <li class="collection-item">
-                    <mat-form-field>
-                        <mat-label>Nuevo parámetro esperado</mat-label>
-                        <input
-                        matInput
-                        type="text"
-                        [(ngModel)]="newParam.param"
-                        name="newParam"
-                        (keyup.Enter)="addParam()"
-                        >
-                    </mat-form-field>
-                </li>
-            </ul>
+                            </div>
+                        </li>
+                        <li class="collection-item">
+                            <mat-form-field>
+                                <mat-label>Nuevo parámetro esperado</mat-label>
+                                <input
+                                matInput
+                                type="text"
+                                [(ngModel)]="newParam.param"
+                                name="newParam"
+                                (keyup.Enter)="addParam()"
+                                >
+                            </mat-form-field>
+                        </li>
+                    </ul>
+                </div>
+            </div>
     
+            <div class="row"
+            style="display: flex; justify-content: center;">
+                <div class="col s12">
+                    <button mat-raised-button
+                    (click)="onSave()"
+                    color="primary"
+                    >Guardar</button>
+                </div>
+            </div>
         </div>
         <div class="col s12 m8">
             <b>Datos obtenidos</b>
@@ -49,10 +62,3 @@
             </ul>
         </div>
     </div>
-<div class="row"
-style="display: flex; justify-content: center;">
-    <button mat-raised-button
-    (click)="onSave()"
-    color="primary"
-    >Guardar</button>
-</div>

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatSelectionListChange, MatSelectionList } from '@angular/material/list';
 import { ColeccionesService } from './colecciones.service';
 import { ColeccionModel } from './collection.interface';
@@ -6,27 +6,29 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { MatDialog } from '@angular/material/dialog';
 import { AddColeccionComponent } from './add-coleccion/add-coleccion.component';
 import { CurrentAgenteService } from '../agentes/agente/current-agente.service';
+import { Subscription, Observable } from 'rxjs';
+import { CacheService } from '../../../Gdev-Tools/cache/cache.service';
 
 @Component({
   selector: 'aSmart-colecciones',
   templateUrl: './colecciones.component.html',
   styleUrls: ['./colecciones.component.scss']
 })
-export class ColeccionesComponent implements OnInit {
-
+export class ColeccionesComponent implements OnInit, OnDestroy {
 
   coleccionSelected: ColeccionModel
   @ViewChild( 'currentCol' ) colPanel: MatDrawer
   @ViewChild('listPanel') listPanel: MatSelectionList
   constructor (
-    public colService: ColeccionesService,
+    public colecciones_: ColeccionesService,
     private _dialog: MatDialog,
-    public agente: CurrentAgenteService
+    public agente: CurrentAgenteService,
+    private _cache: CacheService
   ) {
-    this.coleccionSelected = new ColeccionModel( '', '' )
+    this.coleccionSelected = new ColeccionModel( ''  )
    }
 
-  ngOnInit(): void {
+  async ngOnInit() {
   }
 
   onCollectionSelected( selected: MatSelectionListChange ) {
@@ -38,13 +40,16 @@ export class ColeccionesComponent implements OnInit {
   onCloseColeccion() {
     this.colPanel.close()
     this.listPanel.deselectAll()
-    this.coleccionSelected = new ColeccionModel( '', '' )
+    this.coleccionSelected = new ColeccionModel( '',  )
   }
 
   openAddDialog() {
     this._dialog.open( AddColeccionComponent, {
       minWidth: 450,
     })
+  }
+
+  ngOnDestroy() {
   }
 
 }

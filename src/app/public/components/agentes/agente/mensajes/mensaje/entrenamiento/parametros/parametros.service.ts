@@ -97,11 +97,12 @@ export class ParametrosService {
 
 
     // READ PARAM
-    getParamByName(name: string) {
+    getParamByName(displayName: string) {
+        // console.log(this._mensaje.current);
         var paramSelected = this._mensaje.current.parameters.find(
-            (p) => p.displayName == name
+            (p) => p.entityTypeDisplayName == displayName
         );
-        console.log(paramSelected);
+        // console.log(paramSelected);
         return paramSelected;
     }
 

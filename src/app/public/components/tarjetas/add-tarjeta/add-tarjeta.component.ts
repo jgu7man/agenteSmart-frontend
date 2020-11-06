@@ -39,14 +39,12 @@ export class AddTarjetaComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onTipoContenidoSelected(change: MatSelectChange) {
-    this.tarjeta.tipoContenido = change.value
-  }
+ 
 
   onColecctionNameSelected( change: MatSelectChange ) {
-    let coleccion = this.agenteS.coleccionesList
-      .find(c => c.name == change.value)
-    this.tarjeta.contenido = coleccion
+    // let coleccion = this.agenteS.coleccionesList
+    //   .find(c => c.name == change.value)
+    // this.tarjeta.contenido = coleccion
   }
 
   updateTarjeta( contenido: RespuestaCard ) {
@@ -54,9 +52,7 @@ export class AddTarjetaComponent implements OnInit {
   }
 
   save() {
-    if ( this.tarjeta.tipoContenido == 'estatico' ) {
-      this.tarjeta.contenido = this.estaticaForm.contenido
-    }
+    this.tarjeta.contenido = this.estaticaForm.contenido
     if ( this.botones.length > 0 ) {
       this.tarjeta.botones = this.botones
     }

@@ -1,37 +1,39 @@
-<!-- Barra de información del agente -->
-<nav 
-gdev-color
-[background]="'white'"
-class="agentNav" 
-mat-tab-nav-bar 
-mat-align-tabs="end"
-*ngIf="agente">
-
-    <!-- Imagen y nombre -->
-    <div class="agentInfo">
-        
-        <div class="imgAgentAvatar">
-            <img [src]="agente.avatarUri.url" alt="">
+<div id="agente-container">
+    <!-- Barra de información del agente -->
+    <nav 
+    gdev-color
+    [background]="'white'"
+    class="agentNav" 
+    mat-tab-nav-bar 
+    mat-align-tabs="end"
+    *ngIf="agente">
+    
+        <!-- Imagen y nombre -->
+        <div class="agentInfo">
+            
+            <div class="imgAgentAvatar">
+                <img [src]="agente.avatarUri.url" alt="">
+            </div>
+    
+            <p 
+            gdev-color
+            [color]="'dark'"
+            class="agentName"
+            > {{agente.displayName}} </p>
         </div>
-
-        <p 
-        gdev-color
-        [color]="'dark'"
-        class="agentName"
-        > {{agente.displayName}} </p>
-    </div>
-
-    <!-- Secciones del agente -->
-    <a mat-tab-link
-        [ngStyle]="{'display': _responsive.small ? 'none' : 'inline-flex'}"
-        *ngFor="let link of agentLinks"
-        [routerLink]="link.path"
-        routerLinkActive="active" 
-        #rla="routerLinkActive"
-        [active]="rla.isActive">
-        <i class="fas {{link.icon}}"></i> &nbsp;&nbsp;
-        {{link.label}}
-    </a>
-</nav>
-
-<router-outlet></router-outlet>
+    
+        <!-- Secciones del agente -->
+        <a mat-tab-link
+            [ngStyle]="{'display': resposive_.small ? 'none' : 'inline-flex'}"
+            *ngFor="let link of agentLinks"
+            [routerLink]="link.path"
+            routerLinkActive="active" 
+            #rla="routerLinkActive"
+            [active]="rla.isActive">
+            <i class="fas {{link.icon}}"></i> &nbsp;&nbsp;
+            {{link.label}}
+        </a>
+    </nav>
+    
+    <router-outlet></router-outlet>
+</div>

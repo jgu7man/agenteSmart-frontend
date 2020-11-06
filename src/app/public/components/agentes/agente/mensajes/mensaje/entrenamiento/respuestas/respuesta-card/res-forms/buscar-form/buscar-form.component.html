@@ -17,18 +17,20 @@
         </mat-select>
     </div>
 </div>
-<!-- Base de datos -->
+
+<!-- Colección -->
 <div class="row">
-    <div class="col s4 resp-label">Base de datos</div>
+    <div class="col s4 resp-label">Colección</div>
     <div class="col s8">
         <mat-select
             (selectionChange)="catchDBSelect($event)"
-            placeholder="Base de datos"
+            placeholder="Colección"
             [(ngModel)]="response.rutaDB"
             name="param"
+            (click)="validateColeccionOnClick()"
         >
             <mat-option
-                *ngFor="let db of agenteS.coleccionesList"
+                *ngFor="let db of tarjetas"
                 [value]="db.name"
             >
                 {{ db.name }}

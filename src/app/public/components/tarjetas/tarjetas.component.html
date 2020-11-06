@@ -19,12 +19,12 @@
                     <div class="container">
                         <div class="row">
 
-                            <ng-container *ngIf="agente.tarjetasList && agente.tarjetasList.length > 0; else empty">
+                            <ng-container *ngIf="tarjetas_.list && tarjetas_.list.length > 0; else empty">
                                 <div class="col s4">
                                         
                                         <mat-card 
                                         class="tarjeta" 
-                                        *ngFor="let tarjeta of agente.tarjetasList" >
+                                        *ngFor="let tarjeta of tarjetas_.list" >
                             
                                             <div class="row align-cols">
                             
@@ -42,11 +42,11 @@
                             
                                                     <mat-menu #tarjetaMenu="matMenu">
                                                         <button mat-menu-item 
-                                                        (click)="tarjetas.addTarjeta(tarjeta)"
+                                                        (click)="tarjetas_.addTarjeta(tarjeta)"
                                                         >Duplicar</button>
                             
                                                         <button mat-menu-item
-                                                        (click)="tarjetas.deleteTarjeta(tarjeta.name)"
+                                                        (click)="tarjetas_.deleteTarjeta(tarjeta.id)"
                                                         >Eliminar</button>
                                                     </mat-menu>
                                                 </div>

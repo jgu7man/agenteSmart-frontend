@@ -6,7 +6,7 @@
     <div class="col s8">
         <mat-select placeholder="parámetro" [(ngModel)]="dataForm.parametro" name="param"
         (selectionChange)="edited.emit(dataForm)">
-            <mat-option *ngFor="let param of mensajeS.current.parameters" [value]="param.displayName">
+            <mat-option *ngFor="let param of mensaje_.current.parameters" [value]="param.displayName">
                 {{param.displayName}}
             </mat-option>
         </mat-select>
@@ -17,11 +17,12 @@
 <!-- Grupo de datos -->
 <div class="row">
     <div class="col s4 resp-label">
-        En grupo
+        En colección
     </div>
     <div class="col s8">
-        <mat-select placeholder="grupo de datos" [(ngModel)]="dataForm.grupoDatos" name="grupo" (selectionChange)="edited.emit(dataForm)">
-            <mat-option *ngFor="let group of agenteS.coleccionesList | listFilter:{tipo: 'guardado'}" [value]="group.name">
+        <mat-select placeholder="coleccion" [(ngModel)]="dataForm.grupoDatos" name="grupo" (selectionChange)="edited.emit(dataForm)"
+        (click)="validateColeccionOnClick()">
+            <mat-option *ngFor="let group of colecciones | listFilter:{tipo: 'guardado'}" [value]="group.name">
                 {{group.name}}
             </mat-option>
         </mat-select>

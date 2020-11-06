@@ -20,14 +20,14 @@
                     Crea listas de información para que tus agentes la tengan a la mano sobre cualquier tema. Aquí también se guardarán los datos que desees que tu agente guarde de tus clientes.
                 </mat-card-subtitle>
                 </mat-card-header>
-                <mat-card-content>
+                <mat-card-content *ngIf="colecciones_.list">
 
-                    <ng-container *ngIf="agente.coleccionesList && agente.coleccionesList.length > 0; else empty">
+                    <ng-container *ngIf="colecciones_.list.length > 0; else empty">
                         <mat-selection-list #listPanel class="drawer-list"
                         (selectionChange)="onCollectionSelected($event)" 
                         [multiple]="false">
                             <mat-list-option 
-                            *ngFor="let coleccion of agente.coleccionesList"
+                            *ngFor="let coleccion of colecciones_.list"
                             [value]="coleccion"
                             >
                                 {{coleccion.name}}

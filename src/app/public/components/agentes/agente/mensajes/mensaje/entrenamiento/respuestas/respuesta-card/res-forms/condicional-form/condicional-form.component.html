@@ -6,7 +6,7 @@
     <div class="col s8">
         <mat-select placeholder="parámetro" [(ngModel)]="condicional.parametro" name="param"
         (selectionChange)="onParamChange()">
-            <mat-option *ngFor="let param of resService.paramList" [value]="param.displayName">
+            <mat-option *ngFor="let param of respuestas_.paramList" [value]="param.entityTypeDisplayName">
                 {{param.displayName}}
             </mat-option>
         </mat-select>

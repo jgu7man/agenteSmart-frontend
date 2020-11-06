@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { FraseParte, ParametroMensaje } from '../../../../../mensaje.model';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -18,9 +18,10 @@ import { CurrentMensajeService } from '../../../../current-mensaje.service';
 export class PartParameterComponent implements OnInit {
 
   @Input() parte: FraseParte
+  @Input() index: number
 
   switchEntitySelector: boolean = false
-  paramName: string = ''
+  paramName: any = ''
 
   @ViewChild( 'partEntityInput' ) partEntityInput: ElementRef
   
@@ -35,8 +36,9 @@ export class PartParameterComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    
+    if(this.parte) this.paramName = this.parte.alias == true ? '' : this.parte.alias
   }
+
   
   async toSelectTipo() {
     this.switchEntitySelector = true
@@ -48,13 +50,13 @@ export class PartParameterComponent implements OnInit {
     this.parte.entityType = tipoSelected
     this.tipoSelected.emit( this.parte )
     
-    if ( this.paramName ) {
+    if ( typeof this.parte.alias == 'string' ) {
       var param: ParametroMensaje = {
         displayName: this.paramName,
         entityTypeDisplayName: tipoSelected
       }
 
-      this._params.addParam( param ).then( () => {
+      this._params.addParam(param).then(() => {
         this.parte.alias = this.paramName
       } )
     }
@@ -63,25 +65,29 @@ export class PartParameterComponent implements OnInit {
   
   addParameter( event ) {
     event.stopImmediatePropagation()
-    
-    var entity = this.parte.entityType
+
+    console.log(this._mensaje.current.parameters, this.paramName);
+    var paramStored = this._mensaje.current.parameters
+      .find(p => p.displayName == this.paramName);
     this.parte.alias = this.paramName
-    this.paramAdded.emit(this.parte)
-    
-    var paramStored = 
-      this._mensaje.current.parameters.find(p => p.displayName == this.paramName)
     
     console.log(paramStored);
+    this.paramAdded.emit(this.parte)
+    
+    
     if (!paramStored) {
+      
       var param: ParametroMensaje = {
         displayName: this.paramName,
-        entityTypeDisplayName: entity
+        entityTypeDisplayName: this.parte.entityType
       }
   
-      this._params.addParam( param ).then( () => {
+      this._params.addParam(param)
+        .then(() => {
         this.parte.alias = this.paramName
       })
     }
+
     
   }
 

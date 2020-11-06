@@ -16,15 +16,13 @@ export class AddColeccionComponent implements OnInit {
     public dialog: MatDialogRef<AddColeccionComponent>,
     private _colecciones: ColeccionesService
   ) {
-    this.coleccion = new ColeccionModel('', 'guardado')
+    this.coleccion = new ColeccionModel('',)
    }
 
   ngOnInit(): void {
   }
 
-  onColeccionTipoSelected( selected: MatSelectChange ) {
-    this.coleccion.tipo = selected.value
-  }
+  
 
   addColeccionDato() {
     if ( this.coleccion.name != '' ) {

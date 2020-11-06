@@ -10,9 +10,9 @@
         </div>
     </div>
     
-    <div class="row respuestasList" *ngIf="respuestasList.length > 0; else sinRespuestas">
+    <div class="row respuestasList" *ngIf="mensaje_.respuestasList; else sinRespuestas">
         <div class="respuestaItem"
-        *ngFor="let respuesta of respuestasList; trackBy: trackResponseById">
+        *ngFor="let respuesta of mensaje_.respuestasList; trackBy: trackResponseById">
             <aSmart-respuesta-card
             [respuesta]="respuesta"
             ></aSmart-respuesta-card>

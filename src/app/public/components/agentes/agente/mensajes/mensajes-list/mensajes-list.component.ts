@@ -40,7 +40,7 @@ export class MensajesListComponent implements OnInit {
   async onAddIntent( contexto? ) {
     this.switchAddIntent = false
     if ( this.newDisplayName ) {
-      let lastIndex = this.agente.mensajesList.length
+      let lastIndex = this.agente.intentList.length
       //
       try {
         console.log('crear')
@@ -52,7 +52,7 @@ export class MensajesListComponent implements OnInit {
           //se ha creado el intent(regresa un intent completo vacio),
          
           //aqui nose que hacer con el resourceID
-          await this.mensajes.setMensaje( newIntent, lastIndex )
+          // await this.mensajes.setMensaje( newIntent, lastIndex )
 
         }
       } catch (error) {

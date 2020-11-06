@@ -26,7 +26,7 @@ export class OpcionesAgenteService {
         this.loading.toggleWaitingSpinner(true)
 
         console.log('Search for intent');
-        var defaultIntent: IntentModel = this._agente.mensajesList.find(
+        var defaultIntent: IntentModel = this._agente.intentList.find(
             ( i ) => i.displayName == intent
         );
 
@@ -48,8 +48,7 @@ export class OpcionesAgenteService {
 
         console.log('Save on firestore');
         await this.fs
-            .doc(this._agente.path)
-            .collection('mensajes')
+            .collection(await this._agente.getPath('mensajes'))
             .doc(resourceID)
             .set( defaultIntent );
         

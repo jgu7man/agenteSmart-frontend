@@ -10,7 +10,7 @@
                 <div class="row mensaje-content">
 
                     <div id="mensaje-header">
-                        <div class="row align-cols" *ngIf="intent">
+                        <div class="row align-cols" *ngIf="(intent$ | async) as intent">
                             <div class="col s10">
                                 <p class="intent-title"> {{intent.displayName}} </p>
                             </div>

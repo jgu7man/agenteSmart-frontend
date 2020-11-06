@@ -5,15 +5,19 @@ import { mensajeReducer } from './public/components/agentes/agente/mensajes/mens
 import { conversation } from './chat/store/chat.reducer';
 import { TipoState } from './public/components/agentes/agente/tipos/store/tipo.state';
 import { tiposReducer } from './public/components/agentes/agente/tipos/store/tipo.reducer';
+import {authReducer} from './admin/auth/store/auth.reducer';
+import { UserAuth} from './admin/auth/store/auth.model';
 
 export interface AppState {
     editIntent: MensajeState,
     chat: ChatState,
-    tipos: TipoState[]
+    tipos: TipoState[],
+    auth: UserAuth
 }
 
 export const appReducers: ActionReducerMap<AppState> = {
     editIntent: mensajeReducer,
     chat: conversation,
-    tipos: tiposReducer
+    tipos: tiposReducer,
+    auth: authReducer
 }

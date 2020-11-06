@@ -23,7 +23,7 @@ export class ColeccionComponent implements OnInit {
     private _alerta: AlertService,
     private _dialog: MatDialog
   ) {
-    this.coleccion = new ColeccionModel('', '', [], [], [])
+    this.coleccion = new ColeccionModel('', [], [])
    }
 
   ngOnInit(): void {

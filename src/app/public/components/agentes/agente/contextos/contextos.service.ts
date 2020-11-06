@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, CollectionReference } from '@angular/fire/firestore';
-import { UserInterface, AuthService } from '../../../../../admin/auth/auth.service';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { MensajesService } from '../mensajes/mensajes.service';
 import { IntentModel } from '../mensajes/mensaje.model';
 import { CacheService } from '../../../../../Gdev-Tools/cache/cache.service';
 import { ContextoModel } from './contexto.model';
 import { CurrentAgenteService } from '../current-agente.service';
-import { take, mergeMap, distinctUntilKeyChanged, mergeAll, tap } from 'rxjs/operators';
+import { distinctUntilKeyChanged } from 'rxjs/operators';
 import { AlertService } from '../../../../../Gdev-Tools/alerts/alert.service';
 import { Loading } from '../../../../../Gdev-Tools/loading/loading.service';
-import { Subject, Observable, Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { ColorService } from '../../../../../Gdev-Tools/color/color.service';
 
 @Injectable({
@@ -20,7 +19,7 @@ export class ContextosService {
   /** Ruta de los mensajes para acciones del CRUD */
   private agentePath
   /** Contexto actualizado optenido de la ruta */
-  currentContexto$: string
+  currentContexto: string
   /** Consulta de los contextos de la base de datos */
   contextQuery$: Subject<ContextoModel> = new Subject()
   /** Lista actualizada de los contextos en orden de aparición (index) */
@@ -40,7 +39,7 @@ export class ContextosService {
 
     // Obtiene el contexto de la ruta actual
     this.loading.getRouteQueryParams().subscribe( queryParams => {
-      this.currentContexto$ = queryParams['contexto']
+      this.currentContexto = queryParams['contexto']
     } )
 
 
@@ -86,11 +85,11 @@ export class ContextosService {
   // READ
   /** Obtiene el contexto en curso de la session storage */
   async getCurrentContexto() {
-    if ( !this.currentContexto$ ) {
-      this.currentContexto$ = await this._cache.getDataKey( 'currentContexto' )
-      if(!this.currentContexto$) return ''
+    if ( !this.currentContexto ) {
+      this.currentContexto = await this._cache.getDataKey( 'currentContexto' )
+      if(!this.currentContexto) return ''
     } 
-    return this.currentContexto$
+    return this.currentContexto
   }
   
 
@@ -132,7 +131,7 @@ export class ContextosService {
 
   /** Se desuscribe cunado la vista de contextos no está en pantalla */
   unsubscribeAllContext() {
-    this.subscribeAllContext.unsubscribe()
+    // this.subscribeAllContext.unsubscribe()
   }
 
 

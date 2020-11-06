@@ -10,7 +10,6 @@
         
         <div class="col s9">
             <h5><b>{{coleccion.name}}</b></h5>
-            {{coleccion.tipo}}
         </div>
         
         <div class="col s2">
@@ -26,23 +25,11 @@
     <div class="row" id="data-table">
         
         <div class="col s12">
-            <div [ngSwitch]="coleccion.tipo">
                 
-                <div *ngSwitchCase="'busqueda'">
-                    <aSmart-busqueda-coleccion
-                    [coleccion]="coleccion"
-                    ></aSmart-busqueda-coleccion>
-                </div>
+            <aSmart-guardado-coleccion
+            [coleccion]="coleccion"
+            ></aSmart-guardado-coleccion>
 
-
-                <div *ngSwitchCase="'guardado'">
-                    <aSmart-guardado-coleccion
-                    [coleccion]="coleccion"
-                    ></aSmart-guardado-coleccion>
-                </div>
-
-                <div *ngSwitchDefault></div>
-            </div>
         </div>
 
     </div>

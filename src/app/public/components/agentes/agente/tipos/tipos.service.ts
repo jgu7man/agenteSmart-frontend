@@ -293,6 +293,10 @@ export class TiposService {
     getTipo(name: string) {
         return this.tiposList.find(t => t.name == name)
     }
+    async getByDisplayName(displayName: string) {
+        let list = await this._cache.getAsyncKey<TipoEntidadModel[]>('tipos')
+        return list.find(t => t.displayName == displayName)
+    }
 
     /** Está pendiendte de la entity seleccionada en el storage */
     currentTipo$( ) {

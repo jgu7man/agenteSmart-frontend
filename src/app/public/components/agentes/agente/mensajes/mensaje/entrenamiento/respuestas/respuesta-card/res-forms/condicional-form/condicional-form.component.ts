@@ -31,7 +31,7 @@ export class CondicionalFormComponent implements OnInit {
   ]
 
   constructor (
-    public resService: RespuestasService,
+    public respuestas_: RespuestasService,
     public _params: ParametrosService,
   ) {
     this.condicional = new FormCondicional('texto','', '', '','')
@@ -47,7 +47,8 @@ export class CondicionalFormComponent implements OnInit {
         ? this._params.getParamByName( this.condicional.parametro ).value
         : this._params.getParamByName( this.condicional.parametro ).displayName
       this.isOriginal = value.split( '.' ).length > 1 ? true : false
-      this.tipoSelected = this.resService.tiposList.find(t => t.name == this.condicional.parametro)
+      this.tipoSelected = this.respuestas_.mensajeTypeEntities.find(t => t.displayName == this.condicional.parametro)
+      console.log(this.tipoSelected);
     } else {
       this.isOriginal = true
     }

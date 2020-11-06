@@ -5,8 +5,8 @@
         </div>
     </div>
     <!-- Lista de mensajes -->
-    <div class="mensajes-list" *ngIf="agente.mensajesList"  >
-        <mat-card *ngFor="let mensaje of agente.mensajesList; trackBy:trackByName" 
+    <div class="mensajes-list" *ngIf="agente.intentList"  >
+        <mat-card *ngFor="let mensaje of agente.intentList; trackBy:trackByName" 
         [routerLink]="['../mensaje',mensaje.name]"
         > 
             <mat-card-content class="mensaje-card">

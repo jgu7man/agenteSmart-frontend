@@ -27,7 +27,7 @@ export class ConfigRetrocesoComponent implements OnInit {
         public dialog_: MatDialogRef<ConfigRetrocesoComponent>
     ) {
         this.outputMessage = new FormPredefinida('texto','')
-        this.respuesta = new RespuestaModel('predefinida','','','',this.outputMessage,0,)
+        this.respuesta = new RespuestaModel('predefinida',this.outputMessage,0)
     }
 
     ngOnInit(): void {
@@ -36,7 +36,7 @@ export class ConfigRetrocesoComponent implements OnInit {
     }
 
     async getFallbackIntent() {
-        this.intent = this._agente.mensajesList.find(
+        this.intent = this._agente.intentList.find(
             (i) => i.displayName == 'Default Fallback Intent'
         );
 

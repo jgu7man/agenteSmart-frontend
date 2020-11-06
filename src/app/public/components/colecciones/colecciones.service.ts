@@ -5,49 +5,58 @@ import { CacheService } from '../../../Gdev-Tools/cache/cache.service';
 import { Loading } from '../../../Gdev-Tools/loading/loading.service';
 import { AlertService } from '../../../Gdev-Tools/alerts/alert.service';
 import { CurrentAgenteService } from '../agentes/agente/current-agente.service';
+import { AuthService, UserInterface } from '../../../admin/auth/auth.service';
+import { Observable } from 'rxjs';
+import {flatMap} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ColeccionesService {
 
-  coleccionesList: ColeccionModel[]
+  list: ColeccionModel[]
   coleccionesPath: string
+  usuario: UserInterface
 
   constructor (
     private fs: AngularFirestore,
     private _cache: CacheService,
     private _loading: Loading,
     private _alerts: AlertService,
-    private _currentAgent: CurrentAgenteService
+    private _currentAgent: CurrentAgenteService,
+    private _auth: AuthService
   ) {
-    this.getCollections()
+    this.getColecciones()
+  }
+
+  async coleccionesRef() {
+    return this.fs.collection(this.coleccionesPath).ref
   }
   
-  async getCollections() {
-
-    // await this._loading.waitForDataLoaded(
-    //   this._currentAgent.agenteLoaded$
-    // )
+  async getColecciones() {
+    this.usuario = await this._cache.getAsyncKey<UserInterface>('user')
+    this.coleccionesPath = `usuarios/${this.usuario.uid}/colecciones`
     
-    this.coleccionesList = this._currentAgent.coleccionesList
-    console.log( this.coleccionesList );
-    this.coleccionesPath = await this._currentAgent.getPath('colecciones')
+    this.fs.collection<ColeccionModel>(this.coleccionesPath)
+      .valueChanges()
+      .pipe(flatMap(
+        list => this._cache.updateData<ColeccionModel[]>('colecciones', list)))
+      .subscribe()
     
+    this.list = await this._cache.getAsyncKey<ColeccionModel[]>('colecciones')
   }
 
   
   async addColeccion( coleccion ) {
-    var newCol = this.coleccionesList
+    var newCol = this.list
     .find( col => col.name == coleccion.name );
     
     if ( newCol ) {
       this._alerts.sendMessageAlert('elige otro nombre por que ese ya existe en tus colecciones')
     } else {
-      newCol = { name: coleccion.name, tipo: coleccion.tipo }
+      newCol = { name: coleccion.name }
       console.log(newCol);
-      this.fs.collection( this._currentAgent.path + '/colecciones' ).ref
-        .doc( newCol.name ).set( newCol )
+      (await this.coleccionesRef()).doc( newCol.name ).set( newCol )
       // .then(() => this.getCollections())
     }
     return 

@@ -2,6 +2,7 @@
     background: #fff;
     box-shadow: 2px 0px 4px rgba($color: #000000, $alpha: 0.5);
     padding-bottom: 4em;
+    overflow-y: auto;
 }
 
 .intent-panel {
@@ -14,4 +15,5 @@
 #resp-manager {
     overflow: auto;
     padding-bottom: 4em;
+    overflow-y: auto;
 }

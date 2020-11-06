@@ -1,5 +1,5 @@
 <mat-form-field>
-    <mat-label>Nombre</mat-label>
+    <mat-label>Identificador</mat-label>
     <input
     matInput
     type="text"
@@ -8,47 +8,12 @@
     >
 </mat-form-field>
 <mat-dialog-content>
-    <mat-form-field>
-        <mat-label>Tipo de contenido</mat-label>
-        <mat-select 
-        (selectionChange)="onTipoContenidoSelected($event)" 
-        name="contenido">
-            <mat-option *ngFor="let contenido of tiposContenido" [value]="contenido.value">
-                {{contenido.viewValue}}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
-    <div [ngSwitch]="tarjeta.tipoContenido">
-        <div *ngSwitchCase="'coleccion'">
-            <mat-form-field>
-                <mat-label>Nombre de la colección</mat-label>
-                <mat-select 
-                placeholder="Elige una colección"
-                (selectionChange)="onColecctionNameSelected($event)"
-                name="col">
-                    <mat-option 
-                    *ngFor="let coleccion of agenteS.coleccionesList | listFilter:{tipo:'busqueda'}" 
-                    [value]="coleccion.name">
-                        {{coleccion.name}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-        <div *ngSwitchCase="'producto'">
-        </div>
-        <div *ngSwitchCase="'servicio'">
-        </div>
-        <div *ngSwitchCase="'estatico'">
-            <aSmart-estatica-tarjeta
-            (edited)="updateTarjeta($event)">
-            </aSmart-estatica-tarjeta>
-        </div>
-        <div *ngSwitchDefault>
-            <!-- <aSmart-estatica-tarjeta
-            [contenido]="tarjeta.contenido"
-            (edited)="updateTarjeta($event)"
-            ></aSmart-estatica-tarjeta> -->
-        </div>
+   
+    
+        <aSmart-estatica-tarjeta
+        (edited)="updateTarjeta($event)">
+        </aSmart-estatica-tarjeta>
+    
     
     
         <mat-card-actions>
@@ -70,7 +35,7 @@
                     placeholder="Texto"
                     >
                 </mat-form-field>
-                <mat-form-field *ngIf="tarjeta.tipoContenido != 'coleccion'">
+                <mat-form-field>
                     <input matInput type="text" 
                     name="buttonLink" id="buttonLink"
                     [(ngModel)]="nuevoBoton.link"
@@ -83,7 +48,6 @@
             </div>
         </mat-card-actions>
     
-    </div>
 </mat-dialog-content>
 <mat-dialog-actions style="display: flex; justify-content: space-around;">
     <button 
