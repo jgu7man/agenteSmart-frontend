@@ -204,14 +204,16 @@ export class RespuestasService {
      * @return {Subject} Aviso al observable de cambios en la lista de respuestas
      */
     async delRespuesta(respuestaId: string) {
-        let resToDel = this.respuestasList.find((res) => {
-            res.id === respuestaId;
-        });
-
-        if (resToDel) {
+        try {
+            
             await (await this.responsesPath()).doc(respuestaId).delete();
+
+            return this.onRespuestasChanged.next(true);
+
+        } catch (error) {
+            console.error(error)
+            this._alerts.sendMessageAlert('No se pudo eliminar')
         }
-        return this.onRespuestasChanged.next(true);
     }
 }
 

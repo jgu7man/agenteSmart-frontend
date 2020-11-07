@@ -32,10 +32,14 @@ export class BienvenidaComponent implements OnInit {
 
     ngOnInit(): void {
         // this.loading.toggleWaitingSpinner(true)
-        this.getWelcomeIntent();
         this.stateSubs = this.store.subscribe((store) => {
             this.unsaved = store.editIntent.unsaved;
+            if (this.unsaved == false) {
+                this.getWelcomeIntent();
+
+            }
         });
+        // this.mensaje_.mensajeUpdated$.subscribe(()=>)
     }
 
     async getWelcomeIntent() {

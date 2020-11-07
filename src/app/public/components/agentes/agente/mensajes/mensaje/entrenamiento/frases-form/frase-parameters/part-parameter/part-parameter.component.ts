@@ -66,12 +66,12 @@ export class PartParameterComponent implements OnInit {
   addParameter( event ) {
     event.stopImmediatePropagation()
 
-    console.log(this._mensaje.current.parameters, this.paramName);
+    // console.log(this._mensaje.current.parameters, this.paramName);
     var paramStored = this._mensaje.current.parameters
       .find(p => p.displayName == this.paramName);
     this.parte.alias = this.paramName
     
-    console.log(paramStored);
+    // console.log(paramStored);
     this.paramAdded.emit(this.parte)
     
     
@@ -79,7 +79,8 @@ export class PartParameterComponent implements OnInit {
       
       var param: ParametroMensaje = {
         displayName: this.paramName,
-        entityTypeDisplayName: this.parte.entityType
+        entityTypeDisplayName: this.parte.entityType,
+        value: `$${this.paramName}`
       }
   
       this._params.addParam(param)

@@ -5,6 +5,8 @@ import { startWith, map } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { TiposService } from '../tipos.service';
 import { CurrentAgenteService } from '../../current-agente.service';
+import { CacheService } from '../../../../../../Gdev-Tools/cache/cache.service';
+import { TipoEntidadModel } from '../tipo.model';
 
 @Component({
   selector: 'aSmart-tipo-selector',
@@ -26,7 +28,8 @@ export class TipoSelectorComponent implements OnInit, OnDestroy {
 
   constructor (
     private _tipos: TiposService,
-    private _agente: CurrentAgenteService
+    private _agente: CurrentAgenteService,
+    private _cache: CacheService
   ) { }
 
   async ngOnInit() {
@@ -40,9 +43,12 @@ export class TipoSelectorComponent implements OnInit, OnDestroy {
   }
 
   async getTipos() {
-    this._agente.tiposList.forEach( tipo => {
-      this.tipos.push( tipo.displayName )
-    } )
+    this._cache.listenForChanges<TipoEntidadModel[]>('tipos')
+      .subscribe(list => {
+        list.forEach(tipo => {
+          this.tipos.push(tipo.displayName)
+        })
+      })
   }
 
   private _filter( value: string ): string[] {

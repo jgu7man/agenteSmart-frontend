@@ -3,9 +3,9 @@ import { Injectable } from '@angular/core';
 import { CurrentAgenteService } from '../../current-agente.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { IntentModel } from '../mensaje.model';
-import { Subject, Subscription, forkJoin } from 'rxjs';
+import { Subject, Subscription, forkJoin, Observable } from 'rxjs';
 import { Loading } from '../../../../../../Gdev-Tools/loading/loading.service';
-import { pluck } from 'rxjs/operators';
+import { map, pluck } from 'rxjs/operators';
 import { CacheService } from '../../../../../../Gdev-Tools/cache/cache.service';
 import { RespuestaModel } from './entrenamiento/respuestas/respuesta.model';
 import { AlertService } from '../../../../../../Gdev-Tools/alerts/alert.service';
@@ -34,6 +34,8 @@ export class CurrentMensajeService {
     /** Contiene la ruta a la API */
     private _url =
         'https://us-central1-main-agentesmart.cloudfunctions.net/dialogflow/intent';
+    private intentListSubs: Subscription
+    private intentList$: Observable<IntentModel[]>
 
     constructor(
         private fs: AngularFirestore,
@@ -81,7 +83,7 @@ export class CurrentMensajeService {
     async getCurrent(displayName: string) {
         this.mensajesPath = await this._agente.getPath('mensajes');
         this.current = await this.findMensaje(displayName)
-        // console.log(this.current);
+        console.log(this.current);
         if (this.current) {this.setCurrent()}
         return this.current
     }
@@ -90,7 +92,8 @@ export class CurrentMensajeService {
     /**
      * Busca en la lista de intents del storage un intent que coincida con el parámetro displayName
      *
-     * @param {string} nameOrDisplayName displayName del intent o name. Busca a través de ambos
+     * @param {string} nameOrDisplayName displayName del intent o name. 
+     * Busca a través de ambos
      * @returns {IntentModel | null} intent completo si existe, si no, retorna null
      */
     async findMensaje(nameOrDisplayName: string) {
@@ -104,24 +107,31 @@ export class CurrentMensajeService {
 
     /** Establece en el storage el intent actual y emite un evento para current$ */
     async setCurrent() {
-        // console.log(this.current);
-        this.current$.next(this.current);
+        console.log(this.current);
         
+        this.current$.next(this.current);
         this._cache.updateData('currentContexto', this.currentContexto);
         this._cache.updateData('currentIntent', this.current);
         this.getRespuestasList();
+
+        this.intentList$ = this._cache.listenForChanges<IntentModel[]>('intents')
+        this.intentListSubs = this.intentList$.pipe(
+            map(list => list.find(intent => intent.name == this.current.name))
+        ).subscribe(this.current$)
    }
 
     /** Obtiene el intent actual a partir de la subscripción a los cambios de la ruta */
     async getByActivatedRoute() {
         this.paramSubs = this.getParams().subscribe(async (data) => {
-            this.currentContexto = data.currentContexto;
-            this.mensajeName = data.mensajeName;
-            this.mensajesPath = await this._agente.getPath('mensajes');
-            this.current = await this.findMensaje(this.mensajeName)
-
-            if (this.current) { this.setCurrent() }
+            this._cache.updateData('currentContexto', data.currentContexto)
+            this._cache.updateData('mensajeName', data.currentContexto)
         });
+        this.currentContexto = await this._cache.getAsyncKey<string>('currentContexto')
+        this.mensajeName = await this._cache.getAsyncKey<string>('mensajeName')
+        this.mensajesPath = await this._agente.getPath('mensajes');
+        this.current = await this.findMensaje(this.mensajeName)
+
+        if (this.current) { this.setCurrent() }
     }
 
 
@@ -156,6 +166,7 @@ export class CurrentMensajeService {
         return this.respuestasList
     }
 
+    mensajeUpdated$: Subject<any> = new Subject()
     /** Actualiza el intent actual en DIALOGFLOW con los cambios hechos en el área de entrenamiento. */
     async update() {
         this.loading.toggleWaitingBar();
@@ -171,13 +182,15 @@ export class CurrentMensajeService {
             console.log(request);
             if (request) {
                 console.info('Se Actualizo Intent:', request);
-
+    
+                this._agente.getIntentList()
                 // await ( await this.mensajesCollection() ).doc( this.current.name )
                 // .update( { ...this.current } )
 
                 this.store.dispatch(actions.setSaved());
                 this.loading.toggleWaitingBar();
                 this._alerts.sendFloatNotification('Mensaje guardado');
+                return this.mensajeUpdated$.next()
             }
         } catch (error) {
             console.error(error);
@@ -216,7 +229,7 @@ export class CurrentMensajeService {
                 .then((response) => {
                     if (response) {
                         console.info('Intent Updateado:', response);
-                        resolve(response['result']);
+                        resolve(response['intent']);
                     }
                 })
                 .catch((err) => {
@@ -299,6 +312,7 @@ export class CurrentMensajeService {
         this._cache.deleteDataKey('currentIntent')
         this._cache.deleteDataKey('currentRespuestas')
         this.respuestasSubs.unsubscribe()
+        this.intentListSubs.unsubscribe()
         if (this.paramSubs ) this.paramSubs.unsubscribe()
         // console.log('unsubscribe');
     }

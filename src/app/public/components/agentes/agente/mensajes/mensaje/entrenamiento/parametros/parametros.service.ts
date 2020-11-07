@@ -16,6 +16,7 @@ import { AlertService } from '../../../../../../../../Gdev-Tools/alerts/alert.se
 import { Store } from '@ngrx/store';
 import * as actions from '../../store/mensaje.actions';
 import { ColorService } from '../../../../../../../../Gdev-Tools/color/color.service';
+import { CacheService } from '../../../../../../../../Gdev-Tools/cache/cache.service';
 
 @Injectable({
     providedIn: 'root',
@@ -42,7 +43,8 @@ export class ParametrosService {
         private _alerts: AlertService,
         private store: Store<MensajeState>,
         private _color: ColorService,
-        private fs: AngularFirestore
+        private fs: AngularFirestore,
+        private _cache: CacheService
     ) {
         this.getFirestoredParams()
     }
@@ -65,7 +67,7 @@ export class ParametrosService {
     // CREATE Parametros
 
     async addParam(param: ParametroMensaje) {
-        console.log(param);
+        // console.log(param);
         var paramList = this._mensaje.current.parameters;
 
         await (await this.paramsCollection()).doc(param.displayName).set(
@@ -108,18 +110,24 @@ export class ParametrosService {
 
     firestoredParams: any[] = []
     async getFirestoredParams() {
-        var docs = await (await this.paramsCollection()).get()
-        docs.forEach(
-            param => this.firestoredParams.push(param.data())
-        )
+        this.mensajesPath = await this._agente.getPath(`parametros`);
+        this.fs.collection(this.mensajesPath).valueChanges()
+            .subscribe(async list => {
+                this._cache.updateData('parametros', list)
+                this.firestoredParams = await this._cache.getAsyncKey('parametros')
+        })
     }
     
     getParamColor(displayName: string | boolean): string {
         if (typeof displayName == 'string') {
-            return this.firestoredParams.length > 0
-                ? this.firestoredParams.find(p => p.displayName == displayName)['color']
-                : '#ffee588c'
+            if (this.firestoredParams.length > 0) {
+                let param = this.firestoredParams.find(
+                    p => p.displayName == displayName
+                )
+                return param ? param['color'] : '#ffee588c'
+            }
             
+            else {return '#ffee588c'}
         }
     } 
    

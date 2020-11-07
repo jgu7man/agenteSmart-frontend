@@ -1,5 +1,5 @@
 import { AlertService } from 'src/app/Gdev-Tools/alerts/alert.service';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import {
     RespuestaModel,
@@ -60,6 +60,7 @@ export class RespuestaCardComponent implements OnInit {
         | FormCondicional
         | FormRegistroDatos
         | FormBuscar;
+    @Output() onDelete: EventEmitter<string> = new EventEmitter()
 
     constructor(
         public repuestas_: RespuestasService,
@@ -71,13 +72,15 @@ export class RespuestaCardComponent implements OnInit {
         this.respuesta = new RespuestaModel(
             'predefinida',
             this.outputMessage,
-            0
+            0,
+            '*fin'
         );
 
         // this.selectedRes = this.tiposRes[0]
     }
 
     ngOnInit(): void {
+        console.log(this.respuesta);
         this.selectedRes = this.tiposRes.find(
             (tipo) => tipo.name == this.respuesta.tipo
         );

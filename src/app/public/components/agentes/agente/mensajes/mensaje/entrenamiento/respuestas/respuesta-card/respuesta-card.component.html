@@ -21,7 +21,7 @@
                             <div [ngSwitch]="respuesta.tipo">
                             
 
-                                <ng-container *ngIf="respuesta.nextIntent; else noNext">
+                                <ng-container *ngIf="respuesta.nextIntent != '*fin'; else noNext">
                                 
                                     <div *ngSwitchCase="'condicional'">
                                         <b>{{respuesta.nextIntent}}</b><br>
@@ -40,7 +40,7 @@
                             
                                 <!-- SIGUIENTE MENSAJE NO ASIGNADO -->
                                 <ng-template #noNext>
-                                    <span class="grey-text">Asigna el siguiente mensaje</span>                                        
+                                    <span><b>Termina conversación</b></span>                                        
                                 </ng-template>
                             </div>
                             
@@ -52,7 +52,7 @@
                                 <i class="fas fa-ellipsis-v"></i>
                             </button>
                             <mat-menu #card="matMenu">
-                                <button mat-menu-item (click)="repuestas_.delRespuesta(respuesta.id)">Eliminar</button>
+                                <button mat-menu-item (click)="onDelete.emit(respuesta.id)">Eliminar</button>
                             </mat-menu>
                         </div>
                     </div>
@@ -179,14 +179,13 @@
                     </div>
                     <div class="col s8">
                         <mat-select 
-                        placeholder="Siguiente mensaje" 
-                        [(ngModel)]="respuesta.nextIntent" 
+                        [(value)]="respuesta.nextIntent" 
                         name="mensaje">
+                            <mat-option value="*fin">
+                                Termina conversación
+                            </mat-option>
                             <mat-option *ngFor="let mensaje of repuestas_.nextMensaje" [value]="mensaje.name">
                                 {{mensaje.displayName}}
-                            </mat-option>
-                            <mat-option value="*fin">
-                                Terminar conversación
                             </mat-option>
                         </mat-select>
                     </div>

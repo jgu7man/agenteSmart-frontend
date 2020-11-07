@@ -15,6 +15,7 @@
         *ngFor="let respuesta of mensaje_.respuestasList; trackBy: trackResponseById">
             <aSmart-respuesta-card
             [respuesta]="respuesta"
+            (onDelete)="deleteRespuesta($event)"
             ></aSmart-respuesta-card>
         </div>
     </div>

@@ -9,8 +9,9 @@
 <gdev-image-uploader
 [folder]="user.uid+'/tarjetas/'"
 displayAction="Agregar Imagen"
-[srcPreview]="contenido.imagenURL['url']"
-(imageURL)="catchImgURL($event)"
+[srcPreview]="contenido.imagenURL"
+(result)="catchImgURL($event)"
+[multiple]="false"
 ></gdev-image-uploader>
 
 <mat-card-content>

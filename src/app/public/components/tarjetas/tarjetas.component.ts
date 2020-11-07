@@ -26,14 +26,14 @@ export class TarjetasComponent implements OnInit {
         console.log('open');
         var editBox = this._dialog
             .open(AddTarjetaComponent, {
-                minWidth: 350,
+                width: '380px',
             })
     }
 
     seeTarjeta(tarjeta?: TarjetaModel) {
         var editBox = this._dialog
             .open(TarjetaEditComponent, {
-                minWidth: 350,
+                width: '380px',
                 data: tarjeta
             })
     }

@@ -70,7 +70,7 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
     this.addPhraseInput = false
     if ( this.newPhrase ) {
       
-      console.log(this.newPhrase);
+      // console.log(this.newPhrase);
       const NEWPHRASE: FraseEntrenamiento = {
         type: 'EXAMPLE',
         parts: this.frases.createParts( this.newPhrase )
@@ -91,7 +91,7 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
   
   /** Obtiene el valor seleccionado al momento de soltar el mouse en la frase de entrenamiento y la transforma en "partes" */
   async onSelect(frase: FraseEntrenamiento, index: number) {
-    console.log(frase.parts[1], index);
+    // console.log(frase.parts[1], index);
     const textSelected = window.getSelection().toString()
     
     if ( textSelected ) {
@@ -99,13 +99,13 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
       var fraseRestructured: FraseEntrenamiento = 
       // Find the part that includes text selected and split it
       await this.frases.stractSelectedPart(frase, textSelected)
-      console.log( fraseRestructured);
+      // console.log( fraseRestructured);
       
       
       this.frases.updatePhrase(fraseRestructured, index)
       
       this.fraseExpanded = index
-      console.log(this.fraseExpanded);
+      // console.log(this.fraseExpanded);
       
     }
   }

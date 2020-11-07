@@ -62,11 +62,11 @@ export class FrasesService {
             // frase.name = Math.random().toString( 36 ).substring( 7 );
 
             if (this._mensaje.current.trainingPhrases.length > 0) {
-                console.log('update');
+                // console.log('update');
                 this._mensaje.current.trainingPhrases.push(frase)
 
             } else {
-                console.log('create');
+                // console.log('create');
                 this._mensaje.current.trainingPhrases = [frase]
             }
 
@@ -88,12 +88,12 @@ export class FrasesService {
     // UPDATE 
     async updatePhrase(frase: FraseEntrenamiento, index) {
         try {
-            console.log(this._mensaje.current.trainingPhrases);
+            // console.log(this._mensaje.current.trainingPhrases);
             var mensaje = this._mensaje.current
             var frasesList = mensaje.trainingPhrases
 
-            console.log(frase);
-            console.log(frasesList[index]);
+            // console.log(frase);
+            // console.log(frasesList[index]);
             frasesList[index] = frase;
 
             this._mensaje.current.trainingPhrases = frasesList
@@ -151,7 +151,7 @@ export class FrasesService {
         const fraseInParts = frase.split(';')
         var partes: FraseParte[] = []
 
-        console.log(fraseInParts);
+        // console.log(fraseInParts);
 
         if (fraseInParts.length > 1) {
             fraseInParts.forEach((part) => {
@@ -179,7 +179,7 @@ export class FrasesService {
             })
         }
 
-        console.log(partes);
+        // console.log(partes);
 
         return partes
     }

@@ -3,10 +3,8 @@ import { AngularFirestore, CollectionReference } from '@angular/fire/firestore';
 import { TarjetaModel } from './tarjeta.model';
 import { AlertService } from 'src/app/Gdev-Tools/alerts/alert.service';
 import { GdevCommonsService } from 'src/app/Gdev-Tools/commons/gdev-commons.service';
-import { CurrentAgenteService } from '../agentes/agente/current-agente.service';
 import { CacheService } from '../../../Gdev-Tools/cache/cache.service';
 import { UserInterface } from '../../../admin/auth/auth.service';
-import { flatMap } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root',
@@ -50,17 +48,14 @@ export class TarjetasService {
         this.fs
             .collection<TarjetaModel>(this.tarjetasPath)
             .valueChanges()
-            .pipe(
-                flatMap((list) =>
-                    this._cache.updateData<TarjetaModel[]>('tarjetas', list)
-                )
-            )
-            .subscribe();
-
-        this.list = await this._cache.getAsyncKey<TarjetaModel[]>(
-            'tarjetas'
-        );
-        return this.list
+            .subscribe(async list => {
+                this._cache.updateData<TarjetaModel[]>('tarjetas', list)
+                this.list = await this._cache.getAsyncKey<TarjetaModel[]>(
+                    'tarjetas'
+                );
+            });
+            
+            return this.list
     }
 
     // CREATE
@@ -71,7 +66,6 @@ export class TarjetasService {
      * @returns {*} void
      */
     async addTarjeta(tarjeta: TarjetaModel) {
-        // let list = await this.getTarjetas()
 
         console.log(tarjeta);
         Object.keys(tarjeta).forEach(

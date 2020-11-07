@@ -126,16 +126,12 @@ export class CurrentAgenteService {
     intentList$: Observable<IntentModel[]>;
     /** Retorna  la lista completa de mensajes */
     async getIntentList(): Promise<IntentModel[]> {
+        this.intentList = await this.getAllIntents()
+        this._cache.updateData('intents', this.intentList)
         this.intentList$ = this._cache.listenForChanges<IntentModel[]>('intents')
-        this.intentList = await this._cache.getDataKey<IntentModel[]>('intents')
+        // this.intentList = await this._cache.getDataKey<IntentModel[]>('intents')
         
-        if (this.intentList) {
-            return this.intentList    
-        } else {
-            this.intentList = await this.getAllIntents()
-            return this.intentList
-        }
-        
+        return this.intentList
     }
 
     nextMensajeList: MensajeModel[] = [];
@@ -204,7 +200,7 @@ export class CurrentAgenteService {
     tarjetasList$: Observable<TarjetaModel[]>;
     tarjetasSubs: Subscription;
     async getTarjetasList() {
-        const path = await this.getPath('tarjetas');
+        const path = `usuarios/${this.usuario.uid}/tarjetas`
         this.tarjetasList$ = this._cache.listenForChanges < TarjetaModel[] >('tarjetas')
         this.tarjetasList = await this._cache.getAsyncKey('tarjetas', 2);
         var changes = this.fs.collection<TarjetaModel>(path).valueChanges();
@@ -222,7 +218,7 @@ export class CurrentAgenteService {
      * @return {*}  {Promise<ColeccionModel[]>}
      */
     async getColeccionesList(): Promise<ColeccionModel[]> {
-        const path = await this.getPath('colecciones');
+        const path = `usuarios/${this.usuario.uid}/colecciones`
         this.coleccionesList$ = this._cache.listenForChanges<ColeccionModel[]>('colecciones')
         this.coleccionesList = await this._cache.getAsyncKey<ColeccionModel[]>('colecciones')
         this.contextosSubs =

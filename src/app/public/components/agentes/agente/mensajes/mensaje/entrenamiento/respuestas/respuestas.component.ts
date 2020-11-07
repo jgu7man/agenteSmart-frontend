@@ -52,7 +52,7 @@ export class RespuestasComponent implements OnInit, OnDestroy {
     async addRespuesta() {
         let lastIndex = this.mensaje_.respuestasList.length;
         this.mensaje_.respuestasList.push(
-            new RespuestaModel(undefined, this.newOutputMensaje, lastIndex)
+            new RespuestaModel(undefined, this.newOutputMensaje, lastIndex, '*fin')
         );
         await this.loading.waitFor(100);
         this.cards.last.switchEditResp = true;
@@ -61,6 +61,18 @@ export class RespuestasComponent implements OnInit, OnDestroy {
     
     trackResponseById(index: number, respuesta: RespuestaModel) {
         return respuesta.index;
+    }
+
+    public deleteRespuesta(respuestaId) {
+        let resToDel = this.mensaje_.respuestasList.findIndex((res) => {
+            res.id === respuestaId;
+        });
+        if (resToDel >= 0) {
+            this._respuestas.delRespuesta(respuestaId)
+        } else {
+            this.mensaje_.respuestasList.splice(resToDel,1)
+        }
+        
     }
 
     /** Se desuscribe de los cambios en la lista de respuestas */

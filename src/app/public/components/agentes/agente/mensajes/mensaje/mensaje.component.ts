@@ -3,6 +3,8 @@ import { ResponsiveService } from '../../../../../../services/responsive.service
 import { Router, NavigationEnd } from '@angular/router';
 import { CurrentMensajeService } from './current-mensaje.service';
 import { Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
+import {AppState} from 'src/app/app.state';
 
 @Component({
   selector: 'aSmart-mensaje',
@@ -14,16 +16,22 @@ export class MensajeComponent implements OnInit, OnDestroy {
   mensajeName: string
   // mensaje: IntentModel
   private inMensaje$: Subscription
+  private stateSubs: Subscription
 
   constructor (
     public responsive: ResponsiveService,
     private router: Router,
     private _mensaje: CurrentMensajeService,
+    private store: Store<AppState>
   ) {
-      this._mensaje.getByActivatedRoute()
-   }
-
+  }
+  
   ngOnInit(): void {
+    this.stateSubs = this.store.subscribe((store) => {
+      if (store.editIntent.unsaved == false) {
+        this._mensaje.getByActivatedRoute()
+      }
+    });
     this.updateMensaje()
   }
 
