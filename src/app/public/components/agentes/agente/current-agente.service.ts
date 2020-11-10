@@ -83,7 +83,6 @@ export class CurrentAgenteService {
 
         try {
 
-            // this.loading.toggleWaitingSpinner(true)
             const path = await this.getPath();
             this.current = this._cache.getDataKey('currentAgente');
            
@@ -110,7 +109,6 @@ export class CurrentAgenteService {
     
             this.agenteLoaded$.next(true);
     
-            this.loading.toggleWaitingSpinner(false)
             return this.current;
 
         } catch (error) {
@@ -126,14 +124,17 @@ export class CurrentAgenteService {
     intentList$: Observable<IntentModel[]>;
     /** Retorna  la lista completa de mensajes */
     async getIntentList(): Promise<IntentModel[]> {
+        this.loading.toggleWaitingSpinner(true)
+        this._cache.listenForChanges<IntentModel[]>('intents')
+            .subscribe(list => { this.intentList = list })
+
+        this.intentList = this._cache.getDataKey<IntentModel[]>('intents')
+        
+        if (this.intentList) this.loading.toggleWaitingSpinner(false);
         this.intentList = await this.getAllIntents()
         this._cache.updateData('intents', this.intentList)
-        // this.intentList$ =
-        this._cache.listenForChanges<IntentModel[]>('intents').subscribe(res => {
-                console.log(res);
-            })
-        // this.intentList = await this._cache.getDataKey<IntentModel[]>('intents')
-        
+        if (this.intentList) this.loading.toggleWaitingSpinner(false);
+
         return this.intentList
     }
 
@@ -142,13 +143,13 @@ export class CurrentAgenteService {
     nextMensajesSubs: Subscription;
     async getNextMensajesList() {
         const path = await this.getPath('mensajes');
-        this.nextMensajeList$ = this._cache.listenForChanges<MensajeModel[]>('nextMensajes')
-        this.nextMensajeList = await this._cache
-            .getAsyncKey<MensajeModel[]>('nextMensajes', 2)
-        
         this.nextMensajesSubs = 
         this.fs.collection<MensajeModel>(path).valueChanges()
             .subscribe(list => this._cache.updateData('nextMensajes', list))
+        // this.nextMensajeList$ = this._cache.listenForChanges<MensajeModel[]>('nextMensajes')
+        this.nextMensajeList = await this._cache
+            .getAsyncKey<MensajeModel[]>('nextMensajes', 2)
+        console.log(this.nextMensajeList);
 
         return this.nextMensajeList;
 
@@ -160,12 +161,12 @@ export class CurrentAgenteService {
     /** Retorna la lista de Contextos del agente */
     async getContextosList() {
         const path = await this.getPath('contextos');
-        this.contextosList$ = this._cache.listenForChanges<ContextoModel[]>('contextos')
-        this.contextosList = await this._cache.getAsyncKey<ContextoModel[]>('contextos', 2);
-
         this.contextosSubs = 
         this.fs.collection<ContextoModel>(path).valueChanges()
             .subscribe(list => this._cache.updateData('contextos', list) )
+        this.contextosList$ = this._cache.listenForChanges<ContextoModel[]>('contextos')
+        this.contextosList = await this._cache.getAsyncKey<ContextoModel[]>('contextos', 2);
+
 
         return this.contextosList
     }
@@ -177,9 +178,9 @@ export class CurrentAgenteService {
     async getTiposList(): Promise<(TipoEntidadModel | SystemEntitieModel)[]> {
         const path = await this.getPath('tipos');
         this.tiposList$ = this._cache.listenForChanges<(TipoEntidadModel | SystemEntitieModel)[]>('tipos')
-        this.tiposList = await this._cache.getAsyncKey('tipos', 2);
         var changes = this.fs.collection<TipoEntidadModel>(path).valueChanges();
         var system = of(this._systemEntites.systemEntities);
+        // this.tiposList = await this._cache.getAsyncKey('tipos', 2);
 
         return new Promise<(TipoEntidadModel | SystemEntitieModel)[]>(
             (resolve) => {
@@ -204,13 +205,11 @@ export class CurrentAgenteService {
     tarjetasSubs: Subscription;
     async getTarjetasList() {
         const path = `usuarios/${this.usuario.uid}/tarjetas`
+        var changes = this.fs.collection<TarjetaModel>(path).valueChanges();
+        this.tarjetasSubs = changes.subscribe(
+            (list) => { this._cache.updateData('tarjetas', list);});
         this.tarjetasList$ = this._cache.listenForChanges < TarjetaModel[] >('tarjetas')
         this.tarjetasList = await this._cache.getAsyncKey('tarjetas', 2);
-        var changes = this.fs.collection<TarjetaModel>(path).valueChanges();
-        this.tarjetasSubs = changes.subscribe((list) => {
-            this.tarjetasList = list;
-            this._cache.updateData('tarjetas', list);
-        });
     }
 
     /** Lista de colecciones*/
@@ -222,11 +221,11 @@ export class CurrentAgenteService {
      */
     async getColeccionesList(): Promise<ColeccionModel[]> {
         const path = `usuarios/${this.usuario.uid}/colecciones`
-        this.coleccionesList$ = this._cache.listenForChanges<ColeccionModel[]>('colecciones')
-        this.coleccionesList = await this._cache.getAsyncKey<ColeccionModel[]>('colecciones')
         this.contextosSubs =
             this.fs.collection<ColeccionModel>(path).valueChanges()
                 .subscribe(list => this._cache.updateData('colecciones', list))
+        this.coleccionesList$ = this._cache.listenForChanges<ColeccionModel[]>('colecciones')
+        this.coleccionesList = await this._cache.getAsyncKey<ColeccionModel[]>('colecciones', 2)
 
         return this.coleccionesList
     }
