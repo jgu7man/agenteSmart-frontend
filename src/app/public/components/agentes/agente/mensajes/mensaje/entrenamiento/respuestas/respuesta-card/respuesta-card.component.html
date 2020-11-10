@@ -71,7 +71,7 @@
                     </div>
                     <div class="col s8">
                         <mat-select 
-                        [(ngModel)]="respuesta.tipo"
+                        [(value)]="respuesta.tipo"
                         placeholder="Tipo de respuesta" name="tipoRes" 
                         (selectionChange)="onTipoSelected($event)">
                             <mat-option *ngFor="let tipoRes of tiposRes" [value]="tipoRes.name">

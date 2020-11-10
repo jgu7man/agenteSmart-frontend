@@ -83,7 +83,7 @@ export class CurrentAgenteService {
 
         try {
 
-            this.loading.toggleWaitingSpinner(true)
+            // this.loading.toggleWaitingSpinner(true)
             const path = await this.getPath();
             this.current = this._cache.getDataKey('currentAgente');
            
@@ -128,7 +128,10 @@ export class CurrentAgenteService {
     async getIntentList(): Promise<IntentModel[]> {
         this.intentList = await this.getAllIntents()
         this._cache.updateData('intents', this.intentList)
-        this.intentList$ = this._cache.listenForChanges<IntentModel[]>('intents')
+        // this.intentList$ =
+        this._cache.listenForChanges<IntentModel[]>('intents').subscribe(res => {
+                console.log(res);
+            })
         // this.intentList = await this._cache.getDataKey<IntentModel[]>('intents')
         
         return this.intentList

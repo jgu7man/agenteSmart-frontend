@@ -60,7 +60,7 @@ export class TiposComponent implements OnInit, AfterViewInit, OnDestroy {
     if ( this.currentTipo.opened ) { this.currentTipo.close() }
     this.tipoSelected = selected.option.value
     this.store.dispatch(actions.selectTipo({tipo: this.tipoSelected.body}))
-    console.log(this.tipoSelected);
+    // console.log(this.tipoSelected);
     this.currentTipo.open()
   }
 

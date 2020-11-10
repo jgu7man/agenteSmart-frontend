@@ -60,7 +60,7 @@
                                 (claseEdited)="toEditClase($event)"
                                 [clase]="clase" 
                                 [claseId]="clase.value" 
-                                [tipo]="tipo"
+                                [tipo]="tipo.body"
                                 ></aSmart-clase-item>
 
                             </div>
@@ -70,7 +70,7 @@
                         <ng-template #addClase>
                             <li class="clase-item collection-item" [ngClass]="{'collection-item': switchAddClase}">
                                 <aSmart-add-clase 
-                                [tipo]="tipo"
+                                [tipo]="tipo.body"
                                 >
                                 </aSmart-add-clase>    
                             </li>
@@ -117,7 +117,7 @@
                                     (closeClaseEdit)="toEditClase($event)"
                                     [clase]="clase" 
                                     [claseId]="clase.value" 
-                                    [tipo]="tipo"
+                                    [tipo]="tipo.body"
                                     ></aSmart-clase-item>
     
                                 </div>
@@ -127,7 +127,7 @@
                             <ng-template #addClase>
                                 <li class="clase-item collection-item" [ngClass]="{'collection-item': switchAddClase}">
                                     <aSmart-add-clase 
-                                    [tipo]="tipo"
+                                    [tipo]="tipo.body"
                                     >
                                     </aSmart-add-clase>    
                                 </li>

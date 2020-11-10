@@ -37,7 +37,8 @@
                 <i class="fas fa-ellipsis-v"></i>
             </button>
             <mat-menu #tipoMenu="matMenu">
-                <button mat-menu-item>
+                <button mat-menu-item
+                (click)="tipos_.deleteTipo(tipo.name)">
                     Eliminar
                 </button>
             </mat-menu>

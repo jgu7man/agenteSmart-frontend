@@ -47,14 +47,19 @@ export class GrupoDatosComponent implements OnInit {
             distinctUntilKeyChanged('parametro')
         ).subscribe(form => {
             this.dataForm = form
+            this.setSaveKeys(form.grupoDatos)
         })
     }
 
-    catchColSelected(selected: MatSelectChange) {
+    setSaveKeys(coleccion: string) {
         this.colSelected = this.colecciones
-            .find(col => col.name === selected.value);
+            .find(col => col.name === coleccion);
         this.colSelected.saveKeys = !this.colSelected.saveKeys ? []
-            : this.colSelected.saveKeys    
+            : this.colSelected.saveKeys  
+    }
+
+    catchColSelected(selected: MatSelectChange) {
+        this.setSaveKeys(selected.value) 
     }
 
     validateColeccionOnClick() {

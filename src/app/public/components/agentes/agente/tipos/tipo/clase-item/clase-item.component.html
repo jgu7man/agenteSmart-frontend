@@ -1,6 +1,4 @@
-<div *ngIf="!ClaseInput; then showClase; else editClase"></div>
-<ng-template #showClase>
-    
+<ng-container *ngIf="!ClaseInput; else editClase">
     <ng-container *ngIf="tipo.kind == 'KIND_MAP'; else noSino">
         <div class="col s2 m3">
             <span> {{clase.value}} </span>
@@ -20,7 +18,7 @@
             </mat-menu>
         </div>
     </ng-container>
-
+    
     <ng-template #noSino>
         <div class="col s10 m11">
             <span> {{clase.value}} </span>
@@ -35,8 +33,9 @@
             </mat-menu>
         </div>
     </ng-template>
+</ng-container>
+
     
-</ng-template>
 <ng-template #editClase>
     <aSmart-add-clase 
     [clase]="clase" 

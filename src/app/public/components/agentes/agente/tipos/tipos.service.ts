@@ -177,9 +177,9 @@ export class TiposService {
                 .toPromise()
                 .then( result => {
                     console.info( "Entity PUT Response:", result );
+                    resolve()
                     if ( result[ 'status' ] == "Success" ) {
                         //exito creado
-                        resolve( result[ 'result' ] )
                     }
                 } )
                 .catch( err => {
@@ -340,10 +340,12 @@ export class TiposService {
 
     // TODO EntityType Delete function
 
-    async deleteTipo( tipoName: string ) {
+    async deleteTipo(tipoName: string) {
+        this.loading.toggleWaitingSpinner(true)
         const currentId = tipoName.slice( tipoName.lastIndexOf( '/' ) + 1, - 1 );
         await this._deleteEntityType( currentId )
-        await ( await this.tiposCollection() ).doc( currentId ).delete()
+        await (await this.tiposCollection()).doc(currentId).delete()
+        this.loading.toggleWaitingSpinner(false)
         return
     }
 
