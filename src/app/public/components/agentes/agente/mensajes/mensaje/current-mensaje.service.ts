@@ -5,7 +5,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { IntentModel } from '../mensaje.model';
 import { Subject, Subscription, forkJoin, Observable } from 'rxjs';
 import { Loading } from '../../../../../../Gdev-Tools/loading/loading.service';
-import { map, pluck } from 'rxjs/operators';
+import { map, pluck, tap, debounceTime } from 'rxjs/operators';
 import { CacheService } from '../../../../../../Gdev-Tools/cache/cache.service';
 import { RespuestaModel } from './entrenamiento/respuestas/respuesta.model';
 import { AlertService } from '../../../../../../Gdev-Tools/alerts/alert.service';
@@ -83,7 +83,7 @@ export class CurrentMensajeService {
     async getCurrent(displayName: string) {
         this.mensajesPath = await this._agente.getPath('mensajes');
         this.current = await this.findMensaje(displayName)
-        console.log(this.current);
+        // console.log(this.current);
         if (this.current) {this.setCurrent()}
         return this.current
     }
@@ -107,7 +107,7 @@ export class CurrentMensajeService {
 
     /** Establece en el storage el intent actual y emite un evento para current$ */
     async setCurrent() {
-        console.log(this.current);
+        // console.log(this.current);
         
         this.current$.next(this.current);
         this._cache.updateData('currentContexto', this.currentContexto);
@@ -116,8 +116,13 @@ export class CurrentMensajeService {
 
         this.intentList$ = this._cache.listenForChanges<IntentModel[]>('intents')
         this.intentListSubs = this.intentList$.pipe(
+            debounceTime(1000),
+            tap(emit => console.log(emit)),
             map(list => list.find(intent => intent.name == this.current.name))
-        ).subscribe(this.current$)
+        ).subscribe(mensaje => { 
+            this.current$.next(mensaje)
+            this.current = mensaje
+        })
    }
 
     /** Obtiene el intent actual a partir de la subscripción a los cambios de la ruta */

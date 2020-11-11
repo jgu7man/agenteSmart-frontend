@@ -1,7 +1,7 @@
 import {Component, OnInit, Output, EventEmitter, Input} from '@angular/core';
 import {CurrentAgenteService} from '../../../../../../../current-agente.service';
 import {CurrentMensajeService} from '../../../../../current-mensaje.service';
-import {FormRegistroDatos} from '../../../respuesta.model';
+import {RegistroDatosModel} from '../../../respuesta.model';
 import {BehaviorSubject} from 'rxjs';
 import {distinctUntilKeyChanged, tap} from 'rxjs/operators';
 import {AlertService} from '../../../../../../../../../../../Gdev-Tools/alerts/alert.service';
@@ -24,13 +24,13 @@ export class GrupoDatosComponent implements OnInit {
 
     KeySpected: ParamExpected[] 
 
-    dataForm: FormRegistroDatos = new FormRegistroDatos('texto', '', this.paramSelected, this.dataGroupSelected, '')
+    dataForm: RegistroDatosModel = new RegistroDatosModel('texto', '', this.paramSelected, this.dataGroupSelected, '')
 
-    private _RegistroDatosForm = new BehaviorSubject<FormRegistroDatos>(this.dataForm);
-    @Input() set RegistroDatosForm(form: FormRegistroDatos) {this._RegistroDatosForm.next(form);}
+    private _RegistroDatosForm = new BehaviorSubject<RegistroDatosModel>(this.dataForm);
+    @Input() set RegistroDatosForm(form: RegistroDatosModel) {this._RegistroDatosForm.next(form);}
     get RegistroDatosForm() {return this._RegistroDatosForm.getValue()}
 
-    @Output() edited = new EventEmitter<FormRegistroDatos>();
+    @Output() edited = new EventEmitter<RegistroDatosModel>();
 
     constructor (
         public agente_: CurrentAgenteService,

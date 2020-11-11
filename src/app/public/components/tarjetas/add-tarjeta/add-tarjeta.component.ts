@@ -1,9 +1,10 @@
+import { RespuestaCard, CardButton } from './../../agentes/agente/mensajes/mensaje/entrenamiento/respuestas/respuestasIntent.model';
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {TarjetaModel, tipoContenido} from '../tarjeta.model';
 import {MatDialogRef} from '@angular/material/dialog';
 import {EstaticaTarjetaComponent} from '../estatica-tarjeta/estatica-tarjeta.component';
 import {TarjetasService} from '../tarjetas.service';
-import {RespuestaCardButton, RespuestaCard} from '../../agentes/agente/mensajes/mensaje/entrenamiento/respuestas/respuesta.model';
+
 import {CurrentAgenteService} from '../../agentes/agente/current-agente.service';
 
 @Component({
@@ -26,8 +27,8 @@ export class AddTarjetaComponent implements OnInit {
     ]
 
     filterColeccion = {key: 'guardado'}
-    nuevoBoton: RespuestaCardButton = {text: '', link: ''}
-    botones: RespuestaCardButton[] = []
+    nuevoBoton: CardButton = {text: '', postback: ''}
+    botones: CardButton[] = []
 
     public tarjeta: TarjetaModel
 
@@ -58,7 +59,7 @@ export class AddTarjetaComponent implements OnInit {
 
     addBoton() {
         this.botones.push(this.nuevoBoton)
-        this.nuevoBoton = {text: '', link: ''}
+        this.nuevoBoton = {text: '', postback: ''}
     }
 
     delBoton(botonIndex: number) {

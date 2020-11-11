@@ -149,7 +149,7 @@ export class CurrentAgenteService {
         // this.nextMensajeList$ = this._cache.listenForChanges<MensajeModel[]>('nextMensajes')
         this.nextMensajeList = await this._cache
             .getAsyncKey<MensajeModel[]>('nextMensajes', 2)
-        console.log(this.nextMensajeList);
+        // console.log(this.nextMensajeList);
 
         return this.nextMensajeList;
 
@@ -238,7 +238,7 @@ export class CurrentAgenteService {
             this._http
                 .get<IntentModel[]>(this._url + `/${projectId}`, {responseType: 'json',})
                 .pipe(
-                    tap(intents => console.log(intents)),
+                    // tap(intents => console.log(intents)),
                     pluck<any, IntentModel[]>('result', 'intents'),
                     map<IntentModel[], IntentModel[]>((list) => {
                         return list.map((intent) => {
@@ -251,7 +251,7 @@ export class CurrentAgenteService {
                 )
                 .toPromise()
                 .then((list) => {
-                    console.log(list);
+                    // console.log(list);
                     this._cache.updateData('intents', list);
                     resolve(list);
                 });

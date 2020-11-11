@@ -9,7 +9,7 @@
             name="param"
         >
             <mat-option
-                *ngFor="let param of resService.paramList"
+                *ngFor="let param of respuestas_.paramList"
                 [value]="param.displayName"
             >
                 {{ param.displayName }}
@@ -18,23 +18,23 @@
     </div>
 </div>
 
-<!-- Colección
+<!-- * Colección -->
 <div class="row">
     <div class="col s4 resp-label">Colección</div>
     <div class="col s8">
         <mat-select
             (selectionChange)="catchDBSelect($event)"
             placeholder="Colección"
-            [(ngModel)]="response.rutaDB"
+            [(value)]="response.database"
             name="param"
             (click)="validateColeccionOnClick()"
         >
             <mat-option
-                *ngFor="let db of tarjetas"
-                [value]="db.name"
+                *ngFor="let db of dataBases"
+                [value]="db.value"
             >
-                {{ db.name }}
+                {{ db.displayName }}
             </mat-option>
         </mat-select>
     </div>
-</div> -->
+</div>

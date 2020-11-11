@@ -2,7 +2,7 @@ import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { RespuestasService } from '../../../respuestas.service';
 import { CacheService } from '../../../../../../../../../../../Gdev-Tools/cache/cache.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { FormBuscar, FormPredefinida } from '../../../respuesta.model';
+import { RespuestaBuscarModel, PredefinidaModel } from '../../../respuesta.model';
 import { BehaviorSubject } from 'rxjs';
 import { distinctUntilKeyChanged } from 'rxjs/operators';
 import { CurrentAgenteService } from '../../../../../../../current-agente.service';
@@ -17,28 +17,32 @@ import { AlertService } from '../../../../../../../../../../../Gdev-Tools/alerts
 })
 export class BuscarFormComponent implements OnInit {
 
-  @Input() response: FormBuscar = new FormBuscar( 'texto', '', '', '' )
+  @Input() response: RespuestaBuscarModel = new RespuestaBuscarModel( '', '' )
   
-  private _BuscarRes : BehaviorSubject<FormBuscar> = new BehaviorSubject(this.response);
-  @Input() set BuscarRes(form: FormBuscar) { this._BuscarRes.next(form); }
+  private _BuscarRes : BehaviorSubject<RespuestaBuscarModel> = new BehaviorSubject(this.response);
+  @Input() set BuscarRes(form: RespuestaBuscarModel) { this._BuscarRes.next(form); }
   get BuscarRes() { return this._BuscarRes.getValue()}
 
   paramSelected: string
-  // dataBases: any[]
   dataBaseSelected: string
+  dataBases: DataBase[] = [
+    {value: 'tarjetas', displayName: 'Tarjetas'},
+    {value: 'productos', displayName: 'Productos'}
+  ]
 
   tarjetas: TarjetaModel[]
   
-  @Output() onRespChanges: EventEmitter<FormPredefinida> = new EventEmitter()
-  respBuscar: FormBuscar
+  @Output() onRespChanges: EventEmitter<RespuestaBuscarModel> = new EventEmitter()
+  respuesta: RespuestaBuscarModel
+
   constructor (
-    public resService: RespuestasService,
+    public respuestas_: RespuestasService,
     private _cache: CacheService,
     public agente_: CurrentAgenteService,
     private _alerts: AlertService
   ) {
     this.tarjetas = this._cache.getDataKey<TarjetaModel[]>('tarjetas')
-    this.respBuscar = new FormBuscar('texto', '', this.paramSelected, this.dataBaseSelected)
+    this.respuesta = new RespuestaBuscarModel('', this.paramSelected, )
    }
 
   ngOnInit(): void {
@@ -53,19 +57,23 @@ export class BuscarFormComponent implements OnInit {
   validateColeccionOnClick() {
     
     if (this.tarjetas.length < 1) {
-      this._alerts.sendMessageAlert('Debes crear una tarjeta primero')
+      this._alerts.sendMessageAlert('Debes crear una tarjeta o un producto primero')
     }
   }
 
 
   catchParamSelect( change: MatSelectChange ) {
     this.response.parametro = change.value
-    this.onRespChanges.emit(this.respBuscar)
+    this.onRespChanges.emit(this.respuesta)
   }
 
   catchDBSelect( change: MatSelectChange ) {
-    this.response.rutaDB = change.value
-    this.onRespChanges.emit( this.respBuscar )
+    this.response.database = change.value
+    this.onRespChanges.emit( this.respuesta )
   }
 
+}
+
+export interface DataBase {
+  value: string, displayName: string
 }

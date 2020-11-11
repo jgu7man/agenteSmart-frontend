@@ -1,6 +1,7 @@
+import { RespuestaCard } from './../../../respuestasIntent.model';
 import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { RespuestasService } from '../../../respuestas.service';
-import { FormPredefinida, RespuestaSugerencias, RespuestaCard} from '../../../respuesta.model';
+import { PredefinidaModel, RespuestaSugerencias} from '../../../respuesta.model';
 import { MatSelectChange } from '@angular/material/select';
 
 @Component({
@@ -10,9 +11,9 @@ import { MatSelectChange } from '@angular/material/select';
 })
 export class PredefinidaFormComponent implements OnInit {
 
-  @Input() outputRes: FormPredefinida 
+  @Input() outputRes: PredefinidaModel 
  
-  @Output() onRespChanges: EventEmitter<FormPredefinida> = new EventEmitter()
+  @Output() onRespChanges: EventEmitter<PredefinidaModel> = new EventEmitter()
 
   constructor (
     public resService: RespuestasService,

@@ -3,13 +3,10 @@ import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import {
     RespuestaModel,
-    FormPredefinida,
-    FormCondicional,
-    FormRegistroDatos,
-    FormBuscar,
+    PredefinidaModel,
+    OutputMessage,
 } from '../respuesta.model';
 import { RespuestasService } from '../respuestas.service';
-import { CacheService } from 'src/app/Gdev-Tools/cache/cache.service';
 import { Loading } from 'src/app/Gdev-Tools/loading/loading.service';
 
 @Component({
@@ -26,48 +23,18 @@ export class RespuestaCardComponent implements OnInit {
     switchEditResp: boolean;
     /** Obtiene el tipo de respuesta seleccionado y da estilo a la vista */
     selectedRes: TipoRespuesta;
-    /** Lista de tipo de respuestas con sus respectivos estilos */
-    tiposRes: TipoRespuesta[] = [
-        { display: '', name: undefined, color: 'grey', icono: 'fa-plus' },
-        {
-            display: 'Predefinida',
-            name: 'predefinida',
-            color: '#935cff',
-            icono: 'fa-comment-alt',
-        },
-        {
-            display: 'Condicional',
-            name: 'condicional',
-            color: '#42cbff',
-            icono: 'fa-code-branch',
-        },
-        {
-            display: 'Grupo de datos',
-            name: 'grupo_datos',
-            color: '#26a69a',
-            icono: 'fa-clipboard-list',
-        },
-        {
-            display: 'Buscar',
-            name: 'buscar',
-            color: '#eadb51',
-            icono: 'fa-search',
-        },
-    ];
+
     /** El mensaje de salida */
-    outputMessage:
-        | FormPredefinida
-        | FormCondicional
-        | FormRegistroDatos
-        | FormBuscar;
-    @Output() onDelete: EventEmitter<string> = new EventEmitter()
+    public outputMessage: OutputMessage;
+
+    @Output() onDelete: EventEmitter<string> = new EventEmitter();
 
     constructor(
-        public repuestas_: RespuestasService,
+        public respuestas_: RespuestasService,
         private _alerts: AlertService,
         private loading: Loading
     ) {
-        this.outputMessage = new FormPredefinida('texto', '');
+        this.outputMessage = new PredefinidaModel('texto', '');
 
         this.respuesta = new RespuestaModel(
             'predefinida',
@@ -75,12 +42,10 @@ export class RespuestaCardComponent implements OnInit {
             0,
             '*fin'
         );
-
-        // this.selectedRes = this.tiposRes[0]
     }
 
     ngOnInit(): void {
-        console.log(this.respuesta);
+        this.respuestas_.getDataForRespuestas();
         this.selectedRes = this.tiposRes.find(
             (tipo) => tipo.name == this.respuesta.tipo
         );
@@ -103,6 +68,12 @@ export class RespuestaCardComponent implements OnInit {
         this.outputMessage = msg;
     }
 
+    /**
+     * Valida la respuesta que se ha de guardar en FIRESTORE
+     *
+     * @param {RespuestaModel} respuestaObj Objeto de respuesta modelado como RespuestaModel
+     * @returns {RespuestaModel} Respuesta como objeto sin tipo declarado
+     */
     async validateRespuesta(respuestaObj: RespuestaModel) {
         let respuestaClean,
             output = {};
@@ -135,13 +106,46 @@ export class RespuestaCardComponent implements OnInit {
         }
     }
 
+    /**
+     * Valida y envía la respuesta a guardarse en el servicio de respuestas y prepara nuevamente las variables para una respuesta nueva
+     *
+     */
     async onSave() {
         let cleanRespuesta = await this.validateRespuesta(this.respuesta);
-        this.switchEditResp = false
-        this.repuestas_.setRespuesta(cleanRespuesta);
+        this.switchEditResp = false;
+        this.respuestas_.setRespuesta(cleanRespuesta);
         this.respuesta.tipo = undefined;
-        this.respuesta.outputMessage = new FormPredefinida('texto', '');
+        this.respuesta.outputMessage = new PredefinidaModel('texto', '');
     }
+
+    /** Lista de tipo de respuestas con sus respectivos estilos */
+    tiposRes: TipoRespuesta[] = [
+        { display: '', name: undefined, color: 'grey', icono: 'fa-plus' },
+        {
+            display: 'Predefinida',
+            name: 'predefinida',
+            color: '#935cff',
+            icono: 'fa-comment-alt',
+        },
+        {
+            display: 'Condicional',
+            name: 'condicional',
+            color: '#42cbff',
+            icono: 'fa-code-branch',
+        },
+        {
+            display: 'Grupo de datos',
+            name: 'grupo_datos',
+            color: '#26a69a',
+            icono: 'fa-clipboard-list',
+        },
+        {
+            display: 'Buscar',
+            name: 'buscar',
+            color: '#eadb51',
+            icono: 'fa-search',
+        },
+    ];
 }
 
 export interface TipoRespuesta {

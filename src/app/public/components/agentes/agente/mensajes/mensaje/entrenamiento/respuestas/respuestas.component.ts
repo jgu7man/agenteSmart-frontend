@@ -5,7 +5,7 @@ import {
     ViewChildren,
     QueryList,
 } from '@angular/core';
-import { RespuestaModel, FormPredefinida } from './respuesta.model';
+import { RespuestaModel, PredefinidaModel } from './respuesta.model';
 import { RespuestasService } from './respuestas.service';
 import { Subscription } from 'rxjs';
 import { RespuestaCardComponent } from './respuesta-card/respuesta-card.component';
@@ -22,7 +22,7 @@ export class RespuestasComponent implements OnInit, OnDestroy {
     /** Respuestas obtenidas de la función de obtener respuestas */
     respuestasList: RespuestaModel[] = [];
     /** Modelo de inicio para crear una nueva respuesta predefinida */
-    newOutputMensaje: FormPredefinida;
+    newOutputMensaje: PredefinidaModel;
     /** Suscripción a los cambios de la lista de respuestas */
     respuestasChangesSubs: Subscription;
     /** Lista de componentes de respuestas */
@@ -33,14 +33,14 @@ export class RespuestasComponent implements OnInit, OnDestroy {
         private loading: Loading,
         public mensaje_: CurrentMensajeService
     ) {
-        this.newOutputMensaje = new FormPredefinida('texto', '');
+        this.newOutputMensaje = new PredefinidaModel('texto', '');
         this._respuestas.getDataForRespuestas();
     }
 
     ngOnInit(): void {
         this.respuestasChangesSubs = this._respuestas.onRespuestasChanged.subscribe(
             () => {
-                this.newOutputMensaje = new FormPredefinida('texto', '');
+                this.newOutputMensaje = new PredefinidaModel('texto', '');
             }
         );
     }

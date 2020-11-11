@@ -28,7 +28,7 @@ export interface RespuestaCard {
     subtitle?: string,
     imageUri?: string,
     buttons?: CardButton[]
-}interface CardButton {
+}export interface CardButton {
         text?: string,
         postback?: string
 }

@@ -130,7 +130,7 @@
                             placeholder="Acción" 
                             [(ngModel)]="respuesta.accion" 
                             name="contexto">
-                                <mat-option *ngFor="let action of repuestas_.acciones" [value]="action">
+                                <mat-option *ngFor="let action of respuestas_.acciones" [value]="action">
                                     {{action.accion}}
                                 </mat-option>
                             </mat-select>
@@ -184,7 +184,7 @@
                             <mat-option value="*fin">
                                 Termina conversación
                             </mat-option>
-                            <mat-option *ngFor="let mensaje of repuestas_.nextMensaje" [value]="mensaje.name">
+                            <mat-option *ngFor="let mensaje of respuestas_.nextMensaje" [value]="mensaje.name">
                                 {{mensaje.displayName}}
                             </mat-option>
                         </mat-select>

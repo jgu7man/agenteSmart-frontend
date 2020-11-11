@@ -21,6 +21,8 @@
         box-shadow: none;
         .mat-expansion-panel-header {
             padding: 0;
+            min-height: 48px;
+            height: unset !important;
         }
     }
 }

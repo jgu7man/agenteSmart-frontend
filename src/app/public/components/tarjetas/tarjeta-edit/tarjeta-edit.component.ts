@@ -1,14 +1,10 @@
+import { RespuestaCard, CardButton } from './../../agentes/agente/mensajes/mensaje/entrenamiento/respuestas/respuestasIntent.model';
 import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { TarjetaModel, tipoContenido } from '../tarjeta.model';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { EstaticaTarjetaComponent } from '../estatica-tarjeta/estatica-tarjeta.component';
-import { MatSelectChange } from '@angular/material/select';
 import { TarjetasService } from '../tarjetas.service';
 import { CurrentAgenteService } from '../../agentes/agente/current-agente.service';
-import {
-    RespuestaCardButton,
-    RespuestaCard,
-} from '../../agentes/agente/mensajes/mensaje/entrenamiento/respuestas/respuesta.model';
 
 @Component({
     templateUrl: './tarjeta-edit.component.html',
@@ -32,9 +28,9 @@ export class TarjetaEditComponent implements OnInit {
     ];
 
     /** Modelo de botón para tarjeta */
-    public btnNuevo: RespuestaCardButton = {text: '', link: ''};
+    public btnNuevo: CardButton = {text: '', postback: ''};
     /** Array de botones */
-    public botones: RespuestaCardButton[] = [];
+    public botones: CardButton[] = [];
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public tarjeta: TarjetaModel,
@@ -64,7 +60,7 @@ export class TarjetaEditComponent implements OnInit {
 
     addBoton() {
         this.botones.push(this.btnNuevo);
-        this.btnNuevo = { text: '', link: '' };
+        this.btnNuevo = { text: '', postback: '' };
     }
 
     delBoton(botonIndex: number) {

@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { RespuestasService } from '../../../respuestas.service';
-import { FormCondicional, FormPredefinida } from '../../../respuesta.model';
+import { CondicionalModel, PredefinidaModel } from '../../../respuesta.model';
 import { ParametrosService } from '../../../../parametros/parametros.service';
 import { TipoEntidadModel } from '../../../../../../../tipos/tipo.model';
 import { Loading } from 'src/app/Gdev-Tools/loading/loading.service';
@@ -16,8 +16,8 @@ export class CondicionalFormComponent implements OnInit {
   isOriginal: boolean = true
   tipoSelected: TipoEntidadModel
 
-  @Input() condicional: FormCondicional
-  @Output() onRespChanges: EventEmitter<FormCondicional> = new EventEmitter()
+  @Input() condicional: CondicionalModel
+  @Output() onRespChanges: EventEmitter<CondicionalModel> = new EventEmitter()
 
   condicionesList: Condition[] = [
     { displayText: 'igual a', operator: 'igual' },
@@ -34,7 +34,7 @@ export class CondicionalFormComponent implements OnInit {
     public respuestas_: RespuestasService,
     public _params: ParametrosService,
   ) {
-    this.condicional = new FormCondicional('texto','', '', '','')
+    this.condicional = new CondicionalModel('texto','', '', '','')
   }
 
   async ngOnInit() {
@@ -60,7 +60,7 @@ export class CondicionalFormComponent implements OnInit {
 
   
 
-  async catchOutputMessage( msg: FormPredefinida ) {
+  async catchOutputMessage( msg: PredefinidaModel ) {
     this.condicional.estiloRespuesta = msg.estiloRespuesta
     this.condicional.respuesta = msg.respuesta
     // await this.loading.waitFor(100)

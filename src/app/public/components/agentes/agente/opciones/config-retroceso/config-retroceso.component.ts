@@ -4,7 +4,7 @@ import { CurrentAgenteService } from '../../current-agente.service';
 import { CurrentMensajeService } from '../../mensajes/mensaje/current-mensaje.service';
 import { AlertService } from '../../../../../../Gdev-Tools/alerts/alert.service';
 import { Loading } from '../../../../../../Gdev-Tools/loading/loading.service';
-import { RespuestaModel, FormPredefinida } from '../../mensajes/mensaje/entrenamiento/respuestas/respuesta.model';
+import { RespuestaModel, PredefinidaModel, OutputMessage } from '../../mensajes/mensaje/entrenamiento/respuestas/respuesta.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { MatDialogRef } from '@angular/material/dialog';
 
@@ -16,7 +16,7 @@ export class ConfigRetrocesoComponent implements OnInit {
 
     intent: MensajeModel
     respuesta: RespuestaModel
-    outputMessage: FormPredefinida
+    outputMessage: OutputMessage
     respuestaPath: string
     constructor (
         private _agente: CurrentAgenteService,
@@ -26,7 +26,7 @@ export class ConfigRetrocesoComponent implements OnInit {
         private fs: AngularFirestore,
         public dialog_: MatDialogRef<ConfigRetrocesoComponent>
     ) {
-        this.outputMessage = new FormPredefinida('texto','')
+        this.outputMessage = new PredefinidaModel('texto','')
         this.respuesta = new RespuestaModel('predefinida',this.outputMessage,0)
     }
 

@@ -92,20 +92,22 @@ export class RespuestasService {
     /** Obtiene la data del mensaje en curso */
     async getDataForRespuestas() {
 
-        this.currentContext = await this._cache.getAsyncKey<string>(
-            'currentContexto', 
-        );
-
-        this._cache
-            .listenForChanges<IntentModel>('currentIntent')
+        this.currentContext = await this._cache
+            .getAsyncKey<string>('currentContexto', 1);
+        // console.log(this.currentContext);
+        this.currentMensaje = await this._cache
+            .getAsyncKey < IntentModel >('currentIntent', 2)
+        // console.log(this.currentMensaje);
+        this._cache.listenForChanges<IntentModel>('currentIntent')
             .subscribe((mensaje) => {
                 if (mensaje) {
                     // console.log(mensaje);
                     this.currentMensaje = mensaje;
-                    this.paramList = this.currentMensaje.parameters;
-                    this.getMensajeTipos(mensaje.parameters);
                 }
             });
+        this.paramList = this.currentMensaje.parameters;
+        // console.log(this.paramList);
+        this.getMensajeTipos(this.currentMensaje.parameters);
 
         return;
     }

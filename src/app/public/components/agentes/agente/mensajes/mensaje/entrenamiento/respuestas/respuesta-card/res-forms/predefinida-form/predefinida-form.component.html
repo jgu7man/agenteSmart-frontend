@@ -28,9 +28,6 @@
             <div *ngSwitchCase="'sugerencias'">
                 <aSmart-sugerencias [mensaje]="outputRes.respuesta" (onRespChanges)="catchSugerencias($event)"></aSmart-sugerencias>
             </div>
-            <div *ngSwitchCase="'card'">
-                <aSmart-card [Card]="outputRes.respuesta" (cardSelected)="catchCard($event)" ></aSmart-card>
-            </div>
         </div>
     </div>
 </div>

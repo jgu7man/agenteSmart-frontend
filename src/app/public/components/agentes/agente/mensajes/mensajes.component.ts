@@ -25,7 +25,6 @@ export class MensajesComponent implements OnInit {
   
 
   async crearIntent() {
-    //aqui pueden ir mas parametros
     const intent:IntentModel = {
       displayName: "prueba de Intent",
     }
@@ -33,11 +32,7 @@ export class MensajesComponent implements OnInit {
     try {
       const newIntent = await this._mensajes.createNewIntent(intent)
       if (newIntent) {
-        //se ha creado el intent(regresa un intent completo vacio),
-        // Ejemplo de nombre: projects/prueba-aente/agent/intents/f0b12fde-9600-4e2e-88a7-70861817a358
         const name = newIntent.name; //formato larguisimo solo ocupamos su ID
-        const resourceID = name.slice(name.lastIndexOf("/") + 1); //formato esperado: f0b12fde-9600-4e2e-88a7-70861817a358
-        //aqui nose que hacer con el resourceID
       }
     } catch (error) {
       if (error) {
