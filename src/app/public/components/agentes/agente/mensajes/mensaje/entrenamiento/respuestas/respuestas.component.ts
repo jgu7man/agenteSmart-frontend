@@ -51,10 +51,14 @@ export class RespuestasComponent implements OnInit, OnDestroy {
      */
     async addRespuesta() {
         let lastIndex = this.mensaje_.respuestasList.length;
+        console.log(this.mensaje_.respuestasList);
         this.mensaje_.respuestasList.push(
             new RespuestaModel(undefined, this.newOutputMensaje, lastIndex, '*fin')
         );
-        await this.loading.waitFor(100);
+        await this.loading.waitFor(500);
+        console.log(this.mensaje_.respuestasList );
+        console.log(this.cards);
+
         this.cards.last.switchEditResp = true;
     }
 
@@ -63,16 +67,16 @@ export class RespuestasComponent implements OnInit, OnDestroy {
         return respuesta.index;
     }
 
-    public deleteRespuesta(respuestaId) {
-        let resToDel = this.mensaje_.respuestasList.findIndex((res) => {
-            res.id === respuestaId;
-        });
+    public deleteRespuesta(respuestaId, index) {
+        console.log(this.mensaje_.respuestasList);
+        let resToDel = this.mensaje_.respuestasList.findIndex(
+            (res) => res.id === respuestaId);
+        
         if (resToDel >= 0) {
             this._respuestas.delRespuesta(respuestaId)
-        } else {
-            this.mensaje_.respuestasList.splice(resToDel,1)
         }
-        
+            this.mensaje_.respuestasList.splice(resToDel,1)
+            
     }
 
     /** Se desuscribe de los cambios en la lista de respuestas */

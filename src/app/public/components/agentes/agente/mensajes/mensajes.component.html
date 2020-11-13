@@ -3,7 +3,6 @@
 [hasBackdrop]="false"
 >
     <mat-drawer class="contextos-list-container" 
-    autosize 
     [opened]="true"
     mode="side"
     gdev-color [background]="'bg1'"
@@ -13,7 +12,8 @@
     </mat-drawer>
     
     <mat-drawer-content>
-        <div *ngFor="let contexto of agente_.contextosList" class="mensajes-container">
+        <div *ngFor="let contexto of agente_.contextosList | sortBy:'asc':'index'"  
+        class="mensajes-container">
             <aSmart-mensajes-by-contexto [contexto]="contexto"></aSmart-mensajes-by-contexto>
         </div>
     </mat-drawer-content>

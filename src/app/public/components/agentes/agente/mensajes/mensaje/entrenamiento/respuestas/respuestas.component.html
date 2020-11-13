@@ -12,10 +12,10 @@
     
     <div class="row respuestasList" *ngIf="mensaje_.respuestasList; else sinRespuestas">
         <div class="respuestaItem"
-        *ngFor="let respuesta of mensaje_.respuestasList; trackBy: trackResponseById">
+        *ngFor="let respuesta of mensaje_.respuestasList">
             <aSmart-respuesta-card
             [respuesta]="respuesta"
-            (onDelete)="deleteRespuesta($event)"
+            (onDelete)="deleteRespuesta(respuesta.id, respuesta.index)"
             ></aSmart-respuesta-card>
         </div>
     </div>

@@ -149,31 +149,47 @@
     
     
                 <!-- Select contexto -->
-                <!-- <div class="row">
+                <div class="row" *ngIf="activeContextSelector">
                     <div class="col s4 resp-label">
                         Contexto
                     </div>
                     <div class="col s8">
-                        <mat-select 
-                        *ngIf="repuestas_.contextList"
-                        placeholder="Siguiente contexto" 
-                        [(ngModel)]="respuesta.outputContext" 
-                        name="contexto">
-                            <mat-option *ngFor="let contexto of repuestas_.contextList" 
-                            [value]="contexto.contextName">
-                                {{contexto.contextName}}
-                            </mat-option>
-                        </mat-select>
+
+                        <div class="row">
+                            <mat-form-field>
+                                <mat-select 
+                                placeholder="Siguiente contexto" 
+                                (selectionChange)="catchContextSelected($event)"
+                                [value]="respuesta.outputContext"
+                                name="contexto">
+                                    <mat-option value="*fin">
+                                        Termina conversación
+                                    </mat-option>
+                                    <mat-option *ngFor="let contexto of contextNameList" 
+                                    [value]="contexto">
+                                        {{contexto}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="row">
+                            <button mat-button
+                            (click)="openContextCreator()">
+                                Crear contexto
+                            </button>
+                        </div>
+
                     </div>
                 </div>
-     -->
+    
     
     
     
     
     
                 <!-- Select next mensaje -->
-                <div class="row">
+                <div class="row" *ngIf="!activeContextSelector">
                     <div class="col s4 resp-label">
                         Siguiente
                     </div>

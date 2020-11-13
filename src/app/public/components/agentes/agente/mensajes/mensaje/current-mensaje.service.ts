@@ -12,6 +12,7 @@ import { AlertService } from '../../../../../../Gdev-Tools/alerts/alert.service'
 import { Store } from '@ngrx/store';
 import { MensajeState } from '../mensaje.model';
 import * as actions from './store/mensaje.actions';
+import { GdevCommonsService } from '../../../../../../Gdev-Tools/commons/gdev-commons.service';
 
 
 @Injectable({
@@ -44,7 +45,8 @@ export class CurrentMensajeService {
         private _agente: CurrentAgenteService,
         private _cache: CacheService,
         private _alerts: AlertService,
-        private _http: HttpClient
+        private _http: HttpClient,
+        private _commons: GdevCommonsService
     ) {}
 
     
@@ -116,8 +118,8 @@ export class CurrentMensajeService {
 
         this.intentList$ = this._cache.listenForChanges<IntentModel[]>('intents')
         this.intentListSubs = this.intentList$.pipe(
-            debounceTime(1000),
-            tap(emit => console.log(emit)),
+            // debounceTime(1000),
+            // tap(emit => console.log(emit)),
             map(list => list.find(intent => intent.name == this.current.name))
         ).subscribe(mensaje => { 
             this.current$.next(mensaje)
@@ -141,7 +143,7 @@ export class CurrentMensajeService {
 
 
 
-
+    
     respuestasSubs: Subscription;
     respuestasList: RespuestaModel[];
     /**
@@ -155,13 +157,14 @@ export class CurrentMensajeService {
             `mensajes/${mensajeName}/respuestas`
         );
 
+        
+
         var changes = this.fs
         .collection<RespuestaModel>(respuestasPath)
-        .valueChanges();
+        .valueChanges()
         
         this.respuestasSubs = changes.subscribe((respuestas) => {
-            // console.log({respuestas});
-            this.respuestasList = respuestas;
+            this.respuestasList = this._commons.sortBy<RespuestaModel>(respuestas, 'index')
             this._cache.updateData('currentRespuestas', respuestas);
         });
         

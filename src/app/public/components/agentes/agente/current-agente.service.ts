@@ -120,22 +120,23 @@ export class CurrentAgenteService {
 
     // SECTION INTENTS DE DIALOGFLOW
     // Se obtienen los intents configurados en dialogflow y se almacenan en caché
-    intentList: IntentModel[];
+    // intentList: IntentModel[];
     intentList$: Observable<IntentModel[]>;
     /** Retorna  la lista completa de mensajes */
     async getIntentList(): Promise<IntentModel[]> {
-        this.loading.toggleWaitingSpinner(true)
-        this._cache.listenForChanges<IntentModel[]>('intents')
-            .subscribe(list => { this.intentList = list })
+        this.intentList$ = 
+            this._cache.listenForChanges<IntentModel[]>('intents')
+            .pipe(tap(list => this._cache.updateData<IntentModel[]>('intents', list)))
+            // .subscribe(list => { this.intentList = list })
 
-        this.intentList = this._cache.getDataKey<IntentModel[]>('intents')
+        // this.intentList = this._cache.getDataKey<IntentModel[]>('intents')
         
-        if (this.intentList) this.loading.toggleWaitingSpinner(false);
-        this.intentList = await this.getAllIntents()
-        this._cache.updateData('intents', this.intentList)
-        if (this.intentList) this.loading.toggleWaitingSpinner(false);
+        // this.intentList =
+            await this.getAllIntents()
+        // this._cache.updateData('intents', this.intentList)
 
-        return this.intentList
+        return
+        // this.intentList
     }
 
     nextMensajeList: MensajeModel[] = [];
@@ -162,11 +163,11 @@ export class CurrentAgenteService {
     async getContextosList() {
         const path = await this.getPath('contextos');
         this.contextosSubs = 
-        this.fs.collection<ContextoModel>(path).valueChanges()
-            .subscribe(list => this._cache.updateData('contextos', list) )
+            this.fs.collection<ContextoModel>(path).valueChanges()
+            .pipe(tap(list =>this._cache.updateData('contextos', list)))
+            .subscribe()
         this.contextosList$ = this._cache.listenForChanges<ContextoModel[]>('contextos')
         this.contextosList = await this._cache.getAsyncKey<ContextoModel[]>('contextos', 2);
-
 
         return this.contextosList
     }

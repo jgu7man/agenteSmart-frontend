@@ -95,7 +95,8 @@ export class RespuestaBuscarModel {
         public parametro: string,
         public database: string,
         public respuesta?: RespuestaCard ,
-        public estiloRespuesta?: 'card' 
+        public estiloRespuesta?: EstiloRespuesta,
+        public card?: RespuestaCard
     ){}
 }
 
@@ -161,6 +162,5 @@ export type OutputMessage =
 export type EstiloRespuesta =
     | 'texto'
     | 'sugerencias'
-    | 'card'
     | RespuestaBinaria;
 export type RespuestaDisplay = string | RespuestaSugerencias | RespuestaCard;

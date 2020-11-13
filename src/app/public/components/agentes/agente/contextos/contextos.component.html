@@ -7,7 +7,7 @@ cdkDropListOrientation="vertical"
 (cdkDropListDropped)="drop($event)">
     <div class="col s12 en-Column" 
     cdkDrag cdkDragLockAxis="y"
-    *ngFor="let contexto of agente_.contextosList | sortBy:'asc':'index'"
+    *ngFor="let contexto of (agente_.contextosList$ | async) | sortBy:'asc':'index'"
     id="context-{{contexto}}"
     gdev-color [background]="contexto.color"
     >

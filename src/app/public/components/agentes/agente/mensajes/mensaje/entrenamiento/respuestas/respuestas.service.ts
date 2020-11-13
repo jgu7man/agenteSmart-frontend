@@ -61,7 +61,7 @@ export class RespuestasService {
     estiloResps: EstiloResp[] = [
         { name: 'texto', display: 'Texto' },
         { name: 'sugerencias', display: 'Sugerencias' },
-        { name: 'card', display: 'Tarjeta' },
+        // { name: 'card', display: 'Tarjeta' },
     ];
 
     constructor(
@@ -103,11 +103,11 @@ export class RespuestasService {
                 if (mensaje) {
                     // console.log(mensaje);
                     this.currentMensaje = mensaje;
+                    this.paramList = this.currentMensaje.parameters;
+                    // console.log(this.paramList);
+                    this.getMensajeTipos(this.currentMensaje.parameters);
                 }
             });
-        this.paramList = this.currentMensaje.parameters;
-        // console.log(this.paramList);
-        this.getMensajeTipos(this.currentMensaje.parameters);
 
         return;
     }

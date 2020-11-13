@@ -71,6 +71,7 @@ import { BienvenidaComponent } from './agente/bienvenida/bienvenida.component';
 import { ConfigRetrocesoComponent } from './agente/opciones/config-retroceso/config-retroceso.component';
 import { DefaultIntentsComponent } from './agente/opciones/default-intents/default-intents.component';
 import { DatosContactoComponent } from './agente/opciones/datos-contacto/datos-contacto.component';
+import { AddContextoDialogComponent } from './agente/contextos/add-contexto-dialog/add-contexto-dialog.component';
 
 
 
@@ -136,6 +137,7 @@ import { DatosContactoComponent } from './agente/opciones/datos-contacto/datos-c
     ConfigRetrocesoComponent,
     DefaultIntentsComponent,
     DatosContactoComponent,
+    AddContextoDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -149,6 +151,6 @@ import { DatosContactoComponent } from './agente/opciones/datos-contacto/datos-c
   providers: [
     
   ],
-  entryComponents: [CreatingComponent, ConfigRetrocesoComponent]
+  entryComponents: [CreatingComponent, ConfigRetrocesoComponent, AddContextoDialogComponent]
 })
 export class AgentesModule { }

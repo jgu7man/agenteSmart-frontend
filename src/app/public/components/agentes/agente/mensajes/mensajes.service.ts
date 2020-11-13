@@ -84,15 +84,20 @@ export class MensajesService {
         contexto?: string
     ) {
         
+        let projectId = this._cache.getDataKey('projectId')
+        console.log({ displayName,index,contexto });
         try {
+            
             const newIntent = await this.createNewIntent({
                 displayName: displayName,
-                inputContextNames: index > 0 ? [contexto] : [],
+                inputContextNames: contexto
+                    ? [`projects/${projectId}/agent/sessions/-/contexts/${contexto}`]
+                    : []
             });
 
             const resourceID = newIntent.name.slice(
                 newIntent.name.lastIndexOf('/') + 1
-            ); //formato esperado: f0b12fde-9600-4e2e-88a7-70861817a358
+            ); 
             
             let intent = {
                 name: newIntent.name,
@@ -101,14 +106,16 @@ export class MensajesService {
     
             if (index) intent['index'] = index;
             if (contexto) intent['contexto'] = contexto;
+            
     
-            await (await this.mensajesCollection()).doc(resourceID).set(intent);
-    
+            await (await this.mensajesCollection()).doc(resourceID).set(intent)
+            this._agente.getIntentList()
+            this._loading.toggleWaitingSpinner(false)
             return this._alerts.sendFloatNotification('Mensaje creado');
 
         } catch (error) {
-            console.error(error)
-            this._alerts.sendError('Error', error)
+            console.error(error.error.error.details)
+            this._alerts.sendError('Error', error.error.error)
         }
   }
   
@@ -124,13 +131,12 @@ export class MensajesService {
      */
     async getMensajesListByContexto(contexto: ContextoModel) {
         var mensajesList: MensajeModel[] = [];
-
         if (contexto.id) {
             const mensajeCol = await (await this.mensajesCollection())
-                .where('contextos', 'array-contains', contexto.id)
+                .where('contexto', '==', contexto.id)
                 .orderBy('index', 'asc')
                 .get();
-
+            
             await this._loading.asyncForEach(mensajeCol.docs, (mensaje) => {
                 mensajesList.push(mensaje.data());
             });

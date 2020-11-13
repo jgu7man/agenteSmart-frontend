@@ -13,23 +13,23 @@ import {CurrentAgenteService} from '../../agentes/agente/current-agente.service'
 })
 export class AddTarjetaComponent implements OnInit {
 
-    @ViewChild(EstaticaTarjetaComponent) estaticaForm: EstaticaTarjetaComponent
-    /**
-     * Tipo de contenidos de tarjeta
+    /** Tipo de contenidos de tarjeta
      * @deprecated
      * @type {tipoContenido[]}
      */
-    tiposContenido: tipoContenido[] = [
+    private tiposContenido: tipoContenido[] = [
         {value: 'estatico', viewValue: 'Estático'},
         {value: 'coleccion', viewValue: 'Colección'},
         {value: 'producto', viewValue: 'Producto'},
         {value: 'servicio', viewValue: 'Servicio'},
     ]
-
-    filterColeccion = {key: 'guardado'}
-    nuevoBoton: CardButton = {text: '', postback: ''}
-    botones: CardButton[] = []
-
+    /** Se encarga de importar el componente de la tarjeta estática */
+    @ViewChild(EstaticaTarjetaComponent) estaticaForm: EstaticaTarjetaComponent
+    /** Modelo de nuevo botón */
+    public nuevoBoton: CardButton = {text: '', postback: ''}
+    /** Arreglo de botones de la tarjeta */
+    public botones: CardButton[] = []
+    /** Modelo de tarjeta */
     public tarjeta: TarjetaModel
 
     constructor (
@@ -44,10 +44,19 @@ export class AddTarjetaComponent implements OnInit {
     }
 
 
+    /**
+     * Asigna el contenido de la tarjeta al modelo
+     *
+     * @param {RespuestaCard} contenido
+     */
     updateTarjeta(contenido: RespuestaCard) {
         this.tarjeta.contenido = contenido
     }
 
+    /**
+     * Manda a guardar la tarjeta al servicio
+     *
+     */
     save() {
         this.tarjeta.contenido = this.estaticaForm.contenido
         if (this.botones.length > 0) {
@@ -57,11 +66,20 @@ export class AddTarjetaComponent implements OnInit {
         this.dialog.close()
     }
 
+    /**
+     * Agrega un botón creado al arreglo
+     *
+     */
     addBoton() {
         this.botones.push(this.nuevoBoton)
         this.nuevoBoton = {text: '', postback: ''}
     }
 
+    /**
+     * Eliminar el botón del arreglo
+     *
+     * @param {number} botonIndex
+     */
     delBoton(botonIndex: number) {
         this.botones.splice(botonIndex, 1)
     }
