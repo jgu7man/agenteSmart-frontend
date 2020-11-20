@@ -1,0 +1,15 @@
+<mat-select
+    #paramSelector="matSelect"
+    placeholder="parámetro"
+    [(ngModel)]="paramSelected"
+    name="param"
+    (openedChange)="onOpenedChange($event)"
+    (selectionChange)="onParamChange()"
+>
+    <mat-option
+        *ngFor="let param of respuestas_.paramList"
+        [value]="param.entityTypeDisplayName"
+    >
+        {{ param.displayName }}
+    </mat-option>
+</mat-select>

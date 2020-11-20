@@ -3,7 +3,7 @@
     <!-- * Lista de mensajes -->
     <div class="mensajes-list">
         <mat-card *ngFor="let mensaje of mensajes; trackBy:trackByName" 
-        [routerLink]="['../mensaje',mensaje.name]"
+        [routerLink]="['../mensaje', getMensajeRoute(mensaje.name)]"
         [queryParams]="{'contexto': contexto.contextName}"
         > 
             <mat-card-content diagramElement 

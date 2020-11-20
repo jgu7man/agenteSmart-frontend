@@ -5,6 +5,7 @@ import { MensajesService } from '../mensajes/mensajes.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Loading } from '../../../../../Gdev-Tools/loading/loading.service';
 import { AlertService } from '../../../../../Gdev-Tools/alerts/alert.service';
+import { CacheService } from '../../../../../Gdev-Tools/cache/cache.service';
 
 @Injectable({
     providedIn: 'root',
@@ -15,7 +16,8 @@ export class OpcionesAgenteService {
       private _mensajes: MensajesService,
       private fs: AngularFirestore,
       private loading: Loading,
-      private _alerts: AlertService
+      private _alerts: AlertService,
+      private _cache: CacheService
     ) {}
 
     async restoreDefaultIntent(
@@ -24,9 +26,10 @@ export class OpcionesAgenteService {
 
         // Init process
         this.loading.toggleWaitingSpinner(true)
+        var intentList: IntentModel[] = await this._cache.getAsyncKey<IntentModel[]>('intents')
 
         console.log('Search for intent');
-        var defaultIntent: IntentModel = this._agente.intentList.find(
+        var defaultIntent: IntentModel = intentList.find(
             ( i ) => i.displayName == intent
         );
 

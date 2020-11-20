@@ -47,7 +47,7 @@ export class CurrentMensajeService {
         private _alerts: AlertService,
         private _http: HttpClient,
         private _commons: GdevCommonsService
-    ) {}
+    ) {  }
 
     
     /**
@@ -118,8 +118,8 @@ export class CurrentMensajeService {
 
         this.intentList$ = this._cache.listenForChanges<IntentModel[]>('intents')
         this.intentListSubs = this.intentList$.pipe(
-            // debounceTime(1000),
-            // tap(emit => console.log(emit)),
+            debounceTime(1000),
+            tap(emit => console.log(emit)),
             map(list => list.find(intent => intent.name == this.current.name))
         ).subscribe(mensaje => { 
             this.current$.next(mensaje)
@@ -128,10 +128,11 @@ export class CurrentMensajeService {
    }
 
     /** Obtiene el intent actual a partir de la subscripción a los cambios de la ruta */
-    async getByActivatedRoute() {
+    async getByActivatedRoute(intentName:string, contexto: string) {
+        this._cache.updateData('currentContexto', contexto)
+        this._cache.updateData('mensajeName', intentName)
         this.paramSubs = this.getParams().subscribe(async (data) => {
-            this._cache.updateData('currentContexto', data.currentContexto)
-            this._cache.updateData('mensajeName', data.currentContexto)
+            console.log('updated');
         });
         this.currentContexto = await this._cache.getAsyncKey<string>('currentContexto')
         this.mensajeName = await this._cache.getAsyncKey<string>('mensajeName')

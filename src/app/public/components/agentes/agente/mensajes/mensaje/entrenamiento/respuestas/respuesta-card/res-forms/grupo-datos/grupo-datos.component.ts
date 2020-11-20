@@ -24,7 +24,7 @@ export class GrupoDatosComponent implements OnInit {
 
     KeySpected: ParamExpected[] 
 
-    dataForm: RegistroDatosModel = new RegistroDatosModel('texto', '', this.paramSelected, this.dataGroupSelected, '')
+    dataForm: RegistroDatosModel = new RegistroDatosModel('', this.paramSelected, this.dataGroupSelected, '')
 
     private _RegistroDatosForm = new BehaviorSubject<RegistroDatosModel>(this.dataForm);
     @Input() set RegistroDatosForm(form: RegistroDatosModel) {this._RegistroDatosForm.next(form);}
@@ -47,15 +47,20 @@ export class GrupoDatosComponent implements OnInit {
             distinctUntilKeyChanged('parametro')
         ).subscribe(form => {
             this.dataForm = form
-            this.setSaveKeys(form.grupoDatos)
+            this.setSaveKeys(form.coleccion)
         })
     }
 
     setSaveKeys(coleccion: string) {
         this.colSelected = this.colecciones
             .find(col => col.name === coleccion);
-        this.colSelected.saveKeys = !this.colSelected.saveKeys ? []
-            : this.colSelected.saveKeys  
+            console.log(this.colSelected);
+        if (this.colSelected) {
+            this.colSelected.saveKeys = !this.colSelected.saveKeys ? []
+                : this.colSelected.saveKeys  
+        } else {
+            this.colSelected = new ColeccionModel('', [])
+        }
     }
 
     catchColSelected(selected: MatSelectChange) {

@@ -88,15 +88,12 @@ export class FrasesService {
     // UPDATE 
     async updatePhrase(frase: FraseEntrenamiento, index) {
         try {
-            // console.log(this._mensaje.current.trainingPhrases);
-            var mensaje = this._mensaje.current
-            var frasesList = mensaje.trainingPhrases
-
-            // console.log(frase);
-            // console.log(frasesList[index]);
+            var frasesList = this._mensaje.current.trainingPhrases
+            
             frasesList[index] = frase;
-
+            
             this._mensaje.current.trainingPhrases = frasesList
+            console.log(this._mensaje.current.trainingPhrases);
             return this.store.dispatch(actions.setUnsaved())
 
         } catch (error) {
@@ -196,16 +193,18 @@ export class FrasesService {
             // * Convertimos las partes en map para conservar el orden
             let initialParts: Map<number, FraseParte> = new Map()
             frase.parts.forEach((parte, i) => {initialParts.set(i, parte)})
-            // const cleanFrase = this.stringCleanPhrase( frase )
+            console.log(initialParts);
 
             // * Buscamos en las partes, el texto seleccionado
             let partSelected: [number, FraseParte];
             initialParts.forEach((p, i) => {
                 if (p.text.includes(textSelected)) {partSelected = [i, p]}
             });
+            console.log(partSelected);
 
             // * Dividimos la parte encontrada en nuevas partes
             let newParts: Map<number, FraseParte> = await this.getTextSelectInPart(partSelected[1].text, textSelected)
+            console.log(newParts);
 
 
             // * Sustituimos la parte eliminada 
@@ -228,7 +227,7 @@ export class FrasesService {
 
             })
 
-            // console.log( resultParts );
+            console.log( resultParts );
             frase.parts = []
             await this.loading.asyncForEach(resultParts, parte => {
                 return frase.parts.push(parte)

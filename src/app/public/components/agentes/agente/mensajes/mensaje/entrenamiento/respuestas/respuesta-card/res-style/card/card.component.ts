@@ -1,5 +1,6 @@
+import { CardButton } from './../../../respuestasIntent.model';
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { RespuestaCard, RespuestaCardButton } from '../../../respuesta.model';
+// import { RespuestaCard, RespuestaCardButton } from '../../../respuesta.model';
 import { CurrentAgenteService } from '../../../../../../../current-agente.service';
 import { MatSelectChange } from '@angular/material/select';
 import { BehaviorSubject } from 'rxjs';
@@ -13,7 +14,7 @@ import { TarjetaModel } from '../../../../../../../../../tarjetas/tarjeta.model'
 })
 export class CardComponent implements OnInit {
 
-  botones: RespuestaCardButton[] = []
+  botones: CardButton[] = []
 
   card: TarjetaModel = {name:''}
   private _Card : BehaviorSubject<TarjetaModel> = new BehaviorSubject(this.card);

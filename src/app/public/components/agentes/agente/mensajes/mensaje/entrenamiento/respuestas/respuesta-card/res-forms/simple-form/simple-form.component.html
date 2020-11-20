@@ -1,0 +1,23 @@
+<!-- Respuesta -->
+<div class="row">
+    <div class="col s4 resp-label">
+        Respuesta
+    </div>
+    <div class="col s8">
+        <div class="row text-box">
+            <aSmart-respuesta-text [text]="result.text" (onTextEvent)="catchText($event)"></aSmart-respuesta-text>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col s6 resp-label">
+        Activar sugerencias
+    </div>
+    <div class="col s6">
+        <mat-slide-toggle [checked]="result.suggestions.length > 0
+        " (change)="toggleSuggestions($event)"></mat-slide-toggle>
+    </div>
+</div>
+<div class="row" *ngIf="switchSuggestions">
+    <aSmart-sugerencias (onSugerenciasChange)="catchSugerencias($event)" [sugerencias]="result.suggestions"></aSmart-sugerencias>
+</div>

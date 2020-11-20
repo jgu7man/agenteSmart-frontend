@@ -3,8 +3,8 @@ import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import {
     RespuestaModel,
-    PredefinidaModel,
-    OutputMessage,
+    SimpleModel,
+    ResultResponse,
 } from '../respuesta.model';
 import { RespuestasService } from '../respuestas.service';
 import { Loading } from 'src/app/Gdev-Tools/loading/loading.service';
@@ -14,6 +14,8 @@ import { ContextoModel } from '../../../../../contextos/contexto.model';
 import { MensajeModel } from '../../../../mensaje.model';
 import { MatDialog } from '@angular/material/dialog';
 import { AddContextoDialogComponent } from '../../../../../contextos/add-contexto-dialog/add-contexto-dialog.component';
+import { CurrentMensajeService } from '../../../current-mensaje.service';
+import { ContextSelected } from '../../../../../contextos/contexto-selector/contexto-selector.component';
 
 @Component({
     selector: 'aSmart-respuesta-card',
@@ -30,16 +32,17 @@ export class RespuestaCardComponent implements OnInit {
     /** Obtiene el tipo de respuesta seleccionado y da estilo a la vista */
     selectedRes: TipoRespuesta;
     /** El mensaje de salida */
-    public outputMessage: OutputMessage;
+    public result: ResultResponse;
     /** Almacena el contexto y permite que se muestre la lista de contextos */
-    public currentContext: string
+    public currentContext: string;
     /** Almacena la lista de contextos del cache */
-    public contextLists: any
-    public contextNameList: string[]
-    public nuevoContexto: ContextoModel
+    public contextLists: any;
+    public contextNameList: string[];
+    public nuevoContexto: ContextoModel;
+    public nextMensajesList: MensajeModel[];
+    public sugerenciasActivated: boolean = false
     /** Notifica al componente padre que se ha borrado una respuesta */
     @Output() onDelete: EventEmitter<string> = new EventEmitter();
-
 
     constructor(
         public respuestas_: RespuestasService,
@@ -47,68 +50,88 @@ export class RespuestaCardComponent implements OnInit {
         private loading: Loading,
         private _cache: CacheService,
         public contextos_: ContextosService,
-        private _dialog: MatDialog
+        private _dialog: MatDialog,
+        private _mensaje: CurrentMensajeService
     ) {
-        this.outputMessage = new PredefinidaModel('texto', '');
+        this.result = new SimpleModel('');
 
-        this.currentContext = this._cache.getDataKey<string>('currentContexto')
-        this.contextLists = this._cache.getDataKey<any>('contextosLists')
-        if (this.contextLists) {
-            this.contextNameList = Object.keys(this.contextLists)
-        } else {
-            let agenteContext = this._cache.getDataKey<ContextoModel[]>('contextos')
-            if (agenteContext) {
-                this.contextNameList = agenteContext.map(context => context.contextName)
-            } else {
-                this.contextNameList = []
-            }
-        }
-        
-        this.nuevoContexto = {
-            contextName: '',
-            lifespanCount: 3,
-            index: this.contextLists.length,
-        };
-        
-        this.respuesta = new RespuestaModel(
-            'predefinida',
-            this.outputMessage,
-            0,
-            '*fin'
-        );
+        this.currentContext = this._cache.getDataKey<string>('currentContexto');
+        this.respuesta = new RespuestaModel('simple', this.result, 0, '*fin');
     }
 
-    ngOnInit(): void {
+    async ngOnInit() {
+        this.nextMensajesList = await this._cache.getAsyncKey<MensajeModel[]>(
+            'nextMensajes'
+        );
+        this.contextLists = await this._cache.getDataKey<any>('contextosLists')
         this.respuestas_.getDataForRespuestas();
+        if (this.respuesta.result['suggestions']) {
+            if (this.respuesta.result['suggestions'].length)
+                this.sugerenciasActivated = true
+        }
         this.selectedRes = this.tiposRes.find(
             (tipo) => tipo.name == this.respuesta.tipo
         );
     }
 
+    
+
     get activeContextSelector() {
-        if (this.respuesta.tipo == 'predefinida') {
+        if (this.respuesta.tipo == 'sugerencias') {
+            return false;
+        } else if (!this.currentContext) {
+            return true;
+        }
+    }
+
+    get activeIntentSelector() {
+        if (this.respuesta.tipo == 'simple') {
+            return false;
+        } else if (this.respuesta.tipo == 'sugerencias') {
+            return false;
+        } else if (!this.currentContext) {
             return false
-        } else
-            if (!this.currentContext) {
-                return true
-        }
-    }
-
-    catchContextSelected(selection: MatSelectChange) {
-        this.respuesta.outputContext = selection.value
-        if (selection.value) {
-            this.setContextSelected(selection.value)
         } else {
-            this.respuesta.nextIntent = '*fin'
-            this.respuesta.outputContext = ''
+            return true;
         }
     }
 
-    setContextSelected(contextName: string) {
-        let mensajesList: MensajeModel[] = this.contextLists[contextName];
-        if (mensajesList && mensajesList.length > 0)
-            this.respuesta.nextIntent = mensajesList[0].displayName;
-        return 
+    async catchContextSelected({ context, continueIntents }: ContextSelected) {
+        this.setContextSelected(context);
+        console.log(continueIntents);
+        if (continueIntents.length > 0) {
+            this.nextMensajesList = continueIntents
+        } else {
+            this.nextMensajesList
+                = await this._cache.getAsyncKey<MensajeModel[]>('nextMensajes');
+        }
+    }
+
+    setContextSelected(contextName?: string) {
+        if (contextName) {
+            this.respuesta.outputContext = contextName;
+            if (this.nextMensajesList && this.nextMensajesList.length > 0)
+                this.respuesta.nextIntent = this.nextMensajesList[0].displayName;
+        } else {
+            this.respuesta.nextIntent = '*fin';
+            this.respuesta.outputContext = '';
+        }
+        return this.respuesta;
+    }
+
+    async setNextContext(nextIntent: string) {
+        var nextMensaje: MensajeModel
+        var lists = Object.keys(this.contextLists)
+        console.log(nextIntent);
+        await this.loading.asyncForEach(lists, async (contextName) => {
+            console.log(this.contextLists[contextName]);
+            let mensajeFinded = this.contextLists[contextName].find(
+                intent => intent.displayName == nextIntent
+            )
+            if(mensajeFinded) nextMensaje = mensajeFinded
+            console.log(nextMensaje);
+        })
+        return nextMensaje.contexto
     }
 
     /**
@@ -116,16 +139,24 @@ export class RespuestaCardComponent implements OnInit {
      * @param {MatSelectChange} tipoSelected - Contiene la propidad valor que es de tipo `TipoEntityType.name`
      */
     onTipoSelected(tipoSelected: MatSelectChange) {
-        this.selectedRes = this.tiposRes.find(
-            (tipo) => tipo.name == tipoSelected.value
+        let simpleStored = this._mensaje.respuestasList.map(
+            (r) => r.tipo == 'simple'
         );
-        this.respuesta.tipo = tipoSelected.value;
+        if (tipoSelected.value == 'simple' && simpleStored.length > 1) {
+            console.log(this._mensaje.respuestasList, tipoSelected.value);
+            this._alerts.sendMessageAlert(
+                'No puedes agregar más de una respuesta simple'
+            );
+        } else {
+            this.selectedRes = this.tiposRes.find( t => t.name == tipoSelected.value)
+            this.respuesta.tipo = this.selectedRes.name;
+        }
     }
 
-    /** Recibe los cambios en los formularios hijos como PREDEFINIDA, CODICIONAL, BUSCAR Y GRUPO DE DATOS */
-    catchOutputMessage(msg: any) {
-        // console.log(this.outputMessage, msg);
-        this.outputMessage = msg;
+    /** Recibe los cambios en los formularios hijos como simple, CODICIONAL, BUSCAR Y GRUPO DE DATOS */
+    catchResult(msg: any) {
+        // console.log(this.result, msg);
+        this.result = msg;
     }
 
     /**
@@ -135,11 +166,17 @@ export class RespuestaCardComponent implements OnInit {
      * @returns {RespuestaModel} Respuesta como objeto sin tipo declarado
      */
     async validateRespuesta(respuestaObj: RespuestaModel) {
+        if (!this.currentContext) {
+            respuestaObj = this.setContextSelected(respuestaObj.outputContext);
+        } else {
+            respuestaObj.outputContext
+                = await this.setNextContext(respuestaObj.nextIntent)    
+        }
         let respuestaClean,
             output = {};
-        output = { ...respuestaObj.outputMessage, ...this.outputMessage };
-        let respuesta = output['respuesta'];
-        let respEstilo = respuestaObj.outputMessage.estiloRespuesta;
+        output = { ...respuestaObj.result, ...this.result };
+        let respuesta = output['text'];
+        
 
         if (!respuesta) {
             if (respuestaObj.tipo != 'buscar') {
@@ -147,12 +184,9 @@ export class RespuestaCardComponent implements OnInit {
                     'Agrega al menos un mensaje de texto'
                 );
             }
-        } else if (
-            respEstilo == 'sugerencias' &&
-            output['respuesta']['sugerencias'].length < 1
-        ) {
+        } else if (output['suggestions'].length == 1) {
             this._alerts.sendMessageAlert(
-                'Al menos agrega un par de sugerencias o tal vez mejor quieras utilizar el estilo de respuesta TEXTO'
+                'Agrega 2 o más sugerencias o desactiva las sugerencias'
             );
         } else {
             var respuestaKeys = Object.keys(respuestaObj);
@@ -160,25 +194,12 @@ export class RespuestaCardComponent implements OnInit {
                 if (respuestaObj[key] === undefined) delete respuestaObj[key];
                 return;
             });
-            
-            this.setContextSelected(respuestaObj.outputContext)
-            respuestaClean = { ...respuestaObj };
-            respuestaClean['outputMessage'] = output;
 
+            respuestaClean = { ...respuestaObj };
+            respuestaClean['result'] = output;
 
             return respuestaClean;
         }
-    }
-
-    openContextCreator() {
-        var dialog = this._dialog.open(AddContextoDialogComponent, {
-            minWidth: 300,
-            data: this.nuevoContexto
-        })
-
-        dialog.afterClosed().subscribe((result: ContextoModel) => {
-            if (result) this.contextNameList.push(result.contextName)
-        })
     }
 
     /**
@@ -186,21 +207,22 @@ export class RespuestaCardComponent implements OnInit {
      *
      */
     async onSave() {
+        console.log(this.respuesta.nextIntent);
         let cleanRespuesta = await this.validateRespuesta(this.respuesta);
+        console.log(cleanRespuesta['nextIntent']);
         this.switchEditResp = false;
-        
-        if(cleanRespuesta) 
-            this.respuestas_.setRespuesta(cleanRespuesta);
+
+        if (cleanRespuesta) this.respuestas_.setRespuesta(cleanRespuesta);
         this.respuesta.tipo = undefined;
-        this.respuesta.outputMessage = new PredefinidaModel('texto', '');
+        this.respuesta.result = new SimpleModel('');
     }
 
     /** Lista de tipo de respuestas con sus respectivos estilos */
     tiposRes: TipoRespuesta[] = [
         { display: '', name: undefined, color: 'grey', icono: 'fa-plus' },
         {
-            display: 'Predefinida',
-            name: 'predefinida',
+            display: 'Simple',
+            name: 'simple',
             color: '#935cff',
             icono: 'fa-comment-alt',
         },
@@ -222,12 +244,18 @@ export class RespuestaCardComponent implements OnInit {
             color: '#eadb51',
             icono: 'fa-search',
         },
+        // {
+        //     display: 'Sugerencias',
+        //     name: 'sugerencias',
+        //     color: '#f44336',
+        //     icono: 'fa-list-ul',
+        // },
     ];
 }
 
 export interface TipoRespuesta {
     display: string;
-    name: 'predefinida' | 'condicional' | 'grupo_datos' | 'buscar' | '';
+    name: 'simple' | 'condicional' | 'grupo_datos' | 'buscar'  | 'sugerencias' ;
     color: string;
     icono: string;
 }

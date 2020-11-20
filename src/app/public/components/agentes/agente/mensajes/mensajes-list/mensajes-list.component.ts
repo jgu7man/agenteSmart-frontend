@@ -4,6 +4,7 @@ import { Loading } from '../../../../../../Gdev-Tools/loading/loading.service';
 import { MensajesService } from '../mensajes.service';
 import { IntentModel } from '../mensaje.model';
 import { CurrentAgenteService } from '../../current-agente.service';
+import { CacheService } from '../../../../../../Gdev-Tools/cache/cache.service';
 @Component({
   selector: 'aSmart-mensajes-list',
   templateUrl: './mensajes-list.component.html',
@@ -23,6 +24,7 @@ export class MensajesListComponent implements OnInit {
     public mensajes: MensajesService,
     public agente: CurrentAgenteService,
     private _alerta: AlertService,
+    private _cache: CacheService
   ) { }
 
   async ngOnInit() {
@@ -39,8 +41,10 @@ export class MensajesListComponent implements OnInit {
 
   async onAddIntent( contexto? ) {
     this.switchAddIntent = false
-    if ( this.newDisplayName ) {
-      let lastIndex = this.agente.intentList.length
+
+    if (this.newDisplayName) {
+      this.intents = await this._cache.getAsyncKey<IntentModel[]>('intents')
+      let lastIndex = this.intents.length
       //
       try {
         console.log('crear')

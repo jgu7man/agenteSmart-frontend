@@ -20,7 +20,7 @@
         En colección
     </div>
     <div class="col s8">
-        <mat-select placeholder="coleccion" [(value)]="dataForm.grupoDatos" name="grupo" (selectionChange)="edited.emit(dataForm)"
+        <mat-select placeholder="coleccion" [(value)]="dataForm.coleccion" name="grupo" (selectionChange)="edited.emit(dataForm)"
         (selectionChange)="catchColSelected($event)"
         (click)="validateColeccionOnClick()">
             <mat-option *ngFor="let group of colecciones" [value]="group.name">

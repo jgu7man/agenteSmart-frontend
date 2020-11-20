@@ -23,7 +23,7 @@
             type="text" 
             [(ngModel)]="paramName"
             (keyup.enter)="addParameter($event);"
-            (blur)="parte.alias ? addParameter($event) : null"
+            (blur)="paramName ? addParameter($event) : null"
             >
         </mat-form-field>
         

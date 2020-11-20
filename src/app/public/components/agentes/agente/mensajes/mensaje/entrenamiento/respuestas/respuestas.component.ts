@@ -5,7 +5,7 @@ import {
     ViewChildren,
     QueryList,
 } from '@angular/core';
-import { RespuestaModel, PredefinidaModel } from './respuesta.model';
+import { RespuestaModel, SimpleModel } from './respuesta.model';
 import { RespuestasService } from './respuestas.service';
 import { Subscription } from 'rxjs';
 import { RespuestaCardComponent } from './respuesta-card/respuesta-card.component';
@@ -21,8 +21,8 @@ import { CurrentMensajeService } from '../../current-mensaje.service';
 export class RespuestasComponent implements OnInit, OnDestroy {
     /** Respuestas obtenidas de la función de obtener respuestas */
     respuestasList: RespuestaModel[] = [];
-    /** Modelo de inicio para crear una nueva respuesta predefinida */
-    newOutputMensaje: PredefinidaModel;
+    /** Modelo de inicio para crear una nueva respuesta simple */
+    newOutputMensaje: SimpleModel;
     /** Suscripción a los cambios de la lista de respuestas */
     respuestasChangesSubs: Subscription;
     /** Lista de componentes de respuestas */
@@ -33,14 +33,14 @@ export class RespuestasComponent implements OnInit, OnDestroy {
         private loading: Loading,
         public mensaje_: CurrentMensajeService
     ) {
-        this.newOutputMensaje = new PredefinidaModel('texto', '');
+        this.newOutputMensaje = new SimpleModel('', []);
         this._respuestas.getDataForRespuestas();
     }
 
     ngOnInit(): void {
         this.respuestasChangesSubs = this._respuestas.onRespuestasChanged.subscribe(
             () => {
-                this.newOutputMensaje = new PredefinidaModel('texto', '');
+                this.newOutputMensaje = new SimpleModel('', []);
             }
         );
     }
@@ -51,14 +51,10 @@ export class RespuestasComponent implements OnInit, OnDestroy {
      */
     async addRespuesta() {
         let lastIndex = this.mensaje_.respuestasList.length;
-        console.log(this.mensaje_.respuestasList);
         this.mensaje_.respuestasList.push(
             new RespuestaModel(undefined, this.newOutputMensaje, lastIndex, '*fin')
         );
         await this.loading.waitFor(500);
-        console.log(this.mensaje_.respuestasList );
-        console.log(this.cards);
-
         this.cards.last.switchEditResp = true;
     }
 

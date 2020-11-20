@@ -70,9 +70,7 @@ export class CurrentAgenteService {
 
     /** Obtiene la ruta del agente en curso, espera por la respuesta del auth service para obtener el usuario */
     async getPath(collection?: string) {
-        this.projectId = await this._cache.getAsyncKey<string>(
-            'projectId'
-        );
+        this.projectId = await this._cache.getAsyncKey<string>('projectId');
         this.usuario = await this._cache.getAsyncKey<UserInterface>('user');
         this.path = `usuarios/${this.usuario.uid}/agentes/${this.projectId}`;
         return !collection ? this.path : `${this.path}/${collection}`;
@@ -80,6 +78,8 @@ export class CurrentAgenteService {
 
     /** Función que se encarga de cargar todos los elementos del agente en curso */
     async get() {
+
+        this.loading.toggleWaitingSpinner(true)
 
         try {
 
@@ -108,10 +108,11 @@ export class CurrentAgenteService {
             // console.log('tarjetas');
     
             this.agenteLoaded$.next(true);
-    
+            this.loading.toggleWaitingSpinner(false);
             return this.current;
 
         } catch (error) {
+            this.loading.toggleWaitingSpinner(false);
             console.error(error)
             this._alerts.sendError('Error', error)
         }
@@ -120,23 +121,14 @@ export class CurrentAgenteService {
 
     // SECTION INTENTS DE DIALOGFLOW
     // Se obtienen los intents configurados en dialogflow y se almacenan en caché
-    // intentList: IntentModel[];
     intentList$: Observable<IntentModel[]>;
     /** Retorna  la lista completa de mensajes */
     async getIntentList(): Promise<IntentModel[]> {
-        this.intentList$ = 
-            this._cache.listenForChanges<IntentModel[]>('intents')
-            .pipe(tap(list => this._cache.updateData<IntentModel[]>('intents', list)))
-            // .subscribe(list => { this.intentList = list })
+        this.intentList$ = this._cache.listenForChanges<IntentModel[]>('intents')
 
-        // this.intentList = this._cache.getDataKey<IntentModel[]>('intents')
-        
-        // this.intentList =
-            await this.getAllIntents()
-        // this._cache.updateData('intents', this.intentList)
+        await this.getAllIntents()
 
         return
-        // this.intentList
     }
 
     nextMensajeList: MensajeModel[] = [];
@@ -147,10 +139,8 @@ export class CurrentAgenteService {
         this.nextMensajesSubs = 
         this.fs.collection<MensajeModel>(path).valueChanges()
             .subscribe(list => this._cache.updateData('nextMensajes', list))
-        // this.nextMensajeList$ = this._cache.listenForChanges<MensajeModel[]>('nextMensajes')
         this.nextMensajeList = await this._cache
             .getAsyncKey<MensajeModel[]>('nextMensajes', 2)
-        // console.log(this.nextMensajeList);
 
         return this.nextMensajeList;
 
@@ -252,8 +242,7 @@ export class CurrentAgenteService {
                 )
                 .toPromise()
                 .then((list) => {
-                    // console.log(list);
-                    this._cache.updateData('intents', list);
+                    this._cache.updateData('intents', list)
                     resolve(list);
                 });
         });

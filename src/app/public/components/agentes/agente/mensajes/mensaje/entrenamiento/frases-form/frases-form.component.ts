@@ -96,10 +96,11 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
     
     if ( textSelected ) {
       // Define variables
+      console.log(textSelected, frase);
       var fraseRestructured: FraseEntrenamiento = 
       // Find the part that includes text selected and split it
       await this.frases.stractSelectedPart(frase, textSelected)
-      // console.log( fraseRestructured);
+      console.log( fraseRestructured);
       
       
       this.frases.updatePhrase(fraseRestructured, index)

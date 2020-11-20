@@ -2,7 +2,7 @@
 
     <!-- Icono de color para identificar tipo de respuesta -->
     <div class="col 2 res-type-icon" [ngClass]="{'type-icon-closed': !switchEditResp}">
-        <button mat-fab [ngStyle]="{'background': selectedRes.color}" >
+        <button mat-fab *ngIf="selectedRes" [ngStyle]="{'background': selectedRes.color}" >
             <i class="fas" [ngClass]="selectedRes.icono"></i>
         </button>
     </div>
@@ -23,18 +23,40 @@
 
                                 <ng-container *ngIf="respuesta.nextIntent != '*fin'; else noNext">
                                 
+                                    <div *ngSwitchCase="'simple'">
+                                        <span style="font-size: x-small;">Siguiente conversacion</span> <br>
+                                        <b>{{respuesta['nextIntent']}}</b>
+                                    </div>
+
                                     <div *ngSwitchCase="'condicional'">
                                         <b>{{respuesta.nextIntent}}</b><br>
-                                        Si {{respuesta.outputMessage['parametro']}}
-                                        es {{respuesta.outputMessage['condicion']}}
-                                        {{respuesta.outputMessage['valor']}}
+                                        <span style="font-size: x-small;">
+                                            Si {{respuesta.result['parametro']}}
+                                            es {{respuesta.result['condicion']}}
+                                            {{respuesta.result['valor']}}
+                                        </span>
                                     </div>
-                                
-                                    <div *ngSwitchCase="'predefinida'">
-                                        <b>{{respuesta.nextIntent}}</b>
+
+                                    <div *ngSwitchCase="'grupo_datos'">
+                                        <b>{{respuesta.nextIntent}}</b><br>
+                                        <span style="font-size: x-small;">
+                                            Guarda {{respuesta.result['key']}}
+                                            en {{respuesta.result['coleccion']}}
+                                        </span>
+                                    </div>
+
+
+                                    <div *ngSwitchCase="'buscar'">
+                                        <b>{{respuesta.nextIntent}}</b><br>
+                                        <span style="font-size: x-small;">
+                                            Busca {{respuesta.result['parametro']}}
+                                            en {{respuesta.result['database']}}
+                                        </span>
+                                            
                                     </div>
                                 
                                     <div *ngSwitchDefault>
+                                        <b>{{respuesta.nextIntent}}</b>
                                     </div>
                                 </ng-container>
                             
@@ -71,7 +93,7 @@
                     </div>
                     <div class="col s8">
                         <mat-select 
-                        [(value)]="respuesta.tipo"
+                        [(ngModel)]="respuesta.tipo"
                         placeholder="Tipo de respuesta" name="tipoRes" 
                         (selectionChange)="onTipoSelected($event)">
                             <mat-option *ngFor="let tipoRes of tiposRes" [value]="tipoRes.name">
@@ -85,26 +107,75 @@
     
     
     
-            <mat-card-content>
+            <mat-card-content *ngIf="respuesta.tipo">
     
                 <div [ngSwitch]="respuesta.tipo">
                     
                     <div *ngSwitchCase="'condicional'">
-                        <aSmart-condicional-form [condicional]="respuesta.outputMessage" (onRespChanges)="catchOutputMessage($event)"></aSmart-condicional-form>
+                        <aSmart-condicional-form [result]="respuesta.result" (onRespChanges)="catchResult($event)"></aSmart-condicional-form>
                     </div>
                     <div *ngSwitchCase="'grupo_datos'">
-                        <aSmart-grupo-datos [RegistroDatosForm]="respuesta.outputMessage" (edited)="catchOutputMessage($event)"></aSmart-grupo-datos>
+                        <aSmart-grupo-datos [RegistroDatosForm]="respuesta.result" (edited)="catchResult($event)"></aSmart-grupo-datos>
                     </div>
                     <div *ngSwitchCase="'buscar'">
-                        <aSmart-buscar-form [BuscarRes]="respuesta.outputMessage" (onRespChanges)="catchOutputMessage($event)"></aSmart-buscar-form>
+                        <aSmart-buscar-form [BuscarRes]="respuesta.result" (onRespChanges)="catchResult($event)"></aSmart-buscar-form>
                     </div>
-
-                    <aSmart-predefinida [outputRes]="respuesta.outputMessage" (onRespChanges)="catchOutputMessage($event)"></aSmart-predefinida>
+                    
+                    <aSmart-simple 
+                    [result]="respuesta.result" 
+                    (onRespChanges)="catchResult($event)"
+                    (toggleSugerencias)="sugerenciasActivated = $event"
+                    >
+                    </aSmart-simple>
                     
                 </div>
     
-                
     
+    
+    
+                <ng-container *ngIf="!sugerenciasActivated">
+                    
+    
+                    <!-- Select contexto -->
+                    <div class="row" *ngIf="activeContextSelector">
+                        <div class="col s4 resp-label">
+                            Contexto
+                        </div>
+                        <div class="col s8">
+
+                            <aSmart-contexto-selector [contexto]="respuesta.outputContext" (sendContextSelected)="catchContextSelected($event)"></aSmart-contexto-selector>
+
+                        </div>
+                    </div>
+        
+        
+        
+        
+        
+        
+                    <!-- Select next mensaje -->
+                    <div class="row" *ngIf="activeIntentSelector">
+                        <div class="col s4 resp-label">
+                            Siguiente
+                        </div>
+                        <div class="col s8">
+                            <mat-select 
+                            [(ngModel)]="respuesta.nextIntent" 
+                            name="mensaje">
+                                <mat-option value="*fin">
+                                    Termina conversación
+                                </mat-option>
+                                <mat-option *ngFor="let mensaje of nextMensajesList" [value]="mensaje.displayName">
+                                    {{mensaje.displayName}}
+                                </mat-option>
+                            </mat-select>
+                        </div>
+                    </div>
+                
+ 
+                </ng-container>
+               
+                
     
                 
     
@@ -143,69 +214,6 @@
                     </div>
                 </ng-container>
     
-    
-    
-    
-    
-    
-                <!-- Select contexto -->
-                <div class="row" *ngIf="activeContextSelector">
-                    <div class="col s4 resp-label">
-                        Contexto
-                    </div>
-                    <div class="col s8">
-
-                        <div class="row">
-                            <mat-form-field>
-                                <mat-select 
-                                placeholder="Siguiente contexto" 
-                                (selectionChange)="catchContextSelected($event)"
-                                [value]="respuesta.outputContext"
-                                name="contexto">
-                                    <mat-option value="*fin">
-                                        Termina conversación
-                                    </mat-option>
-                                    <mat-option *ngFor="let contexto of contextNameList" 
-                                    [value]="contexto">
-                                        {{contexto}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-
-                        <div class="row">
-                            <button mat-button
-                            (click)="openContextCreator()">
-                                Crear contexto
-                            </button>
-                        </div>
-
-                    </div>
-                </div>
-    
-    
-    
-    
-    
-    
-                <!-- Select next mensaje -->
-                <div class="row" *ngIf="!activeContextSelector">
-                    <div class="col s4 resp-label">
-                        Siguiente
-                    </div>
-                    <div class="col s8">
-                        <mat-select 
-                        [(value)]="respuesta.nextIntent" 
-                        name="mensaje">
-                            <mat-option value="*fin">
-                                Termina conversación
-                            </mat-option>
-                            <mat-option *ngFor="let mensaje of respuestas_.nextMensaje" [value]="mensaje.name">
-                                {{mensaje.displayName}}
-                            </mat-option>
-                        </mat-select>
-                    </div>
-                </div>
     
     
     

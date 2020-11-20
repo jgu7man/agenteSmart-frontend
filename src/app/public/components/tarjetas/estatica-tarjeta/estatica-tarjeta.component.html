@@ -1,15 +1,15 @@
 <mat-card-title>
     <gdev-reactive-textline
     [label]="'Titulo'"
-    [text]="contenido.titulo"
-    (onTextEvent)="contenido.titulo = $event"
+    [text]="contenido.title"
+    (onTextEvent)="contenido.title = $event"
     ></gdev-reactive-textline>
 </mat-card-title>
 
 <gdev-image-uploader
 [folder]="user.uid+'/tarjetas/'"
 displayAction="Agregar Imagen"
-[srcPreview]="contenido.imagenURL"
+[srcPreview]="contenido.imageUri"
 (result)="catchImgURL($event)"
 [multiple]="false"
 ></gdev-image-uploader>

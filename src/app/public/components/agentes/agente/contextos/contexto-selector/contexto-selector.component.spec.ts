@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PredefinidaFormComponent } from './predefinida-form.component';
+import { ContextoSelectorComponent } from './contexto-selector.component';
 
-describe('PredefinidaFormComponent', () => {
-  let component: PredefinidaFormComponent;
-  let fixture: ComponentFixture<PredefinidaFormComponent>;
+describe('ContextoSelectorComponent', () => {
+  let component: ContextoSelectorComponent;
+  let fixture: ComponentFixture<ContextoSelectorComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PredefinidaFormComponent ]
+      declarations: [ ContextoSelectorComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PredefinidaFormComponent);
+    fixture = TestBed.createComponent(ContextoSelectorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

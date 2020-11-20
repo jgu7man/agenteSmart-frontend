@@ -41,7 +41,9 @@ export class MensajesByContextoComponent implements OnInit {
 
     async ngOnInit() {
         this._agente.intentList$
-            .pipe(distinctUntilChanged((x, y) => x.length == y.length))
+            .pipe(
+                startWith([]),
+                distinctUntilChanged((x, y) => x.length == y.length))
             .subscribe((get) => this.getMensajes());
     }
 
@@ -69,6 +71,11 @@ export class MensajesByContextoComponent implements OnInit {
         }
         this._cache.updateData('contextosLists', contextosLists);
         
+    }
+
+    getMensajeRoute(name:string) {
+        name = name.slice(name.lastIndexOf('/') + 1);
+        return name
     }
 
     trackByName(index, intent: IntentModel) {

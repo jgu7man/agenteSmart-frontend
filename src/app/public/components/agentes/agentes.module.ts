@@ -39,7 +39,7 @@ import { RespuestasComponent } from './agente/mensajes/mensaje/entrenamiento/res
 import { RespuestaCardComponent } from './agente/mensajes/mensaje/entrenamiento/respuestas/respuesta-card/respuesta-card.component';
 import { BuscarFormComponent } from './agente/mensajes/mensaje/entrenamiento/respuestas/respuesta-card/res-forms/buscar-form/buscar-form.component';
 import { GrupoDatosComponent } from './agente/mensajes/mensaje/entrenamiento/respuestas/respuesta-card/res-forms/grupo-datos/grupo-datos.component';
-import { PredefinidaFormComponent } from './agente/mensajes/mensaje/entrenamiento/respuestas/respuesta-card/res-forms/predefinida-form/predefinida-form.component';
+import { SimpleFormComponent } from './agente/mensajes/mensaje/entrenamiento/respuestas/respuesta-card/res-forms/simple-form/simple-form.component';
 
 import { TiposComponent } from './agente/tipos/tipos.component';
 import { AddTipoComponent } from './agente/tipos/add-tipo/add-tipo.component';
@@ -72,6 +72,9 @@ import { ConfigRetrocesoComponent } from './agente/opciones/config-retroceso/con
 import { DefaultIntentsComponent } from './agente/opciones/default-intents/default-intents.component';
 import { DatosContactoComponent } from './agente/opciones/datos-contacto/datos-contacto.component';
 import { AddContextoDialogComponent } from './agente/contextos/add-contexto-dialog/add-contexto-dialog.component';
+import { ContextoSelectorComponent } from './agente/contextos/contexto-selector/contexto-selector.component';
+import { ParamSelectorComponent } from './agente/mensajes/mensaje/entrenamiento/parametros/param-selector/param-selector.component';
+import { RespuestaTextComponent } from './agente/mensajes/mensaje/entrenamiento/respuestas/respuesta-card/res-style/respuesta-text/respuesta-text.component';
 
 
 
@@ -107,7 +110,7 @@ import { AddContextoDialogComponent } from './agente/contextos/add-contexto-dial
     BuscarFormComponent,
     CondicionalFormComponent,
     GrupoDatosComponent,
-    PredefinidaFormComponent,
+    SimpleFormComponent,
     TiposComponent,
     AddTipoComponent,
     AddClaseComponent,
@@ -138,6 +141,9 @@ import { AddContextoDialogComponent } from './agente/contextos/add-contexto-dial
     DefaultIntentsComponent,
     DatosContactoComponent,
     AddContextoDialogComponent,
+    ContextoSelectorComponent,
+    ParamSelectorComponent,
+    RespuestaTextComponent,
   ],
   imports: [
     CommonModule,

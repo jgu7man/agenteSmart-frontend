@@ -13,6 +13,7 @@ import { TiposService } from '../../../../tipos/tipos.service';
 import { TipoEntidadModel } from '../../../../tipos/tipo.model';
 import { TarjetaModel } from '../../../../../../tarjetas/tarjeta.model';
 import { ColeccionesService } from '../../../../../../colecciones/colecciones.service';
+import { pluck } from 'rxjs/operators';
 
 
 
@@ -103,7 +104,12 @@ export class RespuestasService {
                 if (mensaje) {
                     // console.log(mensaje);
                     this.currentMensaje = mensaje;
-                    this.paramList = this.currentMensaje.parameters;
+                    this._cache.listenForChanges<IntentModel>('currentIntent')
+                        .pipe(
+                        pluck<IntentModel, ParametroMensaje[]>('parameters')
+                    ).subscribe(list => 
+                        this.paramList = list
+                    )
                     // console.log(this.paramList);
                     this.getMensajeTipos(this.currentMensaje.parameters);
                 }
@@ -161,7 +167,7 @@ export class RespuestasService {
             
             
             if (    respuesta.tipo != 'condicional'
-            &&  await this.checkKindResponses(respuesta.tipo) >= 1) {
+                &&  await this.checkKindResponses(respuesta.tipo) > 1) {
                
                 this._alerts.sendMessageAlert('No puedes agregar más de una respuesta de tipo '+respuesta.tipo);
 
@@ -184,11 +190,11 @@ export class RespuestasService {
     /**
      * Revisa si existe alguna respuesta del tipo seleccionado 
      *
-     * @param {('predefinida' | 'grupo_datos' | 'buscar')} kind Tipo de respuesta. Puede ser 'predefinida' | 'grupo_datos' | 'buscar'
+     * @param {('simple' | 'grupo_datos' | 'buscar')} kind Tipo de respuesta. Puede ser 'simple' | 'grupo_datos' | 'buscar'
      * @return {number} Cantidad de veces que existe el tipo de respuesta
      */
     async checkKindResponses(
-        kind: 'predefinida' | 'grupo_datos' | 'buscar'
+        kind: 'simple' | 'grupo_datos' | 'buscar' | 'sugerencias'
     ) {
         
         var resCant: boolean[] = []

@@ -1,5 +1,6 @@
+import { RespuestaCard } from './../../agentes/agente/mensajes/mensaje/entrenamiento/respuestas/respuestasIntent.model';
 import { Component, Input, OnInit } from '@angular/core';
-import { RespuestaCard } from '../../agentes/agente/mensajes/mensaje/entrenamiento/respuestas/respuesta.model';
+// import { RespuestaCard } from '../../agentes/agente/mensajes/mensaje/entrenamiento/respuestas/respuesta.model';
 
 @Component({
   selector: 'aSmart-coleccion-tarjeta',
@@ -9,7 +10,7 @@ import { RespuestaCard } from '../../agentes/agente/mensajes/mensaje/entrenamien
 export class ColeccionTarjetaComponent implements OnInit {
 
   @Input() contenido: RespuestaCard = {
-    titulo: '', body: '', imagenURL: ''
+    title: '', body: '', imageUri: ''
   }
 
   constructor() { }

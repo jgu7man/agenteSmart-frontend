@@ -1,6 +1,7 @@
+import { RespuestaCard } from './../../agentes/agente/mensajes/mensaje/entrenamiento/respuestas/respuestasIntent.model';
 import {Component, OnInit, ViewChild, ElementRef, Output, EventEmitter, Input} from '@angular/core';
 import {Observable} from 'rxjs';
-import {RespuestaCard} from '../../agentes/agente/mensajes/mensaje/entrenamiento/respuestas/respuesta.model';
+// import {RespuestaCard} from '../../agentes/agente/mensajes/mensaje/entrenamiento/respuestas/respuesta.model';
 import {CacheService} from '../../../../Gdev-Tools/cache/cache.service';
 import {UserInterface} from '../../../../admin/auth/auth.service';
 
@@ -19,7 +20,7 @@ export class EstaticaTarjetaComponent implements OnInit {
 
     @Output() edited: EventEmitter<RespuestaCard> = new EventEmitter()
     @Input() contenido: RespuestaCard = {
-        titulo: '', body: '', imagenURL: ''
+        title: '', body: '', imageUri: ''
     }
 
     constructor (
@@ -32,7 +33,7 @@ export class EstaticaTarjetaComponent implements OnInit {
     }
 
     catchImgURL(image) {
-        this.contenido.imagenURL = image
+        this.contenido.imageUri = image
         this.edited.emit(this.contenido)
     }
 

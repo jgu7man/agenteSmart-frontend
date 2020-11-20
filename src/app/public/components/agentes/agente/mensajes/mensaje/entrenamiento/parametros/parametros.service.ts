@@ -69,24 +69,28 @@ export class ParametrosService {
     async addParam(param: ParametroMensaje) {
         // console.log(param);
         var paramList = this._mensaje.current.parameters;
+        var paramInList = paramList.find(p => p.displayName == param.displayName)
+        
+        if (paramInList) {
+            await (await this.paramsCollection()).doc(param.displayName).set(
+                {
+                    displayName: param.displayName,
+                    color: this._color.generateBrightColor(),
+                },
+                { merge: true }
+            );
+        }
 
-        await (await this.paramsCollection()).doc(param.displayName).set(
-            {
-                displayName: param.displayName,
-                color: this._color.generateBrightColor(),
-            },
-            { merge: true }
-        );
 
         if (!paramList || paramList.length == 0) {
             paramList = [param];
             this._mensaje.current.parameters = paramList;
 
-            this.parameterAdded$.next(param);
+            // this.parameterAdded$.next(param);
         } else {
             paramList.push(param);
             this._mensaje.current.parameters = paramList;
-            this.parameterAdded$.next(param);
+            // this.parameterAdded$.next(param);
         }
 
         return;
@@ -100,11 +104,11 @@ export class ParametrosService {
 
     // READ PARAM
     getParamByName(displayName: string) {
-        // console.log(this._mensaje.current);
+        console.log(this._mensaje.current);
         var paramSelected = this._mensaje.current.parameters.find(
             (p) => p.entityTypeDisplayName == displayName
         );
-        // console.log(paramSelected);
+        console.log(paramSelected);
         return paramSelected;
     }
 

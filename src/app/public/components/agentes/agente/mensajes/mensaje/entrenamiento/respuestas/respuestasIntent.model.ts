@@ -6,7 +6,7 @@ export interface RespuestaMensaje {
     RespuestaCard |
     RespuestaPayload |
     RespuestaSimples |
-    RespuestaSugerencia |
+    RespuestaSugerencias |
     RespuestaLinkExterno
 }
 
@@ -26,6 +26,7 @@ export interface RespuestaRapida {
 export interface RespuestaCard {
     title: string,
     subtitle?: string,
+    body?: string,
     imageUri?: string,
     buttons?: CardButton[]
 }export interface CardButton {
@@ -44,9 +45,9 @@ export interface RespuestaSimples {
         displayText?: string
     }
 
-export interface RespuestaSugerencia {
-    suggestions: Sugerencia[]
-}interface Sugerencia {
+export interface RespuestaSugerencias {
+    suggestions: Suggest[]
+}export interface Suggest {
     title: string
 }
 export interface RespuestaLinkExterno {

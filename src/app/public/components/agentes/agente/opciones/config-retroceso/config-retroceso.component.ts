@@ -1,12 +1,13 @@
 import {Component, OnInit} from '@angular/core';
-import { MensajeModel } from '../../mensajes/mensaje.model';
+import { MensajeModel, IntentModel } from '../../mensajes/mensaje.model';
 import { CurrentAgenteService } from '../../current-agente.service';
 import { CurrentMensajeService } from '../../mensajes/mensaje/current-mensaje.service';
 import { AlertService } from '../../../../../../Gdev-Tools/alerts/alert.service';
 import { Loading } from '../../../../../../Gdev-Tools/loading/loading.service';
-import { RespuestaModel, PredefinidaModel, OutputMessage } from '../../mensajes/mensaje/entrenamiento/respuestas/respuesta.model';
+import { RespuestaModel, SimpleModel, ResultResponse } from '../../mensajes/mensaje/entrenamiento/respuestas/respuesta.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { MatDialogRef } from '@angular/material/dialog';
+import { CacheService } from '../../../../../../Gdev-Tools/cache/cache.service';
 
 @Component({
     templateUrl: './config-retroceso.component.html',
@@ -16,7 +17,7 @@ export class ConfigRetrocesoComponent implements OnInit {
 
     intent: MensajeModel
     respuesta: RespuestaModel
-    outputMessage: OutputMessage
+    result: ResultResponse
     respuestaPath: string
     constructor (
         private _agente: CurrentAgenteService,
@@ -24,10 +25,11 @@ export class ConfigRetrocesoComponent implements OnInit {
         private _alerts: AlertService,
         private loading: Loading,
         private fs: AngularFirestore,
-        public dialog_: MatDialogRef<ConfigRetrocesoComponent>
+        public dialog_: MatDialogRef<ConfigRetrocesoComponent>,
+        private _cache: CacheService
     ) {
-        this.outputMessage = new PredefinidaModel('texto','')
-        this.respuesta = new RespuestaModel('predefinida',this.outputMessage,0)
+        this.result = new SimpleModel('')
+        this.respuesta = new RespuestaModel('simple',this.result,0)
     }
 
     ngOnInit(): void {
@@ -36,7 +38,8 @@ export class ConfigRetrocesoComponent implements OnInit {
     }
 
     async getFallbackIntent() {
-        this.intent = this._agente.intentList.find(
+        var intentList: IntentModel[] = await this._cache.getAsyncKey<IntentModel[]>('intents')
+        this.intent = intentList.find(
             (i) => i.displayName == 'Default Fallback Intent'
         );
 
@@ -46,7 +49,7 @@ export class ConfigRetrocesoComponent implements OnInit {
         if (respuestasCol.size > 0) {
             const respuestaDoc = respuestasCol.docs[0]
             this.respuesta = respuestaDoc.data() as RespuestaModel
-            this.outputMessage = this.respuesta.outputMessage
+            this.result = this.respuesta.result
         }
 
         
@@ -54,12 +57,12 @@ export class ConfigRetrocesoComponent implements OnInit {
     }
 
     catchText(respuesta) {
-        this.outputMessage.respuesta = respuesta
+        this.result.text = respuesta
     }
     
 
     saveRespuesta() {
-        this.respuesta.outputMessage = {...this.outputMessage}
+        this.respuesta.result = {...this.result}
         console.log(this.respuesta);
         Object.keys(this.respuesta).forEach(key => { if (this.respuesta[key] == undefined) delete this.respuesta[key]})
         

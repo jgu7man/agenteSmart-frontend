@@ -2,7 +2,7 @@ import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { RespuestasService } from '../../../respuestas.service';
 import { CacheService } from '../../../../../../../../../../../Gdev-Tools/cache/cache.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { RespuestaBuscarModel, PredefinidaModel } from '../../../respuesta.model';
+import { RespuestaBuscarModel } from '../../../respuesta.model';
 import { BehaviorSubject } from 'rxjs';
 import { distinctUntilKeyChanged } from 'rxjs/operators';
 import { CurrentAgenteService } from '../../../../../../../current-agente.service';

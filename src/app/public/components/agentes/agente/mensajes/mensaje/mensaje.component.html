@@ -1,11 +1,11 @@
 <div class="row">
     <waiting-bar></waiting-bar>
     <ng-container *ngIf="!responsive.small; else mobileDesing">
-        <div  class="col s6" id="intent-form">
-            <aSmart-entrenamiento strechHeight ></aSmart-entrenamiento>
+        <div strechHeight  class="col s6" id="intent-form">
+            <aSmart-entrenamiento></aSmart-entrenamiento>
         </div>
-        <div  class="col s6" id="resp-manager">
-            <aSmart-respuestas strechHeight></aSmart-respuestas>
+        <div strechHeight class="col s6" id="resp-manager">
+            <aSmart-respuestas></aSmart-respuestas>
         </div>
     </ng-container>
     <ng-template #mobileDesing>

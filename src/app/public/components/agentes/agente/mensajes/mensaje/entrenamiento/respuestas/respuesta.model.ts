@@ -1,10 +1,10 @@
-import { RespuestaSugerencia, RespuestaCard } from './respuestasIntent.model';
+import { RespuestaCard, Suggest } from './respuestasIntent.model';
 
 /**
  * Modelo de respuestas guardadas en FIRESTORE para cada intent
  * Creates an instance of RespuestaModel. 
  * @param {TipoRespuesta} tipo REQUERIDO. El tipo de respuesta que espera
- * @param {OutputMessage} outputMessage REQUERIDO. El mensaje que se muestra en la salida o en la interfaz de chat de cada plataforma
+ * @param {ResultResponse} result REQUERIDO. El mensaje que se muestra en la salida o en la interfaz de chat de cada plataforma
  * @param {number} index REQUERIDO. El orden de aparición y de importancia
  * @param {string} [nextIntent] El siguiente intent al que se pretende continuar con la conversación
  * @param {string} [inputContext] El contexto en el cuál se encuentra el inetnt al que pertenece esta respuesta.
@@ -15,7 +15,7 @@ import { RespuestaSugerencia, RespuestaCard } from './respuestasIntent.model';
 export class RespuestaModel {
     constructor(
         public tipo: TipoRespuesta,
-        public outputMessage:OutputMessage,
+        public result:ResultResponse,
         public index: number,
         public nextIntent?: string,
         public inputContext?: string,
@@ -29,14 +29,14 @@ export class RespuestaModel {
 
 
 /**
- * Modelo de una respuesta predefinida. Este modelo es usado sólo para crear una respuesta estática y predefinida ante la request a DIALOGFLOW. Si existe este tipo de respuesta, siempre se debe retornar.
+ * Modelo de una respuesta simple. Este modelo es usado sólo para crear una respuesta estática y simple ante la request a DIALOGFLOW. Si existe este tipo de respuesta, siempre se debe retornar.
  * @param {EstiloRespuesta} estiloRespuesta El estilo de la respuesta de la cuál se espera
  * @param {RespuestaDisplay} respuesta La respuesta que se espera
  */
-export class PredefinidaModel {
+export class SimpleModel {
     constructor (
-        public estiloRespuesta: EstiloRespuesta,
-        public respuesta: RespuestaDisplay
+        public text: string,
+        public suggestions?: Suggest[]
     ){}
 }
 
@@ -52,13 +52,12 @@ export class PredefinidaModel {
  */
 export class CondicionalModel {
     constructor (
-        public estiloRespuesta: EstiloRespuesta,
-        public respuesta: RespuestaDisplay,
         public parametro: string,
         public condicion: string,
-        public valor: string | number | any[]
+        public valor: string | number | any[],
+        public text: string,
     ){}
-}
+} 
 
 
 
@@ -72,11 +71,11 @@ export class CondicionalModel {
  */
 export class RegistroDatosModel {
     constructor (
-        public estiloRespuesta: EstiloRespuesta,
-        public respuesta: RespuestaDisplay,
         public parametro: string,
-        public grupoDatos: string,
-        public key: string
+        public coleccion: string,
+        public key: string,
+        public text: string,
+        public suggestions?: Suggest[],
     ){}
 }
 
@@ -94,9 +93,16 @@ export class RespuestaBuscarModel {
     constructor (
         public parametro: string,
         public database: string,
-        public respuesta?: RespuestaCard ,
-        public estiloRespuesta?: EstiloRespuesta,
+        public text?: string ,
         public card?: RespuestaCard
+    ){}
+}
+
+
+export class SugerenciasModel {
+    constructor (
+        public text: string,
+        public sugerencias: Sugerencia[]
     ){}
 }
 
@@ -119,43 +125,33 @@ export class RespuestaBinaria {
 
 /**
  * Modelo de un estilo de respuesta que será consumida en el front.
- * @param {RespuestaSugerencia} sugerencias REQUERIDO. Arreglo de textos que serán tomadas como sugerencias de respuestas.
+ * @param {Sugerencia} sugerencias REQUERIDO. Arreglo de textos que serán tomadas como sugerencias de respuestas.
  * @param {string} mensaje Texto que será mostrado describiendo las sugerencias
  *
  * @export
  * @interface RespuestaSugerencias
  */
-export interface RespuestaSugerencias {
-    sugerencias: RespuestaSugerencia
-    mensaje?:string
+export interface Sugerencia {
+    text: string
+    contexto:string
+}
+
+
+export interface TextRespuesta {
+    text: string,
+    param: string
 }
 
 
 
-// /**
-//  * Modelo de estilo de respuesta que será mostrada en el front con contenido enriquecido.
-//  * @param {string} titulo
-//  * @export
-//  * @interface RespuestaCard
-//  */
-// export interface RespuestaCard {
-//     titulo: string,
-//     body: string,
-//     imagenURL?: string,
-//     botones?: RespuestaCardButton[] }
-//     export interface RespuestaCardButton {
-//         text: string,
-//         link: string
-//     }
-    
-
 export type TipoRespuesta =
-    | 'predefinida'
+    | 'simple'
     | 'condicional'
     | 'grupo_datos'
-    | 'buscar';
-export type OutputMessage =
-    | PredefinidaModel
+    | 'buscar'
+    | 'sugerencias';
+export type ResultResponse =
+    | SimpleModel
     | CondicionalModel
     | RegistroDatosModel
     | RespuestaBuscarModel;
@@ -163,4 +159,4 @@ export type EstiloRespuesta =
     | 'texto'
     | 'sugerencias'
     | RespuestaBinaria;
-export type RespuestaDisplay = string | RespuestaSugerencias | RespuestaCard;
+export type RespuestaDisplay = string | Sugerencia | RespuestaCard;

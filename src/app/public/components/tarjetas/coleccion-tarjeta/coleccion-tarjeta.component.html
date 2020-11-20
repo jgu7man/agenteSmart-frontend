@@ -1,8 +1,8 @@
 <mat-card class="mat-elevation-z5">
     <mat-card-header>
-        <mat-card-title>{{contenido.titulo}}</mat-card-title>
+        <mat-card-title>{{contenido.title}}</mat-card-title>
     </mat-card-header>
-    <img *ngIf="contenido.imagenURL" [src]="contenido.imagenURL['url']" matCardImage>
+    <img *ngIf="contenido.imageUri" [src]="contenido.imageUri" matCardImage>
     <mat-card-content>
         {{contenido.body}}
     </mat-card-content>
