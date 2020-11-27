@@ -36,7 +36,7 @@ export class RespuestaModel {
 export class SimpleModel {
     constructor (
         public text: string,
-        public suggestions?: Suggest[]
+        public suggestions?: Sugerencia[]
     ){}
 }
 

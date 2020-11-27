@@ -19,7 +19,7 @@ export class ParamValueComponent implements OnInit {
     let paramSplit = this.paramValue.split( '.' )
     let original = paramSplit[1]
     this.valueOptions.push(
-      original ? paramSplit[ 0 ] : this.paramValue + '.orginal'
+      original ? paramSplit[ 0 ] : this.paramValue + '.original'
     )    
     this.valueOptions.push( this.paramValue )
   }

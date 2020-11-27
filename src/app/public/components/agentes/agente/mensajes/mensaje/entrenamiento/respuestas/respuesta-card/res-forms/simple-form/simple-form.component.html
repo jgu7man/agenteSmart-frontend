@@ -13,7 +13,7 @@
     <div class="col s6 resp-label">
         Activar sugerencias
     </div>
-    <div class="col s6">
+    <div class="col s6" *ngIf="result.suggestions">
         <mat-slide-toggle [checked]="result.suggestions.length > 0
         " (change)="toggleSuggestions($event)"></mat-slide-toggle>
     </div>

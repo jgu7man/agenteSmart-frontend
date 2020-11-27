@@ -119,7 +119,7 @@ export class CurrentMensajeService {
         this.intentList$ = this._cache.listenForChanges<IntentModel[]>('intents')
         this.intentListSubs = this.intentList$.pipe(
             debounceTime(1000),
-            tap(emit => console.log(emit)),
+            // tap(emit => console.log(emit)),
             map(list => list.find(intent => intent.name == this.current.name))
         ).subscribe(mensaje => { 
             this.current$.next(mensaje)

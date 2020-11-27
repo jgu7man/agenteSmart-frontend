@@ -1,5 +1,5 @@
 export interface SysDateTime {
-    result:Date | SysDatePeriod | SysTimePeriod | SysDateTimePeriod
+    date_time: Date
 }
 
 export interface SysDatePeriod {

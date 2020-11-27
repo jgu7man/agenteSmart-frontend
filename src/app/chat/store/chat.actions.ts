@@ -1,5 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { MessageType, Interaction, QuickResponse, Image } from './chat.model';
+import { CardButton } from '../../public/components/agentes/agente/mensajes/mensaje/entrenamiento/respuestas/respuestasIntent.model';
 
 export const send = createAction(
     '[INTERACTION] send',
@@ -8,7 +9,7 @@ export const send = createAction(
 
 export const recive = createAction(
     '[INTERACTION] recive',
-    props<{ message: string | QuickResponse[] | Image  }>()
+    props<{ message: string | QuickResponse[] | Image | CardButton[] }>()
 )
 
 export const clean = createAction(

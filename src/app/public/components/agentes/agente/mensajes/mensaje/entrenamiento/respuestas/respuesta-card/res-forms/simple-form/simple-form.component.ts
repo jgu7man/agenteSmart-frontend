@@ -34,7 +34,7 @@ export class SimpleFormComponent implements OnInit {
         this.onRespChanges.emit(this.result);
     }
 
-    catchSugerencias(sugerencias: Suggest[]) {
+    catchSugerencias(sugerencias: Sugerencia[]) {
         this.result.suggestions = sugerencias
         this.onRespChanges.emit(this.result);
     }

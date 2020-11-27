@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/app.state';
 import * as actions from '../../store/chat.actions'
 import { ChatService } from '../chat.service';
+import { CacheService } from '../../../Gdev-Tools/cache/cache.service';
 
 @Component({
   selector: 'gdev-typing-area',
@@ -16,7 +17,8 @@ export class TypingAreaComponent implements OnInit {
 
   constructor (
     private store: Store<AppState>,
-    private _chat: ChatService
+    private _chat: ChatService,
+    private _cache: CacheService
   ) {
     
    }
@@ -25,13 +27,15 @@ export class TypingAreaComponent implements OnInit {
   }
 
   onSend() {
-    this.store.dispatch( actions.send( {message: this.message} ) )
+    this.store.dispatch(actions.send({message: this.message}))
+    console.log(this.message);
     this._chat.sendMessage$.next(this.message)
     this.message = ''
   }
 
   cleanConversation() {
     this.store.dispatch(actions.clean())
+    this._cache.deleteDataKey('currentSession')
   }
 
 }
