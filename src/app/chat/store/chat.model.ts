@@ -1,11 +1,13 @@
+import { CardButton } from 'src/app/public/components/agentes/agente/mensajes/mensaje/entrenamiento/respuestas/respuestasIntent.model'
+
 export class Interaction {
 
-    public message: string | QuickResponse[] | Image 
+    public message: string | QuickResponse[] | Image | CardButton[]
     public emiter?: 'this' | 'that'
     public time: Date
 
     constructor (
-        message: string | QuickResponse[] | Image ,
+        message: string | QuickResponse[] | Image | CardButton[],
         emiter: 'this' | 'that'
     ) {
         this.message = message
