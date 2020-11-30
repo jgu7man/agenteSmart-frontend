@@ -1,10 +1,15 @@
-<mat-toolbar gdev-color [background]="'dark'" id="navbar" class="mat-elevation-z5">
+<mat-toolbar 
+gdev-color 
+[background]="view == 'dashboard' ? 'dark' : 'bg2'" 
+id="navbar" 
+class="mat-elevation-z5">
     <span class="hide-on-large-only mobile-menu" (click)="dashboard.toggleMobileMenu.emit()"> <i class="fas fa-bars    "></i> </span>
     <span class="logo-area">
         <div class="app-logo">
             <img src="/assets/icons/as-iso@0.5x.png" alt="Logo Agente Smart">
         </div>
-        <p class="logo-text">Agente Smart</p>
+        <p class="logo-text" gdev-color 
+        [color]="view == 'dashboard' ? 'bg2' : 'dark'"  >Agente Smart</p>
     </span>
     <span class="espacio"></span>
     <div class="col right user-profile" *ngIf="user; else unlogged">
@@ -22,7 +27,7 @@
             <img src="{{user.photoURL}}" alt="">
         </div>
 
-        <p class="userName" gdev-color [color]="'bg3'"> {{user.displayName}} </p>
+        <p class="userName" gdev-color [color]="view == 'dashboard' ? 'bg2' : 'dark'"> {{user.displayName}} </p>
     </div>
     <ng-template #unlogged>
         <aSmart-login-button (isLogged)="user = $event"></aSmart-login-button>

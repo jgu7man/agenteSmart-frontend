@@ -6,29 +6,28 @@
     "AgenteSmart-frontend": {
       "projectType": "application",
       "schematics": {
-                "@schematics/angular:component": {
-                    "style": "scss",
-                    "spec": false
-                },
-                "@schematics/angular:class": {
-                    "spec": false
-                },
-                "@schematics/angular:directive": {
-                    "spec": false
-                },
-                "@schematics/angular:guard": {
-                    "spec": false
-                },
-                "@schematics/angular:module": {
-                    "spec": false
-                },
-                "@schematics/angular:pipe": {
-                    "spec": false
-                },
-                "@schematics/angular:service": {
-                    "spec": false
-                }
-            
+        "@schematics/angular:component": {
+          "style": "scss",
+          "spec": false
+        },
+        "@schematics/angular:class": {
+          "spec": false
+        },
+        "@schematics/angular:directive": {
+          "spec": false
+        },
+        "@schematics/angular:guard": {
+          "spec": false
+        },
+        "@schematics/angular:module": {
+          "spec": false
+        },
+        "@schematics/angular:pipe": {
+          "spec": false
+        },
+        "@schematics/angular:service": {
+          "spec": false
+        }
       },
       "root": "",
       "sourceRoot": "src",
@@ -48,10 +47,10 @@
               "src/assets",
               "src/manifest.webmanifest"
             ],
-            "styles": [{
-                  "input": "src/tema.scss"
+            "styles": [
+              {
+                "input": "src/tema.scss"
               },
-              
               "src/styles.scss"
             ],
             "scripts": [
@@ -150,9 +149,14 @@
               "devServerTarget": "AgenteSmart-frontend:serve:production"
             }
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {}
         }
       }
-    }},
+    }
+  },
   "defaultProject": "AgenteSmart-frontend",
   "cli": {
     "analytics": "b88c81b1-2ff8-4f46-80dd-bd75ce3d676a"

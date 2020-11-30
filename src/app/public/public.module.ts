@@ -23,6 +23,10 @@ import { InventarioModule } from './components/inventario/inventario.module';
 import { GdevToolsModule } from '../Gdev-Tools/gdev-tools.module';
 import { ChatTesterModule } from './components/chat-tester/chat-tester.module';
 import { ChatModule } from '../chat/chat.module';
+import { InicioComponent } from './components/pages/inicio/inicio.component';
+import { DocsComponent } from './components/pages/docs/docs.component';
+import { TratamientoDatosComponent } from './components/pages/legal/tratamiento-datos/tratamiento-datos.component';
+import { LegalComponent } from './components/pages/legal/legal.component';
 
 
 
@@ -35,6 +39,10 @@ import { ChatModule } from '../chat/chat.module';
     PublicComponent,
     SidenavComponent,
     UsuariosComponent,
+    InicioComponent,
+    DocsComponent,
+    TratamientoDatosComponent,
+    LegalComponent,
   ],
   imports: [
     CommonModule,

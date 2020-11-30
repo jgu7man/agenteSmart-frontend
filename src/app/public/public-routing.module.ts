@@ -16,11 +16,22 @@ import { AddProductComponent } from './components/inventario/products/add-produc
 import { EditProductComponent } from './components/inventario/products/edit-product/edit-product.component';
 import { EditAgenteComponent } from './components/agentes/edit-agente/edit-agente.component';
 import { BienvenidaComponent } from './components/agentes/agente/bienvenida/bienvenida.component';
+import { InicioComponent } from './components/pages/inicio/inicio.component';
+import { DocsComponent } from './components/pages/docs/docs.component';
+import { TratamientoDatosComponent } from './components/pages/legal/tratamiento-datos/tratamiento-datos.component';
+import { LegalComponent } from './components/pages/legal/legal.component';
 
 const routes: Routes = [
     {
         path: '', component: PublicComponent, children: [
-            { path: 'dashboard', component: DashboardComponent, children: 
+            {path: '', component: InicioComponent, data: {page: 'home'}, },
+            {path: 'docs', component: DocsComponent, data: {page: 'docs'}, children:[
+                
+            ]},
+            { path: 'legal', component: LegalComponent, children: [
+                { path: 'tratamiento-de-datos', component: TratamientoDatosComponent, data:{page:'tratamiento_datos'} },
+            ] },
+            { path: 'dashboard', component: DashboardComponent, data: {page: 'dashboard'}, children: 
                 [
                     { path: '', redirectTo: 'agentes', pathMatch: 'full' },
     
