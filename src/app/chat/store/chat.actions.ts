@@ -4,7 +4,7 @@ import { CardButton } from '../../public/components/agentes/agente/mensajes/mens
 
 export const send = createAction(
     '[INTERACTION] send',
-    props<{ message: string | QuickResponse[] | Image  }>()
+    props<{ message: string | QuickResponse[] | Image | CardButton[]  }>()
 );
 
 export const recive = createAction(

@@ -23,7 +23,7 @@ export class TiposService {
     tiposPath: string
     tiposList: TipoEntidadModel[] = []
     
-    private _url = 'http://localhost:5000/main-agentesmart/us-central1/dialogflow/entity';
+    private _url = 'http://localhost:5001/main-agentesmart/us-central1/dialogflow/entity';
     private _projectId: String;
   
     closeCreateDialog: Subject<any> = new Subject()
@@ -320,14 +320,13 @@ export class TiposService {
         //elEntity id es el el utlimo pedazo de la uri de NAME del entityType
         //sino se pasa el id solo y se prefiere pasar todo el name la siguiente variable lo extrae
         //Ej. EntityType "name": "projects/testproject-a4323/agent/entityTypes/6c7cd0d9-03f9-47f6-803e-dc39d3ffb789",
-          console.log({projectId: this._projectId, entityId});
+        console.log({projectId: this._projectId, entityId})
         
         this._http.delete( this._url + `/${ this._projectId }/${ entityId }` )
           .toPromise()
-          .then( result => {
-            if ( result[ 'status' ] == 204 ) {
-              resolve( 'done' );
-            }
+            .then(() => {
+              //
+            resolve('done')
           } )
           .catch( err => {
             if ( err ) {
@@ -343,10 +342,11 @@ export class TiposService {
 
     async deleteTipo(tipoName: string) {
         this.loading.toggleWaitingSpinner(true)
-        console.log(tipoName);
-        const currentId = tipoName.slice( tipoName.lastIndexOf( '/' ) + 1, - 1 );
+        console.log(tipoName)
+        const currentId = tipoName.slice( tipoName.lastIndexOf( '/' ) + 1)
         await this._deleteEntityType( currentId )
         await (await this.tiposCollection()).doc(currentId).delete()
+        this._alerts.sendFloatNotification('Exito elimando ese tipo de dato.', "ok", 0, "bottom", "left")
         this.loading.toggleWaitingSpinner(false)
         return
     }

@@ -1,0 +1,10 @@
+"use strict";
+exports.__esModule = true;
+exports.close = exports.open = exports.toggle = exports.clean = exports.recive = exports.send = void 0;
+var store_1 = require("@ngrx/store");
+exports.send = store_1.createAction('[INTERACTION] send', store_1.props());
+exports.recive = store_1.createAction('[INTERACTION] recive', store_1.props());
+exports.clean = store_1.createAction('[INTERACTION] clean');
+exports.toggle = store_1.createAction('[LISTEN] toggle');
+exports.open = store_1.createAction('[LISTEN] open');
+exports.close = store_1.createAction('[LISTEN] close');
