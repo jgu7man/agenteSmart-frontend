@@ -1,10 +1,10 @@
-<mat-toolbar 
+<mat-toolbar
 gdev-color 
 [background]="view == 'dashboard' ? 'dark' : 'bg2'" 
 id="navbar" 
 class="mat-elevation-z5">
     <span class="hide-on-large-only mobile-menu" (click)="dashboard.toggleMobileMenu.emit()"> <i class="fas fa-bars    "></i> </span>
-    <span class="logo-area">
+    <span [routerLink]="['/']" class="logo-area" >
         <div class="app-logo">
             <img src="/assets/icons/as-iso@0.5x.png" alt="Logo Agente Smart">
         </div>
@@ -12,22 +12,37 @@ class="mat-elevation-z5">
         [color]="view == 'dashboard' ? 'bg2' : 'dark'"  >Agente Smart</p>
     </span>
     <span class="espacio"></span>
-    <div class="col right user-profile" *ngIf="user; else unlogged">
-        
-        <button mat-button
+    <span class="nav_menu">
+        <div class="main_menu">
+            <a [routerLink]="[ '/']"
+            routerLinkActive="active">Inicio</a>
+            <a [routerLink]="[ '/academia']"
+            routerLinkActive="active">Academia</a>
+            <a [routerLink]="[ '/docs']"
+            routerLinkActive="active">Documentación</a>
+            <a [routerLink]="[ '/precios' ]"
+            routerLinkActive="active">Precios</a>
+        </div>
+    </span>
+    <div class="col right user_log" *ngIf="user; else unlogged">
+        <!-- <button mat-button
         [matMenuTriggerFor]="menuProfile"
-        ><i class="fas fa-chevron-circle-down"></i></button>
+        >Cuenta
+            <i class="fas fa-chevron-circle-down"></i>
+        </button> -->
+        <!-- <a [matMenuTriggerFor]="menuProfile">Cuenta</a> -->
         <mat-menu #menuProfile="matMenu">
             <button mat-menu-item>Ver perfil</button>
             <button mat-menu-item [routerLink]="['/dashboard']">Dashboard</button>
             <button mat-menu-item (click)="auth.singOut()">Cerrar sesión</button>
         </mat-menu>
         
-        <div class="imgProfileContainer">
+        <div class="imgProfileContainer"
+        [matMenuTriggerFor]="menuProfile">
             <img src="{{user.photoURL}}" alt="">
         </div>
 
-        <p class="userName" gdev-color [color]="view == 'dashboard' ? 'bg2' : 'dark'"> {{user.displayName}} </p>
+        <!-- <p class="userName" gdev-color [color]="view == 'dashboard' ? 'bg2' : 'dark'"> {{user.displayName}} </p> -->
     </div>
     <ng-template #unlogged>
         <aSmart-login-button (isLogged)="user = $event"></aSmart-login-button>

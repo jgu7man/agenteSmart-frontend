@@ -27,6 +27,7 @@ import { InicioComponent } from './components/pages/inicio/inicio.component';
 import { DocsComponent } from './components/pages/docs/docs.component';
 import { TratamientoDatosComponent } from './components/pages/legal/tratamiento-datos/tratamiento-datos.component';
 import { LegalComponent } from './components/pages/legal/legal.component';
+import { PageFooterComponent } from './components/page-footer/page-footer.component';
 
 
 
@@ -43,6 +44,7 @@ import { LegalComponent } from './components/pages/legal/legal.component';
     DocsComponent,
     TratamientoDatosComponent,
     LegalComponent,
+    PageFooterComponent,
   ],
   imports: [
     CommonModule,

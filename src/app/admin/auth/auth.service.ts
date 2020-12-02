@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
-import { auth } from 'firebase/app'
+// import { auth } from 'firebase/app'
 import { Router } from '@angular/router';
 import { of, Observable, Subject } from 'rxjs';
 import { switchMap, debounceTime } from 'rxjs/operators';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 // import * as google from 'googleapis'
 import { Loading } from '../../Gdev-Tools/loading/loading.service';
-import { CacheService } from '../../Gdev-Tools/cache/cache.service';
+import {CacheService} from '../../Gdev-Tools/cache/cache.service';
+import * as firebase from 'firebase/app';
+import 'firebase/firestore';
 
 
 
@@ -66,7 +68,7 @@ export class AuthService {
    
 
     // Abre el popup de autenticación
-    const provider = new auth.GoogleAuthProvider();
+    const provider = new firebase.auth.GoogleAuthProvider();
     var credential = await this.afAuth.signInWithPopup(provider)
       
     
@@ -103,7 +105,7 @@ export class AuthService {
 
   // ? Obtiene token
   async getToken() {
-    const provider = new auth.GoogleAuthProvider();
+    const provider = new firebase.auth.GoogleAuthProvider();
     
     var credential = await (await this.afAuth.signInWithPopup(provider))
     console.log( credential )
@@ -126,7 +128,8 @@ export class AuthService {
     await this.afAuth.signOut();
     localStorage.removeItem( 'mii' )
     sessionStorage.removeItem('as-data')
-     return this.router.navigate(['/']);
+    return this.router.navigateByUrl('/', {skipLocationChange: true})
+      .then(() => this.router.navigate(['/']));
   }
 
 
@@ -134,30 +137,30 @@ export class AuthService {
 
 
 
-  openPopup (): Observable<any> {
-    const name = 'Authorization'
-    const options = `width=${ 500 },height=${ 600 },left=${ 0 },top=${ 0 }`;
-    const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=683912406589-acc9kkbnqu7qgao221kuk6aqanqli01b.apps.googleusercontent.com&response_type=code&include_granted_scopes=true&scope=https%3A//www.googleapis.com/auth/cloud-platform&redirect_uri=http://localhost:4200/appadmin/code&access_type=offline`;
+  // openPopup (): Observable<any> {
+  //   const name = 'Authorization'
+  //   const options = `width=${ 500 },height=${ 600 },left=${ 0 },top=${ 0 }`;
+  //   const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=683912406589-acc9kkbnqu7qgao221kuk6aqanqli01b.apps.googleusercontent.com&response_type=code&include_granted_scopes=true&scope=https%3A//www.googleapis.com/auth/cloud-platform&redirect_uri=http://localhost:4200/appadmin/code&access_type=offline`;
 
-    window.open( url, name );
-    return this.authenticated$
-  }
-
-
-  authApi (code): Observable<any> {
-
-    let headers = new HttpHeaders( {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    } )
-
-    console.log(code)
-
-    let body = `code=${code}&client_id=683912406589-acc9kkbnqu7qgao221kuk6aqanqli01b.apps.googleusercontent.com&client_secret=FsTiRJz155vCC0CE3HRu-v0u&grant_type=authorization_code&redirect_uri=http://localhost:4200/appadmin/code`
+  //   window.open( url, name );
+  //   return this.authenticated$
+  // }
 
 
-    return this._http.post( `https://www.googleapis.com/oauth2/v4/token`,
-      body, { headers: headers } )
-  }
+  // authApi (code): Observable<any> {
+
+  //   let headers = new HttpHeaders( {
+  //     'Content-Type': 'application/x-www-form-urlencoded'
+  //   } )
+
+  //   console.log(code)
+
+  //   let body = `code=${code}&client_id=683912406589-acc9kkbnqu7qgao221kuk6aqanqli01b.apps.googleusercontent.com&client_secret=FsTiRJz155vCC0CE3HRu-v0u&grant_type=authorization_code&redirect_uri=http://localhost:4200/appadmin/code`
+
+
+  //   return this._http.post( `https://www.googleapis.com/oauth2/v4/token`,
+  //     body, { headers: headers } )
+  // }
 
   
 

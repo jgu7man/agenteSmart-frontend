@@ -2,10 +2,41 @@
     flex: 1 1 auto;
 }
 
+.home_bar {
+    position: fixed;
+    top: 0;
+}
+
+.nav_menu {
+    min-width: 50%;
+    .main_menu {
+        display: flex;
+        justify-content: space-around;
+        a {
+            font-weight: 400;
+            font-size: medium;
+        }
+        .active {
+            border-bottom: solid 3px;
+        }
+    }
+}
+
+.user_log {
+    display: flex;
+    justify-content: space-around;
+    a {
+        font-weight: 400;
+        font-size: medium;
+    }
+}
+
 .logo-area{
     display: flex;
     align-items: center;
     padding: 0em;
+    transition: all .3s ease-out;
+    cursor: pointer;
     .app-logo {
         width: 60px;
         display: flex;
@@ -23,6 +54,12 @@
     }
 }
 
+// .home_init {
+//     transform: scale(1.8) translate(40%, 60%);
+// }
+
+
+
 .user-profile{
     display: flex;
     align-items: center;
@@ -31,11 +68,13 @@
 }
 
 .imgProfileContainer {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     overflow: hidden;
     position: relative;
+    margin: 0 1em;
+    cursor: pointer;
     img {
         position: absolute;
         transform: translate(-50%, -50%);

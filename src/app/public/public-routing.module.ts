@@ -28,36 +28,36 @@ const routes: Routes = [
             {path: 'docs', component: DocsComponent, data: {page: 'docs'}, children:[
                 
             ]},
-            { path: 'legal', component: LegalComponent, children: [
+            { path: 'legal', component: LegalComponent,data: {page: 'legal'}, children: [
                 { path: 'tratamiento-de-datos', component: TratamientoDatosComponent, data:{page:'tratamiento_datos'} },
             ] },
-            { path: 'dashboard', component: DashboardComponent, data: {page: 'dashboard'}, children: 
+        ],
+    },
+    { path: 'dashboard', component: DashboardComponent, data: {page: 'dashboard'}, children: 
+        [
+            { path: '', redirectTo: 'agentes', pathMatch: 'full' },
+
+            { path: 'agentes', component: AgentesComponent },
+            { path: 'crear_agente', component: InitAgenteComponent },
+            { path: 'editar_agente/:id', component: EditAgenteComponent, },
+            { path: 'agente/:id', component: AgenteComponent, children: 
                 [
-                    { path: '', redirectTo: 'agentes', pathMatch: 'full' },
-    
-                    { path: 'agentes', component: AgentesComponent },
-                    { path: 'crear_agente', component: InitAgenteComponent },
-                    { path: 'editar_agente/:id', component: EditAgenteComponent, },
-                    { path: 'agente/:id', component: AgenteComponent, children: 
-                        [
-                            { path: '', redirectTo: 'mensajes', pathMatch: 'full', },
-                            { path: 'bienvenida', component: BienvenidaComponent },
-                            { path: 'mensajes', component: MensajesComponent },
-                            { path: 'mensaje/:name', component: MensajeComponent, },
-                            { path: 'tipos', component: TiposComponent },
-                            { path: 'opciones', component: OpcionesComponent },
-                        ],
-                    },
-                    { path: 'tarjetas', component: TarjetasComponent },
-                    { path: 'colecciones', component: ColeccionesComponent },
-    
-                    { path: 'inventario', component: ProductsComponent },
-                    { path: 'products/add', component: AddProductComponent },
-                    {
-                        path: 'products/edit/:id',
-                        component: EditProductComponent,
-                    },
+                    { path: '', redirectTo: 'mensajes', pathMatch: 'full', },
+                    { path: 'bienvenida', component: BienvenidaComponent },
+                    { path: 'mensajes', component: MensajesComponent },
+                    { path: 'mensaje/:name', component: MensajeComponent, },
+                    { path: 'tipos', component: TiposComponent },
+                    { path: 'opciones', component: OpcionesComponent },
                 ],
+            },
+            { path: 'tarjetas', component: TarjetasComponent },
+            { path: 'colecciones', component: ColeccionesComponent },
+
+            { path: 'inventario', component: ProductsComponent },
+            { path: 'products/add', component: AddProductComponent },
+            {
+                path: 'products/edit/:id',
+                component: EditProductComponent,
             },
         ],
     },
