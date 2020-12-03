@@ -29,10 +29,10 @@ export class CodeGetterComponent implements OnInit {
     } )
 
     await waitFor(1000)
-    this._auth.authApi( params[ 'code' ] ).subscribe( res => {
-      this._auth.authenticated$.next(res)
-      localStorage.setItem('googleTokens', JSON.stringify(res))
-    })
+    // this._auth.authApi( params[ 'code' ] ).subscribe( res => {
+    //   this._auth.authenticated$.next(res)
+    //   localStorage.setItem('googleTokens', JSON.stringify(res))
+    // })
   }
 
 }

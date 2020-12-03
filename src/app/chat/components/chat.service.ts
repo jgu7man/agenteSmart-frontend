@@ -14,7 +14,6 @@ import { Subject, Subscription } from 'rxjs';
 import { AppState } from '../../app.state';
 import { CacheService } from '../../Gdev-Tools/cache/cache.service';
 import { HttpClient } from '@angular/common/http';
-import { User } from 'firebase';
 import {
     ResultResponse,
     SimpleModel,
@@ -22,6 +21,7 @@ import {
 } from '../../public/components/agentes/agente/mensajes/mensaje/entrenamiento/respuestas/respuesta.model';
 import { RespuestaCard } from '../../public/components/agentes/agente/mensajes/mensaje/entrenamiento/respuestas/respuestasIntent.model';
 import { Sugerencia } from '../../public/components/agentes/agente/mensajes/mensaje/entrenamiento/respuestas/respuesta.model';
+import { UserInterface } from '../../admin/auth/auth.service';
 
 @Injectable({
     providedIn: 'root',
@@ -44,7 +44,7 @@ export class ChatService {
     ) {
         this.sendMessage();
         this._projectId = this._cache.getDataKey<string>('projectId');
-        this._clientId = this._cache.getDataKey<User>('user').uid;
+        this._clientId = this._cache.getDataKey<UserInterface>('user').uid;
     }
 
     opened = this._store.select('chat').pipe(map((chat) => chat.isOpened));

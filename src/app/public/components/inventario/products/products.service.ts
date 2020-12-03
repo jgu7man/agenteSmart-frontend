@@ -3,7 +3,8 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { GdevStoreProductModel } from './product.model';
 import { Subject } from 'rxjs';
-import * as firebase from 'firebase/app';
+import firebase from 'firebase/app';
+import 'firebase/firestore'
 import { AlertService } from 'src/app/Gdev-Tools/alerts/alert.service';
 import { finalize } from 'rxjs/operators';
 import { CacheService } from '../../../../Gdev-Tools/cache/cache.service';
