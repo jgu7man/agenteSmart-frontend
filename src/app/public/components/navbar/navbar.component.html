@@ -14,13 +14,13 @@ class="mat-elevation-z5">
     <span class="espacio"></span>
     <span class="nav_menu">
         <div class="main_menu">
-            <a [routerLink]="[ '/']"
+            <a [routerLink]="['/']"
             routerLinkActive="active">Inicio</a>
-            <a [routerLink]="[ '/academia']"
+            <a [routerLink]="['/academia']"
             routerLinkActive="active">Academia</a>
-            <a [routerLink]="[ '/docs']"
+            <a [routerLink]="['/docs']"
             routerLinkActive="active">Documentación</a>
-            <a [routerLink]="[ '/precios' ]"
+            <a [routerLink]="['/precios' ]"
             routerLinkActive="active">Precios</a>
         </div>
     </span>
@@ -32,7 +32,7 @@ class="mat-elevation-z5">
         </button> -->
         <!-- <a [matMenuTriggerFor]="menuProfile">Cuenta</a> -->
         <mat-menu #menuProfile="matMenu">
-            <button mat-menu-item>Ver perfil</button>
+            <!-- <button mat-menu-item>Ver perfil</button> -->
             <button mat-menu-item [routerLink]="['/dashboard']">Dashboard</button>
             <button mat-menu-item (click)="auth.singOut()">Cerrar sesión</button>
         </mat-menu>

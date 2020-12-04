@@ -1,4 +1,4 @@
-<div class="container" *ngIf="tipos_.currentTipo | async as tipo">
+<div class="container" *ngIf="tipos_.currentTipo$ | async as tipo">
     <div class="row">
         <div class="col s1">
             <button mat-icon-button
@@ -38,7 +38,7 @@
             </button>
             <mat-menu #tipoMenu="matMenu">
                 <button mat-menu-item
-                (click)="tipos_.deleteTipo(tipo.name)">
+                (click)="delete(tipo.name)">
                     Eliminar
                 </button>
             </mat-menu>

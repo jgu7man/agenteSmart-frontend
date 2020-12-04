@@ -73,7 +73,7 @@
 
 
 <div class="col s2 m1">
-    <button mat-button (click)="claseDone.emit(true)">
+    <button mat-button (keyup.ENTER)="setClase()" (click)="setClase()">
         <i class="fas fa-check"></i>
     </button>
 </div>

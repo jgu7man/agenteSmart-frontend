@@ -1,5 +1,5 @@
 <mat-drawer-container [hasBackdrop]="true">
-    <mat-drawer #currentTipo [mode]="'over'" position="start">
+    <mat-drawer style="width: 100%;" #currentTipo [mode]="'over'" position="start">
         <aSmart-tipo [name]="tipoSelected.name"
         (closePanel)="currentTipo.close()"
         ></aSmart-tipo>

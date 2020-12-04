@@ -36,10 +36,15 @@ export class NavbarComponent implements OnInit, OnChanges {
   }
 
   async getCurrentPage() {
-    await this._loading.getCurrentActivatedRoute().pipe(
-      take(1))
-      .toPromise().then(async route =>{
-        this.view = (await route.data.pipe(take(1)).toPromise())['page']})
+    this._loading.colectRouteData().subscribe( data => {
+      this.view = data.data['page']
+    })
+    // await this._loading.getCurrentActivatedRoute().pipe(
+    //   take(1))
+    //   .toPromise().then( async route => {
+    //     console.log(route.snapshot);
+    //     this.view = ( await route.data.pipe( take( 1 ) ).toPromise() )[ 'page' ]
+    //   } )
   }
 
   updatePage() {

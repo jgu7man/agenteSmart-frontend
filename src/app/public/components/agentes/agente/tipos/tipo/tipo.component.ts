@@ -12,6 +12,8 @@ import { TiposService } from '../tipos.service';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../../../../app.state';
 import * as actions from '../store/tipo.actions';
+import { Router } from '@angular/router';
+import { CacheService } from '../../../../../../Gdev-Tools/cache/cache.service';
 
 @Component({
     selector: 'aSmart-tipo',
@@ -25,8 +27,16 @@ export class TipoComponent implements OnInit {
     @Output() closePanel = new EventEmitter<any>();
 
     switchEditTipo: boolean = false;
+    projectId: string
 
-    constructor(public tipos_: TiposService, private store: Store<AppState>) {}
+    constructor (
+        public tipos_: TiposService,
+        private store: Store<AppState>,
+        private _router: Router,
+        private _cache: CacheService
+    ) {
+        this.projectId = this._cache.getDataKey('projectId')
+     }
 
     async ngOnInit() {}
 
@@ -42,6 +52,13 @@ export class TipoComponent implements OnInit {
     onClose() {
         this.closePanel.emit();
         this.store.dispatch(actions.unselect());
+    }
+
+    async delete( tipoName ) {
+        let url = `/dahsboard/agente/${this.projectId}/`
+        await this.tipos_.deleteTipo( tipoName );
+        this._router.navigateByUrl( url, { skipLocationChange: true } )
+            .then(() => this._router.navigate([url+'tipos']))
     }
 
     delSpaces(e) {

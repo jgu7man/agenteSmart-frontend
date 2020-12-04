@@ -57,10 +57,10 @@
                         <li class="clase-item collection-item" *ngFor="let clase of tipo.body.entities">
                             <div class="row">
                                 <aSmart-clase-item 
-                                (claseEdited)="toEditClase($event)"
-                                [clase]="clase" 
-                                [claseId]="clase.value" 
-                                [tipo]="tipo.body"
+                                    (claseEdited)="toEditClase($event)"
+                                    [clase]="clase" 
+                                    [claseId]="clase.value" 
+                                    [tipo]="tipo.body"
                                 ></aSmart-clase-item>
 
                             </div>

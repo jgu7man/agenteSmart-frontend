@@ -6,6 +6,7 @@ import { NAVLINK } from '../../navbar/navlink.interface';
 import { ResponsiveService } from '../../../../services/responsive.service';
 import { CacheService } from '../../../../Gdev-Tools/cache/cache.service';
 import { CurrentAgenteService } from './current-agente.service';
+import { Loading } from '../../../../Gdev-Tools/loading/loading.service';
 
 @Component({
   selector: 'aSmart-agente',
@@ -22,6 +23,7 @@ export class AgenteComponent implements OnInit, OnDestroy {
     private _cache: CacheService,
     private _route: ActivatedRoute,
     public resposive_: ResponsiveService,
+    public loading: Loading
   ) {
 
     // GET THE CURRENT PROJECT ID
@@ -41,6 +43,7 @@ export class AgenteComponent implements OnInit, OnDestroy {
 
   async loadAgente() {
     this.agente = await this._agente.get()
+    this.loading.toggleWaitingSpinner( false )
   }
 
   agentLinks:NAVLINK[] = [

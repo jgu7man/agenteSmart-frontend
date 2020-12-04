@@ -23,13 +23,14 @@ export class TiposService {
     tiposPath: string
     tiposList: TipoEntidadModel[] = []
     
-    private _url = 'http://localhost:5001/main-agentesmart/us-central1/dialogflow/entity';
+    private _url = 'http://localhost:5000/main-agentesmart/us-central1/dialogflow/entity';
     private _projectId: String;
   
     closeCreateDialog: Subject<any> = new Subject()
-    currentTipo: Subject<TipoState> = new Subject()
+    currentTipo$: Subject<TipoState> = new Subject()
     currentTipoSubs: Subscription
     listSubs: Subscription
+    current
 
 
     constructor (
@@ -154,10 +155,9 @@ export class TiposService {
         } )
 
 
-        console.log('actualiza entity');
-        const entityEdited = await this._putEntityRequest( tipo )
-        const resourceID = entityEdited[ 'name' ].slice( entityEdited[ 'name' ].lastIndexOf( "/" ) + 1 );
-        console.log(resourceID);
+        await this._putEntityRequest( tipo )
+        const resourceID = tipo.name.slice( tipo.name.lastIndexOf( "/" ) + 1 );
+        // console.log(resourceID);
         await ( await this.tiposCollection() ).doc( resourceID ).set( tipo, { merge: true } )
         this.loading.toggleWaitingSpinner( false )
         
@@ -177,15 +177,17 @@ export class TiposService {
                 .toPromise()
                 .then( result => {
                     console.info( "Entity PUT Response:", result );
+                    this._alerts.sendFloatNotification('Tipo guardado')
                     resolve()
-                    if ( result[ 'status' ] == "Success" ) {
-                        //exito creado
-                    }
+                    // if ( result[ 'status' ] == "Success" ) {
+                    //     //exito creado
+                    // }
                 } )
                 .catch( err => {
                     if ( err ) {
+                        console.error(err)
                         this.loading.toggleWaitingSpinner( false )
-                        this._alerts.sendError( 'No fué posible crear ese Tipo en este momento. Intentelo de nuevo por favor.', err )
+                        this._alerts.sendError( 'No fué posible crear ese Tipo en este momento.', err )
                         this.closeCreateDialog.next()
                     }
                     reject( err )
@@ -197,8 +199,8 @@ export class TiposService {
     /** Agrega una clase a la entity seleccionada por nombre */
     async setClase( tipoName: string, clase: Clase ) {
         
-        var current = this.getTipo(tipoName)
-        var clasesList = current.entities
+        this.current = this.getTipo(tipoName)
+        var clasesList = this.current.entities
         var claseIndex = clasesList.findIndex( cla => cla.value === clase.value )
         console.log({claseIndex});
 
@@ -208,34 +210,45 @@ export class TiposService {
             clasesList = [...clasesList, clase]
         }
         
-        current = { ...current, entities: clasesList }
-        this.store.dispatch(actions.editTipo({tipo: current}))
+        this.current = { ...this.current, entities: clasesList }
+        this.store.dispatch(actions.editTipo({tipo: this.current}))
         
         return
     }
 
     /** Agrega sinónimos a la entity actual */
-    async setSinonimo( tipoName, claseValue: string, sinonimo: string, action: 'add' | 'del' ) {
+    async setSinonimo( tipoName, clase: Clase, sinonimo: string, action: 'add' | 'del' ) {
         
-        var current = this.getTipo( tipoName )
-        var clasesList = current.entities
-        var claseIndex = clasesList.findIndex( clase => clase.value === claseValue )
-        var synonymsList: string[] = clasesList[ claseIndex ][ 'synonyms' ]
-        
-
-        if ( action == 'add' ) {
-            if ( !synonymsList ) { synonymsList = [] }
-            
-            synonymsList = [...synonymsList, sinonimo]
-
+        if ( !this.current ) { this.current = this.getTipo( tipoName ) }
+        var clasesList: Clase[] = this.current.entities
+        var claseIndex = clasesList.findIndex(
+            c => c.value === clase.value
+        )
+        if ( claseIndex < 0 ) {
+            clasesList = [ ...clasesList, clase ]
+            clase[ 'synonyms' ] = []
         } else {
-            synonymsList = synonymsList.filter(s => s != sinonimo)
+            clasesList = [...clasesList]
         }
 
-        current = {...current, entities: clasesList}
-        this.store.dispatch( actions.editTipo( { tipo: current } ) )
+        if ( action == 'add' ) {
+            clasesList = clasesList.map( c => c.value === clase.value
+                ? { ...c, synonyms: [ ...c.synonyms, sinonimo ] } : c )
+        } else {
+            clasesList.map( c => c.value === clase.value
+            ? {...c, synonyms: [...c.synonyms.filter(s => s != sinonimo)]}: c)
+        }
+        
+        this.current = {...this.current, entities: clasesList}
         return
-
+        
+    }
+    
+    async pushCurrent() {
+        console.log(this.current);
+        this.store.dispatch( actions.editTipo( { tipo: this.current } ) )
+        // this.current = undefined
+        return
     }
 
     /** Actualiza la entityType de productos en el agente. Debe dispararse desde la interfaz de productos */
@@ -299,7 +312,7 @@ export class TiposService {
     }
 
     /** Está pendiendte de la entity seleccionada en el storage */
-    currentTipo$( ) {
+    getCurrentTipo$( ) {
         return this.store.select( 'tipos' ).pipe( map( tipos => {
             // console.log(tipos);
             let selected = tipos.find( t => t.selected == true )
@@ -309,7 +322,7 @@ export class TiposService {
 
     /** Regresa como promesa la entity que se abrió en el panel. Se suscribe en tipo.compoenent.ts */
     getCurrentTipo() {
-        this.currentTipoSubs = this.currentTipo$().subscribe( this.currentTipo )
+        this.currentTipoSubs = this.getCurrentTipo$().subscribe( this.currentTipo$ )
     }
 
 
@@ -322,18 +335,20 @@ export class TiposService {
         //Ej. EntityType "name": "projects/testproject-a4323/agent/entityTypes/6c7cd0d9-03f9-47f6-803e-dc39d3ffb789",
         console.log({projectId: this._projectId, entityId})
         
-        this._http.delete( this._url + `/${ this._projectId }/${ entityId }` )
-          .toPromise()
-            .then(() => {
-              //
-            resolve('done')
-          } )
-          .catch( err => {
-            if ( err ) {
-              this._alerts.sendError( 'No es posible elimnar intent, intentelo de nuevo, porfavor.', err )
-            }
-            reject( err )
-          } )
+        this._http.delete( this._url + `/${ this._projectId }/${ entityId }` ).toPromise()
+            .then(() => { resolve('done')} )
+            .catch( err => {
+                if ( err ) {
+                    let error  = err.error.error
+                    console.log( error );
+                    if ( error.code === 3 ) {
+                        this._alerts.sendMessageAlert('Este tipo de datos es usado en el flujo, no puede ser eliminado')
+                    } else {
+                        this._alerts.sendError( 'No es posible elimnar intent, error desconocido.', err )
+                    }
+                }
+                reject( err )
+            } )
       } )
     }
 
@@ -342,7 +357,6 @@ export class TiposService {
 
     async deleteTipo(tipoName: string) {
         this.loading.toggleWaitingSpinner(true)
-        console.log(tipoName)
         const currentId = tipoName.slice( tipoName.lastIndexOf( '/' ) + 1)
         await this._deleteEntityType( currentId )
         await (await this.tiposCollection()).doc(currentId).delete()

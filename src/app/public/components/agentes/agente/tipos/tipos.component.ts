@@ -20,7 +20,7 @@ import { SystemEntitiesService } from '../../../../../admin/system/system-entiti
   templateUrl: './tipos.component.html',
   styleUrls: ['./tipos.component.scss']
 })
-export class TiposComponent implements OnInit, AfterViewInit, OnDestroy {
+export class TiposComponent implements OnInit,  OnDestroy {
 
   tiposList$: Observable<TipoState[]>
   tipos: TipoEntidadModel[]
@@ -44,23 +44,17 @@ export class TiposComponent implements OnInit, AfterViewInit, OnDestroy {
    }
 
   ngOnInit(): void {
-    this.loading.toggleWaitingSpinner( true )
     this.backendSubs = this.tipos_.getAllEntities().subscribe( data => {
       let tipos: TipoEntidadModel[] = data.result
       tipos.forEach(tipo => this.store.dispatch(actions.addTipo({tipo})))
       this.tiposList$ = this.store.select('tipos')
-      this.loading.toggleWaitingSpinner( false )
     })
-  }
-
-  ngAfterViewInit() {
   }
 
   onSelected( selected: MatSelectionListChange ) {
     if ( this.currentTipo.opened ) { this.currentTipo.close() }
     this.tipoSelected = selected.option.value
     this.store.dispatch(actions.selectTipo({tipo: this.tipoSelected.body}))
-    // console.log(this.tipoSelected);
     this.currentTipo.open()
   }
 
