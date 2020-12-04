@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {OpcionesAgenteModel} from '../opciones.model';
+import {AgenteConfigModel} from '../agent-config.model';
 
 @Component({
   selector: 'aSmart-datos-contacto',
@@ -8,9 +8,9 @@ import {OpcionesAgenteModel} from '../opciones.model';
 })
 export class DatosContactoComponent implements OnInit {
 
-  config: OpcionesAgenteModel
+  config: AgenteConfigModel
   constructor () {
-    this.config = new OpcionesAgenteModel('')
+    this.config = new AgenteConfigModel('')
    }
 
   ngOnInit(): void {

@@ -3,14 +3,14 @@ import { IntentModel } from '../mensajes/mensaje.model';
 import { CurrentAgenteService } from '../current-agente.service';
 import { MensajesService } from '../mensajes/mensajes.service';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Loading } from '../../../../../Gdev-Tools/loading/loading.service';
-import { AlertService } from '../../../../../Gdev-Tools/alerts/alert.service';
-import { CacheService } from '../../../../../Gdev-Tools/cache/cache.service';
+import { Loading } from 'src/app/Gdev-Tools/loading/loading.service';
+import { AlertService } from 'src/app/Gdev-Tools/alerts/alert.service';
+import { CacheService } from 'src/app/Gdev-Tools/cache/cache.service';
 
 @Injectable({
     providedIn: 'root',
 })
-export class OpcionesAgenteService {
+export class AgentConfigService {
   constructor (
       private _agente: CurrentAgenteService,
       private _mensajes: MensajesService,

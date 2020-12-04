@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { OpcionesAgenteService } from '../opciones-agente.service';
+import { AgentConfigService } from '../agent-config.service';
 import { ConfigRetrocesoComponent } from '../config-retroceso/config-retroceso.component';
 
 @Component({
@@ -11,7 +11,7 @@ import { ConfigRetrocesoComponent } from '../config-retroceso/config-retroceso.c
 export class DefaultIntentsComponent implements OnInit {
 
   constructor (
-    public opciones_: OpcionesAgenteService,
+    public opciones_: AgentConfigService,
     private _dialog: MatDialog
   ) { }
 

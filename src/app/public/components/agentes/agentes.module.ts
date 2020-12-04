@@ -33,7 +33,7 @@ import { PartParameterComponent } from './agente/mensajes/mensaje/entrenamiento/
 import { MensajeHeaderComponent } from './agente/mensajes/mensaje/entrenamiento/mensaje-header/mensaje-header.component';
 import { DelMensajeDialogComponent } from './agente/mensajes/del-mensaje-dialog/del-mensaje-dialog.component';
 
-import { OpcionesComponent } from './agente/opciones/opciones.component';
+import { AgentConfigComponent } from './agente/agent-config/agent-config.component';
 
 import { RespuestasComponent } from './agente/mensajes/mensaje/entrenamiento/respuestas/respuestas.component';
 import { RespuestaCardComponent } from './agente/mensajes/mensaje/entrenamiento/respuestas/respuesta-card/respuesta-card.component';
@@ -68,9 +68,9 @@ import { MensajesDiagramComponent } from './agente/mensajes/mensajes-diagram/men
 import { CreatingComponent } from './init-agente/creating/creating.component';
 import { EditAgenteComponent } from './edit-agente/edit-agente.component';
 import { BienvenidaComponent } from './agente/bienvenida/bienvenida.component';
-import { ConfigRetrocesoComponent } from './agente/opciones/config-retroceso/config-retroceso.component';
-import { DefaultIntentsComponent } from './agente/opciones/default-intents/default-intents.component';
-import { DatosContactoComponent } from './agente/opciones/datos-contacto/datos-contacto.component';
+import { ConfigRetrocesoComponent } from './agente/agent-config/config-retroceso/config-retroceso.component';
+import { DefaultIntentsComponent } from './agente/agent-config/default-intents/default-intents.component';
+import { DatosContactoComponent } from './agente/agent-config/datos-contacto/datos-contacto.component';
 import { AddContextoDialogComponent } from './agente/contextos/add-contexto-dialog/add-contexto-dialog.component';
 import { ContextoSelectorComponent } from './agente/contextos/contexto-selector/contexto-selector.component';
 import { ParamSelectorComponent } from './agente/mensajes/mensaje/entrenamiento/parametros/param-selector/param-selector.component';
@@ -104,7 +104,7 @@ import { RespuestaTextComponent } from './agente/mensajes/mensaje/entrenamiento/
     PartParameterComponent,
     MensajeHeaderComponent,
     DelMensajeDialogComponent,
-    OpcionesComponent,
+    AgentConfigComponent,
     RespuestasComponent,
     RespuestaCardComponent,
     BuscarFormComponent,

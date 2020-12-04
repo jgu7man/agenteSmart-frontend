@@ -6,7 +6,7 @@ import { AgentesComponent } from './components/agentes/agentes.component';
 import { InitAgenteComponent } from './components/agentes/init-agente/init-agente.component';
 import { AgenteComponent } from './components/agentes/agente/agente.component';
 import { TiposComponent } from './components/agentes/agente/tipos/tipos.component';
-import { OpcionesComponent } from './components/agentes/agente/opciones/opciones.component';
+import { AgentConfigComponent } from './components/agentes/agente/agent-config/agent-config.component';
 import { MensajeComponent } from './components/agentes/agente/mensajes/mensaje/mensaje.component';
 import { MensajesComponent } from './components/agentes/agente/mensajes/mensajes.component';
 import { ColeccionesComponent } from './components/colecciones/colecciones.component';
@@ -47,7 +47,7 @@ const routes: Routes = [
                     { path: 'mensajes', component: MensajesComponent },
                     { path: 'mensaje/:name', component: MensajeComponent, },
                     { path: 'tipos', component: TiposComponent },
-                    { path: 'opciones', component: OpcionesComponent },
+                    { path: 'opciones', component: AgentConfigComponent },
                 ],
             },
             { path: 'tarjetas', component: TarjetasComponent },
