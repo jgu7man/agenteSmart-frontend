@@ -20,17 +20,17 @@ import { TipoState } from './store/tipo.state';
 } )
 export class TiposService {
 
-    tiposPath: string
-    tiposList: TipoEntidadModel[] = []
+    private tiposPath: string
+    private tiposList: TipoEntidadModel[] = []
     
     private _url = 'http://localhost:5000/main-agentesmart/us-central1/dialogflow/entity';
     private _projectId: String;
   
-    closeCreateDialog: Subject<any> = new Subject()
-    currentTipo$: Subject<TipoState> = new Subject()
-    currentTipoSubs: Subscription
-    listSubs: Subscription
-    current
+    public closeCreateDialog: Subject<any> = new Subject()
+    public currentTipo$: Subject<TipoState> = new Subject()
+    private currentTipoSubs: Subscription
+    private listSubs: Subscription
+    private current: TipoEntidadModel
 
 
     constructor (
@@ -260,22 +260,24 @@ export class TiposService {
         try {
             var productTypesDoc = await productTypeRef.get()
             if ( productTypesDoc.exists ) {
-
                 let productTypes = productTypesDoc.data() as TipoEntidadModel;
-                if ( !productTypes[ 'created' ] ) {
-                    
+                
+                if ( productTypes[ 'status' ] === 'created' ) {
+                    delete productTypes[ 'status' ]
+                    delete productTypes.name
+
                     await this.createTipo( productTypes )
-                    await productTypeRef.update( { creted: true, saved: true } )
+                    this.getAllEntities()
 
-                } else if(!productTypes[ 'saved' ]) {
-                    delete productTypes[ 'created' ]
-                    delete productTypes[ 'saved' ]
-                    
-                    await this.updateTipo(productTypes)
-                    await productTypeRef.update({creted: true, saved: true})
-                    
+
+                } else if ( productTypes[ 'status' ] === 'unsaved' ) {
+                    delete productTypes[ 'status' ]
+
+                    await this.updateTipo( productTypes )
+                    this.getAllEntities()
                 } 
-
+                
+                await productTypeRef.update( { status:'saved' } )
                 this._alerts.sendFloatNotification('Tipo de datos de productos actualizada')
             }
         

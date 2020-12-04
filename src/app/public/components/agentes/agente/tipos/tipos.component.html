@@ -29,8 +29,12 @@
                                 <mat-list-option 
                                 *ngFor="let tipo of tiposList$ | async"
                                 [value]="tipo"
+                                [disabled]="tipo.body.displayName == 'productos'"
                                 >
                                     {{tipo.body.displayName}}
+                                    <div mat-line 
+                                    style="font-size: x-small;"
+                                    *ngIf="tipo.body.displayName == 'productos'">Este tipo sólo se puede editar desde la sección de inventario</div>
                                 </mat-list-option>
                             </mat-selection-list>
                         </mat-card-content>

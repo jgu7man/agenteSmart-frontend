@@ -19,7 +19,7 @@ export class DelProdcutComponent implements OnInit {
     private _router: Router,
     private _alerta: AlertService
   ) {
-    this.product = new GdevStoreProductModel( '',  0, true, '', {},'',[],[] )
+    this.product = new GdevStoreProductModel( '', 0, false, '', '', [], [])
   }
 
   ngOnInit() {
@@ -29,7 +29,7 @@ export class DelProdcutComponent implements OnInit {
     this._products.delProduct( this.productId )
       .then( () => {
         console.log( 'listo' );
-        this._dialog.close()
+        this._dialog.close(true)
       } )
       .catch( error => {
         this._dialog.close()

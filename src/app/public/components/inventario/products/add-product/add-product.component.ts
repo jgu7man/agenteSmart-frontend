@@ -33,7 +33,7 @@ export class AddProductComponent implements OnInit {
     private _cache: CacheService
   ) {
     this.product = undefined
-    this.product = new GdevStoreProductModel( '', 0, false, '', {}, '', [], [], [], [] )
+    this.product = new GdevStoreProductModel( '', 0, false, '', '', [], [])
     this.usuario = this._cache.getDataKey('user')
   }
 
@@ -111,7 +111,11 @@ export class AddProductComponent implements OnInit {
     this.product.galeria.splice( itemDeleted, 1 )
   }
   
-  
+  disableForm(valid: boolean) {
+    return this.product.imagenUrl === undefined 
+      ? true 
+      : valid
+  }
 
 
 

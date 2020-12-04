@@ -43,7 +43,9 @@ export class MensajesByContextoComponent implements OnInit {
         this._agente.intentList$
             .pipe(
                 startWith([]),
-                distinctUntilChanged((x, y) => x.length == y.length))
+                distinctUntilChanged( ( x, y ) => x.length
+                    ? x.length == y.length
+                    : x == y) )
             .subscribe((get) => this.getMensajes());
     }
 

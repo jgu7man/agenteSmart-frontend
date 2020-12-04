@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input, OnDestroy } from '@angular/core';
 import { GdevStoreProductModel } from '../product.model';
 import { GdevStoreProductsService } from '../products.service';
 import { Router } from '@angular/router';
@@ -11,13 +11,14 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA } from '@angular/cdk/keycodes';
 import { CacheService } from '../../../../../Gdev-Tools/cache/cache.service';
 import { UserInterface } from '../../../../../admin/auth/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'gdev-edit-product',
   templateUrl: './edit-product.component.html',
   styleUrls: ['./edit-product.component.scss']
 })
-export class EditProductComponent implements OnInit {
+export class EditProductComponent implements OnInit, OnDestroy {
 
   @Input() public product: GdevStoreProductModel
 
@@ -28,7 +29,7 @@ export class EditProductComponent implements OnInit {
   public usuario: UserInterface
   
   @Output() closeForm: EventEmitter<any> = new EventEmitter()
-
+  DeleteDialogSub: Subscription
   
   constructor (
     public _products: GdevStoreProductsService,
@@ -39,7 +40,7 @@ export class EditProductComponent implements OnInit {
     private _cache: CacheService
   ) {
     this.product = undefined
-    this.product = new GdevStoreProductModel( '', 0, false, '', {}, '', [], [], [], [], '' )
+    this.product = new GdevStoreProductModel( '', 0, false, '', '', [], [])
     this.usuario = this._cache.getDataKey( 'user' )
   }
 
@@ -114,13 +115,10 @@ export class EditProductComponent implements OnInit {
       data: this.product.id
     } )
     
-    dialog.afterClosed().subscribe(
-      () => {
-        this.closeForm.emit()
-        this.router.navigateByUrl( 'panel', { skipLocationChange: true } )
-        .then(() => this.router.navigate(['panel/tienda/products']))
+    this.DeleteDialogSub = dialog.afterClosed()
+      .subscribe( ( response ) => {
+        if(response) this.closeForm.emit()
       } )
-    .unsubscribe()
   }
 
   readonly separatorKeysCodes: number[] = [ COMMA ];
@@ -153,5 +151,10 @@ export class EditProductComponent implements OnInit {
     this._products.updateProduct( this.product ).then( () => {
       this.closeForm.emit()
     } )
+  }
+
+
+  ngOnDestroy() {
+    if (this.DeleteDialogSub) this.DeleteDialogSub.unsubscribe()
   }
 }

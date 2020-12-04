@@ -16,6 +16,8 @@ export class FormAgregarAgenteComponent implements OnInit {
   ngOnInit() {
   }
 
-  
+  importAgente() {
+    
+  }
 
 }

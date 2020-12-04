@@ -48,7 +48,8 @@ export class TiposComponent implements OnInit,  OnDestroy {
       let tipos: TipoEntidadModel[] = data.result
       tipos.forEach(tipo => this.store.dispatch(actions.addTipo({tipo})))
       this.tiposList$ = this.store.select('tipos')
-    })
+    } )
+    this.tipos_.updateProductType()
   }
 
   onSelected( selected: MatSelectionListChange ) {
