@@ -20,6 +20,7 @@ import { InicioComponent } from './components/pages/inicio/inicio.component';
 import { DocsComponent } from './components/pages/docs/docs.component';
 import { TratamientoDatosComponent } from './components/pages/legal/tratamiento-datos/tratamiento-datos.component';
 import { LegalComponent } from './components/pages/legal/legal.component';
+import { OpcionesComponent } from './components/agentes/agente/opciones/opciones.component';
 
 const routes: Routes = [
     {
@@ -47,7 +48,8 @@ const routes: Routes = [
                     { path: 'mensajes', component: MensajesComponent },
                     { path: 'mensaje/:name', component: MensajeComponent, },
                     { path: 'tipos', component: TiposComponent },
-                    { path: 'opciones', component: AgentConfigComponent },
+                    { path: 'configuraciones', component: AgentConfigComponent },
+                    { path: 'opciones', component: OpcionesComponent },
                 ],
             },
             { path: 'tarjetas', component: TarjetasComponent },

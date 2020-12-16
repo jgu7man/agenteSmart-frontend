@@ -49,8 +49,9 @@ export class AgenteComponent implements OnInit, OnDestroy {
   agentLinks:NAVLINK[] = [
     { path: 'bienvenida', label: 'Bienvenida', icon: 'fa-filter' },
     { path: 'mensajes', label: 'Flujo', icon:'fa-sitemap' },
-    { path: 'tipos', label: 'Tipos', icon:'fa-exchange-alt' },
-    { path: 'opciones', label: 'Configuración', icon: 'fa-cog' },
+    { path: 'opciones', label: 'Opciones', icon: 'fa-exchange-alt' },
+    { path: 'tipos', label: 'Tipos', icon:'fa-list-alt' },
+    { path: 'configuraciones', label: 'Configuración', icon: 'fa-cog' },
   ]
 
   ngOnDestroy() {

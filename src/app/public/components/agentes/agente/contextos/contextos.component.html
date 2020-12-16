@@ -5,6 +5,15 @@ id="contextos"
 cdkDropList 
 cdkDropListOrientation="vertical" 
 (cdkDropListDropped)="drop($event)">
+    
+<div class="col s12 enColumn">
+        <div class="row">
+            <div class="col s12">
+                <p class="contexto-name">Sin contexto</p>
+            </div>
+        </div>
+    </div>
+
     <div class="col s12 en-Column" 
     cdkDrag cdkDragLockAxis="y"
     *ngFor="let contexto of (agente_.contextosList$ | async) | sortBy:'asc':'index'"

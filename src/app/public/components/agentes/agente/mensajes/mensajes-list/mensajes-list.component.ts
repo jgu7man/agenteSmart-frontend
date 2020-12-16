@@ -5,6 +5,10 @@ import { MensajesService } from '../mensajes.service';
 import { IntentModel } from '../mensaje.model';
 import { CurrentAgenteService } from '../../current-agente.service';
 import { CacheService } from '../../../../../../Gdev-Tools/cache/cache.service';
+import { DiagramProps } from '../diagram/diagram-data.interface';
+import { DiagramService } from '../diagram/diagram.service';
+import { TextService } from '../../../../../../Gdev-Tools/text/gdev-text.service';
+import { ContextoModel } from '../../contextos/contexto.model';
 @Component({
   selector: 'aSmart-mensajes-list',
   templateUrl: './mensajes-list.component.html',
@@ -13,25 +17,51 @@ import { CacheService } from '../../../../../../Gdev-Tools/cache/cache.service';
 export class MensajesListComponent implements OnInit {
 
   switchAddIntent: boolean = false
+  newIntent: string = '';
   newDisplayName: string = ''
-  intents: IntentModel[] = []
+  mensajes: IntentModel[];
 
 
-  @Input() contexto
+  // @Input() contexto
   @ViewChild( 'intentNuevo' ) intentNuevo: ElementRef
   constructor (
     private _loading: Loading,
-    public mensajes: MensajesService,
+    public mensajes_: MensajesService,
     public agente: CurrentAgenteService,
-    private _alerta: AlertService,
+    public diagram_: DiagramService,
+    private _text: TextService,
     private _cache: CacheService
   ) { }
 
   async ngOnInit() {
-    //Cargo todo los intents del Agente Actual.
-    // this.intents = await this.mensajes.getAllIntents()
-    // console.log('Abemus Intents:', this.intents);
+    this.getMensajes()
   }
+
+  async getMensajes() {
+        
+    this.mensajes = await this.mensajes_.getMensajesWithoputContext();
+    let contextosLists = this._cache.getDataKey('contextosLists');
+    let agentContextos: ContextoModel[] = this._cache.getDataKey('contextos')
+
+    
+    
+    if (!contextosLists) {
+        contextosLists = { ['sinContexto']: this.mensajes };
+    }
+    else {
+        contextosLists['sinContexto'] = this.mensajes;
+    }
+    if (agentContextos) {
+        
+        Object.keys(contextosLists).forEach((name) => {
+            let contexto = agentContextos.find(c => c.contextName == name)
+            if (!contexto) delete contextosLists[name]
+        })
+
+    }
+    this._cache.updateData('contextosLists', contextosLists);
+    
+}
 
   async toAddIntent() {
     this.switchAddIntent = !this.switchAddIntent
@@ -39,41 +69,33 @@ export class MensajesListComponent implements OnInit {
     this.intentNuevo.nativeElement.focus()
   }
 
-  async onAddIntent( contexto? ) {
-    this.switchAddIntent = false
+  async onAddIntent() {
+    this._loading.toggleWaitingSpinner(true)
+    this.switchAddIntent = false;
+    if ( !this.mensajes ) this.mensajes = []
+    
+    let contexto = this._text.normalize(this.newIntent).toLowerCase()
 
-    if (this.newDisplayName) {
-      this.intents = await this._cache.getAsyncKey<IntentModel[]>('intents')
-      let lastIndex = this.intents.length
-      //
-      try {
-        console.log('crear')
-        const newIntent = await this.mensajes.createNewIntent({displayName: this.newDisplayName})
-
-        if (newIntent) {
-          console.info('Intent Created, response:', newIntent)
-
-          //se ha creado el intent(regresa un intent completo vacio),
-         
-          //aqui nose que hacer con el resourceID
-          // await this.mensajes.setMensaje( newIntent, lastIndex )
-
-        }
-      } catch (error) {
-        if (error) {
-          console.error(error)
-          switch (error.error.error.code) {
-            case 3:
-              this._alerta.sendFloatNotification("Ya tienes un Intent con ese nombre.")
-              break;
-            default:
-              this._alerta.sendFloatNotification("Error creando intent, porfavor vuelva a intentarlo.")
-              break;
-          }
-        }
-      }
+    if (this.newIntent) {
+        let lastIndex = this.mensajes.length;
+        await this.mensajes_.setMensaje(this.newIntent, lastIndex, contexto);
+        
     }
   }
+
+
+  getMensajeRoute(name:string) {
+    name = name.slice(name.lastIndexOf('/') + 1);
+    return name
+  }
+
+  async setDiagramaData(props: DiagramProps, id) {
+    this.diagram_.object$.next({
+        props,
+        id,
+        anchors: await this.mensajes_.getFollowingMensajes(id),
+    });
+}
   
 
   trackByName( index, intent: IntentModel ) {

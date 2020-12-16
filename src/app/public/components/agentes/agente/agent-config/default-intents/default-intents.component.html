@@ -16,6 +16,12 @@
         </div>
         <div class="col s12">
             <button mat-button
+            (click)="opciones_.restoreDefaultIntent('Default Options Intent')">
+                Restaurar intent de Opciones
+            </button>
+        </div>
+        <div class="col s12">
+            <button mat-button
             (click)="opciones_.restoreDefaultIntent('Default Fallback Intent')">
                 Restaurar intent de Retroceso
             </button>

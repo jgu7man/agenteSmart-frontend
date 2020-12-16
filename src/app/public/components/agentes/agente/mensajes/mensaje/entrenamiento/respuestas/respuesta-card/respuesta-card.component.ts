@@ -96,22 +96,22 @@ export class RespuestaCardComponent implements OnInit {
         }
     }
 
-    async catchContextSelected({ context, continueIntents }: ContextSelected) {
+    async catchContextSelected(context: string) {
         this.setContextSelected(context);
-        console.log(continueIntents);
-        if (continueIntents.length > 0) {
-            this.nextMensajesList = continueIntents
-        } else {
-            this.nextMensajesList
-                = await this._cache.getAsyncKey<MensajeModel[]>('nextMensajes');
-        }
+        // console.log(continueIntents);
+        // if (continueIntents.length > 0) {
+        //     this.nextMensajesList = continueIntents
+        // } else {
+        //     this.nextMensajesList
+        //         = await this._cache.getAsyncKey<MensajeModel[]>('nextMensajes');
+        // }
     }
 
     setContextSelected(contextName?: string) {
         if (contextName) {
             this.respuesta.outputContext = contextName;
-            if (this.nextMensajesList && this.nextMensajesList.length > 0)
-                this.respuesta.nextIntent = this.nextMensajesList[0].displayName;
+            // if (this.nextMensajesList && this.nextMensajesList.length > 0)
+            //     this.respuesta.nextIntent = this.nextMensajesList[0].displayName;
         } else {
             this.respuesta.nextIntent = '*fin';
             this.respuesta.outputContext = '';

@@ -1,23 +1,21 @@
-<div class="container">
-    <div class="row">
-        <div class="col s12 center">
-            <h6 class="center"><b>Entradas list</b></h6>
-        </div>
-    </div>
-    <!-- Lista de mensajes -->
-    <div class="mensajes-list" *ngIf="agente"  >
-        <mat-card *ngFor="let mensaje of agente; trackBy:trackByName" 
-        [routerLink]="['../mensaje',mensaje.name]"
+<div class="mensajes-content">
+   
+    <!-- * Lista de mensajes -->
+    <div class="mensajes-list">
+        <mat-card *ngFor="let mensaje of mensajes; trackBy:trackByName" 
+        [routerLink]="['../mensaje', getMensajeRoute(mensaje.name)]"
         > 
-            <mat-card-content class="mensaje-card">
+            <mat-card-content diagramElement 
+            (getDiagramData)="setDiagramaData($event, mensaje.name)" 
+            class="mensaje-card">
                 <p class="mensaje-name"> <b>{{mensaje.displayName}}</b> </p>
             </mat-card-content>
         </mat-card>
     </div>
-
-
-<!-- Agregado de mensaje nuevo -->
-    <div class="row">
+    
+    
+    <!-- * Agregado de mensaje nueva -->
+    <div class="row addIntent-area">
         <div class="add-intent" [ngClass]="{'activate': switchAddIntent}" *ngIf="!switchAddIntent; else addIntent" (click)="toAddIntent()">
             <i class="fas fa-plus"></i>
         </div>
@@ -32,13 +30,17 @@
                         #intentNuevo
                         (keyup.enter)="onAddIntent()"
                         (keyup.Esc)="$event.target.blur()"
-                        [(ngModel)]="newDisplayName"
+                        (blur)="newIntent == '' ? switchAddIntent = false : onAddIntent()"
+                        [(ngModel)]="newIntent"
                         >
                     </mat-form-field>
                 </mat-card-content>
             </mat-card>
-            <!-- <div class="intent"></div> -->
         </ng-template>
     </div>
-
+    
+    
+    
+                
+            
 </div>

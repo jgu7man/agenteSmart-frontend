@@ -75,6 +75,7 @@ import { AddContextoDialogComponent } from './agente/contextos/add-contexto-dial
 import { ContextoSelectorComponent } from './agente/contextos/contexto-selector/contexto-selector.component';
 import { ParamSelectorComponent } from './agente/mensajes/mensaje/entrenamiento/parametros/param-selector/param-selector.component';
 import { RespuestaTextComponent } from './agente/mensajes/mensaje/entrenamiento/respuestas/respuesta-card/res-style/respuesta-text/respuesta-text.component';
+import { OpcionesComponent } from './agente/opciones/opciones.component';
 
 
 
@@ -144,6 +145,7 @@ import { RespuestaTextComponent } from './agente/mensajes/mensaje/entrenamiento/
     ContextoSelectorComponent,
     ParamSelectorComponent,
     RespuestaTextComponent,
+    OpcionesComponent,
   ],
   imports: [
     CommonModule,

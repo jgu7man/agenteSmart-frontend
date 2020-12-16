@@ -21,7 +21,7 @@ export class AgentConfigService {
     ) {}
 
     async restoreDefaultIntent(
-        intent: 'Default Welcome Intent' | 'Default Fallback Intent'
+        intent: 'Default Welcome Intent' | 'Default Fallback Intent' | 'Default Options Intent'
     ) {
 
         // Init process

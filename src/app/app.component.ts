@@ -16,6 +16,7 @@ export class AppComponent implements OnInit {
     private _cache: CacheService
   ) {
     this._cache.cacheTagName = 'as-data'
+    
   }
   
   ngOnInit() {

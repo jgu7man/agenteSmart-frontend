@@ -86,7 +86,7 @@
             <ng-template #editResp>
                 
             
-            
+                <!-- TIPO DE RESPUESTA -->
                 <div class="row">
                     <div class="col s4 resp-label">
                         Tipo
@@ -106,9 +106,10 @@
                 
     
     
-    
+            <!-- CONTENIDO DE LA TARJETA -->
             <mat-card-content *ngIf="respuesta.tipo">
-    
+                
+                <!-- SWITCH TIPO RESPUESAS -->
                 <div [ngSwitch]="respuesta.tipo">
                     
                     <div *ngSwitchCase="'condicional'">
@@ -132,9 +133,28 @@
     
     
     
-    
+                <!-- CONTEXTO -->
                 <ng-container *ngIf="!sugerenciasActivated">
                     
+
+                    <!-- Select next mensaje -->
+                    <div class="row">
+                        <div class="col s4 resp-label">
+                            Siguiente
+                        </div>
+                        <div class="col s8">
+                            <mat-select 
+                            [(ngModel)]="respuesta.nextIntent" 
+                            name="mensaje">
+                                <mat-option value="*fin">
+                                    Termina conversación
+                                </mat-option>
+                                <mat-option *ngFor="let mensaje of nextMensajesList" [value]="mensaje.displayName">
+                                    {{mensaje.displayName}}
+                                </mat-option>
+                            </mat-select>
+                        </div>
+                    </div>
     
                     <!-- Select contexto -->
                     <div class="row" *ngIf="activeContextSelector">
@@ -153,24 +173,7 @@
         
         
         
-                    <!-- Select next mensaje -->
-                    <div class="row" *ngIf="activeIntentSelector">
-                        <div class="col s4 resp-label">
-                            Siguiente
-                        </div>
-                        <div class="col s8">
-                            <mat-select 
-                            [(ngModel)]="respuesta.nextIntent" 
-                            name="mensaje">
-                                <mat-option value="*fin">
-                                    Termina conversación
-                                </mat-option>
-                                <mat-option *ngFor="let mensaje of nextMensajesList" [value]="mensaje.displayName">
-                                    {{mensaje.displayName}}
-                                </mat-option>
-                            </mat-select>
-                        </div>
-                    </div>
+                    
                 
  
                 </ng-container>
@@ -185,7 +188,7 @@
     
     
     
-                <!-- Action -->
+                <!-- ACCIONES -->
                 <div class="row">
                     <div class="col s4 resp-label">
                         Acción

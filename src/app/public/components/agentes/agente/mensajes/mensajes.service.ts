@@ -145,19 +145,16 @@ export class MensajesService {
         return mensajesList;
     }
 
-    
-
-    async getMensajesListByContextoName(contextoName: string) {
-        var mensajesList = [];
+    async getMensajesWithoputContext() {
+        var mensajesList: MensajeModel[] = []
         const mensajeCol = await (await this.mensajesCollection())
-            .where('inputContextNames', 'array-contains', contextoName)
-            .orderBy('index', 'asc')
-            .get();
-
+            .where('contexto', '==', false).get();
+            
         await this._loading.asyncForEach(mensajeCol.docs, (mensaje) => {
             mensajesList.push(mensaje.data());
-        });
-        return mensajesList;
+        } );
+        
+        return mensajesList
     }
 
     /**

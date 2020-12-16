@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CurrentAgenteService } from '../../current-agente.service';
@@ -13,6 +14,8 @@ import { Store } from '@ngrx/store';
 import { MensajeState } from '../mensaje.model';
 import * as actions from './store/mensaje.actions';
 import { GdevCommonsService } from '../../../../../../Gdev-Tools/commons/gdev-commons.service';
+import { Location } from '@angular/common';
+
 
 
 @Injectable({
@@ -46,7 +49,9 @@ export class CurrentMensajeService {
         private _cache: CacheService,
         private _alerts: AlertService,
         private _http: HttpClient,
-        private _commons: GdevCommonsService
+        private _commons: GdevCommonsService,
+        private _router: Router,
+        private _location: Location
     ) {  }
 
     
@@ -131,15 +136,21 @@ export class CurrentMensajeService {
     async getByActivatedRoute(intentName:string, contexto: string) {
         this._cache.updateData('currentContexto', contexto)
         this._cache.updateData('mensajeName', intentName)
-        this.paramSubs = this.getParams().subscribe(async (data) => {
-            console.log('updated');
-        });
+        // this.paramSubs = this.getParams().subscribe( async ( data ) => {
+        //     console.log(data);
+        // });
         this.currentContexto = await this._cache.getAsyncKey<string>('currentContexto')
         this.mensajeName = await this._cache.getAsyncKey<string>('mensajeName')
         this.mensajesPath = await this._agente.getPath('mensajes');
         this.current = await this.findMensaje(this.mensajeName)
-
-        if (this.current) { this.setCurrent() }
+        console.log(this.current)
+        if ( this.current ) { this.setCurrent() }
+        else { 
+            await this.loading.waitFor(1000)
+            const projectId: string = this._cache.getDataKey('projectId');
+            this._alerts.sendFloatNotification( 'Error al cargar el intent. Parece que fue eliminado' )
+            this._router.navigate( [ `/dashboard/agente/${ projectId }/mensajes` ] )
+        }
     }
 
 
@@ -276,11 +287,15 @@ export class CurrentMensajeService {
     async delete(mensajeName: string) {
         //params intentName (ultima cadena)
         // REVIEW Falta testear esta función.
+        const projectId: string = this._cache.getDataKey('projectId');
         const request = await this.deleteIntentRequest(mensajeName);
-        if (request) {
+        if ( request ) {
+            console.log(mensajeName)
             await (await this.mensajesCollection())
                 .doc(mensajeName)
                 .delete();
+            await this._router.navigateByUrl( `/dashboard`, { skipLocationChange: true } )
+            this._router.navigate([`/dashboard/agente/${ projectId }/mensajes`])
         }
 
         return
@@ -292,7 +307,8 @@ export class CurrentMensajeService {
      * @param {string} intentId
      * @returns {*}  {Promise<any>}
      */
-    private deleteIntentRequest(intentId: string): Promise<any> {
+    private deleteIntentRequest( intentId: string ): Promise<any> {
+        this.loading.toggleWaitingSpinner(true)
         return new Promise((resolve, reject) => {
             const projectId: string = this._cache.getDataKey('projectId');
 
@@ -300,17 +316,17 @@ export class CurrentMensajeService {
                 .delete(this._url + `/${intentId}/project/${projectId}`)
                 .toPromise()
                 .then((response) => {
-                    console.info(response);
-                    resolve(response);
+                    resolve(true);
                 })
                 .catch((err) => {
-                    if (err) {
+                    if ( err ) {
+                        console.log(err);
                         this._alerts.sendError(
                             'No es posible elimnar intent, intentelo de nuevo, porfavor.',
                             err
                         );
                     }
-                    reject(err);
+                    // reject(true);
                 });
         });
     }
@@ -319,10 +335,10 @@ export class CurrentMensajeService {
     unsubscribe() {
         this.store.dispatch(actions.getOutMensaje());
         this._cache.deleteDataKey('currentIntent')
-        this._cache.deleteDataKey('currentRespuestas')
-        this.respuestasSubs.unsubscribe()
-        this.intentListSubs.unsubscribe()
-        if (this.paramSubs ) this.paramSubs.unsubscribe()
+        this._cache.deleteDataKey( 'currentRespuestas' )
+        if ( this.respuestasSubs ) { this.respuestasSubs.unsubscribe() }
+        if ( this.intentListSubs ) { this.intentListSubs.unsubscribe() }
+        if ( this.paramSubs ) this.paramSubs.unsubscribe()
         // console.log('unsubscribe');
     }
 }

@@ -4,18 +4,18 @@
 <ng-template #editContext>
     <div class="contextField">
         <mat-form-field appearence="outline">
-        <input 
-        lowecase
-        matInput
-        #contextEditing
-        type="text" 
-        name="contextEditing" 
-        id="contextEditing"
-        (keydown)="delSpaces($event)"
-        (keyup.enter)="onEditContext()"
-        (blur)="editedContext == contexto.contextName ? switchEditContext = false : onEditContext()"
-        [(ngModel)]="editedContext"
-        >
-    </mat-form-field>
-</div>
+            <input 
+            lowecase
+            matInput
+            #contextEditing
+            type="text" 
+            name="contextEditing" 
+            id="contextEditing"
+            (keydown)="delSpaces($event)"
+            (keyup.enter)="onEditContext()"
+            (blur)="editedContext == contexto.contextName ? switchEditContext = false : onEditContext()"
+            [(ngModel)]="editedContext"
+            >
+        </mat-form-field>
+    </div>
 </ng-template>
