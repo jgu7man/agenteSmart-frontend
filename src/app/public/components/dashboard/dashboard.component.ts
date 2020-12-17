@@ -5,6 +5,8 @@ import { DashboardService } from './dashboard.service';
 import { MatDrawer } from '@angular/material/sidenav';
 import { CacheService } from '../../../Gdev-Tools/cache/cache.service';
 import { ChatService } from '../../../chat/components/chat.service';
+import { ActivatedRoute } from '@angular/router';
+import { Loading } from 'src/app/Gdev-Tools/loading/loading.service';
 
 @Component({
   selector: 'aSmart-dashboard',
@@ -17,12 +19,20 @@ export class DashboardComponent implements OnInit {
   mobileNavbar: NAVLINK[]
   toggleSideNav
   projectId: string
+  section: string
+
+  backdrop: boolean
   constructor (
     public responsive: ResponsiveService,
     public dashboard: DashboardService,
     private _cache: CacheService,
     public chat_: ChatService,
-  ) { }
+    private _loading: Loading
+  ) {
+    this._loading.collectRouteData().subscribe( routeData => {
+      this.section = routeData.data['section']
+    })
+   }
 
   ngOnInit() {
    this.toggleMenuMobile()

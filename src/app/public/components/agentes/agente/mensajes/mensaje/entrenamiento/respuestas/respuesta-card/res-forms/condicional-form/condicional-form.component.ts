@@ -39,9 +39,21 @@ export class CondicionalFormComponent implements OnInit {
         this.result = new CondicionalModel('', '', '', '');
     }
 
-    async ngOnInit() {}
+    async ngOnInit() {
+        console.log( this.result )
+    }
 
-    
+    disableValue() {
+        if ( this.result.condicion == 'existe' || this.result.condicion == 'no_existe') {
+            return true
+        }
+    }
+
+    setParameter() {
+        if ( this.result.parametro ) {
+            return this.result.parametro.split( '$' )[ 1 ].split( '.' )[ 0 ]
+        } 
+    }
 
     onParamChange(selected: ParamSelected) {
         

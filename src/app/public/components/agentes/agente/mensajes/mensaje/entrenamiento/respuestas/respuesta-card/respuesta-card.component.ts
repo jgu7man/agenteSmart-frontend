@@ -113,10 +113,20 @@ export class RespuestaCardComponent implements OnInit {
             // if (this.nextMensajesList && this.nextMensajesList.length > 0)
             //     this.respuesta.nextIntent = this.nextMensajesList[0].displayName;
         } else {
-            this.respuesta.nextIntent = '*fin';
+            // this.respuesta.nextIntent = '*fin';
             this.respuesta.outputContext = '';
         }
         return this.respuesta;
+    }
+
+    disableEScondition() {
+        
+        if (
+            this.respuesta.result[ 'condicion' ] == 'no existe'
+            || this.respuesta.result[ 'condicion' ] == 'existe'
+        ) {
+            return true
+        }
     }
 
     async setNextContext(nextIntent: string) {

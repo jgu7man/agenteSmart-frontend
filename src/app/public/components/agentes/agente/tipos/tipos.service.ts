@@ -149,6 +149,7 @@ export class TiposService {
         // Loading animation
         this.loading.toggleWaitingSpinner( true )
 
+        console.log(tipo)
         // clean object
         Object.keys( tipo ).forEach( key => {
             if ( tipo[ key ] == undefined ) delete tipo[ key ]
@@ -157,9 +158,16 @@ export class TiposService {
 
         await this._putEntityRequest( tipo )
         const resourceID = tipo.name.slice( tipo.name.lastIndexOf( "/" ) + 1 );
-        // console.log(resourceID);
+        console.log( resourceID );
         await ( await this.tiposCollection() ).doc( resourceID ).set( tipo, { merge: true } )
         this.loading.toggleWaitingSpinner( false )
+
+        // Update cache 
+        const tiposList = this._cache.getDataKey<TipoEntidadModel[]>( 'tipos' )
+        const tipoIndex = tiposList.findIndex( t => t.name === 'resourceID' )
+        tiposList[ tipoIndex ] = tipo
+        this._cache.updateData('tipos', tiposList)
+        
         
 
         // End loading animation
@@ -178,7 +186,7 @@ export class TiposService {
                 .then( result => {
                     console.info( "Entity PUT Response:", result );
                     this._alerts.sendFloatNotification('Tipo guardado')
-                    resolve()
+                    resolve(true)
                     // if ( result[ 'status' ] == "Success" ) {
                     //     //exito creado
                     // }
@@ -261,6 +269,7 @@ export class TiposService {
             var productTypesDoc = await productTypeRef.get()
             if ( productTypesDoc.exists ) {
                 let productTypes = productTypesDoc.data() as TipoEntidadModel;
+                console.log(productTypes['status'])
                 
                 if ( productTypes[ 'status' ] === 'created' ) {
                     delete productTypes[ 'status' ]
@@ -268,17 +277,17 @@ export class TiposService {
 
                     await this.createTipo( productTypes )
                     this.getAllEntities()
-
+                    this._alerts.sendFloatNotification('Tipo de datos de productos creada')
 
                 } else if ( productTypes[ 'status' ] === 'unsaved' ) {
                     delete productTypes[ 'status' ]
 
                     await this.updateTipo( productTypes )
                     this.getAllEntities()
+                    this._alerts.sendFloatNotification('Tipo de datos de productos actualizada')
                 } 
                 
                 await productTypeRef.update( { status:'saved' } )
-                this._alerts.sendFloatNotification('Tipo de datos de productos actualizada')
             }
         
         } catch ( error ) {
@@ -287,7 +296,38 @@ export class TiposService {
         }
     }
 
+    async setContextType(entity: string) {
+        const tiposList = await this._cache.getDataKey<TipoEntidadModel[]>( 'tipos' )
+        var contextType: TipoEntidadModel = tiposList.find(
+            t => t.displayName === 'contextos'
+        )
+        
+        try {
+            // Create Tipo  de contextos
+            if ( !contextType ) {
+                contextType = new TipoEntidadModel( 'contextos', 'KIND_MAP', 'AUTO_EXPANSION_MODE_DEFAULT', [], true )    
+                contextType.entities.push( { value: entity, synonyms: [ entity ] } )
 
+                await this.createTipo( contextType )
+            
+            
+            // Update tipo de contextos
+            } else {
+                
+                contextType.entities.push( { value: entity, synonyms: [ entity ] } )
+                await this.updateTipo( contextType )
+            
+            }
+            
+            return this.getAllEntities()
+            
+        } catch (error) {
+            console.error(error)
+            return this._alerts.sendError('Error', error)
+        }
+    }
+
+    
     // READ TIPOS DE DATOS
 
 
@@ -328,7 +368,6 @@ export class TiposService {
     }
 
 
-    // REVIEW
     // DELETE review Delete De EntityType
     private _deleteEntityType(entityId: string): Promise<any> {
       return new Promise( ( resolve, reject ) => {
@@ -355,7 +394,7 @@ export class TiposService {
     }
 
 
-    // TODO EntityType Delete function
+
 
     async deleteTipo(tipoName: string) {
         this.loading.toggleWaitingSpinner(true)

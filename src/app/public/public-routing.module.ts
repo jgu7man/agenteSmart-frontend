@@ -41,7 +41,7 @@ const routes: Routes = [
             { path: 'agentes', component: AgentesComponent },
             { path: 'crear_agente', component: InitAgenteComponent },
             { path: 'editar_agente/:id', component: EditAgenteComponent, },
-            { path: 'agente/:id', component: AgenteComponent, children: 
+            { path: 'agente/:id', component: AgenteComponent, data: {section: 'agente'}, children: 
                 [
                     { path: '', redirectTo: 'mensajes', pathMatch: 'full', },
                     { path: 'bienvenida', component: BienvenidaComponent },

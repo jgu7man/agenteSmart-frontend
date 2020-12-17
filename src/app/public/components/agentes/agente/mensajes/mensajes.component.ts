@@ -3,6 +3,7 @@ import { IntentModel } from './mensaje.model';
 import { Component, OnInit } from '@angular/core';
 import { MensajesService} from './mensajes.service'
 import { CurrentAgenteService } from '../current-agente.service';
+import { Loading } from '../../../../../Gdev-Tools/loading/loading.service';
 
 
 @Component({
@@ -16,10 +17,12 @@ export class MensajesComponent implements OnInit {
     private _mensajes:MensajesService,
     private _alerta: AlertService,
     public agente_: CurrentAgenteService,
+    private loading: Loading
   ) { }
 
   async ngOnInit() {
-    
+    await this.loading.waitFor(5000)
+    // console.log( this.agente_.contextosList )
   }
   
   

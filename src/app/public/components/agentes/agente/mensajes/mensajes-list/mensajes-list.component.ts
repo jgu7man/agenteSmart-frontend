@@ -1,5 +1,5 @@
 import { AlertService } from './../../../../../../Gdev-Tools/alerts/alert.service';
-import { Component, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { Loading } from '../../../../../../Gdev-Tools/loading/loading.service';
 import { MensajesService } from '../mensajes.service';
 import { IntentModel } from '../mensaje.model';
@@ -9,17 +9,20 @@ import { DiagramProps } from '../diagram/diagram-data.interface';
 import { DiagramService } from '../diagram/diagram.service';
 import { TextService } from '../../../../../../Gdev-Tools/text/gdev-text.service';
 import { ContextoModel } from '../../contextos/contexto.model';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'aSmart-mensajes-list',
   templateUrl: './mensajes-list.component.html',
   styleUrls: ['./mensajes-list.component.scss']
 })
-export class MensajesListComponent implements OnInit {
+export class MensajesListComponent implements OnInit , OnDestroy{
 
   switchAddIntent: boolean = false
   newIntent: string = '';
   newDisplayName: string = ''
   mensajes: IntentModel[];
+  listSubs: Subscription
+  agenteSubs: Subscription
 
 
   // @Input() contexto
@@ -35,24 +38,33 @@ export class MensajesListComponent implements OnInit {
 
   async ngOnInit() {
     this.getMensajes()
+    this.agenteSubs = this.agente.agenteLoaded$.subscribe( () => { 
+      // console.log("agente cargado")
+      this.getMensajes()
+      // this.listSubs = this.agente.intentList$
+      //   .subscribe( () => {
+      //     console.log("intent cargados")
+      //   } )
+    })
   }
 
   async getMensajes() {
         
-    this.mensajes = await this.mensajes_.getMensajesWithoputContext();
+    this.mensajes = await this.mensajes_.getMensajesWithoutContext();
     let contextosLists = this._cache.getDataKey('contextosLists');
     let agentContextos: ContextoModel[] = this._cache.getDataKey('contextos')
 
     
     
     if (!contextosLists) {
-        contextosLists = { ['sinContexto']: this.mensajes };
+        contextosLists = { ['no-context']: this.mensajes };
     }
     else {
-        contextosLists['sinContexto'] = this.mensajes;
+        contextosLists['no-context'] = this.mensajes;
     }
     if (agentContextos) {
-        
+        // console.log( agentContextos )
+
         Object.keys(contextosLists).forEach((name) => {
             let contexto = agentContextos.find(c => c.contextName == name)
             if (!contexto) delete contextosLists[name]
@@ -74,11 +86,9 @@ export class MensajesListComponent implements OnInit {
     this.switchAddIntent = false;
     if ( !this.mensajes ) this.mensajes = []
     
-    let contexto = this._text.normalize(this.newIntent).toLowerCase()
-
     if (this.newIntent) {
         let lastIndex = this.mensajes.length;
-        await this.mensajes_.setMensaje(this.newIntent, lastIndex, contexto);
+        await this.mensajes_.setMensaje(this.newIntent, lastIndex);
         
     }
   }
@@ -100,6 +110,11 @@ export class MensajesListComponent implements OnInit {
 
   trackByName( index, intent: IntentModel ) {
     return intent.name
+  }
+
+  ngOnDestroy() {
+    this.agenteSubs.unsubscribe()
+    if ( this.listSubs ) this.listSubs.unsubscribe()
   }
 
 }

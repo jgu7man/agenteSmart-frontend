@@ -21,7 +21,7 @@ export class AgentConfigService {
     ) {}
 
     async restoreDefaultIntent(
-        intent: 'Default Welcome Intent' | 'Default Fallback Intent' | 'Default Options Intent'
+        intent: 'Default Welcome Intent' | 'Default Fallback Intent' | 'Default Context Intent'
     ) {
 
         // Init process
@@ -53,9 +53,13 @@ export class AgentConfigService {
         await this.fs
             .collection(await this._agente.getPath('mensajes'))
             .doc(resourceID)
-            .set( defaultIntent );
+            .set( {
+                name: resourceID,
+                displayName: defaultIntent.displayName
+            } );
         
-        console.log('Process finished');
+        console.log( 'Process finished' );
+        this._agente.getAllIntents()
         
         this.loading.toggleWaitingSpinner( false )
         this._alerts.sendFloatNotification(intent+' creado')

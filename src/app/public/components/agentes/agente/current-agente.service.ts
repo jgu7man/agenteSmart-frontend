@@ -154,7 +154,10 @@ export class CurrentAgenteService {
         const path = await this.getPath('contextos');
         this.contextosSubs = 
             this.fs.collection<ContextoModel>(path).valueChanges()
-            .pipe(tap(list =>this._cache.updateData('contextos', list)))
+            .pipe(
+                map<ContextoModel[], ContextoModel[]>
+                    ( list => list.filter( c => c.contextName != 'contextos' ) ),
+                tap( list => this._cache.updateData( 'contextos', list ) ) )
             .subscribe()
         this.contextosList$ = this._cache.listenForChanges<ContextoModel[]>('contextos')
         this.contextosList = await this._cache.getAsyncKey<ContextoModel[]>('contextos', 2);
@@ -229,8 +232,8 @@ export class CurrentAgenteService {
             this._http
                 .get<IntentModel[]>(this._url + `/${projectId}`, {responseType: 'json',})
                 .pipe(
-                    // tap(intents => console.log(intents)),
                     pluck<any, IntentModel[]>('result', 'intents'),
+                    tap(intents => console.log(intents)),
                     map<IntentModel[], IntentModel[]>((list) => {
                         return list.map((intent) => {
                             intent.name = intent.name.slice(

@@ -12,8 +12,7 @@ import { Subject } from 'rxjs';
 import { TiposService } from '../../../../tipos/tipos.service';
 import { TipoEntidadModel } from '../../../../tipos/tipo.model';
 import { TarjetaModel } from '../../../../../../tarjetas/tarjeta.model';
-import { ColeccionesService } from '../../../../../../colecciones/colecciones.service';
-import { pluck } from 'rxjs/operators';
+import { pluck, map } from 'rxjs/operators';
 
 
 
@@ -106,12 +105,12 @@ export class RespuestasService {
                     this.currentMensaje = mensaje;
                     this._cache.listenForChanges<IntentModel>('currentIntent')
                         .pipe(
-                        pluck<IntentModel, ParametroMensaje[]>('parameters')
-                    ).subscribe(list => 
-                        this.paramList = list
-                    )
-                    // console.log(this.paramList);
-                    this.getMensajeTipos(this.currentMensaje.parameters);
+                            map<IntentModel, ParametroMensaje[]>
+                                ( ( intent: IntentModel ) => intent
+                                    ? intent.parameters : []
+                            )
+                        ).subscribe(list => this.paramList = list )
+                    if (this.currentMensaje) this.getMensajeTipos(this.currentMensaje.parameters);
                 }
             });
 

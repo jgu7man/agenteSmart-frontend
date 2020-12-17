@@ -30,13 +30,13 @@ export class NavbarComponent implements OnInit, OnChanges {
 
   async ngOnInit() {
     this.user = await this.auth.getCurrentUser()
-    console.log(this.view);
+    // console.log(this.view);
     this.updatePage()
     
   }
 
   async getCurrentPage() {
-    this._loading.colectRouteData().subscribe( data => {
+    this._loading.collectRouteData().subscribe( data => {
       this.view = data.data['page']
     })
     // await this._loading.getCurrentActivatedRoute().pipe(

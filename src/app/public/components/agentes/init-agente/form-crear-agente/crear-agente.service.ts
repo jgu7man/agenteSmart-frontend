@@ -11,6 +11,8 @@ import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { CreatingComponent } from '../creating/creating.component';
 import { AlertService } from '../../../../../Gdev-Tools/alerts/alert.service';
+import { AgentConfigService } from '../../agente/agent-config/agent-config.service';
+import { ContextoModel } from '../../agente/contextos/contexto.model';
 
 interface doc {
     user: string,
@@ -31,7 +33,8 @@ export class CrearAgenteService {
         private router: Router,
         private _text: TextService,
         private _dialog: MatDialog,
-        private _alerts: AlertService
+        private _alerts: AlertService,
+        private _config: AgentConfigService,
     ) { }
 
     waitFor = ( ms ) => new Promise( r => setTimeout( r, ms ) )
@@ -84,9 +87,16 @@ export class CrearAgenteService {
                 console.log( user.uid );
 
                 // * Crear el agente
-                await this.createNewAgent( agente ).subscribe( () => {
-                  this.router.navigate(['/dashboard/agentes'])
-                  this.creatingDialog.close()
+                this.createNewAgent( agente ).subscribe( () => {
+                    this._config.restoreDefaultIntent( 'Default Context Intent' )
+
+                    this.afs.collection(
+                        `usuarios/${ user.uid }/agentes/${ agente.projectId }/contextos/`
+                    ).add( {
+                        contextName: 'Contextos',
+                    }).then(cont => cont.update({ id: cont.id}))
+                    this.router.navigate(['/dashboard/agentes'])
+                    this.creatingDialog.close()
                 } )
 
             } )

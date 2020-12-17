@@ -104,7 +104,7 @@ export class ParametrosService {
 
     // READ PARAM
     getParamByName(displayName: string) {
-        console.log(this._mensaje.current);
+        // console.log(this._mensaje.current);
         var paramSelected = this._mensaje.current.parameters.find(
             (p) => p.entityTypeDisplayName == displayName
         );
@@ -161,7 +161,7 @@ export class ParametrosService {
     
     
     
-    // DELETE
+    // DELETE parameter
 
     async deleteParam(param: ParametroMensaje) {
         try {

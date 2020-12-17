@@ -33,6 +33,7 @@ export class ContextoSelectorComponent implements OnInit {
             let agenteContext = this._cache.getDataKey<ContextoModel[]>(
                 'contextos'
             );
+            console.log(agenteContext)
             if (agenteContext) {
                 this.contextNameList = agenteContext.map(
                     (context) => context.contextName

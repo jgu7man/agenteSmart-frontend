@@ -3,7 +3,7 @@
     <div class="col s4 resp-label">Si</div>
     <div class="col s8">
         <aSmart-param-selector
-            [paramSelected]="result.parametro"
+            [paramSelected]="setParameter()"
             (onParamaSelected)="onParamChange($event)"
         ></aSmart-param-selector>
     </div>
@@ -28,7 +28,7 @@
     </div>
 </div>
 <!-- Valor -->
-<div class="row">
+<div class="row" *ngIf="disableValue()" >
     <div class="col s4 resp-label">Valor</div>
     <div class="col s8">
         <ng-container *ngIf="!isOriginal; else original">

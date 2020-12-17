@@ -5,11 +5,13 @@
         [(value)]="contexto"
         name="contexto">
             <mat-option value="*fin">
-                Termina conversación
+                <span class="grey-text">Termina conversación</span>
             </mat-option>
             <mat-option *ngFor="let contexto of contextNameList" 
             [value]="contexto">
-                {{contexto}}
+                <span [ngClass]="{'blue-text': contexto == 'contextos'}">
+                    {{contexto}}
+                </span>
             </mat-option>
         </mat-select>
     </mat-form-field>

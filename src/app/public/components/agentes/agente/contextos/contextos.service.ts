@@ -10,6 +10,9 @@ import { AlertService } from '../../../../../Gdev-Tools/alerts/alert.service';
 import { Loading } from '../../../../../Gdev-Tools/loading/loading.service';
 import { Subject, Subscription } from 'rxjs';
 import { ColorService } from '../../../../../Gdev-Tools/color/color.service';
+import { TiposService } from '../tipos/tipos.service';
+import { TipoEntidadModel } from '../tipos/tipo.model';
+import { CurrentMensajeService } from '../mensajes/mensaje/current-mensaje.service';
 
 @Injectable({
     providedIn: 'root',
@@ -31,7 +34,9 @@ export class ContextosService {
         private _agente: CurrentAgenteService,
         private _cache: CacheService,
         private loading: Loading,
-        private _color: ColorService
+        private _color: ColorService,
+        private _tipos: TiposService,
+        private _currentMensaje: CurrentMensajeService
     ) {
         // Obtiene el contexto de la ruta actual
         this.loading.getRouteQueryParams().subscribe((queryParams) => {
@@ -53,23 +58,39 @@ export class ContextosService {
     async setContext(contexto: ContextoModel) {
         try {
             contexto.color = this._color.generateHSLcolor(50, 50);
-            this.list = this._cache.getDataKey<ContextoModel[]>('contextos');
+            this.list = this._cache.getDataKey<ContextoModel[]>( 'contextos' );
+            const contextName = contexto.contextName
+            console.log(this.list)
 
-            Object.keys(contexto).forEach(key => { if (contexto[key] == undefined) delete contexto[key]})
+            Object.keys( contexto ).forEach( key => {
+                if ( contexto[ key ] == undefined ) delete contexto[ key ]
+            } )
 
-            if (!contexto.id) {
+            // Contexto nuevo
+            if ( !contexto.id ) {
                 let contextFinded = this.list.find(
-                    (context) => context.contextName === contexto.contextName
+                    (context) => context.contextName === contextName
                 );
+
+                console.log(!contextFinded)
+
+                // Agrega contexto nuevo
                 if (!contextFinded) {
                     let contextNuevo = await (
                         await this.contextosCollection()
                     ).add(contexto);
                     contextNuevo.update({ id: contextNuevo.id });
                     contexto.id = contextNuevo.id;
+                    
+                    await this._mensajes.setContextMensaje( contextName )
+                    await this._tipos.setContextType( contextName )
+
+                // Contexto duplicado
                 } else {
                     this._alerts.sendMessageAlert('Contexto duplicado');
                 }
+            
+            // Actualiza contexto
             } else {
                 // Crea un nuevo contexto
                 await (await this.contextosCollection())
@@ -152,25 +173,71 @@ export class ContextosService {
     // DELETE
 
     async delContext(context: ContextoModel) {
+        
+        await this.deleteContextFromMensajes( context )
+        await this.deleteContextFromIntent( context.contextName )
+        await this.deleteContextFromTipo(context.contextName)
+        await ( await this.contextosCollection() ).doc( context.id ).delete();
+        
+        console.log('Context deleted')
+        return
+    }
+
+
+    private deleteContextFromIntent( context: string ) {
+        const intentList = this._cache.getDataKey<IntentModel[]>( 'intents' )
+        const contextIntent = intentList.find(
+            i => i.displayName === 'Default Context Intent'
+        )
+
+        contextIntent.parameters = contextIntent.parameters.map( c => {
+            if (c.displayName !== context) return c
+        } )
+        
+        contextIntent.trainingPhrases = contextIntent.trainingPhrases.map( t => {
+            if (t.parts[0].text !== context) return t
+        } )
+        
+        this._currentMensaje.update( contextIntent )
+        return 
+    }
+
+
+    private async deleteContextFromTipo( context: string ) {
+        const tiposList = await this._cache.getDataKey<TipoEntidadModel[]>( 'contextos' );
+        const contextType = tiposList.find( c => c.displayName === context )
+        if ( contextType ) { 
+            contextType.entities = contextType.entities.map( entity => {
+                if (entity.value != context) return entity
+            } )
+            await this._tipos.updateTipo(contextType)
+            console.log('Entities list updated')
+        }
+        return 
+    }
+
+    private async deleteContextFromMensajes( context: ContextoModel ) {
         var mensajesPath = await this._agente.getPath('mensajes');
         const mensajeRef = this.afs.collection(mensajesPath).ref;
 
-        const mensajes = await this._mensajes.getMensajesListByContexto(
-            context
-        );
+        const mensajes = await
+            this._mensajes.getMensajesListByContexto( context );
+    
         if (mensajes.length > 0) {
             mensajes.forEach((mensaje: IntentModel) => {
                 let contextToDel = mensaje.contextos.findIndex(
                     (ent) => ent === context.id
                 );
+                
                 mensaje.contextos.splice(contextToDel, 1);
                 mensajeRef
-                    .doc(mensaje.name)
-                    .set({ contextos: mensaje.contextos }, { merge: true });
-            });
+                .doc(mensaje.name)
+                .set({ contextos: mensaje.contextos }, { merge: true });
+            } );
+                
+            console.log('Intents updated')
         }
 
-        await (await this.contextosCollection()).doc(context.id).delete();
-        return;
+        return 
     }
 }

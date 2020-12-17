@@ -32,7 +32,8 @@
                                         <b>{{respuesta.nextIntent}}</b><br>
                                         <span style="font-size: x-small;">
                                             Si {{respuesta.result['parametro']}}
-                                            es {{respuesta.result['condicion']}}
+                                            <span *ngIf="!disableEScondition()">es</span>
+                                            {{respuesta.result['condicion']}}
                                             {{respuesta.result['valor']}}
                                         </span>
                                     </div>

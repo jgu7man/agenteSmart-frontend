@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Loading } from 'src/app/Gdev-Tools/loading/loading.service';
 import { CacheService } from 'src/app/Gdev-Tools/cache/cache.service';
@@ -11,6 +12,7 @@ import { of, Subject } from 'rxjs';
 import { IntentModel, MensajeModel } from './mensaje.model';
 import { map } from 'rxjs/operators';
 import { RespuestaModel } from './mensaje/entrenamiento/respuestas/respuesta.model';
+import { CurrentMensajeService } from './mensaje/current-mensaje.service';
 
 @Injectable({
     providedIn: 'root',
@@ -33,7 +35,10 @@ export class MensajesService {
         private _cache: CacheService,
         private _alerts: AlertService,
         private _agente: CurrentAgenteService,
-        private _loading: Loading
+        private _loading: Loading,
+        private _text: TextService,
+        private _current: CurrentMensajeService,
+        private _router: Router
     ) {}
 
     /** Obtine la referencia actual a FIRESTORE para los mensjaes */
@@ -65,7 +70,7 @@ export class MensajesService {
                         this.reloadMensajes$.next();
                     },
                     (onError) => {
-                        this._alerts.sendError('Algo falló', onError);
+                        // this._alerts.sendError('Algo falló', onError);
                         reject(onError);
                     }
                 );
@@ -83,17 +88,24 @@ export class MensajesService {
         index?: number,
         contexto?: string
     ) {
-        
-        let projectId = this._cache.getDataKey('projectId')
+        this._loading.toggleWaitingSpinner(true)
+        const projectId = this._cache.getDataKey( 'projectId' )
+        var nameContext = this._text.normalize( displayName ).toLowerCase()
+        nameContext = nameContext.replace(/\s/g, '')
         console.log({ displayName,index,contexto });
         try {
-            
+
             const newIntent = await this.createNewIntent({
                 displayName: displayName,
                 inputContextNames: contexto
-                    ? [`projects/${projectId}/agent/sessions/-/contexts/${contexto}`]
-                    : []
-            });
+                    ? [
+                        `projects/${ projectId }/agent/sessions/-/contexts/${ contexto }`,
+                        `projects/${ projectId }/agent/sessions/-/contexts/${ nameContext }`
+                    ]
+                    : [
+                        `projects/${ projectId }/agent/sessions/-/contexts/${ nameContext }`
+                    ]
+            } );
 
             const resourceID = newIntent.name.slice(
                 newIntent.name.lastIndexOf('/') + 1
@@ -105,21 +117,63 @@ export class MensajesService {
             };
     
             if (index) intent['index'] = index;
-            if (contexto) intent['contexto'] = contexto;
+            intent[ 'contexto' ] = contexto
+                ? contexto
+                : 'no-context'
             
-    
+            console.log(`guardando intent en firestore: `, intent)
             await (await this.mensajesCollection()).doc(resourceID).set(intent)
             this._agente.getIntentList()
-            this._loading.toggleWaitingSpinner(false)
+            this._loading.toggleWaitingSpinner( false )
+            await this._router.navigateByUrl( '/dashboard/agentes', { skipLocationChange: true } )
+            this._router.navigate([`/dashboard/agente/${ projectId }/mensajes`])
             return this._alerts.sendFloatNotification('Mensaje creado');
-
+            
         } catch (error) {
-            console.error(error.error.error.details)
-            this._alerts.sendError('Error', error.error.error)
+            console.error( error )
+            this._loading.toggleWaitingSpinner(false)
+            if ( error.error.code === 3 ) {
+                this._alerts.sendError( 'Este nombre de intent ya existe, por favor elige otro', error.error.error.details )
+            } else if ( error.error.code === 9){    
+                this._alerts.sendError( 'El nombre del intent no sólo puede contener caracteres como LETRAS: [a-z, A-Z], números:[0-9], guión bajo [_], guión medio [-] o espacios', error.error.error.details )
+
+            } else {
+                this._alerts.sendError('Error', error.error.error.details)
+            }
         }
   }
   
 
+    setContextMensaje( context: string ) {
+        const intentList = this._cache.getDataKey<IntentModel[]>( 'intents' )
+        const contextIntent = intentList.find(
+            i => i.displayName === 'Default Context Intent'
+        )
+
+        contextIntent.parameters.push( {
+            defaultValue: context,
+            displayName: context,
+            entityTypeDisplayName: context,
+            isList: false,
+            mandatory: false,
+            value: context
+        } )
+        
+        contextIntent.trainingPhrases.push( {
+            parts: [ {
+                alias: context,
+                entityType: "@contextos",
+                text: context,
+                userDefined: true
+            }],
+            type: "EXAMPLE"
+        } )
+        
+        // console.log(contextIntent)
+        this._current.update( contextIntent )
+        return 
+
+    }
 
 
     // READ ENTRADAS
@@ -131,24 +185,26 @@ export class MensajesService {
      */
     async getMensajesListByContexto(contexto: ContextoModel) {
         var mensajesList: MensajeModel[] = [];
-        if (contexto.id) {
+        if ( contexto.id ) {
+            // console.log(contexto.id);
             const mensajeCol = await (await this.mensajesCollection())
                 .where('contexto', '==', contexto.id)
                 .orderBy('index', 'asc')
                 .get();
             
+            // console.log(mensajeCol.docs);
             await this._loading.asyncForEach(mensajeCol.docs, (mensaje) => {
                 mensajesList.push(mensaje.data());
             });
         }
-
+        // console.log(mensajesList)
         return mensajesList;
     }
 
-    async getMensajesWithoputContext() {
+    async getMensajesWithoutContext() {
         var mensajesList: MensajeModel[] = []
         const mensajeCol = await (await this.mensajesCollection())
-            .where('contexto', '==', false).get();
+            .where('contexto', '==', 'no-context').get();
             
         await this._loading.asyncForEach(mensajeCol.docs, (mensaje) => {
             mensajesList.push(mensaje.data());

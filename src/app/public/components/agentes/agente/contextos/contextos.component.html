@@ -6,7 +6,7 @@ cdkDropList
 cdkDropListOrientation="vertical" 
 (cdkDropListDropped)="drop($event)">
     
-<div class="col s12 enColumn">
+<div class="col s12 en-Column">
         <div class="row">
             <div class="col s12">
                 <p class="contexto-name">Sin contexto</p>
@@ -14,37 +14,39 @@ cdkDropListOrientation="vertical"
         </div>
     </div>
 
-    <div class="col s12 en-Column" 
-    cdkDrag cdkDragLockAxis="y"
-    *ngFor="let contexto of (agente_.contextosList$ | async) | sortBy:'asc':'index'"
-    id="context-{{contexto}}"
-    gdev-color [background]="contexto.color"
-    >
+    <ng-container *ngFor="let contexto of (agente_.contextosList$ | async) | sortBy:'asc':'index'">
+        <div class="col s12 en-Column" 
+        cdkDrag cdkDragLockAxis="y"
+        *ngIf="contexto.contextName != 'contextos'"
+        id="context-{{contexto}}"
+        gdev-color [background]="contexto.color"
+        >
 
-        <!-- Titulo de contexto agregado -->
-        <div class="row">
-            <div class="col s10">
-                <aSmart-contexto 
-                cdkDragHandle 
-                class="context-name" 
-                [contextId]="contexto.id"
-                [contexto]="contexto" 
-                (mousedown)="grabEffect($event)" 
-                (mouseup)="ungrab($event)" 
-                ></aSmart-contexto>
+            <!-- Titulo de contexto agregado -->
+            <div class="row" >
+                <div class="col s10">
+                    <aSmart-contexto 
+                    cdkDragHandle 
+                    class="context-name" 
+                    [contextId]="contexto.id"
+                    [contexto]="contexto" 
+                    (mousedown)="grabEffect($event)" 
+                    (mouseup)="ungrab($event)" 
+                    ></aSmart-contexto>
+                </div>
+                <div class="col s2">
+                    <button mat-icon-button [mat-menu-trigger-for]="contextMenu">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                    <mat-menu #contextMenu="matMenu">
+                        <button mat-menu-item (click)="toEdit(contexto)">Editar</button>
+                        <button mat-menu-item (click)="toDeleteContext(contexto)">Eliminar</button>
+                    </mat-menu>
+                </div>
             </div>
-            <div class="col s2">
-                <button mat-icon-button [mat-menu-trigger-for]="contextMenu">
-                    <i class="fas fa-ellipsis-v"></i>
-                </button>
-                <mat-menu #contextMenu="matMenu">
-                    <button mat-menu-item (click)="toEdit(contexto)">Editar</button>
-                    <button mat-menu-item (click)="toDeleteContext(contexto)">Eliminar</button>
-                </mat-menu>
-            </div>
+            
         </div>
-        
-    </div>
+    </ng-container>
 
 
     <!-- Agregado de nuevo contexto -->

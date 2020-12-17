@@ -42,7 +42,8 @@ export class MensajesByContextoComponent implements OnInit {
     async ngOnInit() {
         this._agente.intentList$
             .pipe(
-                startWith([]),
+                startWith( [] ),
+                // tap(x => console.log(x.length)),
                 distinctUntilChanged( ( x, y ) => x.length
                     ? x.length == y.length
                     : x == y) )
@@ -97,6 +98,7 @@ export class MensajesByContextoComponent implements OnInit {
 
         if (this.newIntent) {
             let lastIndex = this.mensajes.length;
+            console.log(`creado ${this.newIntent}, index: ${lastIndex}`)
             await this.mensajes_.setMensaje(this.newIntent, lastIndex, contexto);
             
         }

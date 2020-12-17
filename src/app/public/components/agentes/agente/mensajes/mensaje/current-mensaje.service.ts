@@ -133,14 +133,13 @@ export class CurrentMensajeService {
    }
 
     /** Obtiene el intent actual a partir de la subscripción a los cambios de la ruta */
-    async getByActivatedRoute(intentName:string, contexto: string) {
+    async getByActivatedRoute( intentName: string, contexto: string ) {
+        this.loading.toggleWaitingSpinner(true)
         this._cache.updateData('currentContexto', contexto)
         this._cache.updateData('mensajeName', intentName)
-        // this.paramSubs = this.getParams().subscribe( async ( data ) => {
-        //     console.log(data);
-        // });
-        this.currentContexto = await this._cache.getAsyncKey<string>('currentContexto')
-        this.mensajeName = await this._cache.getAsyncKey<string>('mensajeName')
+        
+        this.currentContexto = await this._cache.getAsyncKey<string>('currentContexto', 1)
+        this.mensajeName = await this._cache.getAsyncKey<string>('mensajeName', 1)
         this.mensajesPath = await this._agente.getPath('mensajes');
         this.current = await this.findMensaje(this.mensajeName)
         console.log(this.current)
@@ -151,6 +150,7 @@ export class CurrentMensajeService {
             this._alerts.sendFloatNotification( 'Error al cargar el intent. Parece que fue eliminado' )
             this._router.navigate( [ `/dashboard/agente/${ projectId }/mensajes` ] )
         }
+        this.loading.toggleWaitingSpinner(false)
     }
 
 
@@ -186,32 +186,50 @@ export class CurrentMensajeService {
         return this.respuestasList
     }
 
+
+
+    // UPDATE MENSAJE ACTUAL
     mensajeUpdated$: Subject<any> = new Subject()
     /** Actualiza el intent actual en DIALOGFLOW con los cambios hechos en el área de entrenamiento. */
-    async update() {
+    async update(mensaje?: IntentModel) {
         this.loading.toggleWaitingBar();
-        Object.keys(this.current).forEach((key) => {
-            if (this.current[key] == undefined) delete this.current[key];
-        });
 
-        console.log(this.current);
+        // if ( !mensaje ) {
+        //     Object.keys(this.current).forEach((key) => {
+        //         if (this.current[key] == undefined) delete this.current[key];
+        //     });
+        // } else {
+        //     Object.keys(mensaje).forEach((key) => {
+        //         if (mensaje[key] == undefined) delete mensaje[key];
+        //     });
+        // }
+
         try {
-            // REVIEW falta testear esta función de update
 
-            const request = await this.updateIntentApiRequest(this.current);
-            console.log(request);
-            if (request) {
-                console.info('Se Actualizo Intent:', request);
-    
-                this._agente.getIntentList()
-                // await ( await this.mensajesCollection() ).doc( this.current.name )
-                // .update( { ...this.current } )
-
-                this.store.dispatch(actions.setSaved());
-                this.loading.toggleWaitingBar();
-                this._alerts.sendFloatNotification('Mensaje guardado');
-                return this.mensajeUpdated$.next()
+            // Update current mensaje
+            if ( !mensaje ) {
+                const request = await this.updateIntentApiRequest(this.current);
+                console.log(request);
+                if (request) {
+                    console.info('Se Actualizo Intent:', request);
+                    
+                    this._agente.getIntentList()
+                    this.store.dispatch(actions.setSaved());
+                    this.loading.toggleWaitingBar();
+                    this._alerts.sendFloatNotification('Mensaje guardado');
+                    return this.mensajeUpdated$.next()
+                }
             }
+
+            
+            // Update another mensaje
+            else {
+                await this.updateIntentApiRequest( mensaje );
+                this._agente.getIntentList()
+                this.loading.toggleWaitingBar();
+                return
+            }
+   
         } catch (error) {
             console.error(error);
             this._alerts.sendError( 'No se pudo guardar', error )
@@ -253,12 +271,7 @@ export class CurrentMensajeService {
                     }
                 })
                 .catch((err) => {
-                    if (err) {
-                        this._alerts.sendError(
-                            'No es posible actualizar este intent, intentelo de nuevo, porfavor.',
-                            err
-                        );
-                    }
+                    if (err) { console.error(err)}
                     reject(err);
                 });
         });
@@ -296,7 +309,7 @@ export class CurrentMensajeService {
                 .delete();
             await this._router.navigateByUrl( `/dashboard`, { skipLocationChange: true } )
             this._router.navigate([`/dashboard/agente/${ projectId }/mensajes`])
-        }
+        }   
 
         return
     }
@@ -307,7 +320,7 @@ export class CurrentMensajeService {
      * @param {string} intentId
      * @returns {*}  {Promise<any>}
      */
-    private deleteIntentRequest( intentId: string ): Promise<any> {
+    public deleteIntentRequest( intentId: string ): Promise<any> {
         this.loading.toggleWaitingSpinner(true)
         return new Promise((resolve, reject) => {
             const projectId: string = this._cache.getDataKey('projectId');

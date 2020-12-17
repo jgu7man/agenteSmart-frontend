@@ -7,6 +7,7 @@ import { ResponsiveService } from '../../../../services/responsive.service';
 import { CacheService } from '../../../../Gdev-Tools/cache/cache.service';
 import { CurrentAgenteService } from './current-agente.service';
 import { Loading } from '../../../../Gdev-Tools/loading/loading.service';
+import { CurrentMensajeService } from './mensajes/mensaje/current-mensaje.service';
 
 @Component({
   selector: 'aSmart-agente',
@@ -23,7 +24,8 @@ export class AgenteComponent implements OnInit, OnDestroy {
     private _cache: CacheService,
     private _route: ActivatedRoute,
     public resposive_: ResponsiveService,
-    public loading: Loading
+    public loading: Loading,
+    private _mensaje: CurrentMensajeService
   ) {
 
     // GET THE CURRENT PROJECT ID
@@ -39,6 +41,16 @@ export class AgenteComponent implements OnInit, OnDestroy {
     if ( this.resposive_.small ) {
       this._dashboard.setMobileNavbar(this.agentLinks)
     }
+
+    let intentNames = [
+      // "4aec3563-4a8b-4f6e-9111-b51bbc5cbb1e", 
+      "74386482-8087-49d8-bc74-f4d881673127"
+    ]
+
+    // intentNames.forEach( name => {
+    //   this._mensaje.deleteIntentRequest(name)
+      
+    // })
   }
 
   async loadAgente() {
@@ -49,9 +61,9 @@ export class AgenteComponent implements OnInit, OnDestroy {
   agentLinks:NAVLINK[] = [
     { path: 'bienvenida', label: 'Bienvenida', icon: 'fa-filter' },
     { path: 'mensajes', label: 'Flujo', icon:'fa-sitemap' },
-    { path: 'opciones', label: 'Opciones', icon: 'fa-exchange-alt' },
     { path: 'tipos', label: 'Tipos', icon:'fa-list-alt' },
     { path: 'configuraciones', label: 'Configuración', icon: 'fa-cog' },
+    // { path: 'opciones', label: 'Opciones', icon: 'fa-exchange-alt' },
   ]
 
   ngOnDestroy() {

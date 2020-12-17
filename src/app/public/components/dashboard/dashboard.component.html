@@ -5,7 +5,7 @@ strechHeight
 class="dash-container" 
 gdev-color
 [background]="'white'"
-hasBackdrop="false">
+[hasBackdrop]="testChat.opened">
 
 
 <!-- Left sidebar -->
@@ -25,7 +25,8 @@ hasBackdrop="false">
     class="test-chat-btn"
     [background]="'dark'"
     >
-      <button mat-raised-button color="accent" (click)="chat_.toggleChatbox()">
+      <button mat-raised-button color="accent" (click)="chat_.toggleChatbox()"
+      [disabled]="section != 'agente'">
         Probar chat
       </button>
     </mat-toolbar>
