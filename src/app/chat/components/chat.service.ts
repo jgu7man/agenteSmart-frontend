@@ -93,15 +93,22 @@ export class ChatService {
                 };
 
                 this._sessionId = this._cache.getDataKey('currentSession');
-                if (this._sessionId) body['sessionId'] = this._sessionId;
+                if ( this._sessionId ) body[ 'sessionId' ] = this._sessionId;
+                let inputContexts = this._cache.getDataKey( 'inputContexts' );
+                if (inputContexts) body[ 'inputContexts' ] = inputContexts
 
                 this._http
                     .post(this._url, body, { responseType: 'json' })
-                    .subscribe((response) => {
+                    .subscribe( ( response ) => {
+                        console.log( response )
                         this._cache.updateData(
                             'currentSession',
                             response['session']
                         );
+                        this._cache.updateData(
+                            'inputContexts',
+                            response['contextos']
+                        )
                         console.log(response['respuestas']);
                         this.reciveMessage(response['respuestas']);
                     });
