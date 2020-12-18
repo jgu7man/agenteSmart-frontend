@@ -80,7 +80,7 @@ export class ChatService {
 
         return this.sendMessage$
             .pipe(
-                distinctUntilChanged(),
+                // distinctUntilChanged(),
                 // tap((r) => console.log(r))
             )
             .subscribe((message: string) => {

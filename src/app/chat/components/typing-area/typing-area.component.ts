@@ -35,7 +35,8 @@ export class TypingAreaComponent implements OnInit {
 
   cleanConversation() {
     this.store.dispatch(actions.clean())
-    this._cache.deleteDataKey('currentSession')
+    this._cache.deleteDataKey( 'currentSession' )
+    this._cache.deleteDataKey( 'inputContexts')
   }
 
 }

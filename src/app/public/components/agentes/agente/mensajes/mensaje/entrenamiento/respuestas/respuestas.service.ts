@@ -110,7 +110,8 @@ export class RespuestasService {
                                     ? intent.parameters : []
                             )
                         ).subscribe(list => this.paramList = list )
-                    if (this.currentMensaje) this.getMensajeTipos(this.currentMensaje.parameters);
+                    if ( this.currentMensaje )
+                        this.getMensajeTipos( this.currentMensaje.parameters );
                 }
             });
 
@@ -126,16 +127,19 @@ export class RespuestasService {
         await this.loading.asyncForEach(paramList,
         async (param: ParametroMensaje) => {
 
+            if ( this.mensajeTypeEntities.length > 0 ) {
                 let tipoStored = this.mensajeTypeEntities.find(
                     (t) => t.displayName == param.displayName
                 );
-
+                    
                 // console.log(tipoStored);
                 if (!tipoStored) {
                     tipoStored = await this._tipos.getByDisplayName( param.entityTypeDisplayName )
                     await this.loading.waitFor(100);
                     return this.mensajeTypeEntities.push(tipoStored);
                 }
+            }
+
             }
         );
         // console.log(this.mensajeTypeEntities);
