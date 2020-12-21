@@ -79,37 +79,30 @@ export class ChatService {
         // ).subscribe(act => console.log(act))
 
         return this.sendMessage$
-            .pipe(
-                // distinctUntilChanged(),
-                // tap((r) => console.log(r))
-            )
             .subscribe((message: string) => {
-                // console.log(message);
 
+                // build body
                 var body = {
                     projectId: this._projectId,
                     textInput: message,
                     clientId: this._clientId,
                 };
 
+                // search for sessionId in storage
                 this._sessionId = this._cache.getDataKey('currentSession');
                 if ( this._sessionId ) body[ 'sessionId' ] = this._sessionId;
+                // search for contexts in storage
                 let inputContexts = this._cache.getDataKey( 'inputContexts' );
                 if (inputContexts) body[ 'inputContexts' ] = inputContexts
 
                 this._http
                     .post(this._url, body, { responseType: 'json' })
                     .subscribe( ( response ) => {
-                        console.log( response )
-                        this._cache.updateData(
-                            'currentSession',
-                            response['session']
-                        );
-                        this._cache.updateData(
-                            'inputContexts',
-                            response['contextos']
-                        )
-                        console.log(response['respuestas']);
+                        // save the sessionId in storage
+                        this._cache.updateData('currentSession',response['session'])
+                        // save the contexts in storage
+                        this._cache.updateData('inputContexts',response['contextos'])
+                        
                         this.reciveMessage(response['respuestas']);
                     });
             });
