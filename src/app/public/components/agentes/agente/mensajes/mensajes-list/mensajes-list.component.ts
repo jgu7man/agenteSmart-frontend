@@ -1,13 +1,13 @@
-import { AlertService } from './../../../../../../Gdev-Tools/alerts/alert.service';
+import { AlertService } from './../../../../../../gdev-tools/alerts/alert.service';
 import { Component, OnInit, Input, ElementRef, ViewChild, OnDestroy } from '@angular/core';
-import { Loading } from '../../../../../../Gdev-Tools/loading/loading.service';
+import { Loading } from '../../../../../../gdev-tools/loading/loading.service';
 import { MensajesService } from '../mensajes.service';
 import { IntentModel } from '../mensaje.model';
 import { CurrentAgenteService } from '../../current-agente.service';
-import { CacheService } from '../../../../../../Gdev-Tools/cache/cache.service';
+import { CacheService } from '../../../../../../gdev-tools/cache/cache.service';
 import { DiagramProps } from '../diagram/diagram-data.interface';
 import { DiagramService } from '../diagram/diagram.service';
-import { TextService } from '../../../../../../Gdev-Tools/text/gdev-text.service';
+import { TextService } from '../../../../../../gdev-tools/text/gdev-text.service';
 import { ContextoModel } from '../../contextos/contexto.model';
 import { Subscription } from 'rxjs';
 @Component({

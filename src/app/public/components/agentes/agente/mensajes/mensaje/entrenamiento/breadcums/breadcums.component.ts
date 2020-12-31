@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { IntentModel } from '../../../mensaje.model';
-import { CacheService } from '../../../../../../../../Gdev-Tools/cache/cache.service';
+import { CacheService } from '../../../../../../../../gdev-tools/cache/cache.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({

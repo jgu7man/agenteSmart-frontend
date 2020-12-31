@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ElementRef, ViewChild, Output, EventEmitter } from '@angular/core';
 import { FraseEntrenamiento, FraseParte } from '../../../../mensaje.model';
-import { Loading } from '../../../../../../../../../Gdev-Tools/loading/loading.service';
+import { Loading } from '../../../../../../../../../gdev-tools/loading/loading.service';
 import { FrasesService } from '../frases.service';
 import { ParametrosService } from '../../parametros/parametros.service';
 

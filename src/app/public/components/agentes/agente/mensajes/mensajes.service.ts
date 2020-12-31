@@ -1,13 +1,13 @@
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { Loading } from 'src/app/Gdev-Tools/loading/loading.service';
-import { CacheService } from 'src/app/Gdev-Tools/cache/cache.service';
+import { Loading } from 'src/app/gdev-tools/loading/loading.service';
+import { CacheService } from 'src/app/gdev-tools/cache/cache.service';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { TextService } from '../../../../../services/text.service';
 import { CurrentAgenteService } from '../current-agente.service';
 import { ContextoModel } from '../contextos/contexto.model';
-import { AlertService } from '../../../../../Gdev-Tools/alerts/alert.service';
+import { AlertService } from '../../../../../gdev-tools/alerts/alert.service';
 import { of, Subject } from 'rxjs';
 import { IntentModel, MensajeModel } from './mensaje.model';
 import { map } from 'rxjs/operators';

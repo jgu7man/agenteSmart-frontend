@@ -2,12 +2,12 @@ import {Component, OnInit} from '@angular/core';
 import { MensajeModel, IntentModel } from '../../mensajes/mensaje.model';
 import { CurrentAgenteService } from '../../current-agente.service';
 import { CurrentMensajeService } from '../../mensajes/mensaje/current-mensaje.service';
-import { AlertService } from '../../../../../../Gdev-Tools/alerts/alert.service';
-import { Loading } from '../../../../../../Gdev-Tools/loading/loading.service';
+import { AlertService } from '../../../../../../gdev-tools/alerts/alert.service';
+import { Loading } from '../../../../../../gdev-tools/loading/loading.service';
 import { RespuestaModel, SimpleModel, ResultResponse } from '../../mensajes/mensaje/entrenamiento/respuestas/respuesta.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { MatDialogRef } from '@angular/material/dialog';
-import { CacheService } from '../../../../../../Gdev-Tools/cache/cache.service';
+import { CacheService } from '../../../../../../gdev-tools/cache/cache.service';
 
 @Component({
     templateUrl: './config-retroceso.component.html',
@@ -28,12 +28,13 @@ export class ConfigRetrocesoComponent implements OnInit {
         public dialog_: MatDialogRef<ConfigRetrocesoComponent>,
         private _cache: CacheService
     ) {
-        this.result = new SimpleModel('')
+        this.result = new SimpleModel('', [])
         this.respuesta = new RespuestaModel('simple',this.result,0)
     }
 
     ngOnInit(): void {
-        this.loading.toggleWaitingSpinner(true)
+        // this.loading.toggleWaitingSpinner( true )
+        
         this.getFallbackIntent()
     }
 
@@ -53,7 +54,7 @@ export class ConfigRetrocesoComponent implements OnInit {
         }
 
         
-        this.loading.toggleWaitingSpinner(false)
+        // this.loading.toggleWaitingSpinner(false)
     }
 
     catchText(respuesta) {
@@ -63,14 +64,15 @@ export class ConfigRetrocesoComponent implements OnInit {
 
     saveRespuesta() {
         this.respuesta.result = {...this.result}
-        console.log(this.respuesta);
         Object.keys(this.respuesta).forEach(key => { if (this.respuesta[key] == undefined) delete this.respuesta[key]})
         
         try {
             
-            if (this.respuesta.id) {
+            if ( this.respuesta.id ) {
+                console.log( 'edited', {...this.respuesta} )
                 this.fs.collection(this.respuestaPath).doc(this.respuesta.id).set({...this.respuesta})
             } else {
+                console.log( 'new', {...this.respuesta} )
                 this.fs.collection(this.respuestaPath).add({...this.respuesta})
                 .then(doc => doc.update({id: doc.id}))
             }

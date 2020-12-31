@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { DiagramObject, DiagramProps } from '../diagram/diagram-data.interface';
 import { DiagramService } from '../diagram/diagram.service';
-import { Loading } from '../../../../../../Gdev-Tools/loading/loading.service';
+import { Loading } from '../../../../../../gdev-tools/loading/loading.service';
 
 @Component({
   selector: 'aSmart-mensajes-diagram',

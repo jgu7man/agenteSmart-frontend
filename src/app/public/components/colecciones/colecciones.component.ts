@@ -7,7 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddColeccionComponent } from './add-coleccion/add-coleccion.component';
 import { CurrentAgenteService } from '../agentes/agente/current-agente.service';
 import { Subscription, Observable } from 'rxjs';
-import { CacheService } from '../../../Gdev-Tools/cache/cache.service';
+import { CacheService } from '../../../gdev-tools/cache/cache.service';
 
 @Component({
   selector: 'aSmart-colecciones',

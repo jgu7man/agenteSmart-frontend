@@ -12,7 +12,7 @@ import {
 } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
 import { AppState } from '../../app.state';
-import { CacheService } from '../../Gdev-Tools/cache/cache.service';
+import { CacheService } from '../../gdev-tools/cache/cache.service';
 import { HttpClient } from '@angular/common/http';
 import {
     ResultResponse,
@@ -31,7 +31,7 @@ export class ChatService {
     private _function =
         'https://us-central1-main-agentesmart.cloudfunctions.net/dialogflow/';
     private _localhost =
-        'http://localhost:5000/main-agentesmart/us-central1/dialogflow/';
+        'http://localhost:5001/main-agentesmart/us-central1/rest/';
     private _url = this._localhost + 'session';
     private _projectId: string;
     private _sessionId: string;
@@ -98,6 +98,7 @@ export class ChatService {
                 this._http
                     .post(this._url, body, { responseType: 'json' })
                     .subscribe( ( response ) => {
+                        console.log( response )
                         // save the sessionId in storage
                         this._cache.updateData('currentSession',response['session'])
                         // save the contexts in storage

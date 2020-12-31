@@ -1,6 +1,6 @@
 import { AddTipoComponent } from './add-tipo/add-tipo.component';
 import { Component, OnInit, ViewChild, ViewChildren, QueryList, AfterViewInit, OnDestroy } from '@angular/core';
-import { Loading } from '../../../../../Gdev-Tools/loading/loading.service';
+import { Loading } from '../../../../../gdev-tools/loading/loading.service';
 import { TiposService } from './tipos.service';
 import { Observable, Subscription } from 'rxjs';
 import { CurrentAgenteService } from '../current-agente.service';

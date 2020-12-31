@@ -21,8 +21,8 @@ import { AuthModule, } from './admin/auth/auth.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
-import { LoadingModule } from './Gdev-Tools/loading/loading.module';
-import { GdevAlertModule } from './Gdev-Tools/alerts/gdev-alert.module';
+import { LoadingModule } from './gdev-tools/loading/loading.module';
+import { GdevAlertModule } from './gdev-tools/alerts/gdev-alert.module';
 
 // * RX
 import { StoreModule } from '@ngrx/store';

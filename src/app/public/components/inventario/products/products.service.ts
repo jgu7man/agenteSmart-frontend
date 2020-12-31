@@ -5,9 +5,9 @@ import { GdevStoreProductModel } from './product.model';
 import { Subject } from 'rxjs';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-import { AlertService } from 'src/app/Gdev-Tools/alerts/alert.service';
+import { AlertService } from 'src/app/gdev-tools/alerts/alert.service';
 import { finalize } from 'rxjs/operators';
-import { CacheService } from '../../../../Gdev-Tools/cache/cache.service';
+import { CacheService } from '../../../../gdev-tools/cache/cache.service';
 import { UserInterface } from '../../../../admin/auth/auth.service';
 import { TipoEntidadModel, Clase } from '../../agentes/agente/tipos/tipo.model';
 

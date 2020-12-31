@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { CacheService } from '../../../../../../Gdev-Tools/cache/cache.service';
+import { CacheService } from '../../../../../../gdev-tools/cache/cache.service';
 import { ContextoModel } from '../contexto.model';
 import { MatDialog } from '@angular/material/dialog';
 import { AddContextoDialogComponent } from '../add-contexto-dialog/add-contexto-dialog.component';

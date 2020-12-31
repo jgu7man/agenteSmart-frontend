@@ -5,15 +5,15 @@ import { CurrentAgenteService } from '../../current-agente.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { IntentModel } from '../mensaje.model';
 import { Subject, Subscription, forkJoin, Observable } from 'rxjs';
-import { Loading } from '../../../../../../Gdev-Tools/loading/loading.service';
+import { Loading } from '../../../../../../gdev-tools/loading/loading.service';
 import { map, pluck, tap, debounceTime } from 'rxjs/operators';
-import { CacheService } from '../../../../../../Gdev-Tools/cache/cache.service';
+import { CacheService } from '../../../../../../gdev-tools/cache/cache.service';
 import { RespuestaModel } from './entrenamiento/respuestas/respuesta.model';
-import { AlertService } from '../../../../../../Gdev-Tools/alerts/alert.service';
+import { AlertService } from '../../../../../../gdev-tools/alerts/alert.service';
 import { Store } from '@ngrx/store';
 import { MensajeState } from '../mensaje.model';
 import * as actions from './store/mensaje.actions';
-import { GdevCommonsService } from '../../../../../../Gdev-Tools/commons/gdev-commons.service';
+import { GdevCommonsService } from '../../../../../../gdev-tools/commons/gdev-commons.service';
 import { Location } from '@angular/common';
 
 

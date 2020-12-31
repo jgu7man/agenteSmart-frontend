@@ -6,7 +6,7 @@ import { Location } from '@angular/common';
 import { COMMA } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { UserInterface } from '../../../../../admin/auth/auth.service';
-import { CacheService } from '../../../../../Gdev-Tools/cache/cache.service';
+import { CacheService } from '../../../../../gdev-tools/cache/cache.service';
 
 @Component({
   selector: 'gdev-add-product',

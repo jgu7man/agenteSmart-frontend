@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import { ColeccionModel } from './collection.interface';
 import { AngularFirestore,  CollectionReference } from '@angular/fire/firestore';
-import { CacheService} from '../../../Gdev-Tools/cache/cache.service';
-import { AlertService} from '../../../Gdev-Tools/alerts/alert.service';
+import { CacheService} from '../../../gdev-tools/cache/cache.service';
+import { AlertService} from '../../../gdev-tools/alerts/alert.service';
 import { UserInterface} from '../../../admin/auth/auth.service';
 
 @Injectable({

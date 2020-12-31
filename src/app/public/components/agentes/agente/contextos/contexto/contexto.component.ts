@@ -3,7 +3,7 @@ import { TextService } from '../../../../../../services/text.service';
 import { ContextosService } from '../contextos.service';
 import { CurrentAgenteService } from '../../current-agente.service';
 import { ContextoModel } from '../contexto.model';
-import { Loading } from '../../../../../../Gdev-Tools/loading/loading.service';
+import { Loading } from '../../../../../../gdev-tools/loading/loading.service';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({

@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { RespuestasService } from '../../../respuestas.service';
-import { CacheService } from '../../../../../../../../../../../Gdev-Tools/cache/cache.service';
+import { CacheService } from '../../../../../../../../../../../gdev-tools/cache/cache.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { RespuestaBuscarModel } from '../../../respuesta.model';
 import { BehaviorSubject } from 'rxjs';
@@ -8,7 +8,7 @@ import { distinctUntilKeyChanged } from 'rxjs/operators';
 import { CurrentAgenteService } from '../../../../../../../current-agente.service';
 import { MatSelectChange } from '@angular/material/select';
 import { TarjetaModel } from '../../../../../../../../../tarjetas/tarjeta.model';
-import { AlertService } from '../../../../../../../../../../../Gdev-Tools/alerts/alert.service';
+import { AlertService } from '../../../../../../../../../../../gdev-tools/alerts/alert.service';
 
 @Component({
   selector: 'aSmart-buscar-form',

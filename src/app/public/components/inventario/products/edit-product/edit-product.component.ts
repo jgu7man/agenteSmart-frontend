@@ -9,7 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DelProdcutComponent } from '../del-prodcut/del-prodcut.component';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA } from '@angular/cdk/keycodes';
-import { CacheService } from '../../../../../Gdev-Tools/cache/cache.service';
+import { CacheService } from '../../../../../gdev-tools/cache/cache.service';
 import { UserInterface } from '../../../../../admin/auth/auth.service';
 import { Subscription } from 'rxjs';
 

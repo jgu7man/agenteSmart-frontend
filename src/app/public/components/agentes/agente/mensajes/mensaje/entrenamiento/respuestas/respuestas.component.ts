@@ -9,7 +9,7 @@ import { RespuestaModel, SimpleModel } from './respuesta.model';
 import { RespuestasService } from './respuestas.service';
 import { Subscription } from 'rxjs';
 import { RespuestaCardComponent } from './respuesta-card/respuesta-card.component';
-import { Loading } from 'src/app/Gdev-Tools/loading/loading.service';
+import { Loading } from 'src/app/gdev-tools/loading/loading.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { CurrentMensajeService } from '../../current-mensaje.service';
 

@@ -13,7 +13,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../../../../../app.state';
 import * as actions from '../store/tipo.actions';
 import { Router } from '@angular/router';
-import { CacheService } from '../../../../../../Gdev-Tools/cache/cache.service';
+import { CacheService } from '../../../../../../gdev-tools/cache/cache.service';
 
 @Component({
     selector: 'aSmart-tipo',

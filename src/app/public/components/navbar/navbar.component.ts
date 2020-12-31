@@ -3,7 +3,7 @@ import { AuthService } from 'src/app/admin/auth/auth.service';
 import { UserInterface } from '../../../admin/auth/auth.service';
 import { DashboardService } from '../dashboard/dashboard.service';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-import { Loading } from '../../../Gdev-Tools/loading/loading.service';
+import { Loading } from '../../../gdev-tools/loading/loading.service';
 import { take, debounceTime, tap } from 'rxjs/operators';
 import { fromEvent, Subscription } from 'rxjs';
 

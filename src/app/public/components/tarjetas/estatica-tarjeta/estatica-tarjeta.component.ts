@@ -2,7 +2,7 @@ import { RespuestaCard } from './../../agentes/agente/mensajes/mensaje/entrenami
 import {Component, OnInit, ViewChild, ElementRef, Output, EventEmitter, Input} from '@angular/core';
 import {Observable} from 'rxjs';
 // import {RespuestaCard} from '../../agentes/agente/mensajes/mensaje/entrenamiento/respuestas/respuesta.model';
-import {CacheService} from '../../../../Gdev-Tools/cache/cache.service';
+import {CacheService} from '../../../../gdev-tools/cache/cache.service';
 import {UserInterface} from '../../../../admin/auth/auth.service';
 
 @Component({

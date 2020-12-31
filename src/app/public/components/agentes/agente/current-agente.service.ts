@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AgenteModel } from '../init-agente/agente.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthService, UserInterface } from '../../../../admin/auth/auth.service';
-import { CacheService } from '../../../../Gdev-Tools/cache/cache.service';
+import { CacheService } from '../../../../gdev-tools/cache/cache.service';
 import { Subject, Observable, Subscription, of, BehaviorSubject, zip, forkJoin } from 'rxjs';
 import { filter, concatAll, pluck, tap, map } from 'rxjs/operators';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
@@ -12,8 +12,8 @@ import { SystemEntitieModel, TipoEntidadModel } from './tipos/tipo.model';
 import { ColeccionModel } from '../../colecciones/collection.interface';
 import { TarjetaModel } from '../../tarjetas/tarjeta.model';
 import { HttpClient } from '@angular/common/http';
-import { AlertService } from '../../../../Gdev-Tools/alerts/alert.service';
-import { Loading } from '../../../../Gdev-Tools/loading/loading.service';
+import { AlertService } from '../../../../gdev-tools/alerts/alert.service';
+import { Loading } from '../../../../gdev-tools/loading/loading.service';
 import { SystemEntitiesService } from '../../../../admin/system/system-entities.service';
 
 @Injectable({

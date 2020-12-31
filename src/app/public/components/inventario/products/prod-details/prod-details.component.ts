@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { ProdDetalle } from '../product.model';
-import { AlertService } from 'src/app/Gdev-Tools/alerts/alert.service';
+import { AlertService } from 'src/app/gdev-tools/alerts/alert.service';
 
 @Component({
   selector: 'gdev-prod-details',

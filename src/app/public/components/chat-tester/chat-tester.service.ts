@@ -4,7 +4,7 @@ import { distinctUntilChanged, tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { QuickResponse, Image } from '../../../chat/store/chat.model';
 import { HttpClient } from '@angular/common/http';
-import { CacheService } from '../../../Gdev-Tools/cache/cache.service';
+import { CacheService } from '../../../gdev-tools/cache/cache.service';
 import { ResultResponse, SimpleModel, CondicionalModel, RegistroDatosModel, RespuestaBuscarModel } from '../agentes/agente/mensajes/mensaje/entrenamiento/respuestas/respuesta.model';
 import {threadId} from 'worker_threads';
 import { Store } from '@ngrx/store';
@@ -15,7 +15,7 @@ import {AppState} from 'src/app/app.state';
 })
 export class ChatTesterService {
 
-    private _url = 'https://us-central1-main-agentesmart.cloudfunctions.net/dialogflow/session';
+    private _url = 'http://localhost:5001/main-agentesmart/us-central1/rest/session';
     private _projectId: string
     private _sessionId: string
 

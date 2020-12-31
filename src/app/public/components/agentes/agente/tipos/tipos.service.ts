@@ -1,15 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Loading } from '../../../../../Gdev-Tools/loading/loading.service';
+import { Loading } from '../../../../../gdev-tools/loading/loading.service';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { CacheService } from '../../../../../Gdev-Tools/cache/cache.service';
+import { CacheService } from '../../../../../gdev-tools/cache/cache.service';
 import { CurrentAgenteService } from '../current-agente.service';
 import { TipoEntidadModel, Clase } from './tipo.model';
 import { TextService } from '../../../../../services/text.service';
 import { Subject, Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AuthService } from '../../../../../admin/auth/auth.service';
-import { AlertService } from '../../../../../Gdev-Tools/alerts/alert.service';
+import { AlertService } from '../../../../../gdev-tools/alerts/alert.service';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/app.state';
 import * as actions from './store/tipo.actions'

@@ -1,4 +1,4 @@
-import { AlertService } from 'src/app/Gdev-Tools/alerts/alert.service';
+import { AlertService } from 'src/app/gdev-tools/alerts/alert.service';
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import {
@@ -7,8 +7,8 @@ import {
     ResultResponse,
 } from '../respuesta.model';
 import { RespuestasService } from '../respuestas.service';
-import { Loading } from 'src/app/Gdev-Tools/loading/loading.service';
-import { CacheService } from '../../../../../../../../../Gdev-Tools/cache/cache.service';
+import { Loading } from 'src/app/gdev-tools/loading/loading.service';
+import { CacheService } from '../../../../../../../../../gdev-tools/cache/cache.service';
 import { ContextosService } from '../../../../../contextos/contextos.service';
 import { ContextoModel } from '../../../../../contextos/contexto.model';
 import { MensajeModel } from '../../../../mensaje.model';
@@ -77,7 +77,7 @@ export class RespuestaCardComponent implements OnInit {
     
 
     get activeContextSelector() {
-        if (this.respuesta.tipo == 'sugerencias') {
+        if ( this.respuesta.tipo == 'simple' ) {
             return false;
         } else if (!this.currentContext) {
             return true;

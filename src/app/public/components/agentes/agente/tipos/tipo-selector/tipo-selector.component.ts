@@ -5,7 +5,7 @@ import { startWith, map } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { TiposService } from '../tipos.service';
 import { CurrentAgenteService } from '../../current-agente.service';
-import { CacheService } from '../../../../../../Gdev-Tools/cache/cache.service';
+import { CacheService } from '../../../../../../gdev-tools/cache/cache.service';
 import { TipoEntidadModel } from '../tipo.model';
 
 @Component({

@@ -7,6 +7,7 @@
             [(ngModel)]="message"
             name="message"
             (keyup.enter)="message ? onSend() : null"
+            #messageInput
             >
         </mat-form-field>
     </div>

@@ -3,12 +3,12 @@ import { ResponsiveService } from '../../../../../services/responsive.service';
 import { CurrentAgenteService } from '../current-agente.service';
 import { IntentModel } from '../mensajes/mensaje.model';
 import { CurrentMensajeService } from '../mensajes/mensaje/current-mensaje.service';
-import { CacheService } from '../../../../../Gdev-Tools/cache/cache.service';
-import { AlertService } from '../../../../../Gdev-Tools/alerts/alert.service';
+import { CacheService } from '../../../../../gdev-tools/cache/cache.service';
+import { AlertService } from '../../../../../gdev-tools/alerts/alert.service';
 import { AppState } from '../../../../../app.state';
 import { Store } from '@ngrx/store';
 import { Subscription, Subject, Observable } from 'rxjs';
-import { Loading } from '../../../../../Gdev-Tools/loading/loading.service';
+import { Loading } from '../../../../../gdev-tools/loading/loading.service';
 import { first, take } from 'rxjs/operators';
 
 @Component({

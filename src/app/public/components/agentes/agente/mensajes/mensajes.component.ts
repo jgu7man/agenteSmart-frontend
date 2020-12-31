@@ -1,9 +1,9 @@
-import { AlertService } from 'src/app/Gdev-Tools/alerts/alert.service';
+import { AlertService } from 'src/app/gdev-tools/alerts/alert.service';
 import { IntentModel } from './mensaje.model';
 import { Component, OnInit } from '@angular/core';
 import { MensajesService} from './mensajes.service'
 import { CurrentAgenteService } from '../current-agente.service';
-import { Loading } from '../../../../../Gdev-Tools/loading/loading.service';
+import { Loading } from '../../../../../gdev-tools/loading/loading.service';
 
 
 @Component({

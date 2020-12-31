@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { ParametrosService } from '../../../parametros/parametros.service';
-import { Loading } from '../../../../../../../../../../Gdev-Tools/loading/loading.service';
+import { Loading } from '../../../../../../../../../../gdev-tools/loading/loading.service';
 import { FrasesService } from '../../frases.service';
 import { MensajesService } from '../../../../../mensajes.service';
 import { CurrentMensajeService } from '../../../../current-mensaje.service';

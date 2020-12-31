@@ -6,7 +6,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { TypingAreaComponent } from './components/typing-area/typing-area.component';
 import { ConversationComponent } from './components/conversation/conversation.component';
 import { RemitterAreaComponent } from './components/remitter-area/remitter-area.component';
-import { GdevToolsModule } from '../Gdev-Tools/gdev-tools.module';
+import { GdevToolsModule } from '../gdev-tools/gdev-tools.module';
 
 
 

@@ -4,14 +4,14 @@ import {FraseEntrenamiento, FraseParte, IntentModel} from '../../../mensaje.mode
 import {CurrentAgenteService} from '../../../../current-agente.service';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {CurrentMensajeService} from '../../current-mensaje.service';
-import {CacheService} from '../../../../../../../../Gdev-Tools/cache/cache.service';
-import {Loading} from '../../../../../../../../Gdev-Tools/loading/loading.service';
+import {CacheService} from '../../../../../../../../gdev-tools/cache/cache.service';
+import {Loading} from '../../../../../../../../gdev-tools/loading/loading.service';
 import {Subject} from 'rxjs';
-import {AlertService} from '../../../../../../../../Gdev-Tools/alerts/alert.service';
+import {AlertService} from '../../../../../../../../gdev-tools/alerts/alert.service';
 import {Store} from '@ngrx/store';
 import * as actions from '../../store/mensaje.actions'
 import {map, first, debounceTime} from 'rxjs/operators';
-import {TextService} from '../../../../../../../../Gdev-Tools/text/gdev-text.service';
+import {TextService} from '../../../../../../../../gdev-tools/text/gdev-text.service';
 
 @Injectable({
     providedIn: 'root'

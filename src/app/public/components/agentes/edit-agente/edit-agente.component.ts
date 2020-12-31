@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AgentesService } from '../agentes.service';
 import { AgenteModel, ImageUri } from '../init-agente/agente.model';
 import { UserInterface } from '../../../../admin/auth/auth.service';
-import { CacheService } from '../../../../Gdev-Tools/cache/cache.service';
+import { CacheService } from '../../../../gdev-tools/cache/cache.service';
 
 @Component({
   selector: 'aSmart-edit-agente',

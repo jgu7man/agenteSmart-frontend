@@ -7,8 +7,8 @@ import { of, Observable, Subject } from 'rxjs';
 import { switchMap, debounceTime } from 'rxjs/operators';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 // import * as google from 'googleapis'
-import { Loading } from '../../Gdev-Tools/loading/loading.service';
-import {CacheService} from '../../Gdev-Tools/cache/cache.service';
+import { Loading } from '../../gdev-tools/loading/loading.service';
+import {CacheService} from '../../gdev-tools/cache/cache.service';
 // import * as firebase from 'firebase/app';
 // import 'firebase/auth';
 

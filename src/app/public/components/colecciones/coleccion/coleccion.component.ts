@@ -3,7 +3,7 @@ import { ColeccionModel } from '../collection.interface';
 import { ColeccionesService } from '../colecciones.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DelColeccionComponent } from '../del-coleccion/del-coleccion.component';
-import { AlertService } from '../../../../Gdev-Tools/alerts/alert.service';
+import { AlertService } from '../../../../gdev-tools/alerts/alert.service';
 
 @Component({
   selector: 'aSmart-coleccion',

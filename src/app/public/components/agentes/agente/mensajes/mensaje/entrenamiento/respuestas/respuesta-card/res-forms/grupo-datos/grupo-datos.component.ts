@@ -4,9 +4,9 @@ import {CurrentMensajeService} from '../../../../../current-mensaje.service';
 import {RegistroDatosModel} from '../../../respuesta.model';
 import {BehaviorSubject} from 'rxjs';
 import {distinctUntilKeyChanged, tap} from 'rxjs/operators';
-import {AlertService} from '../../../../../../../../../../../Gdev-Tools/alerts/alert.service';
+import {AlertService} from '../../../../../../../../../../../gdev-tools/alerts/alert.service';
 import {ColeccionModel, ParamExpected} from '../../../../../../../../../colecciones/collection.interface';
-import {CacheService} from '../../../../../../../../../../../Gdev-Tools/cache/cache.service';
+import {CacheService} from '../../../../../../../../../../../gdev-tools/cache/cache.service';
 import { MatSelectChange } from '@angular/material/select';
 
 @Component({

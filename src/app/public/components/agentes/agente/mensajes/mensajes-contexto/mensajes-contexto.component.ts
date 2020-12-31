@@ -1,14 +1,14 @@
-import { AlertService } from './../../../../../../Gdev-Tools/alerts/alert.service';
+import { AlertService } from './../../../../../../gdev-tools/alerts/alert.service';
 import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { ContextosService } from '../../contextos/contextos.service';
 import { ActivatedRoute } from '@angular/router';
-import { Loading } from '../../../../../../Gdev-Tools/loading/loading.service';
+import { Loading } from '../../../../../../gdev-tools/loading/loading.service';
 import { TextService } from 'src/app/services/text.service';
 import { AgenteModel } from '../../../init-agente/agente.model';
 import { AgentesService } from '../../../agentes.service';
 import { MensajesService } from '../mensajes.service';
 import { IntentModel } from '../mensaje.model';
-import { CacheService } from '../../../../../../Gdev-Tools/cache/cache.service';
+import { CacheService } from '../../../../../../gdev-tools/cache/cache.service';
 import { ContextoModel } from '../../contextos/contexto.model';
 import { startWith, map, tap, distinctUntilChanged } from 'rxjs/operators';
 import { DiagramService } from '../diagram/diagram.service';

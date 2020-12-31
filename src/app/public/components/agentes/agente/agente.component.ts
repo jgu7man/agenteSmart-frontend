@@ -4,9 +4,9 @@ import { AgenteModel } from '../init-agente/agente.model';
 import { DashboardService } from '../../dashboard/dashboard.service';
 import { NAVLINK } from '../../navbar/navlink.interface';
 import { ResponsiveService } from '../../../../services/responsive.service';
-import { CacheService } from '../../../../Gdev-Tools/cache/cache.service';
+import { CacheService } from '../../../../gdev-tools/cache/cache.service';
 import { CurrentAgenteService } from './current-agente.service';
-import { Loading } from '../../../../Gdev-Tools/loading/loading.service';
+import { Loading } from '../../../../gdev-tools/loading/loading.service';
 import { CurrentMensajeService } from './mensajes/mensaje/current-mensaje.service';
 
 @Component({

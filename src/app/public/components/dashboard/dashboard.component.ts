@@ -3,10 +3,10 @@ import { ResponsiveService } from 'src/app/services/responsive.service';
 import { NAVLINK } from '../navbar/navlink.interface';
 import { DashboardService } from './dashboard.service';
 import { MatDrawer } from '@angular/material/sidenav';
-import { CacheService } from '../../../Gdev-Tools/cache/cache.service';
+import { CacheService } from '../../../gdev-tools/cache/cache.service';
 import { ChatService } from '../../../chat/components/chat.service';
 import { ActivatedRoute } from '@angular/router';
-import { Loading } from 'src/app/Gdev-Tools/loading/loading.service';
+import { Loading } from 'src/app/gdev-tools/loading/loading.service';
 
 @Component({
   selector: 'aSmart-dashboard',

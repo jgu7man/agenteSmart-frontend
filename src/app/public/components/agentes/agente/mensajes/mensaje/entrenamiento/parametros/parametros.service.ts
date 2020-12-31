@@ -11,12 +11,12 @@ import {
 import { CurrentMensajeService } from '../../current-mensaje.service';
 import { Subject } from 'rxjs';
 import { FrasesService } from '../frases-form/frases.service';
-import { Loading } from '../../../../../../../../Gdev-Tools/loading/loading.service';
-import { AlertService } from '../../../../../../../../Gdev-Tools/alerts/alert.service';
+import { Loading } from '../../../../../../../../gdev-tools/loading/loading.service';
+import { AlertService } from '../../../../../../../../gdev-tools/alerts/alert.service';
 import { Store } from '@ngrx/store';
 import * as actions from '../../store/mensaje.actions';
-import { ColorService } from '../../../../../../../../Gdev-Tools/color/color.service';
-import { CacheService } from '../../../../../../../../Gdev-Tools/cache/cache.service';
+import { ColorService } from '../../../../../../../../gdev-tools/color/color.service';
+import { CacheService } from '../../../../../../../../gdev-tools/cache/cache.service';
 
 @Injectable({
     providedIn: 'root',

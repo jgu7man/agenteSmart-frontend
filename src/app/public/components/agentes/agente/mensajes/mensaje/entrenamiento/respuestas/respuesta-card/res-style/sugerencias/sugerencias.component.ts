@@ -9,8 +9,8 @@ import {
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Sugerencia } from '../../../respuesta.model';
-import { AlertService } from '../../../../../../../../../../../Gdev-Tools/alerts/alert.service';
-import { Loading } from '../../../../../../../../../../../Gdev-Tools/loading/loading.service';
+import { AlertService } from '../../../../../../../../../../../gdev-tools/alerts/alert.service';
+import { Loading } from '../../../../../../../../../../../gdev-tools/loading/loading.service';
 import { ContextSelected } from '../../../../../../../contextos/contexto-selector/contexto-selector.component';
 
 @Component({

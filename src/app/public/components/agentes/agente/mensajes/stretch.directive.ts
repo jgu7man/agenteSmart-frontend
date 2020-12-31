@@ -1,4 +1,4 @@
-import { Loading } from 'src/app/Gdev-Tools/loading/loading.service';
+import { Loading } from 'src/app/gdev-tools/loading/loading.service';
 import { Directive, ElementRef, Input, OnInit, AfterViewInit } from '@angular/core';
 
 @Directive( {

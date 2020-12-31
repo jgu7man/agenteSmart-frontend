@@ -3,7 +3,7 @@ import { RespuestasService } from '../../../respuestas.service';
 import { CondicionalModel, SimpleModel } from '../../../respuesta.model';
 import { ParametrosService } from '../../../../parametros/parametros.service';
 import { TipoEntidadModel } from '../../../../../../../tipos/tipo.model';
-import { Loading } from 'src/app/Gdev-Tools/loading/loading.service';
+import { Loading } from 'src/app/gdev-tools/loading/loading.service';
 import {ParamSelected} from '../../../../parametros/param-selector/param-selector.component';
 
 @Component({

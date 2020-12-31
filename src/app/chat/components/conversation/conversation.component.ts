@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Input } from '@angular/core';
 import { Interaction, MessageType, QuickResponse, Image } from '../../store/chat.model';
 import { BehaviorSubject } from 'rxjs';
-import { TextService } from '../../../Gdev-Tools/text/gdev-text.service';
-import { Loading } from '../../../Gdev-Tools/loading/loading.service';
+import { TextService } from '../../../gdev-tools/text/gdev-text.service';
+import { Loading } from '../../../gdev-tools/loading/loading.service';
 
 @Component({
   selector: 'gdev-conversation',
@@ -32,7 +32,7 @@ export class ConversationComponent implements OnInit, AfterViewInit {
       this.messages = conv
       await this.loading.waitFor(100)
       this.messagesContainer.nativeElement.scrollTop = 
-        this.messagesContainer.nativeElement.scrollHeight + 20
+        this.messagesContainer.nativeElement.scrollHeight + 50
     })
     
   }

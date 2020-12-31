@@ -3,9 +3,10 @@ import { IntentModel } from '../mensajes/mensaje.model';
 import { CurrentAgenteService } from '../current-agente.service';
 import { MensajesService } from '../mensajes/mensajes.service';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Loading } from 'src/app/Gdev-Tools/loading/loading.service';
-import { AlertService } from 'src/app/Gdev-Tools/alerts/alert.service';
-import { CacheService } from 'src/app/Gdev-Tools/cache/cache.service';
+import { Loading } from 'src/app/gdev-tools/loading/loading.service';
+import { AlertService } from 'src/app/gdev-tools/alerts/alert.service';
+import { CacheService } from 'src/app/gdev-tools/cache/cache.service';
+import { CurrentMensajeService } from '../mensajes/mensaje/current-mensaje.service';
 
 @Injectable({
     providedIn: 'root',
@@ -17,7 +18,8 @@ export class AgentConfigService {
       private fs: AngularFirestore,
       private loading: Loading,
       private _alerts: AlertService,
-      private _cache: CacheService
+      private _cache: CacheService,
+      private _mensaje: CurrentMensajeService
     ) {}
 
     async restoreDefaultIntent(
@@ -36,6 +38,7 @@ export class AgentConfigService {
         if ( defaultIntent ) {
             console.log('Delete for default Intent');
             // DELETE INTENT
+            this._mensaje.delete(defaultIntent.name)
         }
 
         console.log('Create in dialogflow');

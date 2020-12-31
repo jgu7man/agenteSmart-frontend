@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild,  ViewEncapsulation,  QueryList, ViewChildren, OnDestroy } from '@angular/core';
 import { ContextosService } from './contextos.service';
-import { Loading } from '../../../../../Gdev-Tools/loading/loading.service';
+import { Loading } from '../../../../../gdev-tools/loading/loading.service';
 import { AgenteModel } from '../../init-agente/agente.model';
 import { ContextoModel } from './contexto.model';
 import { AddContextoComponent } from './add-contexto/add-contexto.component';

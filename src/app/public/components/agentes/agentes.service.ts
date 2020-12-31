@@ -4,9 +4,9 @@ import { AgenteModel } from './init-agente/agente.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { CacheService } from '../../../Gdev-Tools/cache/cache.service';
-import { Loading } from '../../../Gdev-Tools/loading/loading.service';
-import { AlertService } from '../../../Gdev-Tools/alerts/alert.service';
+import { CacheService } from '../../../gdev-tools/cache/cache.service';
+import { Loading } from '../../../gdev-tools/loading/loading.service';
+import { AlertService } from '../../../gdev-tools/alerts/alert.service';
 import { tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })

@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { ColorService } from './Gdev-Tools/color/color.service';
-import { CacheService } from './Gdev-Tools/cache/cache.service';
+import { ColorService } from './gdev-tools/color/color.service';
+import { CacheService } from './gdev-tools/cache/cache.service';
 
 @Component({
   selector: 'app-root',

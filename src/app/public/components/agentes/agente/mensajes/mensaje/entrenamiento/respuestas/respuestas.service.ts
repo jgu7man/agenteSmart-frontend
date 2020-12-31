@@ -1,10 +1,10 @@
-import { AlertService } from 'src/app/Gdev-Tools/alerts/alert.service';
+import { AlertService } from 'src/app/gdev-tools/alerts/alert.service';
 import { Injectable } from '@angular/core';
 import { IntentModel, ParametroMensaje } from '../../../mensaje.model';
 import { AccionModel } from '../../../../acciones/accion.model';
 import { CurrentMensajeService } from '../../current-mensaje.service';
-import { CacheService } from 'src/app/Gdev-Tools/cache/cache.service';
-import { Loading } from 'src/app/Gdev-Tools/loading/loading.service';
+import { CacheService } from 'src/app/gdev-tools/cache/cache.service';
+import { Loading } from 'src/app/gdev-tools/loading/loading.service';
 import { CurrentAgenteService } from '../../../../current-agente.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { RespuestaModel } from './respuesta.model';

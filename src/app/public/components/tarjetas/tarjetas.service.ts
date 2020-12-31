@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, CollectionReference } from '@angular/fire/firestore';
 import { TarjetaModel } from './tarjeta.model';
-import { AlertService } from 'src/app/Gdev-Tools/alerts/alert.service';
-import { GdevCommonsService } from 'src/app/Gdev-Tools/commons/gdev-commons.service';
-import { CacheService } from '../../../Gdev-Tools/cache/cache.service';
+import { AlertService } from 'src/app/gdev-tools/alerts/alert.service';
+import { GdevCommonsService } from 'src/app/gdev-tools/commons/gdev-commons.service';
+import { CacheService } from '../../../gdev-tools/cache/cache.service';
 import { UserInterface } from '../../../admin/auth/auth.service';
 
 @Injectable({

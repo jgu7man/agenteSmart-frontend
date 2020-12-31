@@ -3,7 +3,7 @@ import { GdevStoreProductModel } from '../product.model';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GdevStoreProductsService } from '../products.service';
 import { Router } from '@angular/router';
-import { AlertService } from 'src/app/Gdev-Tools/alerts/alert.service';
+import { AlertService } from 'src/app/gdev-tools/alerts/alert.service';
 
 @Component({
   templateUrl: './del-prodcut.component.html',

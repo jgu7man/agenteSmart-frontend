@@ -4,9 +4,9 @@ import { MatSelectionList } from '@angular/material/list';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ColeccionesService } from '../../colecciones.service';
 import { MatDrawer } from '@angular/material/sidenav';
-import { AlertService } from '../../../../../Gdev-Tools/alerts/alert.service';
-import { Loading } from '../../../../../Gdev-Tools/loading/loading.service';
-import { CacheService } from '../../../../../Gdev-Tools/cache/cache.service';
+import { AlertService } from '../../../../../gdev-tools/alerts/alert.service';
+import { Loading } from '../../../../../gdev-tools/loading/loading.service';
+import { CacheService } from '../../../../../gdev-tools/cache/cache.service';
 import { UserInterface } from '../../../../../admin/auth/auth.service';
 
 @Component({
