@@ -21,6 +21,7 @@ import { DocsComponent } from './components/pages/docs/docs.component';
 import { TratamientoDatosComponent } from './components/pages/legal/tratamiento-datos/tratamiento-datos.component';
 import { LegalComponent } from './components/pages/legal/legal.component';
 import { OpcionesComponent } from './components/agentes/agente/opciones/opciones.component';
+import { PreciosComponent } from './components/pages/precios/precios.component';
 
 const routes: Routes = [
     {
@@ -32,6 +33,7 @@ const routes: Routes = [
             { path: 'legal', component: LegalComponent,data: {page: 'legal'}, children: [
                 { path: 'tratamiento-de-datos', component: TratamientoDatosComponent, data:{page:'tratamiento_datos'} },
             ] },
+            { path: 'precios', component: PreciosComponent, data: {page: 'precios'}}
         ],
     },
     { path: 'dashboard', component: DashboardComponent, data: {page: 'dashboard'}, children: 

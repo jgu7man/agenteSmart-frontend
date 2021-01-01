@@ -8,14 +8,15 @@ import { CacheService } from '../../../gdev-tools/cache/cache.service';
 import { ResultResponse, SimpleModel, CondicionalModel, RegistroDatosModel, RespuestaBuscarModel } from '../agentes/agente/mensajes/mensaje/entrenamiento/respuestas/respuesta.model';
 import {threadId} from 'worker_threads';
 import { Store } from '@ngrx/store';
-import {AppState} from 'src/app/app.state';
+import { AppState } from 'src/app/app.state';
+import { environment } from "src/environments/environment";
 
 @Injectable({
     providedIn: 'root',
 })
 export class ChatTesterService {
 
-    private _url = 'http://localhost:5001/main-agentesmart/us-central1/rest/session';
+    private _url = environment.restURL + 'session';
     private _projectId: string
     private _sessionId: string
 

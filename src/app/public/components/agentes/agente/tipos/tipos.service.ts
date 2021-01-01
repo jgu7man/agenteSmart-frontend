@@ -14,6 +14,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/app.state';
 import * as actions from './store/tipo.actions'
 import { TipoState } from './store/tipo.state';
+import { environment } from "src/environments/environment";
 
 @Injectable( {
     providedIn: 'root'
@@ -23,7 +24,7 @@ export class TiposService {
     private tiposPath: string
     private tiposList: TipoEntidadModel[] = []
     
-    private _url = 'http://localhost:5000/main-agentesmart/us-central1/dialogflow/entity';
+    private _url = environment.restURL + 'entity';
     private _projectId: String;
   
     public closeCreateDialog: Subject<any> = new Subject()

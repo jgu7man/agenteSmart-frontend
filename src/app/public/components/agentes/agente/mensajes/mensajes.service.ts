@@ -13,6 +13,7 @@ import { IntentModel, MensajeModel } from './mensaje.model';
 import { map } from 'rxjs/operators';
 import { RespuestaModel } from './mensaje/entrenamiento/respuestas/respuesta.model';
 import { CurrentMensajeService } from './mensaje/current-mensaje.service';
+import { environment } from "src/environments/environment";
 
 @Injectable({
     providedIn: 'root',
@@ -26,8 +27,7 @@ export class MensajesService {
     /** Motiva a recargar los mensajes */
     reloadMensajes$ = new Subject<any>();
     /** Almacena la URL para consultas de la API */
-    private _url =
-        'https://us-central1-main-agentesmart.cloudfunctions.net/dialogflow/intent';
+    private _url = environment.restURL + 'intent';
 
     constructor(
         private _http: HttpClient,

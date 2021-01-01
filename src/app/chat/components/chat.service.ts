@@ -22,6 +22,7 @@ import {
 import { RespuestaCard } from '../../public/components/agentes/agente/mensajes/mensaje/entrenamiento/respuestas/respuestasIntent.model';
 import { Sugerencia } from '../../public/components/agentes/agente/mensajes/mensaje/entrenamiento/respuestas/respuesta.model';
 import { UserInterface } from '../../admin/auth/auth.service';
+import { environment } from "src/environments/environment";
 
 @Injectable({
     providedIn: 'root',
@@ -32,7 +33,7 @@ export class ChatService {
         'https://us-central1-main-agentesmart.cloudfunctions.net/dialogflow/';
     private _localhost =
         'http://localhost:5001/main-agentesmart/us-central1/rest/';
-    private _url = this._localhost + 'session';
+    private _url = environment.restURL + 'session';
     private _projectId: string;
     private _sessionId: string;
     private _clientId: string;
