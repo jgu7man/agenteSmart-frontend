@@ -22,13 +22,15 @@ import { TratamientoDatosComponent } from './components/pages/legal/tratamiento-
 import { LegalComponent } from './components/pages/legal/legal.component';
 import { OpcionesComponent } from './components/agentes/agente/opciones/opciones.component';
 import { PreciosComponent } from './components/pages/precios/precios.component';
+import { MessengerIntegrationComponent } from './components/pages/docs/messenger-integration/messenger-integration.component';
+import { IntegracionesComponent } from './components/agentes/agente/integraciones/integraciones.component';
 
 const routes: Routes = [
     {
         path: '', component: PublicComponent, children: [
             {path: '', component: InicioComponent, data: {page: 'home'}, },
             {path: 'docs', component: DocsComponent, data: {page: 'docs'}, children:[
-                
+                { path: 'messenger-integration', component: MessengerIntegrationComponent, data: {page: 'messenger-integration'}}
             ]},
             { path: 'legal', component: LegalComponent,data: {page: 'legal'}, children: [
                 { path: 'tratamiento-de-datos', component: TratamientoDatosComponent, data:{page:'tratamiento_datos'} },
@@ -52,6 +54,7 @@ const routes: Routes = [
                     { path: 'tipos', component: TiposComponent },
                     { path: 'configuraciones', component: AgentConfigComponent },
                     { path: 'opciones', component: OpcionesComponent },
+                    { path:  'integraciones', component: IntegracionesComponent},
                 ],
             },
             { path: 'tarjetas', component: TarjetasComponent },

@@ -46,7 +46,8 @@ a {
     font-weight: 600;
 }
 
-h1 { font-weight: 800;}
+h1 { font-weight: 800; font-size: 3em}
+h2 { font-size: 2.5em}
 h3 { font-weight: 700;}
 h4 { font-weight: 600;}
 
@@ -102,4 +103,11 @@ mat-form-field {
         }
     }
 
+}
+
+.advisory-text {
+    background: #b0cefd;
+    border-radius: 5px;
+    border: solid 1px #1c61c7;
+    padding:.5em
 }

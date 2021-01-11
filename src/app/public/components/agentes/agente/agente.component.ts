@@ -63,7 +63,7 @@ export class AgenteComponent implements OnInit, OnDestroy {
     { path: 'mensajes', label: 'Flujo', icon:'fa-sitemap' },
     { path: 'tipos', label: 'Tipos', icon:'fa-list-alt' },
     { path: 'configuraciones', label: 'Configuración', icon: 'fa-cog' },
-    // { path: 'opciones', label: 'Opciones', icon: 'fa-exchange-alt' },
+    { path: 'integraciones', label: 'Integraciones', icon: 'fa-plug' },
   ]
 
   ngOnDestroy() {
