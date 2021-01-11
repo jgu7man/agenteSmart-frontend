@@ -76,6 +76,10 @@ import { ContextoSelectorComponent } from './agente/contextos/contexto-selector/
 import { ParamSelectorComponent } from './agente/mensajes/mensaje/entrenamiento/parametros/param-selector/param-selector.component';
 import { RespuestaTextComponent } from './agente/mensajes/mensaje/entrenamiento/respuestas/respuesta-card/res-style/respuesta-text/respuesta-text.component';
 import { OpcionesComponent } from './agente/opciones/opciones.component';
+import { MessengerIntComponent } from './agente/integraciones/messenger-int/messenger-int.component';
+import { WhatsappIntComponent } from './agente/integraciones/whatsapp-int/whatsapp-int.component';
+import { IntegracionesComponent } from './agente/integraciones/integraciones.component';
+import { QRCodeModule } from 'angularx-qrcode';
 
 
 
@@ -146,6 +150,9 @@ import { OpcionesComponent } from './agente/opciones/opciones.component';
     ParamSelectorComponent,
     RespuestaTextComponent,
     OpcionesComponent,
+    IntegracionesComponent,
+    MessengerIntComponent,
+    WhatsappIntComponent,
   ],
   imports: [
     CommonModule,
@@ -154,7 +161,8 @@ import { OpcionesComponent } from './agente/opciones/opciones.component';
     ReactiveFormsModule,
     MaterialModule,
     GdevToolsModule,
-    HttpClientModule
+    HttpClientModule,
+    QRCodeModule
   ],
   providers: [
     

@@ -1,0 +1,50 @@
+<div class="row">
+    <div class="col s12 m6">
+        <p>
+            Para que tu agente atienda mensajes de whatsapp por ti, deberás seguir las siguientes instrucciones:
+        </p>
+        <ol type="1">
+            <li>Genera un código QR</li>
+            <li>
+                En tu smartphone, abre la aplicación de whatsapp
+            </li>
+            <li>
+                Toca Menú <i class="fas fa-ellipsis-v"></i> o Configuración <i class="fas fa-cog"></i> y selecciona <b>WhatsApp Web</b>
+            </li>
+            <li>
+                Cuando se active la cámara, apunta tu teléfono hacia esta pantalla para escanear el código. Al hacerlo, agente smart responderá por ti.
+            </li>
+        </ol>
+
+        <p>
+            En caso de que desees detener las respuestas automáticas del agente, haz lo siguiente:
+        </p>
+        <ol>
+            <li>
+                En tu smartphone, abre la aplicación de whatsapp
+            </li>
+            <li>
+                Toca Menú <i class="fas fa-ellipsis-v"></i> o Configuración <i class="fas fa-cog"></i> y selecciona <b>WhatsApp Web</b>
+            </li>
+            <li>
+                Elige la sesión creada con agente smart y a continuación <b>"Cerrar Sesión"</b>
+            </li>
+        </ol>
+    </div>
+    
+        <div class="col s12 m6">
+            <div class="row">
+                <div class="col s12">
+                    <button color="primary" mat-raised-button
+                        (click)="requestCode()">
+                        Generar Código QR
+                    </button>
+                </div>
+                <div class="col s12">
+                    <div class="qr-container" *ngIf="waCode">
+                        <qrcode [qrdata]="waCode" [width]="256"></qrcode>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>

@@ -30,7 +30,6 @@ import { LegalComponent } from './components/pages/legal/legal.component';
 import { PageFooterComponent } from './components/page-footer/page-footer.component';
 import { PreciosComponent } from './components/pages/precios/precios.component';
 import { MessengerIntegrationComponent } from './components/pages/docs/messenger-integration/messenger-integration.component';
-import { IntegracionesComponent } from './components/agentes/agente/integraciones/integraciones.component';
 
 
 
@@ -50,7 +49,6 @@ import { IntegracionesComponent } from './components/agentes/agente/integracione
     PageFooterComponent,
     PreciosComponent,
     MessengerIntegrationComponent,
-    IntegracionesComponent,
   ],
   imports: [
     CommonModule,

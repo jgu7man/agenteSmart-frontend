@@ -15,7 +15,7 @@ export class PublicComponent implements OnInit {
   ) {
     this._color.ColorPalette = {
       primary: '#3079F1',
-      acent: '#EFA130',
+      accent: '#EFA130',
       dark: '#143666',
       danger: '#EE3333',
       bg1: '#CCE1FF',

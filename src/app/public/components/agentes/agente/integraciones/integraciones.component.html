@@ -13,111 +13,23 @@
         <mat-card-content>
             <mat-accordion>
                 
-                <mat-expansion-panel class="plaform-area"> 
+                <mat-expansion-panel class="platform-area"> 
                     <mat-expansion-panel-header>
                         <b>Messenger</b>                        
                     </mat-expansion-panel-header>
     
-                    <div class="row">
-                        <div class="col s12">
-                            <mat-slide-toggle>Activar <br>
-                                <mat-hint>Cuando este botón está activo, tu agente atiende los mensajes por ti.</mat-hint>
-                            </mat-slide-toggle>
-                        </div>
-                    </div>
-                    <p>
-                        Para integrar tu agente a messenger, deberás seguir las instrucciones de este link: <br>
-                        <a [routerLink]="['/docs/messenger-integration']" target="_blank">https://agentesmart.com/docs/messenger-integration <i class="fas fa-external-link-alt"></i></a>.
-                        
-                    </p>
-
-                    <p class="advisory-text">
-                        *Agente Smart sólo se puede conectar al messenger de una página de facebook, no es posible conectarlo a una cuenta personal.
-                    </p>
-                    
-                    
-                    <div class="row copy-data-area">
-                        <div class="col s12">
-                            <p>
-                                Copia los siguientes datos en tu app de facebook.
-                            </p>
-                        </div>
-                        <div class="col s12 m6">
-                            <mat-form-field appearance="outline" class="copy-field">
-                                <mat-label>URL de devolución de llamada</mat-label>
-                                <input
-                                matInput
-                                type="text"
-                                name="URL"
-                                [value]="'https://api.agentesmart.com/messenger/'+projectId"
-                                disabled
-                                gdev-color
-                                color="black"
-                                >
-                                <button class="copy-icon"
-                                mat-icon-button matSuffix 
-                                (click)="copyMessenger('URL')">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                            </mat-form-field>
-
-                        </div>
-
-                        <div class="col s12 m6">
-                            <mat-form-field appearance="outline" class="copy-field">
-                                <mat-label>Indentificador de verificación</mat-label>
-                                <input
-                                matInput
-                                type="text"
-                                name="token"
-                                [value]="projectId"
-                                disabled
-                                gdev-color
-                                color="black"
-                                >
-                                <button class="copy-icon"
-                                mat-icon-button matSuffix 
-                                (click)="copyMessenger('ID')">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                            </mat-form-field>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col s12">
-                            Una vez realizados los pasos, presiona el botón de <b>conectar</b>
-                        </div>
-                        <div class="col s2">
-                            <button mat-raised-button color="primary">
-                                Conectar
-                            </button>
-                        </div>
-                        <div class="col s10">
-                            <mat-form-field appearance="outline" class="copy-field">
-                                <mat-label>Page Access Token</mat-label>
-                                <input
-                                matInput
-                                type="text"
-                                name="Page Access Token"
-                                [value]="pageAccessToken"
-                                disabled
-                                gdev-color
-                                color="black"
-                                >
-                            </mat-form-field>
-                        </div>
-                    </div>
+                    <aSmart-messenger-int></aSmart-messenger-int>
 
                 </mat-expansion-panel>
                 
                 
-                <mat-expansion-panel>
+                <mat-expansion-panel class="platform-area">
                     <mat-expansion-panel-header>
                         <b>Whatsapp</b>         
                     </mat-expansion-panel-header>
 
-                    <mat-slide-toggle>Activar</mat-slide-toggle>
+                    <aSmart-whatsapp-int></aSmart-whatsapp-int>
+                    
     
                 </mat-expansion-panel>
 
