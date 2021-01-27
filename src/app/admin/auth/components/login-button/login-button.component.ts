@@ -2,6 +2,7 @@ import { Component, OnInit, Inject, Output, EventEmitter } from '@angular/core';
 import {MatDialog, MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import { AuthService } from '../../auth.service';
 import { CacheService } from '../../../../gdev-tools/cache/cache.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'aSmart-login-button',
@@ -14,7 +15,8 @@ export class LoginButtonComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     public _auth: AuthService,
-    private _cache: CacheService
+    private _cache: CacheService,
+    private _router: Router
   ) { }
 
   ngOnInit() {
@@ -29,15 +31,21 @@ export class LoginButtonComponent implements OnInit {
   }
 
   openDialog(): void {
-    const dialogRef = this.dialog.open(LoginButtonDialog, {
-      width: '350px',
-    });
+    let user = this._cache.getDataKey( 'user' )
+    if ( user ) {
+      this._router.navigate(['/dashboard'])
+    } else {
+      const dialogRef = this.dialog.open(LoginButtonDialog, {
+        width: '350px',
+      });
+  
+      dialogRef.afterClosed().subscribe(result => {
+        this._auth.googleSingIn().then( res => {
+          console.log( 'se autenticó' )
+        })
+      });
 
-    dialogRef.afterClosed().subscribe(result => {
-      this._auth.googleSingIn().then( res => {
-        console.log( 'se autenticó' )
-      })
-    });
+    }
   }
   
 

@@ -1,7 +1,7 @@
-<div *ngIf="_auth.user$ | async; else login">
+<!-- <div *ngIf="_auth.user$ | async; else login">
     <button mat-raised-button (click)="_auth.singOut()">Cerrar Sesión</button>
 </div>
-<ng-template #login>
-    <button mat-raised-button (click)="openDialog()">Ingresar</button>
+<ng-template #login> -->
+    <button mat-raised-button (click)="openDialog()" color="primary">Ingresar</button>
 
-</ng-template>
+<!-- </ng-template> -->

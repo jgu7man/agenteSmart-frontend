@@ -1,12 +1,12 @@
 #home{
-    scroll-snap-type: y mandatory;
-    height: 100vh;
+    // scroll-snap-type: y mandatory;
+    // height: 100vh;
     overflow-y: scroll;
     .home_sec {
         align-items: center;
         display: flex;
         flex-flow: wrap;
-        scroll-snap-align:start;
+        // scroll-snap-align:start;
     }
     .home_sec:nth-child(odd){
         flex-direction: row-reverse;
@@ -37,8 +37,8 @@
     z-index: 0;
     position: relative;
     img {
+        width: 100% !important;
         float: right;
-        width: 120%;
     }
 }
 

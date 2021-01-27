@@ -15,6 +15,7 @@ import { HttpClient } from '@angular/common/http';
 import { AlertService } from '../../../../gdev-tools/alerts/alert.service';
 import { Loading } from '../../../../gdev-tools/loading/loading.service';
 import { SystemEntitiesService } from '../../../../admin/system/system-entities.service';
+import { environment } from '../../../../../environments/environment.prod';
 
 @Injectable({
     providedIn: 'root',
@@ -34,7 +35,7 @@ export class CurrentAgenteService {
     /** Número de veces que se ha recargado el agente */
     private loads = 0;
     /** Almacena la URL del API */
-    private _url = 'https://us-central1-main-agentesmart.cloudfunctions.net/dialogflow/intent';
+    private _url = environment.restURL + 'intent';
 
 
     constructor(

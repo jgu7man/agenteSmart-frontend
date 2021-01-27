@@ -44,7 +44,7 @@ export class MensajesByContextoComponent implements OnInit {
             .pipe(
                 startWith( [] ),
                 // tap(x => console.log(x.length)),
-                distinctUntilChanged( ( x, y ) => x.length
+                distinctUntilChanged( ( x, y ) => x && x.length 
                     ? x.length == y.length
                     : x == y) )
             .subscribe((get) => this.getMensajes());

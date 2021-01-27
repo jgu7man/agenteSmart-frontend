@@ -30,16 +30,19 @@ export class AgentConfigService {
         this.loading.toggleWaitingSpinner(true)
         var intentList: IntentModel[] = await this._cache.getAsyncKey<IntentModel[]>('intents')
 
-        console.log('Search for intent');
-        var defaultIntent: IntentModel = intentList.find(
-            ( i ) => i.displayName == intent
-        );
-
-        if ( defaultIntent ) {
-            console.log('Delete for default Intent');
-            // DELETE INTENT
-            this._mensaje.delete(defaultIntent.name)
+        console.log( 'Search for intent' );
+        if ( intentList.length > 0 ) {
+            var defaultIntent: IntentModel = intentList.find(
+                ( i ) => i.displayName == intent
+            );
+            
+            if ( defaultIntent ) {
+                console.log('Delete for default Intent');
+                // DELETE INTENT
+                this._mensaje.delete(defaultIntent.name)
+            }
         }
+
 
         console.log('Create in dialogflow');
         defaultIntent = await this._mensajes.createNewIntent({

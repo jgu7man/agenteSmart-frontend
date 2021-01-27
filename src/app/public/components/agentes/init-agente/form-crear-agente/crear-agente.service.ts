@@ -13,6 +13,7 @@ import { CreatingComponent } from '../creating/creating.component';
 import { AlertService } from '../../../../../gdev-tools/alerts/alert.service';
 import { AgentConfigService } from '../../agente/agent-config/agent-config.service';
 import { ContextoModel } from '../../agente/contextos/contexto.model';
+import { environment } from '../../../../../../environments/environment.prod';
 
 interface doc {
     user: string,
@@ -117,7 +118,7 @@ export class CrearAgenteService {
 
     // ? Crear proyecto
     createNewAgent( agente: AgenteModel ): Observable<{}> {
-        const _Url = "https://us-central1-main-agentesmart.cloudfunctions.net/dialogflow/agentes/create"
+        const _Url = environment.restURL + "agentes/create"
 
         console.log( agente );
 

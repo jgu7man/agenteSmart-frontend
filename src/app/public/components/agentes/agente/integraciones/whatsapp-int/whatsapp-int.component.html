@@ -41,9 +41,15 @@
                     </button>
                 </div>
                 <div class="col s12">
-                    <div class="qr-container" *ngIf="waCode">
-                        <qrcode [qrdata]="waCode" [width]="256"></qrcode>
-                    </div>
+                    <ng-container *ngIf="waStatus.status == 'DISCONNECTED'; else CONNECTED">
+                        <div class="qr-container" *ngIf="waStatus.qr">
+                            <qrcode [qrdata]="waStatus.qr" [width]="256"></qrcode>
+                        </div>
+                    </ng-container>
+                    <ng-template #CONNECTED>
+                        <p><b>Conectado</b></p>
+                    </ng-template>
+                    
                 </div>
             </div>
         </div>

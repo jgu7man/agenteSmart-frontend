@@ -15,6 +15,7 @@ import { MensajeState } from '../mensaje.model';
 import * as actions from './store/mensaje.actions';
 import { GdevCommonsService } from '../../../../../../gdev-tools/commons/gdev-commons.service';
 import { Location } from '@angular/common';
+import { environment } from '../../../../../../../environments/environment.prod';
 
 
 
@@ -36,8 +37,7 @@ export class CurrentMensajeService {
     /** Contiene la ruta de FIRESTORE del mensaje actual */
     private mensajesPath: string;
     /** Contiene la ruta a la API */
-    private _url =
-        'https://us-central1-main-agentesmart.cloudfunctions.net/dialogflow/intent';
+    private _url = environment.restURL + 'intent';
     private intentListSubs: Subscription
     private intentList$: Observable<IntentModel[]>
 
