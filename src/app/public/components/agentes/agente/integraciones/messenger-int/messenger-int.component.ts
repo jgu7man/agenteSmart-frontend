@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CacheService } from 'src/app/gdev-tools/cache/cache.service';
 import { AlertService } from 'src/app/gdev-tools/alerts/alert.service';
 import { Clipboard } from '@angular/cdk/clipboard';
+import { IntegracionesService } from '../integraciones.service';
+import { MessengerStatus } from './messenger.model';
 
 @Component({
   selector: 'aSmart-messenger-int',
@@ -12,15 +14,22 @@ export class MessengerIntComponent implements OnInit {
 
   projectId: string
   copy: Clipboard
-  pageAccessToken: string = ''
+  msnStatus: MessengerStatus 
   constructor (
     private _cache: CacheService,
-    private _alert: AlertService
+    private _alert: AlertService,
+    public _integration: IntegracionesService
   ) {
-    this.projectId = this._cache.getDataKey('projectId');
+    this.projectId = this._cache.getDataKey( 'projectId' );
+    this.msnStatus = new MessengerStatus('',false)
    }
 
   ngOnInit(): void {
+    this._integration.getMessengerOptions()
+      .subscribe( data => {
+        console.log( data )
+        this.msnStatus = data
+      } )
   }
 
   copyMessenger( field: 'URL' | 'ID' ) {

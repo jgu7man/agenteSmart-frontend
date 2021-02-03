@@ -44,7 +44,7 @@ export class SidenavComponent implements OnInit {
         { name: 'Inventario', route: 'inventario', routeId: 'inventario', icon: 'fa-boxes' },
         // { name: 'Integraciones', route: 'integraciones', routeId: 'integraciones', icon: 'fa-plug' },
         { name: 'Clientes', route: 'clientes', routeId: 'clientes', icon:  'fa-users'},
-        { name: 'Finanzas', route: 'finanzas', routeId: 'finanzas', icon: 'fa-receipt' },
+        { name: 'Cuenta', route: 'cuenta', routeId: 'cuenta', icon: 'fa-receipt' },
     ];
   }
 

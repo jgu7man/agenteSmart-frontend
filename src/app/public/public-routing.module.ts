@@ -28,7 +28,8 @@ import { IntegracionesComponent } from './components/agentes/agente/integracione
 const routes: Routes = [
     {
         path: '', component: PublicComponent, children: [
-            {path: '', component: InicioComponent, data: {page: 'home'}, },
+            {path: '', redirectTo: 'inicio', pathMatch: 'full'}, 
+            {path: 'inicio', component: InicioComponent, data: {page: 'home'}, },
             {path: 'docs', component: DocsComponent, data: {page: 'docs'}, children:[
                 { path: 'messenger-integration', component: MessengerIntegrationComponent, data: {page: 'messenger-integration'}}
             ]},

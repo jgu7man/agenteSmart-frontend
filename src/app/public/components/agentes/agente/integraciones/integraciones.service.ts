@@ -7,6 +7,7 @@ import { catchError, distinct, skip, tap, distinctUntilKeyChanged } from 'rxjs/o
 import { AlertService } from 'src/app/gdev-tools/alerts/alert.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { WhatsappStatus } from './whatsapp-int/messenger.model';
+import { MessengerStatus } from './messenger-int/messenger.model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class IntegracionesService {
 
   projectId: string
   userId: string
-  waPath: string
+  integrationsPath: string
   url: string = environment.restURL + 'whatsapp'
   constructor (
     private _http: HttpClient,
@@ -25,13 +26,19 @@ export class IntegracionesService {
   ) {
     this.projectId = this._cache.getDataKey( 'projectId' )
     this.userId = this._cache.getDataKey( 'user' )[ 'uid' ]
-    this.waPath = `usuarios/${ this.userId }/agentes/${ this.projectId }/integraciones/whatsapp`
+    this.integrationsPath = `usuarios/${ this.userId }/agentes/${ this.projectId }/integraciones/`
   }
 
 
+  getMessengerOptions() {
+    return this._fs.doc<MessengerStatus>
+      ( this.integrationsPath + 'messenger' )
+      .valueChanges().pipe( skip( 2 ) )
+      }
+
+
   listenQRCode() {
-    console.log( this.userId, this.projectId )
-    return this._fs.doc<WhatsappStatus>( this.waPath )
+    return this._fs.doc<WhatsappStatus>( this.integrationsPath+'whatsapp' )
       .valueChanges().pipe( skip( 2 ))
   }
 
@@ -41,11 +48,11 @@ export class IntegracionesService {
   }
 
   disconnect() {
-    this._fs.doc( this.waPath ).ref.set( { qr: '', status: 'DISCONNECTED' } )
+    this._fs.doc( this.integrationsPath+'whatsapp' ).ref.set( { qr: '', status: 'DISCONNECTED' } )
   }
   
   clearQR() {
-    this._fs.doc( this.waPath ).ref.set( { qr: ''  }, { merge: true} )
+    this._fs.doc( this.integrationsPath+'whatsapp' ).ref.set( { qr: ''  }, { merge: true} )
   }
 
   handleError(error: HttpErrorResponse) {
