@@ -1,9 +1,10 @@
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Observable, throwError } from 'rxjs';
 import { CacheService } from 'src/app/gdev-tools/cache/cache.service';
-import { catchError, distinct, skip, tap, distinctUntilKeyChanged } from 'rxjs/operators';
+import { catchError, distinct, skip, tap, distinctUntilKeyChanged, map } from 'rxjs/operators';
 import { AlertService } from 'src/app/gdev-tools/alerts/alert.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { WhatsappStatus } from './whatsapp-int/messenger.model';
@@ -18,6 +19,8 @@ export class IntegracionesService {
   userId: string
   integrationsPath: string
   url: string = environment.restURL + 'whatsapp'
+  wappHost: string = 'ws://localhost:8999'
+  wappSocket$: WebSocketSubject<any>
   constructor (
     private _http: HttpClient,
     private _cache: CacheService,
@@ -43,8 +46,8 @@ export class IntegracionesService {
   }
 
   getQRCode(): Observable<any> {
-    const headers = new HttpHeaders({'Content-Type': 'application/json'})
-    return this._http.get( `${ this.url }/${ this.projectId }`, { headers: headers } )
+    this.wappSocket$ = webSocket(`${this.wappHost}/wa-connect?projectId=${'hola'}`)
+    return this.wappSocket$
   }
 
   disconnect() {

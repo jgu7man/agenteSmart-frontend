@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AlertService } from 'src/app/gdev-tools/alerts/alert.service';
 import { IntegracionesService } from '../integraciones.service';
 import { WhatsappStatus } from './messenger.model';
+import { Loading } from '../../../../../../gdev-tools/loading/loading.service';
 
 @Component({
   selector: 'aSmart-whatsapp-int',
@@ -12,9 +13,11 @@ export class WhatsappIntComponent implements OnInit {
 
   waCode: string
   waStatus: WhatsappStatus
+  waConnection: boolean
   constructor (
     private _integration: IntegracionesService,
-    private _alert: AlertService
+    private _alert: AlertService,
+    private _loading: Loading
   ) { 
     this.waStatus = {
       status: 'DISCONNECTED',
@@ -24,20 +27,43 @@ export class WhatsappIntComponent implements OnInit {
 
   ngOnInit(): void {
     this._integration.listenQRCode().subscribe( data => {
-      console.log( data )
       this.waStatus = data
     })
   }
+  
+  disableRequestCode() {
+    if ( this.waConnection ) {
+      return true
+    } else if ( this.waStatus.qr ) {
+      return true
+    }
+  }
 
-
+  
+  
   requestCode() {
+    this.waConnection = true
+    // this._loading.toggleWaitingSpinner(true)
     this._integration.getQRCode().subscribe(
-      response => { }, 
+      response => {
+        console.log( response )
+        if ( response.type === 'error' ){
+          this._alert.sendMessageAlert( response.message )
+          this.waConnection = false
+        }
+
+        else if (response.type === 'ok') {
+          this._loading.toggleWaitingSpinner(false)
+        }
+          
+      }, 
       error => {
+        console.error( error );
+        this._loading.toggleWaitingSpinner(false)
         if ( this.waStatus.status == 'DISCONNECTED' ) {
           this._integration.disconnect()
-          console.log( 'Se agotó el tiempo de espera' )
-          this._alert.sendMessageAlert('Se agotó el tiempo de espera')
+          // console.log( 'Se agotó el tiempo de espera' )
+          // this._alert.sendMessageAlert('Se agotó el tiempo de espera')
         } else {
           this._integration.clearQR()
         }
