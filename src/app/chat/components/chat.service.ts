@@ -87,6 +87,9 @@ export class ChatService {
                     projectId: this._projectId,
                     textInput: message,
                     clientId: this._clientId,
+                    userIDs: {
+                        userId: 'TEST'
+                    }
                 };
 
                 // search for sessionId in storage
@@ -104,7 +107,7 @@ export class ChatService {
                         this._cache.updateData('currentSession',response['session'])
                         // save the contexts in storage
                         this._cache.updateData('inputContexts',response['contextos'])
-                        
+
                         this.reciveMessage(response['respuestas']);
                     });
             });

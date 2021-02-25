@@ -26,7 +26,7 @@ export class LoginButtonComponent implements OnInit {
         this.isLogged.emit( user )
         this._cache.updateData('user', user)
       }
-      
+
     })
   }
 
@@ -38,16 +38,17 @@ export class LoginButtonComponent implements OnInit {
       const dialogRef = this.dialog.open(LoginButtonDialog, {
         width: '350px',
       });
-  
-      dialogRef.afterClosed().subscribe(result => {
-        this._auth.googleSingIn().then( res => {
-          console.log( 'se autenticó' )
+
+      dialogRef.afterClosed().subscribe( () => {
+        this._auth.googleSingIn().then( () => {
+            console.log( 'se autenticó' )
+            this._router.navigate(['/dashboard'])
         })
       });
 
     }
   }
-  
+
 
 }
 

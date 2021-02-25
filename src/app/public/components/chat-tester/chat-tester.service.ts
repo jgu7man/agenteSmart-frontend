@@ -30,32 +30,36 @@ export class ChatTesterService {
         this._projectId = this._cache.getDataKey<string>('projectId')
     }
 
-    // TODO Depsite aquí su función
+
     // Esta función escucha cada que el trigger de enviar mensaje es ejecutado
     sendMessage(): Subscription {
         this._store.pipe(
             tap(r => console.log(r))
         ).subscribe(act => console.log(act))
-                
-        
+
+
         return this._chat.sendMessage$.pipe(
                 distinctUntilChanged(),
                 tap(r => console.log(r))
             ).subscribe((message: string) => {
                 console.log(message);
-                
+
                 var body = {
                     projectId: this._projectId,
-                    textInput: message
+                    textInput: message,
+                    userIDs: {
+                        userId: 'TEST'
+                    }
                 }
 
-                this._sessionId = this._cache.getDataKey('currentSession')
-                if(this._sessionId) body['sessionId'] = this._sessionId
-                
+                // this._sessionId = this._cache.getDataKey('currentSession')
+                // if(this._sessionId) body['sessionId'] = this._sessionId
+                console.log(body)
+
 
                 this._http.post(this._url, body, {responseType: 'json'})
                     .subscribe(response => {
-                        this._cache.updateData('currentSession', response['session'])
+                        // this._cache.updateData('currentSession', response['session'])
                         console.log(response['respuestas']);
                         // this.reciveMessage(response['respuestas'])
                     })
@@ -66,13 +70,13 @@ export class ChatTesterService {
     // Esta función recibe la respuesta y la pinta en la ventana
     reciveMessage(respuestas: ResultResponse[]) {
         respuestas.forEach(resp => {
-            
+
             if (resp instanceof SimpleModel) {
                 if (resp.suggestions.length > 0) {
                     let suggestions: QuickResponse[] = resp.suggestions.map(
                         (sug) => {return {displayText: sug.text, value: sug.contexto}})
                     }
-                } else 
+                } else
                 if (resp instanceof RespuestaBuscarModel) {
                     // this._chat.reciveMessage(resp.card.title)
                     // this._chat.reciveMessage(resp.card.subtitle)
@@ -84,6 +88,6 @@ export class ChatTesterService {
 
                 }
             })
-        
+
     }
 }

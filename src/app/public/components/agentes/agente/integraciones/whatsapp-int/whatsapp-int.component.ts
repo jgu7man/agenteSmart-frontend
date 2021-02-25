@@ -18,7 +18,7 @@ export class WhatsappIntComponent implements OnInit {
     private _integration: IntegracionesService,
     private _alert: AlertService,
     private _loading: Loading
-  ) { 
+  ) {
     this.waStatus = {
       status: 'DISCONNECTED',
       qr:''
@@ -27,10 +27,14 @@ export class WhatsappIntComponent implements OnInit {
 
   ngOnInit(): void {
     this._integration.listenQRCode().subscribe( data => {
+      console.log(data)
       this.waStatus = data
+      if ( this.waStatus.status == 'DISCONNECTED' && !this.waStatus.qr ) {
+        this.waConnection = false
+        }
     })
   }
-  
+
   disableRequestCode() {
     if ( this.waConnection ) {
       return true
@@ -39,8 +43,8 @@ export class WhatsappIntComponent implements OnInit {
     }
   }
 
-  
-  
+
+
   requestCode() {
     this.waConnection = true
     // this._loading.toggleWaitingSpinner(true)
@@ -55,8 +59,8 @@ export class WhatsappIntComponent implements OnInit {
         else if (response.type === 'ok') {
           this._loading.toggleWaitingSpinner(false)
         }
-          
-      }, 
+
+      },
       error => {
         console.error( error );
         this._loading.toggleWaitingSpinner(false)

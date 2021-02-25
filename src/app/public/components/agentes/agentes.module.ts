@@ -80,6 +80,7 @@ import { MessengerIntComponent } from './agente/integraciones/messenger-int/mess
 import { WhatsappIntComponent } from './agente/integraciones/whatsapp-int/whatsapp-int.component';
 import { IntegracionesComponent } from './agente/integraciones/integraciones.component';
 import { QRCodeModule } from 'angularx-qrcode';
+import { ConversacionesComponent } from './agente/conversaciones/conversaciones.component';
 
 
 
@@ -153,6 +154,7 @@ import { QRCodeModule } from 'angularx-qrcode';
     IntegracionesComponent,
     MessengerIntComponent,
     WhatsappIntComponent,
+    ConversacionesComponent,
   ],
   imports: [
     CommonModule,

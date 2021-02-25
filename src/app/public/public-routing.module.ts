@@ -24,11 +24,12 @@ import { OpcionesComponent } from './components/agentes/agente/opciones/opciones
 import { PreciosComponent } from './components/pages/precios/precios.component';
 import { MessengerIntegrationComponent } from './components/pages/docs/messenger-integration/messenger-integration.component';
 import { IntegracionesComponent } from './components/agentes/agente/integraciones/integraciones.component';
+import { ConversacionesComponent } from './components/agentes/agente/conversaciones/conversaciones.component';
 
 const routes: Routes = [
     {
         path: '', component: PublicComponent, children: [
-            {path: '', redirectTo: 'inicio', pathMatch: 'full'}, 
+            {path: '', redirectTo: 'inicio', pathMatch: 'full'},
             {path: 'inicio', component: InicioComponent, data: {page: 'home'}, },
             {path: 'docs', component: DocsComponent, data: {page: 'docs'}, children:[
                 { path: 'messenger-integration', component: MessengerIntegrationComponent, data: {page: 'messenger-integration'}}
@@ -39,14 +40,14 @@ const routes: Routes = [
             { path: 'precios', component: PreciosComponent, data: {page: 'precios'}}
         ],
     },
-    { path: 'dashboard', component: DashboardComponent, data: {page: 'dashboard'}, children: 
+    { path: 'dashboard', component: DashboardComponent, data: {page: 'dashboard'}, children:
         [
             { path: '', redirectTo: 'agentes', pathMatch: 'full' },
 
             { path: 'agentes', component: AgentesComponent },
             { path: 'crear_agente', component: InitAgenteComponent },
             { path: 'editar_agente/:id', component: EditAgenteComponent, },
-            { path: 'agente/:id', component: AgenteComponent, data: {section: 'agente'}, children: 
+            { path: 'agente/:id', component: AgenteComponent, data: {section: 'agente'}, children:
                 [
                     { path: '', redirectTo: 'mensajes', pathMatch: 'full', },
                     { path: 'bienvenida', component: BienvenidaComponent },
@@ -56,6 +57,7 @@ const routes: Routes = [
                     { path: 'configuraciones', component: AgentConfigComponent },
                     { path: 'opciones', component: OpcionesComponent },
                     { path:  'integraciones', component: IntegracionesComponent},
+                    { path:  'conversaciones', component: ConversacionesComponent},
                 ],
             },
             { path: 'tarjetas', component: TarjetasComponent },

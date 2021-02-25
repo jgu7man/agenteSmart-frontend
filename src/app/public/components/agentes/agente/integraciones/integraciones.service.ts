@@ -46,7 +46,7 @@ export class IntegracionesService {
   }
 
   getQRCode(): Observable<any> {
-    this.wappSocket$ = webSocket(`${this.wappHost}/wa-connect?projectId=${'hola'}`)
+    this.wappSocket$ = webSocket(`${this.wappHost}/wa-connect?projectId=${this.projectId}`)
     return this.wappSocket$
   }
 

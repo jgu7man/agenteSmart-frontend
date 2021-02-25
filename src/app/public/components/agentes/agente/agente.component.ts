@@ -34,8 +34,8 @@ export class AgenteComponent implements OnInit, OnDestroy {
     })
    }
 
-  
-  
+
+
   ngOnInit(): void {
     this.loadAgente()
     if ( this.resposive_.small ) {
@@ -43,13 +43,13 @@ export class AgenteComponent implements OnInit, OnDestroy {
     }
 
     let intentNames = [
-      // "4aec3563-4a8b-4f6e-9111-b51bbc5cbb1e", 
+      // "4aec3563-4a8b-4f6e-9111-b51bbc5cbb1e",
       "74386482-8087-49d8-bc74-f4d881673127"
     ]
 
     // intentNames.forEach( name => {
     //   this._mensaje.deleteIntentRequest(name)
-      
+
     // })
   }
 
@@ -62,8 +62,10 @@ export class AgenteComponent implements OnInit, OnDestroy {
     { path: 'bienvenida', label: 'Bienvenida', icon: 'fa-filter' },
     { path: 'mensajes', label: 'Flujo', icon:'fa-sitemap' },
     { path: 'tipos', label: 'Tipos', icon:'fa-list-alt' },
-    { path: 'configuraciones', label: 'Configuración', icon: 'fa-cog' },
-    { path: 'integraciones', label: 'Integraciones', icon: 'fa-plug' },
+    // { path: 'configuraciones', label: 'Configuración', icon: 'fa-cog' },
+    // { path: 'integraciones', label: 'Integraciones', icon: 'fa-plug' },
+    // { path: 'conversasiones', label: 'Conversaciones', icon: 'fa-comment-dots' },
+
   ]
 
   ngOnDestroy() {

@@ -1,39 +1,58 @@
 <div id="agente-container">
     <!-- Barra de información del agente -->
-    <nav 
+    <nav
     gdev-color
     [background]="'white'"
-    class="agentNav" 
-    mat-tab-nav-bar 
+    class="agentNav"
+    mat-tab-nav-bar
     mat-align-tabs="end"
     *ngIf="agente">
-    
+
         <!-- Imagen y nombre -->
         <div class="agentInfo">
-            
+
             <div class="imgAgentAvatar">
                 <img [src]="agente.avatarUri.url" alt="">
             </div>
-    
-            <p 
+
+            <p
             gdev-color
             [color]="'dark'"
             class="agentName"
             > {{agente.displayName}} </p>
         </div>
-    
+
         <!-- Secciones del agente -->
         <a mat-tab-link
             [ngStyle]="{'display': resposive_.small ? 'none' : 'inline-flex'}"
             *ngFor="let link of agentLinks"
             [routerLink]="link.path"
-            routerLinkActive="active" 
+            routerLinkActive="active"
             #rla="routerLinkActive"
             [active]="rla.isActive">
             <i class="fas {{link.icon}}"></i> &nbsp;&nbsp;
             {{link.label}}
         </a>
+
+        <div mat-tab-link
+        [ngStyle]="{'display': resposive_.small ? 'none' : 'inline-flex'}">
+            <button mat-icon-button [mat-menu-trigger-for]="moreoptions">
+                <i class="fas fa-bars"></i> Opciones
+            </button>
+            <mat-menu #moreoptions="matMenu">
+                <button mat-menu-item [routerLink]="['configuraciones']">
+                    <i class="fas fa-cog" ></i> Configuración
+                </button>
+                <button mat-menu-item [routerLink]="['integraciones']">
+                    <i class="fas fa-plug" aria-hidden="true"></i> Integraciones
+                </button>
+                <button mat-menu-item [routerLink]="['conversaciones']">
+                    <i class="fas fa-comment-dots" aria-hidden="true"></i> Conversaciones
+                </button>
+
+            </mat-menu>
+        </div>
     </nav>
-    
+
     <router-outlet></router-outlet>
 </div>
