@@ -1,0 +1,33 @@
+mat-drawer {
+    min-width: 75%;
+    overflow: auto;
+}
+
+mat-drawer-content {
+    overflow: auto;
+}
+
+::ng-deep {
+    .drawer-list{
+        mat-list-option {
+            border-bottom: .5px solid #a0a0a0;
+        }
+    }
+    .drawer-list mat-list-option:first-child {
+        border-top: .5px solid #a0a0a0;
+    }
+}
+
+.delIcon {
+    opacity: 0;
+    transition: all .3s;
+    display: flex;
+    justify-content: flex-end;
+}
+
+
+mat-list-option:hover .delIcon {
+    opacity: 1;
+}
+
+

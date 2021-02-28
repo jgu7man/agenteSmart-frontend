@@ -4,22 +4,22 @@
             <!-- Si hay agentes -->
             <div class="col s12 l6 agente-box" *ngFor="let agente of agentes" >
                 <mat-card>
-                    <mat-card-header> 
+                    <mat-card-header>
                         <!-- Icono del agente -->
-                        <div mat-card-avatar 
-                        class="avatar-img" 
-                        [ngStyle]="{'background-image':'url('+agente.avatarUri.url+')'}" 
+                        <div mat-card-avatar
+                        class="avatar-img"
+                        [ngStyle]="{'background-image':'url('+agente.avatarUri.url+')'}"
                         [routerLink]="['/dashboard/agente/', agente.projectId]"
                         alt="">
                         </div>
-    
+
                         <!-- Nombre del agentes -->
                         <mat-card-title [routerLink]="['/dashboard/agente/', agente.projectId]"
                         >{{agente.displayName}} </mat-card-title>
-    
+
                         <!-- Descripción -->
                         <mat-card-subtitle> {{agente.description}} </mat-card-subtitle>
-    
+
                         <!-- Opciones -->
                         <button class="card-menu" mat-button [matMenuTriggerFor]="menu">
                             <i class="fas fa-ellipsis-v"></i>
@@ -28,15 +28,15 @@
                             <button mat-menu-item
                             [routerLink]="['/dashboard/editar_agente', agente.projectId]"
                             >Editar</button>
-                            <button mat-menu-item>Eliminar</button>
+                            <button mat-menu-item (click)="deleteAgente(agente.projectId)">Eliminar</button>
                         </mat-menu>
-    
+
                     </mat-card-header>
                 </mat-card>
             </div>
-            
+
         </ng-container>
-        
+
         <!-- Si no hay agentes -->
         <ng-template #noAgentes>
             <div class="col s12 center">
@@ -49,8 +49,8 @@
                 >Crear agente</button>
             </div>
         </ng-template>
-        
+
     </div>
-    
+
 
 </div>

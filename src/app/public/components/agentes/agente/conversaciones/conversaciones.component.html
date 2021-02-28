@@ -1,1 +1,66 @@
-<p>conversaciones works!</p>
+<mat-drawer-container [hasBackdrop]="true">
+    <mat-drawer #currentConv [mode]="'over'" position="end">
+        <aSmart-conversacion
+        *ngIf="convSelected"
+        [conversacion]="convSelected"
+        (close)="onCloseConversation()"
+        ></aSmart-conversacion>
+    </mat-drawer>
+    <mat-drawer-content strechHeight>
+        <div class="container">
+
+            <mat-card class="dashboard-section-card">
+                <mat-card-header class="dashboard-section-header">
+                    <mat-card-title class="dashboard-section-title">
+                        <h2>Conversaciones</h2>
+                </mat-card-title>
+                <mat-card-subtitle>
+                    Revisa las conversaciones que tu agente ha tenido con tus clientes y continúa entranándolo para que no se le escape nada.
+                </mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content *ngIf="convList">
+
+                    <ng-container *ngIf="convList.length > 0; else empty">
+                        <mat-selection-list #listPanel class="drawer-list"
+                        (selectionChange)="onConversationSelected($event)"
+                        [multiple]="false">
+                            <mat-list-option
+                            *ngFor="let conversation of convList"
+                            [value]="conversation"
+                            >
+                            <div class="row align-cols">
+                                <div class="col s5">
+                                    {{conversation.userId}}
+                                </div>
+
+                                <div class="col s5">
+                                    {{conversation.lastUpdated}}
+                                </div>
+
+                                <div class="col s2">
+                                    <span class="delIcon">
+                                        <button mat-icon-button (click)="deleteConversation(conversation.userId, $event)">
+                                            <i class="fas fa-trash red-text" aria-hidden="true"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                            </mat-list-option>
+                        </mat-selection-list>
+                    </ng-container>
+                    <ng-template #empty>
+                        <div class="row">
+                            <div class="col s12 center">
+                                <p class="center grey-text">Aún no tienes conversaciones </p>
+                                <i class="fas fa-robot fa-10x grey-text "></i>
+                            </div>
+                        </div>
+                    </ng-template>
+
+
+                </mat-card-content>
+
+            </mat-card>
+        </div>
+    </mat-drawer-content>
+</mat-drawer-container>

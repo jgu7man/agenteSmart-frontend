@@ -176,7 +176,13 @@
                         <td></td>
                         <td>
                             <!-- <button mat-raised-button color="primary">Ingresar</button> -->
-                            <gdev-login-button></gdev-login-button>
+                            <ng-container *ngIf="_auth.user$ | async else unauthenticated">
+                                <a [routerLink]="['/dashboard']" mat-raised-button>Ingresar</a>
+                            </ng-container>
+                            <ng-template #unauthenticated>
+                                <gdev-login-button></gdev-login-button>
+                            </ng-template>
+
                         </td>
                         <td>
                             <button mat-raised-button color="primary">$33,999 COP</button>
@@ -199,11 +205,12 @@
                     <p class="center">Si ninguno de nuestros planes se adapta a tus necesidades o tienes algo interesante en mente, nos gustaría escucharte.</p>
                     <div class="row">
                         <div class="col s12 center">
-                            <a mat-raised-button 
+                            <a mat-raised-button
                             class="wpbtn"
                             gdev-color
                             color="white"
                             background="primary"
+                            target="_blank"
                             href="https://api.whatsapp.com/send?phone=523121805955&text=Me%20gustar%C3%ADa%20platicar%20sobre%20Agente%20Smart%20y%20mi%20negocio">
                                 Contáctanos
                             </a>

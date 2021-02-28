@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from 'src/app/admin/auth/auth.service';
 
 @Component({
   templateUrl: './precios.component.html',
@@ -6,7 +7,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PreciosComponent implements OnInit {
 
-  constructor() { }
+    constructor (
+      public _auth: AuthService
+  ) { }
 
   ngOnInit(): void {
   }

@@ -2,31 +2,35 @@ import { Injectable } from '@angular/core';
 import { UserInterface } from '../../../admin/auth/auth.service';
 import { AgenteModel } from './init-agente/agente.model';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { CacheService } from '../../../gdev-tools/cache/cache.service';
 import { Loading } from '../../../gdev-tools/loading/loading.service';
 import { AlertService } from '../../../gdev-tools/alerts/alert.service';
-import { tap } from 'rxjs/operators';
+import { tap, catchError } from 'rxjs/operators';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { environment  } from "src/environments/environment";
 
 @Injectable({ providedIn: 'root' })
 export class AgentesService {
 
-    /** 
+    /**
      * Almacena los datos del usuario autenticado
      * @private
      * @type {UserInterface} */
     private usuario: UserInterface;
-    /** 
+    /**
      * Observable de los agentes en FIRESTORE*/
     public agentes$ = new Observable<AgenteModel[]>();
+    private restURL = environment.restURL
 
     constructor(
         private fs: AngularFirestore,
         private router: Router,
         private _cache: CacheService,
         private loading: Loading,
-        private _alerts: AlertService
+        private _alerts: AlertService,
+        private _http: HttpClient
     ) {
         this.listenAgentes();
     }
@@ -52,9 +56,9 @@ export class AgentesService {
         } catch (error) {
             console.error(error)
             this._alerts.sendError('No fue posible conectarse a la base de datos.', error)
-        }    
+        }
 
-        
+
     }
 
     // async loadAgentes() {
@@ -89,23 +93,23 @@ export class AgentesService {
         this.usuario = this._cache.getDataKey('user');
 
         try {
-        
+
             const agenteDoc = await this.fs
                 .collection(`usuarios/${this.usuario.uid}/agentes`).ref
                 .doc(projectId).get()
-            
+
             if (agenteDoc.exists) {
                 return agenteDoc.data() as AgenteModel
             } else {
                 this._alerts.sendMessageAlert('No se encontró el agente')
                 return null
             }
-            
+
         } catch (error) {
             console.error(error)
             this._alerts.sendError('Error en la base de datos', error)
         }
-        
+
 
 
     }
@@ -123,7 +127,7 @@ export class AgentesService {
         Object.keys(agent).forEach((key) => {
             if (agent[key] == undefined) delete agent[key];
         });
-        
+
         const agenetRef = this.fs
             .collection('usuarios')
             .ref.doc(this.usuario.uid)
@@ -139,6 +143,24 @@ export class AgentesService {
         }
 
         this.router.navigate(['/dashboard/agentes']);
+    }
+
+
+
+    deleteAgent( projectId ): Observable<any> {
+        const clientId = this._cache.getDataKey('user')['uid']
+
+        console.log('Eliminando project')
+        return this._http.delete( `${ this.restURL }agentes/delete?projectId=${ projectId }&clientId=${ clientId }` ).pipe(
+            catchError( this.handleError )
+        )
+    }
+
+    private handleError( error ) {
+        console.error( error )
+        this._alerts.sendError( 'No se pudo borrar el agente', error )
+        return throwError(
+            'No se pudo borrar' );
     }
 
     // Arreglo de lenguaje
