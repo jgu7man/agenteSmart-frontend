@@ -22,12 +22,16 @@ export class FormCrearAgenteComponent implements OnInit {
     this.agente = new AgenteModel( '', '', 'es-419', 'America/New_York', '', this.avatar )
     this.user = this._cache.getDataKey( 'user' )
   }
-  
-  
+
+
 
   ngOnInit() {
     this.folder = `${this.user.uid}/agentes/`
-  }
+    }
+
+    catchImage(imageObject: any) {
+        this.agente.avatarUri = imageObject
+    }
 
 
   onSubmit() {
@@ -96,5 +100,5 @@ export class FormCrearAgenteComponent implements OnInit {
 }
 
 
-                                            
-                                                
+
+

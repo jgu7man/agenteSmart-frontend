@@ -31,11 +31,11 @@ export class AgentConfigService {
         var intentList: IntentModel[] = await this._cache.getAsyncKey<IntentModel[]>('intents')
 
         console.log( 'Search for intent' );
-        if ( intentList.length > 0 ) {
+        if ( intentList && intentList.length > 0 ) {
             var defaultIntent: IntentModel = intentList.find(
                 ( i ) => i.displayName == intent
             );
-            
+
             if ( defaultIntent ) {
                 console.log('Delete for default Intent');
                 // DELETE INTENT
@@ -63,10 +63,10 @@ export class AgentConfigService {
                 name: resourceID,
                 displayName: defaultIntent.displayName
             } );
-        
+
         console.log( 'Process finished' );
         this._agente.getAllIntents()
-        
+
         this.loading.toggleWaitingSpinner( false )
         this._alerts.sendFloatNotification(intent+' creado')
     }

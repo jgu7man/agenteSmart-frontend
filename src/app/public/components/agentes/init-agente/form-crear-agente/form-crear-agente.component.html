@@ -14,7 +14,7 @@
 
   </div>
   <div class="row">
-    
+
     <!-- select de lenguajes -->
       <mat-form-field  class="col s12 m6">
         <mat-label>Lenguaje</mat-label>
@@ -40,10 +40,10 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
-  
+
   </div>
   <div class="row">
-    
+
     <!-- Descripción -->
       <mat-form-field  class="col s12">
         <mat-label>Descripción</mat-label>
@@ -54,10 +54,10 @@
                   cols="30"
                   placeholder="Opcional"></textarea>
       </mat-form-field>
-  
+
   </div>
   <div class="row">
-    
+
     <!-- Avatar -->
     <p><b>Avatar</b></p>
     <mat-hint>Agrega la URL de una imagen o cárgala. Puede ser el logotipo de tu negocio, por ejemplo. Es opcional</mat-hint>
@@ -71,24 +71,25 @@
                placeholder="https://...">
       </mat-form-field>
 
-      <div class="col s12 m6">
+      <div class="col s12 m2">
         <gdev-image-uploader
         [folder]="folder"
         [prefix]="agente.displayName"
+        (result)="catchImage($event)"
         ></gdev-image-uploader>
       </div>
-  
+
   </div>
 
 
 
 
-  
+
 
   <mat-action-row>
-      <button 
+      <button
         mat-raised-button
-        color="accent" 
+        color="accent"
         (click)="onSubmit()"
         >Crear
     </button>

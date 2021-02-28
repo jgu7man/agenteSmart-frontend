@@ -33,6 +33,18 @@ export class IntegracionesService {
   }
 
 
+
+    saveMessengerPageAccessToken(token: string) {
+        this._fs.doc( this.integrationsPath + 'messenger' ).set( {
+            page_access_token: token
+        }, { merge: true } )
+            .then( () => this._alert.sendFloatNotification( 'Token guardado' ) )
+            .catch( error => {
+            console.error(error);
+            this._alert.sendFloatNotification('No se pudo guardar')
+        })
+    }
+
   getMessengerOptions() {
     return this._fs.doc<MessengerStatus>
       ( this.integrationsPath + 'messenger' )
@@ -53,7 +65,7 @@ export class IntegracionesService {
   disconnect() {
     this._fs.doc( this.integrationsPath+'whatsapp' ).ref.set( { qr: '', status: 'DISCONNECTED' } )
   }
-  
+
   clearQR() {
     this._fs.doc( this.integrationsPath+'whatsapp' ).ref.set( { qr: ''  }, { merge: true} )
   }
@@ -62,7 +74,7 @@ export class IntegracionesService {
     if (error.error instanceof ErrorEvent) {
       console.error( 'Ocurrió un error:', error.error.message );
       this._alert.sendMessageAlert('Ocurrió un error')
-    } else { 
+    } else {
       this._alert.sendMessageAlert(`Backend returned code ${error.status}`)
       console.error(
         `Backend returned code ${error.status}, ` +

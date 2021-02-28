@@ -27,10 +27,12 @@ export class WhatsappIntComponent implements OnInit {
 
   ngOnInit(): void {
     this._integration.listenQRCode().subscribe( data => {
-      console.log(data)
-      this.waStatus = data
-      if ( this.waStatus.status == 'DISCONNECTED' && !this.waStatus.qr ) {
-        this.waConnection = false
+        console.log( data )
+        if ( data ) {
+            this.waStatus = data
+            if ( this.waStatus.status == 'DISCONNECTED' && !this.waStatus.qr ) {
+              this.waConnection = false
+              }
         }
     })
   }
@@ -38,7 +40,7 @@ export class WhatsappIntComponent implements OnInit {
   disableRequestCode() {
     if ( this.waConnection ) {
       return true
-    } else if ( this.waStatus.qr ) {
+    } else if ( this.waStatus && this.waStatus.qr ) {
       return true
     }
   }
