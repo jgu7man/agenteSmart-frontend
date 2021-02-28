@@ -1,0 +1,35 @@
+.header-image {
+    background-image: url('https://st3.depositphotos.com/1156795/34887/v/600/depositphotos_348878322-stock-illustration-profile-placeholder-image-gray-silhouette.jpg');
+    background-size: cover;
+  }
+
+.chat-container {
+    margin: 2em 1em;
+    border: solid;
+    border-radius: 8px;
+    padding: 1em;
+    .date {
+        margin: 0 1em;
+        top: -5px;
+        position: relative;
+    }
+}
+
+.globe {
+    margin: .5em .5em 0;
+    padding: .5em 1em;
+    max-width: 80%;
+    width: fit-content;
+    border-radius: 5px;
+    display: flex;
+    overflow-y: auto;
+}
+
+.globe.usuario {
+    background: cadetblue;
+}
+
+.globe.agente {
+    background: gold;
+    float: right;
+}

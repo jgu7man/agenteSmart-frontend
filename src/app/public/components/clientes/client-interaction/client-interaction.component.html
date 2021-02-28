@@ -1,0 +1,60 @@
+<div class="container">
+    <!-- HEADER -->
+    <div class="row">
+
+        <div class="col s1">
+            <button mat-icon-button
+            (click)="close.emit()">
+                <i class="fas fa-times fa-lg"></i>
+            </button>
+
+            <button mat-icon-button
+            color="warn"
+            (click)="clients_.deleteConversation(client.userId)">
+                <i class="fas fa-trash fa-lg"></i>
+            </button>
+
+        </div>
+
+        <div class="col s10">
+            <mat-card>
+                <mat-card-header>
+                    <div mat-card-avatar class="header-image"
+                    [ngStyle]="{'background-image': setPhotoProfile(client.photoURL)}"
+                    ></div>
+                    <mat-card-title>{{client.name ? client.name : client.userId}}</mat-card-title>
+                    <mat-card-subtitle>
+                        <span *ngIf="client.whatsappId" style="font-size: x-small">Whatsapp:</span>
+                        {{client.whatsappId}}
+                    </mat-card-subtitle>
+                </mat-card-header>
+
+                <mat-card-content>
+                    <div class="chat-container" strechHeight>
+                        <div *ngFor="let inter of client.conversation" class="interaction" >
+                            <div class="globe usuario">
+                                {{inter.usuario}}
+                            </div>
+                            <span style="font-size: xx-small" class="date">{{inter.time}}</span>
+                            <div class="globe agente" *ngFor="let msg of inter.agente">
+                                {{msg}}
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col s12">
+
+
+        </div>
+    </div>
+
+
+
+</div>

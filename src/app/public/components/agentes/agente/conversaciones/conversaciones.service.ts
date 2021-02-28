@@ -54,7 +54,6 @@ export class ConversacionesService {
             // .orderBy('time')
 
         const convCol = await convRef.get()
-        console.log( convCol.size )
         let conversation: Interaction[] = []
         await this._loading.asyncForEach( convCol.docs, interaction => {
             if ( !interaction.data()[ 'checked' ] ) {
@@ -65,19 +64,6 @@ export class ConversacionesService {
         } )
         return conversation
     }
-
-    async setInteractionChecked(userId: string, convId: string) {
-        const userRef = this._fs.collection( this.conversationsPath ).ref.doc( userId )
-        const convRef = userRef.collection( 'conversacion' ).doc( convId)
-        try {
-            convRef.update( { checked: true } )
-            this._alert.sendFloatNotification('Actualizado')
-        } catch (error) {
-            console.error( error )
-            this._alert.sendFloatNotification('Hubo problemas para actualizar')
-        }
-    }
-
 
     async deleteConversation(userId: string) {
         try {
@@ -94,6 +80,21 @@ export class ConversacionesService {
             this._alert.sendFloatNotification('No fue posible borrar')
         }
     }
+
+    async setInteractionChecked(userId: string, convId: string) {
+        const userRef = this._fs.collection( this.conversationsPath ).ref.doc( userId )
+        const convRef = userRef.collection( 'conversacion' ).doc( convId)
+        try {
+            convRef.update( { checked: true } )
+            this._alert.sendFloatNotification('Actualizado')
+        } catch (error) {
+            console.error( error )
+            this._alert.sendFloatNotification('Hubo problemas para actualizar')
+        }
+    }
+
+
+
 
 
     async addTraningPhrase( updateBody: any ) {

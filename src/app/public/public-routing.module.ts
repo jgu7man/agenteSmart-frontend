@@ -25,6 +25,7 @@ import { PreciosComponent } from './components/pages/precios/precios.component';
 import { MessengerIntegrationComponent } from './components/pages/docs/messenger-integration/messenger-integration.component';
 import { IntegracionesComponent } from './components/agentes/agente/integraciones/integraciones.component';
 import { ConversacionesComponent } from './components/agentes/agente/conversaciones/conversaciones.component';
+import { ClientesComponent } from './components/clientes/clientes.component';
 
 const routes: Routes = [
     {
@@ -69,6 +70,8 @@ const routes: Routes = [
                 path: 'products/edit/:id',
                 component: EditProductComponent,
             },
+
+            { path: 'clientes', component: ClientesComponent },
         ],
     },
 ];

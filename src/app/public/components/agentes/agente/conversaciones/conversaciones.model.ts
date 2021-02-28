@@ -1,5 +1,3 @@
-
-
 export interface UserConversation {
     userId?: string,
     messengerId?: string,

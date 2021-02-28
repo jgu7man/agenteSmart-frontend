@@ -1,0 +1,32 @@
+mat-drawer {
+    width: 50%;
+    overflow: auto;
+}
+
+mat-drawer-content {
+    overflow: auto;
+}
+
+::ng-deep {
+    .drawer-list{
+        mat-list-option {
+            border-bottom: .5px solid #a0a0a0;
+        }
+    }
+    .drawer-list mat-list-option:first-child {
+        border-top: .5px solid #a0a0a0;
+    }
+}
+
+
+.profileImg {
+    width: 40px;
+    overflow: hidden;
+    height: 40px;
+    border-radius: 50%;
+    position: relative;
+    img {
+        width: 100%
+    }
+}
+
