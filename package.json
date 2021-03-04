@@ -9,7 +9,8 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "deploy": "ng build --prod && firebase deploy --only hosting",
-    "serve:ip": "ng serve --live-reload=false --configuration=debug  --host 192.168.1.65 -o"
+    "serve:ip": "ng serve --no-live-reload --configuration=debug  --host 192.168.1.65 -o",
+    "serve:prod": "ng serve --source-map=false --aot --prod --live-reload false --configuration=debug  --host 192.168.1.65 -o"
   },
   "private": true,
   "dependencies": {

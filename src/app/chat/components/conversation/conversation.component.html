@@ -1,19 +1,23 @@
 <div id="messages-container" #messagesContainer>
-    <div class="message-globe"
+    <div class="message"
     [ngClass]="{'this': msg.emiter == 'this', 'that': msg.emiter == 'that'}"
-     *ngFor="let msg of messages">
+    *ngFor="let msg of messages">
      <div [ngSwitch]="messageType(msg.message)">
          <div *ngSwitchCase="'image'">
-             
-             <span class="message-date">{{formatDate(msg.time)}}</span>
+            <div class="globe">
+                <span class="message-date">{{formatDate(msg.time)}}</span>
+            </div>
          </div>
 
-         <div *ngSwitchCase="'quickresponse'">
-             
+         <div class="sugerencias" *ngSwitchCase="'quickresponse'">
+             <span *ngFor="let item of msg.message" class="suggest"
+             (click)="onSuggest(item)">
+                 {{item['displayText']}}
+             </span>
          </div>
 
          <div *ngSwitchDefault>
-             <p>{{msg.message}}</p>
+             <p class="globe" >{{msg.message}}</p>
              <span class="message-date">{{formatDate(msg.time)}}</span>
          </div>
      </div>

@@ -1,8 +1,12 @@
+import { AppState } from './../../../app.state';
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Input } from '@angular/core';
 import { Interaction, MessageType, QuickResponse, Image } from '../../store/chat.model';
 import { BehaviorSubject } from 'rxjs';
 import { TextService } from '../../../gdev-tools/text/gdev-text.service';
 import { Loading } from '../../../gdev-tools/loading/loading.service';
+import { Store } from '@ngrx/store';
+import * as actions from '../../store/chat.actions'
+import { ChatService } from '../chat.service';
 
 @Component({
   selector: 'gdev-conversation',
@@ -20,34 +24,42 @@ export class ConversationComponent implements OnInit, AfterViewInit {
 
   constructor (
     private _text: TextService,
-    private loading: Loading
+      private loading: Loading,
+      private store: Store<AppState>,
+      private _chat: ChatService
   ) { }
 
   ngOnInit(): void {
-    
+
   }
-  
+
   ngAfterViewInit() {
     this._conv.subscribe( async conv => {
       this.messages = conv
       await this.loading.waitFor(100)
-      this.messagesContainer.nativeElement.scrollTop = 
+      this.messagesContainer.nativeElement.scrollTop =
         this.messagesContainer.nativeElement.scrollHeight + 50
     })
-    
+
   }
 
-  messageType( msg: string | QuickResponse | Image ) {
-    if ( typeof msg == 'string' ) {
-      return 'string'
-    } else {
-      if ( msg[ 'src' ] ) {
-        return 'image'
-      } else {
-        return 'quickresponse'
-      }
+    messageType(msg: string | QuickResponse | Image) {
+        if (typeof msg == 'string') {
+            return 'string'
+        } else {
+            if (msg['src']) {
+                return 'image'
+            } else {
+                return 'quickresponse'
+            }
+        }
     }
-  }
+
+
+    onSuggest(item) {
+        this.store.dispatch(actions.send({ message: item.displayText }))
+        this._chat.sendMessage$.next(item.displayText)
+    }
 
 
   formatDate( fecha: Date ) {

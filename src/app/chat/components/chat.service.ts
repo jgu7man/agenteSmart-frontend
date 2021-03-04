@@ -97,7 +97,9 @@ export class ChatService {
                 if ( this._sessionId ) body[ 'sessionId' ] = this._sessionId;
                 // search for contexts in storage
                 let inputContexts = this._cache.getDataKey( 'inputContexts' );
-                if (inputContexts) body[ 'inputContexts' ] = inputContexts
+                if (inputContexts) body['inputContexts'] = inputContexts
+
+                console.log( body )
 
                 this._http
                     .post(this._url, body, { responseType: 'json' })
@@ -115,15 +117,20 @@ export class ChatService {
 
     reciveMessage(respuestas: ResultResponse[]) {
         if (respuestas.length > 0) {
-            respuestas.forEach((resp) => {
+            respuestas.forEach((resp: ResultResponse) => {
                 if (resp != null) {
-                    if (resp instanceof SimpleModel) {
-                        if (resp.suggestions.length > 0) {
-                            this.sendSuggestions(resp.suggestions)
-                        }
+                    if (resp.suggestions.length > 0) {
+                        console.log( 'Sugerencias' )
+                        this._store.dispatch(
+                            actions.recive({ message: resp.text })
+                        );
+                        this.sendSuggestions(resp.suggestions)
+
                     } else if (resp instanceof RespuestaBuscarModel) {
+                        console.log( 'Cards' )
                         this.sendCard(resp.card);
                     } else {
+                        console.log( 'Texto' )
                         this._store.dispatch(
                             actions.recive({ message: resp.text })
                         );
