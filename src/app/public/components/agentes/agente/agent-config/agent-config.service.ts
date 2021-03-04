@@ -27,7 +27,7 @@ export class AgentConfigService {
     ) {
 
         // Init process
-        this.loading.toggleWaitingSpinner(true)
+        this.loading.toggleWaitingSpinner('open')
         var intentList: IntentModel[] = await this._cache.getAsyncKey<IntentModel[]>('intents')
 
         console.log( 'Search for intent' );
@@ -67,7 +67,7 @@ export class AgentConfigService {
         console.log( 'Process finished' );
         this._agente.getAllIntents()
 
-        this.loading.toggleWaitingSpinner( false )
+        this.loading.toggleWaitingSpinner( 'close' )
         this._alerts.sendFloatNotification(intent+' creado')
     }
 }

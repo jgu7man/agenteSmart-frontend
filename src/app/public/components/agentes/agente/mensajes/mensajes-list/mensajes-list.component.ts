@@ -38,7 +38,7 @@ export class MensajesListComponent implements OnInit , OnDestroy{
 
   async ngOnInit() {
     this.getMensajes()
-    this.agenteSubs = this.agente.agenteLoaded$.subscribe( () => { 
+    this.agenteSubs = this.agente.agenteLoaded$.subscribe( () => {
       // console.log("agente cargado")
       this.getMensajes()
       // this.listSubs = this.agente.intentList$
@@ -49,13 +49,13 @@ export class MensajesListComponent implements OnInit , OnDestroy{
   }
 
   async getMensajes() {
-        
+
     this.mensajes = await this.mensajes_.getMensajesWithoutContext();
     let contextosLists = this._cache.getDataKey('contextosLists');
     let agentContextos: ContextoModel[] = this._cache.getDataKey('contextos')
 
-    
-    
+
+
     if (!contextosLists) {
         contextosLists = { ['no-context']: this.mensajes };
     }
@@ -72,7 +72,7 @@ export class MensajesListComponent implements OnInit , OnDestroy{
 
     }
     this._cache.updateData('contextosLists', contextosLists);
-    
+
 }
 
   async toAddIntent() {
@@ -82,14 +82,14 @@ export class MensajesListComponent implements OnInit , OnDestroy{
   }
 
   async onAddIntent() {
-    this._loading.toggleWaitingSpinner(true)
+    this._loading.toggleWaitingSpinner('open')
     this.switchAddIntent = false;
     if ( !this.mensajes ) this.mensajes = []
-    
+
     if (this.newIntent) {
         let lastIndex = this.mensajes.length;
         await this.mensajes_.setMensaje(this.newIntent, lastIndex);
-        
+
     }
   }
 
@@ -106,7 +106,7 @@ export class MensajesListComponent implements OnInit , OnDestroy{
         anchors: await this.mensajes_.getFollowingMensajes(id),
     });
 }
-  
+
 
   trackByName( index, intent: IntentModel ) {
     return intent.name

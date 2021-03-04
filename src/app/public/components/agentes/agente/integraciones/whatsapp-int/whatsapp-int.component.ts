@@ -59,13 +59,13 @@ export class WhatsappIntComponent implements OnInit {
         }
 
         else if (response.type === 'ok') {
-          this._loading.toggleWaitingSpinner(false)
+          this._loading.toggleWaitingSpinner('close')
         }
 
       },
       error => {
         console.error( error );
-        this._loading.toggleWaitingSpinner(false)
+        this._loading.toggleWaitingSpinner('close')
         if ( this.waStatus.status == 'DISCONNECTED' ) {
           this._integration.disconnect()
           // console.log( 'Se agotó el tiempo de espera' )

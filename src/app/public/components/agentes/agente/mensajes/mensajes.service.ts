@@ -19,7 +19,7 @@ import { environment } from "src/environments/environment";
     providedIn: 'root',
 })
 export class MensajesService {
-    
+
     /** Almacena la ruta de los mensajes, incluyendo ID de usuario y de proyecto */
     private mensajesPath: string;
     /** Almacena el ID del proyecto actual */
@@ -77,7 +77,7 @@ export class MensajesService {
         });
     }
 
-  
+
     /** Agrega el intent nuevo creado por la API a dialogflow como referencia para la interfaz en FIRESTORE
      * @param {IntentModel} displayName intent creado por la API
      * @param {number} [index] index en el orden del contexto
@@ -88,7 +88,7 @@ export class MensajesService {
         index?: number,
         contexto?: string
     ) {
-        this._loading.toggleWaitingSpinner(true)
+        this._loading.toggleWaitingSpinner('open')
         const projectId = this._cache.getDataKey( 'projectId' )
         var nameContext = this._text.normalize( displayName ).toLowerCase()
         nameContext = nameContext.replace(/\s/g, '')
@@ -109,32 +109,32 @@ export class MensajesService {
 
             const resourceID = newIntent.name.slice(
                 newIntent.name.lastIndexOf('/') + 1
-            ); 
-            
+            );
+
             let intent = {
                 name: newIntent.name,
                 displayName: newIntent.displayName,
             };
-    
+
             if (index) intent['index'] = index;
             intent[ 'contexto' ] = contexto
                 ? contexto
                 : 'no-context'
-            
+
             console.log(`guardando intent en firestore: `, intent)
             await (await this.mensajesCollection()).doc(resourceID).set(intent)
             this._agente.getIntentList()
-            this._loading.toggleWaitingSpinner( false )
+            this._loading.toggleWaitingSpinner( 'close' )
             await this._router.navigateByUrl( '/dashboard/agentes', { skipLocationChange: true } )
             this._router.navigate([`/dashboard/agente/${ projectId }/mensajes`])
             return this._alerts.sendFloatNotification('Mensaje creado');
-            
+
         } catch (error) {
             console.error( error )
-            this._loading.toggleWaitingSpinner(false)
+            this._loading.toggleWaitingSpinner('close')
             if ( error.error.code === 3 ) {
                 this._alerts.sendError( 'Este nombre de intent ya existe, por favor elige otro', error.error.error.details )
-            } else if ( error.error.code === 9){    
+            } else if ( error.error.code === 9){
                 this._alerts.sendError( 'El nombre del intent no sólo puede contener caracteres como LETRAS: [a-z, A-Z], números:[0-9], guión bajo [_], guión medio [-] o espacios', error.error.error.details )
 
             } else {
@@ -142,7 +142,7 @@ export class MensajesService {
             }
         }
   }
-  
+
 
     setContextMensaje( context: string ) {
         const intentList = this._cache.getDataKey<IntentModel[]>( 'intents' )
@@ -158,7 +158,7 @@ export class MensajesService {
             mandatory: false,
             value: context
         } )
-        
+
         contextIntent.trainingPhrases.push( {
             parts: [ {
                 alias: context,
@@ -168,10 +168,10 @@ export class MensajesService {
             }],
             type: "EXAMPLE"
         } )
-        
+
         // console.log(contextIntent)
         this._current.update( contextIntent )
-        return 
+        return
 
     }
 
@@ -191,7 +191,7 @@ export class MensajesService {
                 .where('contexto', '==', contexto.id)
                 .orderBy('index', 'asc')
                 .get();
-            
+
             // console.log(mensajeCol.docs);
             await this._loading.asyncForEach(mensajeCol.docs, (mensaje) => {
                 mensajesList.push(mensaje.data());
@@ -205,11 +205,11 @@ export class MensajesService {
         var mensajesList: MensajeModel[] = []
         const mensajeCol = await (await this.mensajesCollection())
             .where('contexto', '==', 'no-context').get();
-            
+
         await this._loading.asyncForEach(mensajeCol.docs, (mensaje) => {
             mensajesList.push(mensaje.data());
         } );
-        
+
         return mensajesList
     }
 

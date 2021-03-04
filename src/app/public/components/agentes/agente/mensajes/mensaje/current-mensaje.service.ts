@@ -134,7 +134,7 @@ export class CurrentMensajeService {
 
     /** Obtiene el intent actual a partir de la subscripción a los cambios de la ruta */
     async getByActivatedRoute( intentName: string, contexto: string ) {
-        this.loading.toggleWaitingSpinner(true)
+        this.loading.toggleWaitingSpinner('open')
         this._cache.updateData('currentContexto', contexto)
         this._cache.updateData('mensajeName', intentName)
 
@@ -150,7 +150,7 @@ export class CurrentMensajeService {
             this._alerts.sendFloatNotification( 'Error al cargar el intent. Parece que fue eliminado' )
             this._router.navigate( [ `/dashboard/agente/${ projectId }/mensajes` ] )
         }
-        this.loading.toggleWaitingSpinner(false)
+        this.loading.toggleWaitingSpinner('close')
     }
 
 
@@ -193,7 +193,7 @@ export class CurrentMensajeService {
     /** Actualiza el intent actual en DIALOGFLOW con los cambios hechos en el área de entrenamiento. */
     async update(mensaje?: IntentModel) {
         console.log( 'updapting' )
-        this.loading.toggleWaitingSpinner(true);
+        this.loading.toggleWaitingSpinner('open');
 
         try {
 
@@ -206,7 +206,7 @@ export class CurrentMensajeService {
 
                     this._agente.getIntentList()
                     this.store.dispatch(actions.setSaved());
-                    this.loading.toggleWaitingSpinner(false);
+                    this.loading.toggleWaitingSpinner('close');
                     this._alerts.sendFloatNotification('Mensaje guardado');
                     return this.mensajeUpdated$.next()
                 }
@@ -217,7 +217,7 @@ export class CurrentMensajeService {
             else {
                 await this.updateIntentApiRequest( mensaje );
                 this._agente.getIntentList()
-                this.loading.toggleWaitingSpinner(false);
+                this.loading.toggleWaitingSpinner('close');
                 return
             }
 
@@ -312,7 +312,7 @@ export class CurrentMensajeService {
      * @returns {*}  {Promise<any>}
      */
     public deleteIntentRequest( intentId: string ): Promise<any> {
-        this.loading.toggleWaitingSpinner(true)
+        this.loading.toggleWaitingSpinner('open')
         return new Promise((resolve, reject) => {
             const projectId: string = this._cache.getDataKey('projectId');
 

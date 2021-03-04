@@ -85,7 +85,7 @@ export class TiposService {
     /** Prepara la entity para ser creada en el backend, obtiene el ID:name y guarda los datos en firestore */
     async createTipo( tipo: TipoEntidadModel ) {
         // Loading animation
-        this.loading.toggleWaitingSpinner( true )
+        this.loading.toggleWaitingSpinner( 'open' )
         // Prepare name
         let projectId = this._cache.getDataKey( 'projectId' )
         tipo.displayName = this._text.normalize( tipo.displayName )
@@ -109,7 +109,7 @@ export class TiposService {
             await ( await this.tiposCollection() ).doc( resourceID ).set( newTipo )
             this.store.dispatch(actions.addTipo({tipo: newTipo}))
 
-            this.loading.toggleWaitingSpinner(false);
+            this.loading.toggleWaitingSpinner('close');
             return newTipo
 
 
@@ -141,7 +141,7 @@ export class TiposService {
                     if ( err ) {
                         console.error(err);
 
-                        this.loading.toggleWaitingSpinner( false )
+                        this.loading.toggleWaitingSpinner( 'close' )
                         this._alerts.sendError( 'No fué posible crear ese Tipo en este momento. Intentelo de nuevo porfavor.', err )
                         this.closeCreateDialog.next()
                     }
@@ -160,7 +160,7 @@ export class TiposService {
     /** Prepara la entity para ser actualizada en el backend y posterior lo guarda en Firestore */
     async updateTipo( tipo: TipoEntidadModel ) {
         // Loading animation
-        this.loading.toggleWaitingSpinner( true )
+        this.loading.toggleWaitingSpinner( 'open' )
 
         console.log(tipo)
         // clean object
@@ -173,7 +173,7 @@ export class TiposService {
         const resourceID = tipo.name.slice( tipo.name.lastIndexOf( "/" ) + 1 );
         console.log( resourceID );
         await ( await this.tiposCollection() ).doc( resourceID ).set( tipo, { merge: true } )
-        this.loading.toggleWaitingSpinner( false )
+        this.loading.toggleWaitingSpinner( 'close' )
 
         // Update cache
         const tiposList = this._cache.getDataKey<TipoEntidadModel[]>( 'tipos' )
@@ -184,7 +184,7 @@ export class TiposService {
 
 
         // End loading animation
-        this.loading.toggleWaitingSpinner( false )
+        this.loading.toggleWaitingSpinner( 'close' )
 
         return tipo.name
     }
@@ -207,7 +207,7 @@ export class TiposService {
                 .catch( err => {
                     if ( err ) {
                         console.error(err)
-                        this.loading.toggleWaitingSpinner( false )
+                        this.loading.toggleWaitingSpinner( 'close' )
                         this._alerts.sendError( 'No fué posible crear ese Tipo en este momento.', err )
                         this.closeCreateDialog.next()
                     }
@@ -219,7 +219,7 @@ export class TiposService {
 
     async createTipoContextos(tipo: TipoEntidadModel) {
         // Loading animation
-        this.loading.toggleWaitingSpinner( true )
+        this.loading.toggleWaitingSpinner( 'open' )
         // Prepare name
         tipo.displayName = this._text.normalize( tipo.displayName )
         // clean object
@@ -242,7 +242,7 @@ export class TiposService {
             this.saveContext(entity, index)
         })
 
-        this.loading.toggleWaitingSpinner( false )
+        this.loading.toggleWaitingSpinner( 'close' )
 
     }
 
@@ -475,12 +475,12 @@ export class TiposService {
 
 
     async deleteTipo(tipoName: string) {
-        this.loading.toggleWaitingSpinner(true)
+        this.loading.toggleWaitingSpinner('open')
         const currentId = tipoName.slice( tipoName.lastIndexOf( '/' ) + 1)
         await this._deleteEntityType( currentId )
         await (await this.tiposCollection()).doc(currentId).delete()
         this._alerts.sendFloatNotification('Exito elimando ese tipo de dato.', "ok", 0, "bottom", "left")
-        this.loading.toggleWaitingSpinner(false)
+        this.loading.toggleWaitingSpinner('close')
         return
     }
 

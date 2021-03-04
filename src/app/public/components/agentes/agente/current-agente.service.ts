@@ -80,7 +80,7 @@ export class CurrentAgenteService {
     /** Función que se encarga de cargar todos los elementos del agente en curso */
     async get() {
 
-        this.loading.toggleWaitingSpinner(true)
+        this.loading.toggleWaitingSpinner('open')
 
         try {
 
@@ -109,11 +109,11 @@ export class CurrentAgenteService {
             // console.log('tarjetas');
 
             this.agenteLoaded$.next(true);
-            this.loading.toggleWaitingSpinner(false);
+            this.loading.toggleWaitingSpinner('close');
             return this.current;
 
         } catch (error) {
-            this.loading.toggleWaitingSpinner(false);
+            this.loading.toggleWaitingSpinner('close');
             console.error(error)
             this._alerts.sendError('Error', error)
         }

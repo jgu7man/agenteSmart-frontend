@@ -22,9 +22,9 @@ export class AddContextoDialogComponent implements OnInit {
 
 
   async onSave() {
-    this.loading.toggleWaitingSpinner(true)
+    this.loading.toggleWaitingSpinner('open')
     let contexto = await this._contextos.setContext(this.nuevoContexto)
-    this.loading.toggleWaitingSpinner(false)
+    this.loading.toggleWaitingSpinner('close')
     this.dialog_.close(contexto)
   }
 

@@ -98,7 +98,7 @@ export class ConversacionesService {
 
 
     async addTraningPhrase( updateBody: any ) {
-        this._loading.toggleWaitingSpinner(true)
+        this._loading.toggleWaitingSpinner('open')
         const {intentId, text, userId, convId} = updateBody
         const partialId = intentId.slice(intentId.lastIndexOf('/') + 1)
         const intentList = this._cache.getDataKey<IntentModel[]>( 'intents' )
@@ -108,7 +108,7 @@ export class ConversacionesService {
         }
         intentSelected.trainingPhrases.push( trainingPhrase )
         await this.updateIntentApiRequest( intentSelected )
-        this._loading.toggleWaitingSpinner(false)
+        this._loading.toggleWaitingSpinner('close')
         this.setInteractionChecked(userId, convId)
     }
 

@@ -40,20 +40,20 @@ export class MensajesByContextoComponent implements OnInit {
             .pipe(
                 startWith( [] ),
                 // tap(x => console.log(x.length)),
-                distinctUntilChanged( ( x, y ) => x && x.length 
+                distinctUntilChanged( ( x, y ) => x && x.length
                     ? x.length == y.length
                     : x == y) )
             .subscribe((get) => this.getMensajes());
     }
 
     async getMensajes() {
-        
+
         this.mensajes = await this.mensajes_.getMensajesListByContexto(this.contexto);
         let contextosLists = this._cache.getDataKey('contextosLists');
         let agentContextos = this._cache.getDataKey<ContextoModel[]>('contextos')
 
-        
-        
+
+
         if (!contextosLists) {
             contextosLists = { [this.contexto.contextName]: this.mensajes };
         }
@@ -61,15 +61,15 @@ export class MensajesByContextoComponent implements OnInit {
             contextosLists[this.contexto.contextName] = this.mensajes;
         }
         if (agentContextos) {
-            
+
             Object.keys(contextosLists).forEach((name) => {
                 let contexto = agentContextos.find(c => c.contextName == name)
                 if (!contexto) delete contextosLists[name]
             })
-    
+
         }
         this._cache.updateData('contextosLists', contextosLists);
-        
+
     }
 
     getMensajeRoute(name:string) {
@@ -88,7 +88,7 @@ export class MensajesByContextoComponent implements OnInit {
     }
 
     async onAddIntent(contexto) {
-        this._loading.toggleWaitingSpinner(true)
+        this._loading.toggleWaitingSpinner('open')
         this.switchAddIntent = false;
         if(!this.mensajes) this.mensajes = []
 
@@ -96,7 +96,7 @@ export class MensajesByContextoComponent implements OnInit {
             let lastIndex = this.mensajes.length;
             console.log(`creado ${this.newIntent}, index: ${lastIndex}`)
             await this.mensajes_.setMensaje(this.newIntent, lastIndex, contexto);
-            
+
         }
     }
 

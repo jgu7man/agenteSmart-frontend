@@ -53,7 +53,7 @@ export class AgenteComponent implements OnInit, OnDestroy {
         } else {
           this._router.navigate([`/dashboard/agente/${ projectId }/mensajes`])
       }
-      this.loading.toggleWaitingSpinner( false )
+      this.loading.toggleWaitingSpinner( 'close' )
   }
 
   agentLinks:NAVLINK[] = [
