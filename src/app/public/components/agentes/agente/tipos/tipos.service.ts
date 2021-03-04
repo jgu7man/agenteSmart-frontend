@@ -15,6 +15,9 @@ import { AppState } from 'src/app/app.state';
 import * as actions from './store/tipo.actions'
 import { TipoState } from './store/tipo.state';
 import { environment } from "src/environments/environment";
+import { ContextosService } from '../contextos/contextos.service';
+import { ContextoModel } from '../contextos/contexto.model';
+import { ColorService } from 'src/app/gdev-tools/color/color.service';
 
 @Injectable( {
     providedIn: 'root'
@@ -23,15 +26,17 @@ export class TiposService {
 
     private tiposPath: string
     private tiposList: TipoEntidadModel[] = []
-    
+
     private _url = environment.restURL + 'entity';
     private _projectId: String;
-  
+
     public closeCreateDialog: Subject<any> = new Subject()
     public currentTipo$: Subject<TipoState> = new Subject()
     private currentTipoSubs: Subscription
     private listSubs: Subscription
-    private current: TipoEntidadModel
+    public current: TipoEntidadModel
+    public claseList: Clase[]
+    private agentePath: string
 
 
     constructor (
@@ -43,20 +48,21 @@ export class TiposService {
         private _http: HttpClient,
         private _auth: AuthService,
         private _alerts: AlertService,
-        private store: Store<AppState>
+        private store: Store<AppState>,
+        private _color: ColorService
     ) {
 
         this.tiposCollection()
-        
+
         this._projectId = this._cache.getDataKey('projectId');
         // Se suscribe a la lista de entities en el store
         this.listenEntityList()
         // Se suscribe al tipo a editar
         this.getCurrentTipo()
     }
-    
-    
-    
+
+
+
 
     /** Define la ruta de firestore */
     async tiposCollection() {
@@ -65,8 +71,14 @@ export class TiposService {
         return tiposRef
     }
 
+    private async contextosCollection() {
+        this.agentePath = await this._agente.getPath('contextos');
+        const contextosRef = this.fs.collection(this.agentePath).ref;
+        return contextosRef;
+    }
 
- 
+
+
 
     // CREATE TIPOS DE DATOS
 
@@ -96,7 +108,7 @@ export class TiposService {
 
             await ( await this.tiposCollection() ).doc( resourceID ).set( newTipo )
             this.store.dispatch(actions.addTipo({tipo: newTipo}))
-            
+
             this.loading.toggleWaitingSpinner(false);
             return newTipo
 
@@ -128,7 +140,7 @@ export class TiposService {
                 .catch( err => {
                     if ( err ) {
                         console.error(err);
-                        
+
                         this.loading.toggleWaitingSpinner( false )
                         this._alerts.sendError( 'No fué posible crear ese Tipo en este momento. Intentelo de nuevo porfavor.', err )
                         this.closeCreateDialog.next()
@@ -139,7 +151,7 @@ export class TiposService {
     }
 
 
-    
+
 
 
 
@@ -163,13 +175,13 @@ export class TiposService {
         await ( await this.tiposCollection() ).doc( resourceID ).set( tipo, { merge: true } )
         this.loading.toggleWaitingSpinner( false )
 
-        // Update cache 
+        // Update cache
         const tiposList = this._cache.getDataKey<TipoEntidadModel[]>( 'tipos' )
         const tipoIndex = tiposList.findIndex( t => t.name === 'resourceID' )
         tiposList[ tipoIndex ] = tipo
         this._cache.updateData('tipos', tiposList)
-        
-        
+
+
 
         // End loading animation
         this.loading.toggleWaitingSpinner( false )
@@ -205,29 +217,94 @@ export class TiposService {
     }
 
 
+    async createTipoContextos(tipo: TipoEntidadModel) {
+        // Loading animation
+        this.loading.toggleWaitingSpinner( true )
+        // Prepare name
+        tipo.displayName = this._text.normalize( tipo.displayName )
+        // clean object
+        Object.keys( tipo ).forEach( key => {
+            if ( tipo[ key ] == undefined ) delete tipo[ key ]
+        } )
+
+        // Create entity in dialogflow
+        let newEntity = await this._postCreateEntity( { ...tipo } )
+        console.log( newEntity );
+
+        // Create entity in firestore
+        const resourceID = newEntity.name.slice( newEntity.name.lastIndexOf( "/" ) + 1 );
+        const newTipo = { ...tipo, name: newEntity.name };
+        await (await this.tiposCollection()).doc(resourceID).set(newTipo)
+
+        // create contexts
+        await this.loading.asyncForEach(newEntity.entities,
+            async (entity, index) => {
+            this.saveContext(entity, index)
+        })
+
+        this.loading.toggleWaitingSpinner( false )
+
+    }
+
+
+   async saveContext(entity, index){
+        let contexto: ContextoModel = {
+            contextName: entity.value,
+            lifespanCount: 3,
+            index: index,
+            color: this._color.generateHSLcolor(50, 50)
+            }
+
+        Object.keys( contexto ).forEach( key => {
+            if ( contexto[ key ] == undefined ) delete contexto[ key ]
+        })
+
+        // Agrega contexto nuevo
+            let contextNuevo = await (
+                await this.contextosCollection()
+            ).add(contexto);
+            contextNuevo.update({ id: contextNuevo.id });
+            contexto.id = contextNuevo.id;
+
+
+
+    }
+
+
+
+
+
     /** Agrega una clase a la entity seleccionada por nombre */
     async setClase( tipoName: string, clase: Clase ) {
-        
-        this.current = this.getTipo(tipoName)
-        var clasesList = this.current.entities
-        var claseIndex = clasesList.findIndex( cla => cla.value === clase.value )
-        console.log({claseIndex});
 
-        if ( claseIndex >= 0 ) {
-            clasesList[ claseIndex ] = clase
+        this.current = this.getTipo(tipoName)
+        if (this.current) {
+            var clasesList = this.current.entities
+            var claseIndex = clasesList.findIndex( cla => cla.value === clase.value )
+            console.log({claseIndex});
+
+
+            if ( claseIndex >= 0 ) {
+                clasesList[ claseIndex ] = clase
+            } else {
+                clasesList = [...clasesList, clase]
+            }
+
+            this.current = { ...this.current, entities: clasesList }
+            this.store.dispatch(actions.editTipo({tipo: this.current}))
+
         } else {
-            clasesList = [...clasesList, clase]
+            if (!this.claseList) this.claseList = []
+            this.claseList.push(clase)
+            console.log( this.claseList )
         }
-        
-        this.current = { ...this.current, entities: clasesList }
-        this.store.dispatch(actions.editTipo({tipo: this.current}))
-        
+
         return
     }
 
     /** Agrega sinónimos a la entity actual */
     async setSinonimo( tipoName, clase: Clase, sinonimo: string, action: 'add' | 'del' ) {
-        
+
         if ( !this.current ) { this.current = this.getTipo( tipoName ) }
         var clasesList: Clase[] = this.current.entities
         var claseIndex = clasesList.findIndex(
@@ -247,12 +324,12 @@ export class TiposService {
             clasesList.map( c => c.value === clase.value
             ? {...c, synonyms: [...c.synonyms.filter(s => s != sinonimo)]}: c)
         }
-        
+
         this.current = {...this.current, entities: clasesList}
         return
-        
+
     }
-    
+
     async pushCurrent() {
         console.log(this.current);
         this.store.dispatch( actions.editTipo( { tipo: this.current } ) )
@@ -265,13 +342,13 @@ export class TiposService {
         let user = await this._auth.getCurrentUser()
         var productTypeRef = this.fs.doc( `usuarios/${ user.uid }` ).ref
             .collection( 'config_docs' ).doc( 'products_types' )
-        
+
         try {
             var productTypesDoc = await productTypeRef.get()
             if ( productTypesDoc.exists ) {
                 let productTypes = productTypesDoc.data() as TipoEntidadModel;
                 console.log(productTypes['status'])
-                
+
                 if ( productTypes[ 'status' ] === 'created' ) {
                     delete productTypes[ 'status' ]
                     delete productTypes.name
@@ -286,11 +363,11 @@ export class TiposService {
                     await this.updateTipo( productTypes )
                     this.getAllEntities()
                     this._alerts.sendFloatNotification('Tipo de datos de productos actualizada')
-                } 
-                
+                }
+
                 await productTypeRef.update( { status:'saved' } )
             }
-        
+
         } catch ( error ) {
             console.error( error )
             this._alerts.sendError( 'Error', error )
@@ -302,33 +379,33 @@ export class TiposService {
         var contextType: TipoEntidadModel = tiposList.find(
             t => t.displayName === 'contextos'
         )
-        
+
         try {
             // Create Tipo  de contextos
             if ( !contextType ) {
-                contextType = new TipoEntidadModel( 'contextos', 'KIND_MAP', 'AUTO_EXPANSION_MODE_DEFAULT', [], true )    
+                contextType = new TipoEntidadModel( 'contextos', 'KIND_MAP', 'AUTO_EXPANSION_MODE_DEFAULT', [], true )
                 contextType.entities.push( { value: entity, synonyms: [ entity ] } )
 
                 await this.createTipo( contextType )
-            
-            
+
+
             // Update tipo de contextos
             } else {
-                
+
                 contextType.entities.push( { value: entity, synonyms: [ entity ] } )
                 await this.updateTipo( contextType )
-            
+
             }
-            
+
             return this.getAllEntities()
-            
+
         } catch (error) {
             console.error(error)
             return this._alerts.sendError('Error', error)
         }
     }
 
-    
+
     // READ TIPOS DE DATOS
 
 
@@ -344,7 +421,7 @@ export class TiposService {
         .subscribe( tipos => this.tiposList = tipos)
     }
 
-   
+
     /** Toma una entity basado en el name */
     getTipo(name: string) {
         return this.tiposList.find(t => t.name == name)
@@ -376,7 +453,7 @@ export class TiposService {
         //sino se pasa el id solo y se prefiere pasar todo el name la siguiente variable lo extrae
         //Ej. EntityType "name": "projects/testproject-a4323/agent/entityTypes/6c7cd0d9-03f9-47f6-803e-dc39d3ffb789",
         console.log({projectId: this._projectId, entityId})
-        
+
         this._http.delete( this._url + `/${ this._projectId }/${ entityId }` ).toPromise()
             .then(() => { resolve('done')} )
             .catch( err => {
@@ -409,7 +486,7 @@ export class TiposService {
 
 
     async deleteClase( tipoName: string, claseValue: string, ) {
-        
+
         var current = this.getTipo(tipoName)
         var clasesList = current.entities
         var claseIndex = clasesList.findIndex( clase => clase.value === claseValue )
@@ -421,7 +498,7 @@ export class TiposService {
         current = {...current, entities: clasesList}
         this.store.dispatch(actions.editTipo({tipo: current}))
 
-        
+
         return
 
     }

@@ -74,13 +74,13 @@ export class RespuestaCardComponent implements OnInit {
         );
     }
 
-    
+
 
     get activeContextSelector() {
         if ( this.respuesta.tipo == 'simple' ) {
-            return false;
-        } else if (!this.currentContext) {
             return true;
+        } else if (!this.currentContext) {
+            return false;
         }
     }
 
@@ -96,8 +96,8 @@ export class RespuestaCardComponent implements OnInit {
         }
     }
 
-    async catchContextSelected(context: string) {
-        this.setContextSelected(context);
+    async catchContextSelected(selected: ContextSelected) {
+        this.setContextSelected(selected.context);
         // console.log(continueIntents);
         // if (continueIntents.length > 0) {
         //     this.nextMensajesList = continueIntents
@@ -120,7 +120,7 @@ export class RespuestaCardComponent implements OnInit {
     }
 
     disableEScondition() {
-        
+
         if (
             this.respuesta.result[ 'condicion' ] == 'no existe'
             || this.respuesta.result[ 'condicion' ] == 'existe'
@@ -165,7 +165,7 @@ export class RespuestaCardComponent implements OnInit {
 
     /** Recibe los cambios en los formularios hijos como simple, CODICIONAL, BUSCAR Y GRUPO DE DATOS */
     catchResult(msg: any) {
-        // console.log(this.result, msg);
+        console.log(this.result, msg);
         this.result = msg;
     }
 
@@ -177,16 +177,16 @@ export class RespuestaCardComponent implements OnInit {
      */
     async validateRespuesta(respuestaObj: RespuestaModel) {
         if (!this.currentContext) {
-            respuestaObj = this.setContextSelected(respuestaObj.outputContext);
-        } else {
+            // respuestaObj = this.setContextSelected(respuestaObj.outputContext);
             respuestaObj.outputContext
-                = await this.setNextContext(respuestaObj.nextIntent)    
-        }
+                = await this.setNextContext(respuestaObj.nextIntent)
+        } else { }
+
         let respuestaClean,
             output = {};
         output = { ...respuestaObj.result, ...this.result };
         let respuesta = output['text'];
-        
+
 
         if (!respuesta) {
             if (respuestaObj.tipo != 'buscar') {
@@ -218,7 +218,11 @@ export class RespuestaCardComponent implements OnInit {
      */
     async onSave() {
         console.log(this.respuesta.nextIntent);
+        this.respuesta.outputContext
         let cleanRespuesta = await this.validateRespuesta(this.respuesta);
+        if (!cleanRespuesta['nextIntent']) {
+            cleanRespuesta['nextIntent'] = '*sug'
+        }
         console.log(cleanRespuesta['nextIntent']);
         this.switchEditResp = false;
 

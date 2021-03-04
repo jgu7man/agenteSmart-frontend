@@ -9,7 +9,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "deploy": "ng build --prod && firebase deploy --only hosting",
-    "serve:debug": "ng serve --configuration=debug  --host 192.168.1.103"
+    "serve:ip": "ng serve --live-reload=false --configuration=debug  --host 192.168.1.65 -o"
   },
   "private": true,
   "dependencies": {

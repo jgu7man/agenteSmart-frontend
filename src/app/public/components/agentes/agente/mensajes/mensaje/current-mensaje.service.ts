@@ -54,7 +54,7 @@ export class CurrentMensajeService {
         private _location: Location
     ) {  }
 
-    
+
     /**
      * Obtiene los parámetros de la ruta cuando se ingresa a editar un mensaje
      * @return {*} Obserbavle con variable 'mensajeName' y 'currentContexto'
@@ -70,7 +70,7 @@ export class CurrentMensajeService {
         });
     }
 
-    
+
     /** Returna como promesa la referencia a FIRESTORE directa a la colección de los mensajes del usuario y del agente
      * @return {*} Referencia de firestore
      */
@@ -80,7 +80,7 @@ export class CurrentMensajeService {
         return mensajesRef;
     }
 
-    
+
     /**
      * Obtiene el mensaje actual de la lista de intents y lo asigna como actual
      *
@@ -99,7 +99,7 @@ export class CurrentMensajeService {
     /**
      * Busca en la lista de intents del storage un intent que coincida con el parámetro displayName
      *
-     * @param {string} nameOrDisplayName displayName del intent o name. 
+     * @param {string} nameOrDisplayName displayName del intent o name.
      * Busca a través de ambos
      * @returns {IntentModel | null} intent completo si existe, si no, retorna null
      */
@@ -115,7 +115,7 @@ export class CurrentMensajeService {
     /** Establece en el storage el intent actual y emite un evento para current$ */
     async setCurrent() {
         // console.log(this.current);
-        
+
         this.current$.next(this.current);
         this._cache.updateData('currentContexto', this.currentContexto);
         this._cache.updateData('currentIntent', this.current);
@@ -126,7 +126,7 @@ export class CurrentMensajeService {
             debounceTime(1000),
             // tap(emit => console.log(emit)),
             map(list => list.find(intent => intent.name == this.current.name))
-        ).subscribe(mensaje => { 
+        ).subscribe(mensaje => {
             this.current$.next(mensaje)
             this.current = mensaje
         })
@@ -137,14 +137,14 @@ export class CurrentMensajeService {
         this.loading.toggleWaitingSpinner(true)
         this._cache.updateData('currentContexto', contexto)
         this._cache.updateData('mensajeName', intentName)
-        
+
         this.currentContexto = await this._cache.getAsyncKey<string>('currentContexto', 1)
         this.mensajeName = await this._cache.getAsyncKey<string>('mensajeName', 1)
         this.mensajesPath = await this._agente.getPath('mensajes');
         this.current = await this.findMensaje(this.mensajeName)
         console.log(this.current)
         if ( this.current ) { this.setCurrent() }
-        else { 
+        else {
             await this.loading.waitFor(1000)
             const projectId: string = this._cache.getDataKey('projectId');
             this._alerts.sendFloatNotification( 'Error al cargar el intent. Parece que fue eliminado' )
@@ -155,7 +155,7 @@ export class CurrentMensajeService {
 
 
 
-    
+
     respuestasSubs: Subscription;
     respuestasList: RespuestaModel[];
     /**
@@ -169,20 +169,20 @@ export class CurrentMensajeService {
             `mensajes/${mensajeName}/respuestas`
         );
 
-        
+
 
         var changes = this.fs
         .collection<RespuestaModel>(respuestasPath)
         .valueChanges()
-        
+
         this.respuestasSubs = changes.subscribe((respuestas) => {
             this.respuestasList = this._commons.sortBy<RespuestaModel>(respuestas, 'index')
             this._cache.updateData('currentRespuestas', respuestas);
         });
-        
+
         // console.log({respuestasPath});
         this.respuestasList = await this._cache.getAsyncKey<RespuestaModel[]>('currentRespuestas');
-        
+
         return this.respuestasList
     }
 
@@ -192,17 +192,8 @@ export class CurrentMensajeService {
     mensajeUpdated$: Subject<any> = new Subject()
     /** Actualiza el intent actual en DIALOGFLOW con los cambios hechos en el área de entrenamiento. */
     async update(mensaje?: IntentModel) {
-        this.loading.toggleWaitingBar();
-
-        // if ( !mensaje ) {
-        //     Object.keys(this.current).forEach((key) => {
-        //         if (this.current[key] == undefined) delete this.current[key];
-        //     });
-        // } else {
-        //     Object.keys(mensaje).forEach((key) => {
-        //         if (mensaje[key] == undefined) delete mensaje[key];
-        //     });
-        // }
+        console.log( 'updapting' )
+        this.loading.toggleWaitingSpinner(true);
 
         try {
 
@@ -212,24 +203,24 @@ export class CurrentMensajeService {
                 console.log(request);
                 if (request) {
                     console.info('Se Actualizo Intent:', request);
-                    
+
                     this._agente.getIntentList()
                     this.store.dispatch(actions.setSaved());
-                    this.loading.toggleWaitingBar();
+                    this.loading.toggleWaitingSpinner(false);
                     this._alerts.sendFloatNotification('Mensaje guardado');
                     return this.mensajeUpdated$.next()
                 }
             }
 
-            
+
             // Update another mensaje
             else {
                 await this.updateIntentApiRequest( mensaje );
                 this._agente.getIntentList()
-                this.loading.toggleWaitingBar();
+                this.loading.toggleWaitingSpinner(false);
                 return
             }
-   
+
         } catch (error) {
             console.error(error);
             this._alerts.sendError( 'No se pudo guardar', error )
@@ -238,7 +229,7 @@ export class CurrentMensajeService {
     }
 
 
-    
+
     /**
      * Actualiza el intent actual en DIALOGFLOW a través de la API
      *
@@ -266,7 +257,7 @@ export class CurrentMensajeService {
                 .toPromise()
                 .then((response) => {
                     if (response) {
-                        console.info('Intent Updateado:', response);
+                        console.info('Intent Actualizado:', response);
                         resolve(response['intent']);
                     }
                 })
@@ -295,7 +286,7 @@ export class CurrentMensajeService {
      * Elimina el intent en DIALOGFLOW y después en FIRESTORE
      *
      * @param {string} mensajeName name del intent
-     * @returns {*} 
+     * @returns {*}
      */
     async delete(mensajeName: string) {
         //params intentName (ultima cadena)
@@ -309,7 +300,7 @@ export class CurrentMensajeService {
                 .delete();
             await this._router.navigateByUrl( `/dashboard`, { skipLocationChange: true } )
             this._router.navigate([`/dashboard/agente/${ projectId }/mensajes`])
-        }   
+        }
 
         return
     }

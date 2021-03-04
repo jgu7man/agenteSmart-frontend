@@ -10,8 +10,9 @@
                 id="addClaseItem"
                 matInput
                 [(ngModel)]="newClaseItem"
-                (blur)="newClaseItem ? onAddClase($event) : null"
-                (keyup.enter)="onAddClase($event); $event.target.blur()"
+                (blur)="newClaseItem ? onAddClase($event) : claseDone.emit(false)"
+                (keyup.ENTER)="onAddClase($event); $event.target.blur()"
+                (keyup.esc)="claseDone.emit(false)"
             />
         </mat-form-field>
     </div>
@@ -38,9 +39,9 @@
     </div>
 
 
-    
+
     <!-- * AGREGAR SINÓNIMOS -->
-    
+
     <div class="col s7 m8">
         <mat-form-field style="width: 100%;">
             <mat-chip-list
@@ -69,12 +70,12 @@
             </mat-chip-list>
         </mat-form-field>
     </div>
+    <div class="col s2 m1">
+        <button mat-button  (click)="setClase()">
+            <i class="fas fa-check"></i>
+        </button>
+    </div>
 </ng-template>
 
 
-<div class="col s2 m1">
-    <button mat-button (keyup.ENTER)="setClase()" (click)="setClase()">
-        <i class="fas fa-check"></i>
-    </button>
-</div>
 

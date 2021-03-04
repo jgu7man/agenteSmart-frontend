@@ -52,9 +52,11 @@ export class SugerenciasComponent implements OnInit {
             if (!this.sugerencias) this.sugerencias = [];
             this.newSuggest.contexto = selected.context
             this.sugerencias.push(this.newSuggest);
-            this._loading.waitFor(100)
-            this.newSuggest = { text: '', contexto: undefined };
+            await this._loading.waitFor(100)
+
+            console.log( this.sugerencias )
             this.onSugerenciasChange.emit(this.sugerencias);
+            this.newSuggest = { text: '', contexto: undefined };
         }
     }
     onEdit(suggest: Sugerencia, index: number) {

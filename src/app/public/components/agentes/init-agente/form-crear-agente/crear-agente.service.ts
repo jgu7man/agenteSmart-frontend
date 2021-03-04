@@ -14,6 +14,7 @@ import { AlertService } from '../../../../../gdev-tools/alerts/alert.service';
 import { AgentConfigService } from '../../agente/agent-config/agent-config.service';
 import { ContextoModel } from '../../agente/contextos/contexto.model';
 import { environment } from '../../../../../../environments/environment.prod';
+import { CacheService } from 'src/app/gdev-tools/cache/cache.service';
 
 interface doc {
     user: string,
@@ -36,6 +37,7 @@ export class CrearAgenteService {
         private _dialog: MatDialog,
         private _alerts: AlertService,
         private _config: AgentConfigService,
+        private _cache: CacheService
     ) { }
 
     waitFor = ( ms ) => new Promise( r => setTimeout( r, ms ) )
@@ -62,7 +64,8 @@ export class CrearAgenteService {
                 console.log( { agente } )
 
                 agente.avatarUri = agente.avatarUri ? agente.avatarUri : {url:'favicon.ico', alt:''}
-                agente.description = agente.description ? agente.description : `Agente de ${ user.email }`
+                agente.description = agente.description ? agente.description : `Agente de ${user.email}`
+                agente.started = false
                 // Transformar id para generar un string único
                 var sufixId = agente.displayName.split( ' ' ).join( '-' ).toLowerCase()
                 agente.projectId = `${ sufixId }-${ this._text.generateRandomText( 6 ) }`
@@ -87,6 +90,7 @@ export class CrearAgenteService {
                 }
                 console.log( user.uid );
 
+                this._cache.updateData('projectId', agente.projectId)
                 // * Crear el agente
                 this.createNewAgent( agente ).subscribe( () => {
                     this._config.restoreDefaultIntent( 'Default Context Intent' )
@@ -133,7 +137,7 @@ export class CrearAgenteService {
     }
 
     private handleError( error: HttpErrorResponse ) {
-        
+
         if ( error.error instanceof ErrorEvent ) {
             // A client-side or network error occurred. Handle it accordingly.
             console.error( 'An error occurred:', error.message );
@@ -145,12 +149,12 @@ export class CrearAgenteService {
                 `Backend returned code ${ error.status }, ` +
                 `body was: ${ error.error }` );
             this._alerts.sendError( `Backend returned code ${ error.status } `, error.error)
-            
+
         }
         // delete the recent docuement
         console.log( this.Doc );
         this.afs.collection( 'usuarios' ).ref.doc( this.Doc.user )
-            .collection( 'agentes' ).doc( this.Doc.agente ).delete()
+            .collection( 'agentes' ).doc( this.Doc.agente ) .delete()
         // return an observable with a user-facing error message
 
         this.creatingDialog.close()

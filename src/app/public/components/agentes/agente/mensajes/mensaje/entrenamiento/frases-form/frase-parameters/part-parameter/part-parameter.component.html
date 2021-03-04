@@ -7,7 +7,7 @@
 
     <!-- Tipo de dato -->
     <div class="col s3 m4" (click)="toSelectTipo()">
-        <aSmart-tipo-selector 
+        <aSmart-tipo-selector
         (tipoSelected)="onTipoSelected($event)"
         [value]="parte.entityType"
         [id]="parte.alias"
@@ -16,17 +16,17 @@
 
     <!-- Nombre param -->
     <div class="col s3 m3">
-        
+
         <mat-form-field>
-            <input 
-            matInput 
-            type="text" 
+            <input
+            matInput
+            type="text"
             [(ngModel)]="paramName"
             (keyup.enter)="addParameter($event);"
             (blur)="paramName ? addParameter($event) : null"
             >
         </mat-form-field>
-        
+
     </div>
 
     <!-- Eliminar parametro -->
@@ -36,5 +36,5 @@
         </button>
     </div>
 
-    
+
 </div>

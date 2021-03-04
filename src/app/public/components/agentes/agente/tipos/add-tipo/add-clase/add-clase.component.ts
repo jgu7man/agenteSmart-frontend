@@ -55,6 +55,7 @@ export class AddClaseComponent implements OnInit {
             this.clase = { value: this.newClaseItem };
             // this.newClaseItem = '';
         }
+        console.log( this.tipo.kind, this.clase )
         if (this.tipo.kind == 'KIND_MAP') {
             this.newClaseSinonimos.push(this.clase.value);
             // console.log(this.clase);
@@ -68,9 +69,12 @@ export class AddClaseComponent implements OnInit {
                 'add'
             );
         } else {
+            console.log( this.tipo.name, this.clase )
             this.tipos_.setClase(this.tipo.name, this.clase);
         }
     }
+
+
 
     async setClase() {
         await this.tipos_.pushCurrent( )

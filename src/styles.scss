@@ -16,8 +16,8 @@
 
 
 
-html, body { 
-    height: 100%; 
+html, body {
+    height: 100%;
     background: #EFF1FE;
 }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
@@ -35,14 +35,14 @@ button.mat-primary {
         color: #fff;
     }
 }
- 
+
 button {
-    font-family: 'Montserrat', sans-serif !important; 
+    font-family: 'Montserrat', sans-serif !important;
     margin: .25em !important;
 }
 
 a {
-    font-family: 'Montserrat', sans-serif !important; 
+    font-family: 'Montserrat', sans-serif !important;
     font-weight: 600;
 }
 
@@ -110,4 +110,11 @@ mat-form-field {
     border-radius: 5px;
     border: solid 1px #1c61c7;
     padding:.5em
+}
+
+
+::ng-deep {
+    .mat-form-field-underline {
+        bottom: -1em !important;
+    }
 }

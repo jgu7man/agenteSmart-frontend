@@ -14,7 +14,8 @@ export class ClaseItemComponent implements OnInit {
   @Input() clase: Clase
   @Input() tipo: TipoEntidadModel
   @Output() claseEdited = new EventEmitter<Clase>()
-  @Output() claseDeleted = new EventEmitter<boolean>()
+    @Output() claseDeleted = new EventEmitter<boolean>()
+    @Output() closeClase = new EventEmitter<boolean>()
 
   constructor (
     private _tipos: TiposService
@@ -28,9 +29,10 @@ export class ClaseItemComponent implements OnInit {
   }
 
 
-  onClaseDone() {
-    this.ClaseInput = false
-    this.claseEdited.emit(this.clase)
+    onClaseDone(edited: boolean) {
+      this.ClaseInput = false
+        if (edited) this.claseEdited.emit(this.clase)
+        else this.closeClase.emit(true)
   }
 
   onDelClase() {

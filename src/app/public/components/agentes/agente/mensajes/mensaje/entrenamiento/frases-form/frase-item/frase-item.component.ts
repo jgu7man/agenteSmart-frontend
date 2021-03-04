@@ -30,7 +30,8 @@ export class FraseItemComponent implements OnInit {
   }
 
   preventOnClick(event) {
-    event.stopImmediatePropagation()
+      event.preventDefault()
+      event.stopImmediatePropagation()
   }
 
   @Input() async toEditPhrase( phrase: FraseEntrenamiento ) {
@@ -60,19 +61,19 @@ export class FraseItemComponent implements OnInit {
       this._frases.updatePhrase( PHRASE, this.index )
 
     }
-    
+
   }
 
 
-  
+
 
 
   onSelectPart( textSelected: string ) {
     try {
-      
+
     } catch (error) {
-      
-    }  
+
+    }
   }
 
   delItem() {

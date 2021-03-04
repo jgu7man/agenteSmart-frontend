@@ -26,6 +26,7 @@ import { MessengerIntegrationComponent } from './components/pages/docs/messenger
 import { IntegracionesComponent } from './components/agentes/agente/integraciones/integraciones.component';
 import { ConversacionesComponent } from './components/agentes/agente/conversaciones/conversaciones.component';
 import { ClientesComponent } from './components/clientes/clientes.component';
+import { StartUiComponent } from './components/agentes/agente/start-ui/start-ui.component';
 
 const routes: Routes = [
     {
@@ -50,7 +51,8 @@ const routes: Routes = [
             { path: 'editar_agente/:id', component: EditAgenteComponent, },
             { path: 'agente/:id', component: AgenteComponent, data: {section: 'agente'}, children:
                 [
-                    { path: '', redirectTo: 'mensajes', pathMatch: 'full', },
+                    // { path: '', redirectTo: 'mensajes', pathMatch: 'full', },
+                    { path: 'start', component: StartUiComponent },
                     { path: 'bienvenida', component: BienvenidaComponent },
                     { path: 'mensajes', component: MensajesComponent },
                     { path: 'mensaje/:name', component: MensajeComponent, },

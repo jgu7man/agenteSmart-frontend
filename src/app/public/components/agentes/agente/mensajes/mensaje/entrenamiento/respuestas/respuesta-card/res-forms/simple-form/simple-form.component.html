@@ -2,6 +2,9 @@
 <div class="row">
     <div class="col s4 resp-label">
         Respuesta
+        <i style="font-size:smaller" class="fas fa-info-circle"
+        matTooltip="El mensaje que tu agente responderá"
+        ></i>
     </div>
     <div class="col s8">
         <div class="row text-box">
@@ -9,11 +12,14 @@
         </div>
     </div>
 </div>
-<div class="row">
-    <div class="col s6 resp-label">
+<div class="row" id="sugerencias">
+    <div class="col s8 resp-label">
         Activar sugerencias
+        <i style="font-size:smaller" class="fas fa-info-circle"
+        matTooltip="Opciones de respuesta que tu cliente puede elegir en la conversación"
+        ></i>
     </div>
-    <div class="col s6" *ngIf="result.suggestions">
+    <div class="col s2 toggle" *ngIf="result.suggestions">
         <mat-slide-toggle [checked]="result.suggestions.length > 0
         " (change)="toggleSuggestions($event)"></mat-slide-toggle>
     </div>

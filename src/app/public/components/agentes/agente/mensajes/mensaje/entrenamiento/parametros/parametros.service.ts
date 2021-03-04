@@ -56,21 +56,21 @@ export class ParametrosService {
         return mensajesRef;
     }
 
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
     // CREATE Parametros
 
     async addParam(param: ParametroMensaje) {
         // console.log(param);
         var paramList = this._mensaje.current.parameters;
         var paramInList = paramList.find(p => p.displayName == param.displayName)
-        
+
         if (paramInList) {
             await (await this.paramsCollection()).doc(param.displayName).set(
                 {
@@ -93,6 +93,7 @@ export class ParametrosService {
             // this.parameterAdded$.next(param);
         }
 
+        console.log( param )
         return;
     }
 
@@ -104,9 +105,9 @@ export class ParametrosService {
 
     // READ PARAM
     getParamByName(displayName: string) {
-        // console.log(this._mensaje.current);
+        console.log(displayName);
         var paramSelected = this._mensaje.current.parameters.find(
-            (p) => p.entityTypeDisplayName == displayName
+            (p) => p.displayName == displayName
         );
         console.log(paramSelected);
         return paramSelected;
@@ -121,7 +122,7 @@ export class ParametrosService {
                 this.firestoredParams = await this._cache.getAsyncKey('parametros')
         })
     }
-    
+
     getParamColor(displayName: string | boolean): string {
         if (typeof displayName == 'string') {
             if (this.firestoredParams.length > 0) {
@@ -130,13 +131,13 @@ export class ParametrosService {
                 )
                 return param ? param['color'] : '#ffee588c'
             }
-            
+
             else {return '#ffee588c'}
         }
-    } 
-   
-   
-   
+    }
+
+
+
     // UPDATE Mensaje Parametro
 
     async updateParam(param: ParametroMensaje) {
@@ -154,13 +155,13 @@ export class ParametrosService {
         }
     }
 
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
     // DELETE parameter
 
     async deleteParam(param: ParametroMensaje) {

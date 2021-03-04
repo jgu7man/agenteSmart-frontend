@@ -2,7 +2,7 @@ import { RespuestaCard, Suggest } from './respuestasIntent.model';
 
 /**
  * Modelo de respuestas guardadas en FIRESTORE para cada intent
- * Creates an instance of RespuestaModel. 
+ * Creates an instance of RespuestaModel.
  * @param {TipoRespuesta} tipo REQUERIDO. El tipo de respuesta que espera
  * @param {ResultResponse} result REQUERIDO. El mensaje que se muestra en la salida o en la interfaz de chat de cada plataforma
  * @param {number} index REQUERIDO. El orden de aparición y de importancia
@@ -19,7 +19,7 @@ export class RespuestaModel {
         public index: number,
         public nextIntent?: string,
         public inputContext?: string,
-        public outputContext?: string,
+        public outputContext?: string | string[],
         public accion?:string,
         public id?: string,
     ) {}
@@ -57,7 +57,7 @@ export class CondicionalModel {
         public valor: string | number | any[],
         public text: string,
     ){}
-} 
+}
 
 
 
@@ -83,7 +83,7 @@ export class RegistroDatosModel {
 
 
 /**
- *Modelo de una respuesta de búsqueda. Este modelo buscará el parámetro esperado que el cliente haya asignado en la collection de FIRESTORE asignada en el párametro y siempre retornará una respuesta de estilo `card`. 
+ *Modelo de una respuesta de búsqueda. Este modelo buscará el parámetro esperado que el cliente haya asignado en la collection de FIRESTORE asignada en el párametro y siempre retornará una respuesta de estilo `card`.
  * @param {string} parametro El parámetro al cuál se le pondrá atención del array de parámetros que haya regresado la request a Dialogflow
  * @param {string} database La collection de FIRESTORE en la cuál buscará el valor del parámetro encontrado.
  * @param {RespuestaCard} [respuesta] La respuesta que será mostrada en la interfaz
@@ -116,7 +116,7 @@ export class SugerenciasModel {
 export class RespuestaBinaria {
     constructor(
     public respuestaYES: EstiloRespuesta,
-    public respuestaNO: EstiloRespuesta 
+    public respuestaNO: EstiloRespuesta
     ){}
 }
 

@@ -24,7 +24,7 @@ export class PartParameterComponent implements OnInit {
   paramName: any = ''
 
   @ViewChild( 'partEntityInput' ) partEntityInput: ElementRef
-  
+
   @Output() onDelete = new EventEmitter<any>()
   @Output() paramAdded = new EventEmitter<FraseParte>()
   @Output() tipoSelected = new EventEmitter<FraseParte>();
@@ -32,24 +32,25 @@ export class PartParameterComponent implements OnInit {
   constructor (
     private _params: ParametrosService,
     private loading: Loading,
-    private _mensaje: CurrentMensajeService
+      private _mensaje: CurrentMensajeService,
+    private _frases: FrasesService,
   ) { }
 
   ngOnInit(): void {
     if(this.parte) this.paramName = this.parte.alias == true ? '' : this.parte.alias
   }
 
-  
+
   async toSelectTipo() {
     this.switchEntitySelector = true
     await this.loading.waitFor( 100 )
     // this.partEntityInput.nativeElement.focus()
   }
-  
+
   onTipoSelected(tipoSelected: string) {
     this.parte.entityType = tipoSelected
     this.tipoSelected.emit( this.parte )
-    
+
     if ( typeof this.parte.alias == 'string' ) {
       var param: ParametroMensaje = {
         displayName: this.paramName,
@@ -62,7 +63,7 @@ export class PartParameterComponent implements OnInit {
     }
   }
 
-  
+
   addParameter( event ) {
     event.stopImmediatePropagation()
 
@@ -70,26 +71,27 @@ export class PartParameterComponent implements OnInit {
     var paramStored = this._mensaje.current.parameters
       .find(p => p.displayName == this.paramName);
     this.parte.alias = this.paramName
-    
+
     // console.log(paramStored);
-    this.paramAdded.emit(this.parte)
-    
-    
+      this.paramAdded.emit(this.parte)
+      this._frases.paramAdded$.next()
+
+
     if (!paramStored) {
-      
+
       var param: ParametroMensaje = {
         displayName: this.paramName,
         entityTypeDisplayName: this.parte.entityType,
         value: `$${this.paramName}`
       }
-  
+
       this._params.addParam(param)
         .then(() => {
-        this.parte.alias = this.paramName
+            this.parte.alias = this.paramName
       })
     }
 
-    
+
   }
 
 

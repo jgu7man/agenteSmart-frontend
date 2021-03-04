@@ -21,6 +21,7 @@ export class FrasesService {
     mensajesPath: string
     list$: Subject<FraseEntrenamiento[]> = new Subject()
     frasesList: FraseEntrenamiento[]
+    paramAdded$: Subject<any> = new Subject()
     constructor (
         // private fs: AngularFirestore,
         private _agente: CurrentAgenteService,
@@ -55,22 +56,22 @@ export class FrasesService {
 
 
     // CREATE Frses de entrenamiento
-    async addTraningPhrase(frase: FraseEntrenamiento) {
+    async addTraningPhrase(frase: FraseEntrenamiento, index?: number) {
         try {
 
             this.frasesList = this._mensaje.current.trainingPhrases
             // frase.name = Math.random().toString( 36 ).substring( 7 );
 
             if (this._mensaje.current.trainingPhrases.length > 0) {
-                // console.log('update');
-                this._mensaje.current.trainingPhrases.push(frase)
+                index
+                    ? this._mensaje.current.trainingPhrases.splice( index, 0, frase)
+                    : this._mensaje.current.trainingPhrases.push(frase)
 
             } else {
                 // console.log('create');
                 this._mensaje.current.trainingPhrases = [frase]
             }
-
-
+            this._mensaje.current$.next(this._mensaje.current)
             this.store.dispatch(actions.setUnsaved())
 
             return
@@ -85,15 +86,15 @@ export class FrasesService {
 
 
 
-    // UPDATE 
+    // UPDATE
     async updatePhrase(frase: FraseEntrenamiento, index) {
         try {
             var frasesList = this._mensaje.current.trainingPhrases
-            
+
             frasesList[index] = frase;
-            
+
             this._mensaje.current.trainingPhrases = frasesList
-            console.log(this._mensaje.current.trainingPhrases);
+            // console.log(this._mensaje.current.trainingPhrases);
             return this.store.dispatch(actions.setUnsaved())
 
         } catch (error) {
@@ -202,36 +203,39 @@ export class FrasesService {
             });
             console.log(partSelected);
 
-            // * Dividimos la parte encontrada en nuevas partes
-            let newParts: Map<number, FraseParte> = await this.getTextSelectInPart(partSelected[1].text, textSelected)
-            console.log(newParts);
+            if (partSelected) {
+
+                // * Dividimos la parte encontrada en nuevas partes
+                let newParts: Map<number, FraseParte> = await this.getTextSelectInPart(partSelected[1].text, textSelected)
+                console.log(newParts);
 
 
-            // * Sustituimos la parte eliminada 
-            let resultParts: Map<number, FraseParte> = new Map()
-            initialParts.forEach((p, i) => {
-                if (i < partSelected[0]) {
-                    // console.log('before part selected ',i);
-                    resultParts.set(i, p)
-                } else if (i == partSelected[0]) {
-                    // Define nuevos valores para las nuevas partes donde la parte seleccionada se sustituye por el nuevo mapa, basado en el index de la parte seleccionada y sumando el index de la parte nueva. Así si la parte seleccionada es 1 la primera nueva parte será 1+0=1, y sus consecuententes 1+1=2; 1+2=3...
-                    newParts.forEach((nP, nI) => {
-                        // console.log( 'on part selected ', partSelected[ 0 ] + nI );
-                        resultParts.set(partSelected[0] + nI, nP)
-                    })
-                } else {
-                    // Continua con la asignación de orden a partir de la longitud de la propiedad asignando uno a uno como el último
-                    // console.log( 'after part selected ', resultParts.size);
-                    resultParts.set(resultParts.size, p)
-                }
+                // * Sustituimos la parte eliminada
+                let resultParts: Map<number, FraseParte> = new Map()
+                initialParts.forEach((p, i) => {
+                    if (i < partSelected[0]) {
+                        // console.log('before part selected ',i);
+                        resultParts.set(i, p)
+                    } else if (i == partSelected[0]) {
+                        // Define nuevos valores para las nuevas partes donde la parte seleccionada se sustituye por el nuevo mapa, basado en el index de la parte seleccionada y sumando el index de la parte nueva. Así si la parte seleccionada es 1 la primera nueva parte será 1+0=1, y sus consecuententes 1+1=2; 1+2=3...
+                        newParts.forEach((nP, nI) => {
+                            // console.log( 'on part selected ', partSelected[ 0 ] + nI );
+                            resultParts.set(partSelected[0] + nI, nP)
+                        })
+                    } else {
+                        // Continua con la asignación de orden a partir de la longitud de la propiedad asignando uno a uno como el último
+                        // console.log( 'after part selected ', resultParts.size);
+                        resultParts.set(resultParts.size, p)
+                    }
 
-            })
+                })
+                console.log( resultParts );
+                frase.parts = []
+                await this.loading.asyncForEach(resultParts, parte => {
+                    return frase.parts.push(parte)
+                })
+            }
 
-            console.log( resultParts );
-            frase.parts = []
-            await this.loading.asyncForEach(resultParts, parte => {
-                return frase.parts.push(parte)
-            })
             // console.log(frase);
             return frase
 
@@ -255,7 +259,7 @@ export class FrasesService {
 
         partInParts.forEach((textPart, i) => {
             if (textPart) {
-                let newPart: FraseParte = { 
+                let newPart: FraseParte = {
                     text: textPart,
                 }
 

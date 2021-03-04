@@ -18,7 +18,7 @@
             </mat-menu>
         </div>
     </ng-container>
-    
+
     <ng-template #noSino>
         <div class="col s10 m11">
             <span> {{clase.value}} </span>
@@ -35,12 +35,12 @@
     </ng-template>
 </ng-container>
 
-    
+
 <ng-template #editClase>
-    <aSmart-add-clase 
-    [clase]="clase" 
+    <aSmart-add-clase
+    [clase]="clase"
     [tipo]="tipo"
-    (claseDone)="onClaseDone()"
+    (claseDone)="onClaseDone($event)"
     ></aSmart-add-clase>
 </ng-template>
 

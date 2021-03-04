@@ -8,10 +8,18 @@ export class SystemEntitiesService {
 
   constructor () {}
 
-  
-  
 
-  systemEntities: SystemEntitieModel[] = [
+
+
+    systemEntities: SystemEntitieModel[] = [
+        {displayName: 'sys.any',
+        ejemplos: [
+            {request:"Manuel"},
+          {request:"Perro"},
+          {request:"Casa"},
+          {request:"Globo"},
+          {request:"235"},
+      ]},
     {displayName: 'sys.date-time',
       ejemplos: [
         {request:"2:30 pm"},
@@ -28,7 +36,7 @@ export class SystemEntitiesService {
     {displayName: 'sys.date-period',
       ejemplos: [
         {request:"abril"},
-        
+
     ]},
     {displayName: 'sys.time',
       ejemplos: [
@@ -154,6 +162,6 @@ export class SystemEntitiesService {
       ejemplos: [
         {request:"www.agentesmart.com"},
     ]},
-    
+
   ]
 }

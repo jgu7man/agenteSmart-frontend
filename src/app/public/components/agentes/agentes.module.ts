@@ -82,6 +82,9 @@ import { IntegracionesComponent } from './agente/integraciones/integraciones.com
 import { QRCodeModule } from 'angularx-qrcode';
 import { ConversacionesComponent } from './agente/conversaciones/conversaciones.component';
 import { ConversacionComponent } from './agente/conversaciones/conversacion/conversacion.component';
+import { StartUiComponent } from './agente/start-ui/start-ui.component';
+import { StartTipoComponent } from './agente/start-ui/start-tipo/start-tipo.component';
+import { StartFrasesComponent } from './agente/start-ui/start-frases/start-frases.component';
 
 
 
@@ -157,6 +160,9 @@ import { ConversacionComponent } from './agente/conversaciones/conversacion/conv
     WhatsappIntComponent,
     ConversacionesComponent,
     ConversacionComponent,
+    StartUiComponent,
+    StartTipoComponent,
+    StartFrasesComponent,
   ],
   imports: [
     CommonModule,

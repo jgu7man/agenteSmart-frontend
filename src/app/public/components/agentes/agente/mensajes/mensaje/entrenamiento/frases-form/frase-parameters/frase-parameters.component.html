@@ -1,20 +1,22 @@
 <div class="parameter-list" gdev-color [background]="'lightgrey'">
-    
+
     <!-- Params table header -->
     <div class="row params-header">
         <div class="col s3 m3">Valor</div>
-        <div class="col s3 m4">Tipo dato</div>
-        <div class="col s3 m3">Parámetro</div>
+        <div class="col s3 m4">Tipo dato
+            <i matTooltip="Tipo de dato como palabra clave" class="fas fa-info-circle"></i></div>
+        <div class="col s3 m3" >Parámetro
+            <i matTooltip="El nombre como tu agente reconocerá la palabra seleccionada" class="fas fa-info-circle"></i> </div>
         <div class="col s3 m2"></div>
     </div>
 
-    
+
     <!-- Params table body -->
-    <div class="part" 
+    <div class="part"
     *ngFor="let parte of frase.parts; index as i" >
-        
+
         <div class="part-parameter-form" *ngIf="parte" >
-            <aSmart-part-parameter 
+            <aSmart-part-parameter
             [parte]="parte"
             (tipoSelected)="setTipoFrase($event, i)"
             (onDelete)="onDelPartParam(i)"

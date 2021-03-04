@@ -1,25 +1,30 @@
-<div class="row">
-    <mat-form-field>
-        <mat-select 
-        (selectionChange)="catchContextSelected($event)"
-        [(value)]="contexto"
-        name="contexto">
-            <mat-option value="*fin">
-                <span class="grey-text">Termina conversación</span>
-            </mat-option>
-            <mat-option *ngFor="let contexto of contextNameList" 
-            [value]="contexto">
-                <span [ngClass]="{'blue-text': contexto == 'contextos'}">
-                    {{contexto}}
-                </span>
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
+<div class="row align-cols">
+    <div class="col s9">
+        <mat-form-field appearence="fill">
+            <mat-select
+            placeholder="Elige contexto"
+            (selectionChange)="catchContextSelected($event)"
+            [(value)]="contexto"
+            name="contexto">
+                <mat-option>
+                    <span class="grey-text">Deseleccionar</span>
+                </mat-option>
+                <mat-option *ngFor="let contexto of contextNameList"
+                [value]="contexto">
+                    <span [ngClass]="{'blue-text': contexto == 'contextos'}">
+                        {{contexto}}
+                    </span>
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="col s3">
+        <button mat-icon-button
+        (click)="openContextCreator()">
+            <i class="fas fa-plus"></i>
+        </button>
+    </div>
 </div>
 
-<div class="row">
-    <button mat-button
-    (click)="openContextCreator()">
-        Crear contexto
-    </button>
-</div>
+<!-- <div class="row">
+</div> -->

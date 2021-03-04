@@ -8,6 +8,7 @@ export class AgenteModel {
         public avatarUri?: ImageUri,
         public clientToken?: string,
         public developerToken?: string,
+        public started?: boolean,
     ){}
 
 }

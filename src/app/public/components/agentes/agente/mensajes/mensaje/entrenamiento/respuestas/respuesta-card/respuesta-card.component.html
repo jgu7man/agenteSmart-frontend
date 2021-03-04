@@ -21,49 +21,57 @@
                             <div [ngSwitch]="respuesta.tipo">
 
 
-                                <ng-container *ngIf="respuesta.nextIntent != '*fin'; else noNext">
-
-                                    <div *ngSwitchCase="'simple'">
-                                        <span style="font-size: x-small;">Siguiente conversacion</span> <br>
-                                        <b>{{respuesta['nextIntent']}}</b>
+                                <div [ngSwitch]="respuesta.nextIntent">
+                                    <div *ngSwitchCase="'*fin'">
+                                        <span><b>Termina conversación</b></span>
                                     </div>
-
-                                    <div *ngSwitchCase="'condicional'">
-                                        <b>{{respuesta.nextIntent}}</b><br>
-                                        <span style="font-size: x-small;">
-                                            Si {{respuesta.result['parametro']}}
-                                            <span *ngIf="!disableEScondition()">es</span>
-                                            {{respuesta.result['condicion']}}
-                                            {{respuesta.result['valor']}}
-                                        </span>
+                                    <div *ngSwitchCase="'*sug'">
+                                        <span><b>Sugerencias</b></span>
                                     </div>
-
-                                    <div *ngSwitchCase="'grupo_datos'">
-                                        <b>{{respuesta.nextIntent}}</b><br>
-                                        <span style="font-size: x-small;">
-                                            Guarda {{respuesta.result['key']}}
-                                            en {{respuesta.result['coleccion']}}
-                                        </span>
-                                    </div>
-
-
-                                    <div *ngSwitchCase="'buscar'">
-                                        <b>{{respuesta.nextIntent}}</b><br>
-                                        <span style="font-size: x-small;">
-                                            Busca {{respuesta.result['parametro']}}
-                                            en {{respuesta.result['database']}}
-                                        </span>
-
-                                    </div>
-
                                     <div *ngSwitchDefault>
-                                        <b>{{respuesta.nextIntent}}</b>
+                                        <div *ngSwitchCase="'simple'">
+                                            <span style="font-size: x-small;">Siguiente conversacion</span> <br>
+                                            <b>{{respuesta['nextIntent']}}</b>
+                                        </div>
+
+                                        <div *ngSwitchCase="'condicional'">
+                                            <b>{{respuesta.nextIntent}}</b><br>
+                                            <span style="font-size: x-small;">
+                                                Si {{respuesta.result['parametro']}}
+                                                <span *ngIf="!disableEScondition()">es</span>
+                                                {{respuesta.result['condicion']}}
+                                                {{respuesta.result['valor']}}
+                                            </span>
+                                        </div>
+
+                                        <div *ngSwitchCase="'grupo_datos'">
+                                            <b>{{respuesta.nextIntent}}</b><br>
+                                            <span style="font-size: x-small;">
+                                                Guarda {{respuesta.result['key']}}
+                                                en {{respuesta.result['coleccion']}}
+                                            </span>
+                                        </div>
+
+
+                                        <div *ngSwitchCase="'buscar'">
+                                            <b>{{respuesta.nextIntent}}</b><br>
+                                            <span style="font-size: x-small;">
+                                                Busca {{respuesta.result['parametro']}}
+                                                en {{respuesta.result['database']}}
+                                            </span>
+
+                                        </div>
+
+                                        <div *ngSwitchDefault>
+                                            <b>{{respuesta.nextIntent}}</b>
+                                        </div>
                                     </div>
-                                </ng-container>
+                                </div>
+
+
 
                                 <!-- SIGUIENTE MENSAJE NO ASIGNADO -->
                                 <ng-template #noNext>
-                                    <span><b>Termina conversación</b></span>
                                 </ng-template>
                             </div>
 
@@ -88,19 +96,21 @@
 
 
                 <!-- TIPO DE RESPUESTA -->
-                <div class="row">
+                <div class="row" id="tipo-select">
                     <div class="col s4 resp-label">
                         Tipo
                     </div>
                     <div class="col s8">
-                        <mat-select
-                        [(ngModel)]="respuesta.tipo"
-                        placeholder="Tipo de respuesta" name="tipoRes"
-                        (selectionChange)="onTipoSelected($event)">
-                            <mat-option *ngFor="let tipoRes of tiposRes" [value]="tipoRes.name">
-                                {{tipoRes.display}}
-                            </mat-option>
-                        </mat-select>
+                        <mat-form-field appearance="outline">
+                            <mat-select
+                            [(ngModel)]="respuesta.tipo"
+                            placeholder="Tipo de respuesta" name="tipoRes"
+                            (selectionChange)="onTipoSelected($event)">
+                                <mat-option *ngFor="let tipoRes of tiposRes" [value]="tipoRes.name">
+                                    {{tipoRes.display}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
                     </div>
                 </div>
 
@@ -139,42 +149,50 @@
 
 
                     <!-- Select next mensaje -->
-                    <div class="row">
+                    <div class="row card-row" id="siguiente">
                         <div class="col s4 resp-label">
-                            Siguiente
+                            Sig. Inter
+                            <i style="font-size:smaller"
+                            class="fas fa-info-circle"
+                            matTooltip="Elige la siguiente interacción con la que continúa la conversación. La interacción que te indique el tipo de mensajes esperados"
+                            ></i>
                         </div>
                         <div class="col s8">
-                            <mat-select
-                            [(ngModel)]="respuesta.nextIntent"
-                            name="mensaje">
-                                <mat-option value="*fin">
-                                    Termina conversación
-                                </mat-option>
-                                <mat-option *ngFor="let mensaje of nextMensajesList" [value]="mensaje.displayName">
-                                    {{mensaje.displayName}}
-                                </mat-option>
-                            </mat-select>
+                            <mat-form-field appearance="outline">
+
+                                <mat-select
+                                [disableRipple]="true"
+                                [(ngModel)]="respuesta.nextIntent"
+                                name="mensaje">
+                                    <mat-option value="*fin">
+                                        Termina conversación
+                                    </mat-option>
+                                    <mat-option *ngFor="let mensaje of nextMensajesList" [value]="mensaje.displayName">
+                                        {{mensaje.displayName}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
                         </div>
                     </div>
 
                     <!-- Select contexto -->
-                    <div class="row" *ngIf="activeContextSelector">
+                    <div class="row card-row" *ngIf="activeContextSelector">
                         <div class="col s4 resp-label">
                             Contexto
+                            <i class="fas fa-info-circle"
+                            style="font-size:smaller"
+                            matTooltip="Elige el contexto que tiene la conversación a partir de esta respuesta"
+                            ></i>
                         </div>
                         <div class="col s8">
 
-                            <aSmart-contexto-selector [contexto]="respuesta.outputContext" (sendContextSelected)="catchContextSelected($event)"></aSmart-contexto-selector>
+                            <aSmart-contexto-selector
+                            [contexto]="respuesta.outputContext"
+                            (sendContextSelected)="catchContextSelected($event)">
+                            </aSmart-contexto-selector>
 
                         </div>
                     </div>
-
-
-
-
-
-
-
 
 
                 </ng-container>
@@ -183,23 +201,21 @@
 
 
 
-
-
-
-
-
-
                 <!-- ACCIONES -->
-                <div class="row">
-                    <div class="col s4 resp-label">
-                        Acción
+                <div class="row card-row" id="acciones">
+                    <div class="col s10 resp-label">
+                        Activar Acción
+                        <i class="fas fa-info-circle"
+                        style="font-size:smaller"
+                        matTooltip="[BETA] Alguna acción a realizar junto con la respuesta"
+                        ></i>
                     </div>
-                    <div class="col s8 right">
-                        <mat-slide-toggle [(ngModel)]="activateAccion">Realizar accion</mat-slide-toggle>
+                    <div class="col s2 right toggle">
+                        <mat-slide-toggle [(ngModel)]="activateAccion"></mat-slide-toggle>
                     </div>
                 </div>
                 <ng-container *ngIf="activateAccion">
-                    <div class="row">
+                    <div class="row card-row">
                         <div class="col s4">
                             <mat-select
                             placeholder="Acción"

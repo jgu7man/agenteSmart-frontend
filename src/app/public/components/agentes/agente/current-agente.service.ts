@@ -21,7 +21,7 @@ import { environment } from '../../../../../environments/environment.prod';
     providedIn: 'root',
 })
 export class CurrentAgenteService {
-    
+
     /** Estado presente del agente actual */
     public current: AgenteModel;
     /** Almacena el ID de projecto actual */
@@ -58,7 +58,7 @@ export class CurrentAgenteService {
         });
     }
 
-    
+
 
     /** Incrementa el número de veces que se ha recargado la página */
     private listenFirstLoad() {
@@ -86,15 +86,15 @@ export class CurrentAgenteService {
 
             const path = await this.getPath();
             this.current = this._cache.getDataKey('currentAgente');
-           
-    
+
+
             if (!this.current) {
                 const agenteRES = await this.fs.doc(path).ref.get();
                 console.log(agenteRES.id);
                 this.current = agenteRES.data() as AgenteModel;
                 this._cache.updateData('currentAgente', this.current);
             }
-    
+
             await this.getIntentList();
             // console.log('intents');
             await this.getNextMensajesList();
@@ -107,7 +107,7 @@ export class CurrentAgenteService {
             // console.log('tipos');
             await this.getTarjetasList();
             // console.log('tarjetas');
-    
+
             this.agenteLoaded$.next(true);
             this.loading.toggleWaitingSpinner(false);
             return this.current;
@@ -137,7 +137,7 @@ export class CurrentAgenteService {
     nextMensajesSubs: Subscription;
     async getNextMensajesList() {
         const path = await this.getPath('mensajes');
-        this.nextMensajesSubs = 
+        this.nextMensajesSubs =
         this.fs.collection<MensajeModel>(path).valueChanges()
             .subscribe(list => this._cache.updateData('nextMensajes', list))
         this.nextMensajeList = await this._cache
@@ -153,7 +153,7 @@ export class CurrentAgenteService {
     /** Retorna la lista de Contextos del agente */
     async getContextosList() {
         const path = await this.getPath('contextos');
-        this.contextosSubs = 
+        this.contextosSubs =
             this.fs.collection<ContextoModel>(path).valueChanges()
             .pipe(
                 map<ContextoModel[], ContextoModel[]>
@@ -234,7 +234,7 @@ export class CurrentAgenteService {
                 .get<IntentModel[]>(this._url + `/${projectId}`, {responseType: 'json',})
                 .pipe(
                     pluck<any, IntentModel[]>('result', 'intents'),
-                    tap(intents => console.log(intents)),
+                    // tap(intents => console.log(intents)),
                     map<IntentModel[], IntentModel[]>((list) => {
                         return list.map((intent) => {
                             intent.name = intent.name.slice(

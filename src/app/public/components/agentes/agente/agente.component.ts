@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AgenteModel } from '../init-agente/agente.model';
 import { DashboardService } from '../../dashboard/dashboard.service';
 import { NAVLINK } from '../../navbar/navlink.interface';
@@ -25,7 +25,8 @@ export class AgenteComponent implements OnInit, OnDestroy {
     private _route: ActivatedRoute,
     public resposive_: ResponsiveService,
     public loading: Loading,
-    private _mensaje: CurrentMensajeService
+      private _mensaje: CurrentMensajeService,
+    private _router: Router
   ) {
 
     // GET THE CURRENT PROJECT ID
@@ -42,20 +43,17 @@ export class AgenteComponent implements OnInit, OnDestroy {
       this._dashboard.setMobileNavbar(this.agentLinks)
     }
 
-    let intentNames = [
-      // "4aec3563-4a8b-4f6e-9111-b51bbc5cbb1e",
-      "74386482-8087-49d8-bc74-f4d881673127"
-    ]
-
-    // intentNames.forEach( name => {
-    //   this._mensaje.deleteIntentRequest(name)
-
-    // })
   }
 
   async loadAgente() {
-    this.agente = await this._agente.get()
-    this.loading.toggleWaitingSpinner( false )
+      this.agente = await this._agente.get()
+      let projectId = this._cache.getDataKey('projectId')
+      if (!this.agente.started) {
+          this._router.navigate([`/dashboard/agente/${ projectId }/start`])
+        } else {
+          this._router.navigate([`/dashboard/agente/${ projectId }/mensajes`])
+      }
+      this.loading.toggleWaitingSpinner( false )
   }
 
   agentLinks:NAVLINK[] = [

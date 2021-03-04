@@ -11,11 +11,11 @@
 <div class="row">
   <div class="col s12" id="params-head">
     <div class="row">
-      <div class="col s3">Nombre</div>
-      <div class="col s3">Entidad</div>
+      <div class="col s4">Nombre</div>
+      <div class="col s4">Entidad</div>
       <div class="col s3">Valor</div>
-      <div class="col s1">Req</div>
-      <div class="col s1">Lista</div>
+      <!-- <div class="col s1">Req</div> -->
+      <!-- <div class="col s1">Lista</div> -->
       <div class="col s1"></div>
     </div>
     </div>
@@ -27,8 +27,8 @@
         <aSmart-param-row *ngFor="let param of mensaje.current.parameters" [param]="param"></aSmart-param-row>
       </ng-container>
       <ng-template #noParams>
-        <p class="center">No has agregado parametros</p>        
+        <p class="center">No has agregado parametros</p>
       </ng-template>
-      
+
     </div>
 </div>

@@ -22,7 +22,7 @@ import { pluck, map } from 'rxjs/operators';
 export class RespuestasService {
     /** @module Respuestas */
 
-    
+
     tarjetasList: TarjetaModel[];
     /** El mensae en curso de edición */
     currentMensaje: IntentModel;
@@ -123,7 +123,7 @@ export class RespuestasService {
      */
     async getMensajeTipos(paramList: ParametroMensaje[]) {
         this.mensajeTypeEntities  = [];
-        
+
         await this.loading.asyncForEach(paramList,
         async (param: ParametroMensaje) => {
 
@@ -131,7 +131,7 @@ export class RespuestasService {
                 let tipoStored = this.mensajeTypeEntities.find(
                     (t) => t.displayName == param.displayName
                 );
-                    
+
                 // console.log(tipoStored);
                 if (!tipoStored) {
                     tipoStored = await this._tipos.getByDisplayName( param.entityTypeDisplayName )
@@ -145,7 +145,7 @@ export class RespuestasService {
         // console.log(this.mensajeTypeEntities);
         return this.mensajeTypeEntities;
     }
-    
+
     /**
      * Agrega o actualiza respuestas al mensaje en curso en FIRESTORE
      *
@@ -153,35 +153,37 @@ export class RespuestasService {
      * @return {Subject} Aviso al observable de cambios en la lista de respuestas
      */
     async setRespuesta(respuesta: RespuestaModel) {
-        
-        
+
+
         if (respuesta.id) {
             console.log('update');
-            
+
             (await this.responsesPath())
                 .doc(respuesta.id)
                 .set(respuesta, { merge: true });
             this._alerts.sendFloatNotification('Respuesta actualizada');
         }
-            
-            
+
+
         else {
             console.log('create');
-            
-            
+
+
             if (    respuesta.tipo != 'condicional'
                 &&  await this.checkKindResponses(respuesta.tipo) > 1) {
-               
+
                 this._alerts.sendMessageAlert('No puedes agregar más de una respuesta de tipo '+respuesta.tipo);
 
             }
-            
+
             else {
 
-            let res = await (await this.responsesPath()).add(respuesta);
-            await (await this.responsesPath())
-                .doc(res.id)
-                .update({ id: res.id });
+                console.log( respuesta )
+                Object.keys(respuesta).forEach(key => { if (respuesta[key] == undefined) delete respuesta[key]})
+                let res = await (await this.responsesPath()).add(respuesta);
+                await (await this.responsesPath())
+                    .doc(res.id)
+                    .update({ id: res.id });
             }
         }
 
@@ -191,7 +193,7 @@ export class RespuestasService {
 
 
     /**
-     * Revisa si existe alguna respuesta del tipo seleccionado 
+     * Revisa si existe alguna respuesta del tipo seleccionado
      *
      * @param {('simple' | 'grupo_datos' | 'buscar')} kind Tipo de respuesta. Puede ser 'simple' | 'grupo_datos' | 'buscar'
      * @return {number} Cantidad de veces que existe el tipo de respuesta
@@ -199,7 +201,7 @@ export class RespuestasService {
     async checkKindResponses(
         kind: 'simple' | 'grupo_datos' | 'buscar' | 'sugerencias'
     ) {
-        
+
         var resCant: boolean[] = []
         await this.loading.asyncForEach(this._mensaje.respuestasList,
             (res: RespuestaModel) => {
@@ -216,7 +218,7 @@ export class RespuestasService {
      */
     async delRespuesta(respuestaId: string) {
         try {
-            
+
             await (await this.responsesPath()).doc(respuestaId).delete();
 
             return this.onRespuestasChanged.next(true);

@@ -22,7 +22,11 @@ export class SimpleFormComponent implements OnInit {
         this.result = new SimpleModel('', []);
     }
 
-    ngOnInit(): void {}
+    ngOnInit(): void {
+        if (this.result.suggestions.length > 0) {
+            this.switchSuggestions = true
+        }
+    }
 
     toggleSuggestions(change: MatSlideToggleChange) {
         this.switchSuggestions = change.checked;
@@ -36,6 +40,7 @@ export class SimpleFormComponent implements OnInit {
 
     catchSugerencias(sugerencias: Sugerencia[]) {
         this.result.suggestions = sugerencias
+        console.log( this.result.suggestions )
         this.onRespChanges.emit(this.result);
     }
 }
