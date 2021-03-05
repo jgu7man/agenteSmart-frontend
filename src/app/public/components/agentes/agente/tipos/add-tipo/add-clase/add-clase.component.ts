@@ -12,6 +12,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { Clase, TipoEntidadModel } from '../../tipo.model';
 import { TiposService } from '../../tipos.service';
 import { Loading } from '../../../../../../../gdev-tools/loading/loading.service';
+import { TextService } from 'src/app/services/text.service';
 
 @Component({
     selector: 'aSmart-add-clase',
@@ -31,7 +32,8 @@ export class AddClaseComponent implements OnInit {
 
     constructor (
         public tipos_: TiposService,
-        private loading: Loading
+        private loading: Loading,
+        private _text: TextService
     ) {
         if (this.clase) this.clase.synonyms = [];
     }
@@ -48,6 +50,15 @@ export class AddClaseComponent implements OnInit {
             }
         }
     }
+
+    delSpaces(e) {
+        this._text.normalize(this.newClaseItem)
+        if ( e.which === 32 ) {
+          this.newClaseItem.valueOf().replace( /\s/g, '' )
+          return false
+        }
+
+      }
 
     onAddClase(event) {
         event.stopPropagation();

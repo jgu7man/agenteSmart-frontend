@@ -1,8 +1,8 @@
 <aSmart-navbar></aSmart-navbar>
-<mat-drawer-container 
+<mat-drawer-container
 id="dashboard_container"
 strechHeight
-class="dash-container" 
+class="dash-container"
 gdev-color
 [background]="'white'"
 [hasBackdrop]="testChat.opened">
@@ -22,14 +22,20 @@ gdev-color
   >
 
     <aSmart-sidenav></aSmart-sidenav>
-    <mat-toolbar 
+    <mat-toolbar
     gdev-color
     class="test-chat-btn"
     [background]="'dark'"
     >
       <button mat-raised-button color="accent" (click)="chat_.toggleChatbox()"
       [disabled]="section != 'agente'">
-        Probar chat
+      <ng-container *ngIf="responsive.med; else icon">
+          Probar chat
+      </ng-container>
+      <ng-template #icon>
+        <i class="fas fa-comment-dots"></i>
+      </ng-template>
+
       </button>
     </mat-toolbar>
   </mat-drawer>
@@ -65,10 +71,10 @@ gdev-color
   <a mat-tab-link
         *ngFor="let item of mobileNavbar"
         [routerLink]="['/dashboard/agente/',projectId, item.path]"
-        routerLinkActive="active" 
+        routerLinkActive="active"
         #rla="routerLinkActive"
         [active]="rla.isActive">
-        
+
         <span> {{item.label}} </span>
     </a>
 </nav>

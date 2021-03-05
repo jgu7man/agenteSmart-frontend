@@ -10,6 +10,7 @@
                 id="addClaseItem"
                 matInput
                 [(ngModel)]="newClaseItem"
+                (keyup)="delSpaces($event)"
                 (blur)="newClaseItem ? onAddClase($event) : claseDone.emit(false)"
                 (keyup.ENTER)="onAddClase($event); $event.target.blur()"
                 (keyup.esc)="claseDone.emit(false)"

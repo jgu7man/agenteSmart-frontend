@@ -17,6 +17,14 @@ mat-list-item {
         span, .collection-item {
             color: #F3F8FF;
         }
+
+    }
+}
+
+
+@media screen and (min-width:900 ){
+    .mat-panel-title{
+        display: none
     }
 }
 

@@ -16,12 +16,20 @@
     width: 220px;
 }
 
+@media screen and (min-width:900 ){
+    ::ng-deep {
+        .side-nav {
+           width: 80px;
+       }
+    }
+}
+
 mat-drawer-container {
     height: 89vh;
 }
 
-::ng-deep mat-drawer-container::-webkit-scrollbar, 
-.mat-drawer-content::-webkit-scrollbar, 
+::ng-deep mat-drawer-container::-webkit-scrollbar,
+.mat-drawer-content::-webkit-scrollbar,
 .mat-drawer-inner-container::-webkit-scrollbar {
     display: none;
 }

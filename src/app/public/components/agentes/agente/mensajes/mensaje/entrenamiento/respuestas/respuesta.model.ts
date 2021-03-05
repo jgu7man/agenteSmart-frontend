@@ -50,13 +50,15 @@ export class SimpleModel {
  * @param {string} condicion La condición que comparará el valor
  * @param {(string | number | any[])} valor Los valores con los que se comparará el parámetro
  */
-export class CondicionalModel {
+export class CondicionalModel extends SimpleModel {
     constructor (
         public parametro: string,
         public condicion: string,
         public valor: string | number | any[],
-        public text: string,
-    ){}
+        // public text: string,
+    ) {
+        super('', [])
+    }
 }
 
 
@@ -69,14 +71,16 @@ export class CondicionalModel {
  * @param {string} grupoDatos El grupo de datos al cuál se agregará el parámetro encontrado.
  * @param {string} key La variable del grupo de datos a la cuál se asignará el valor del parámetro encontrado.
  */
-export class RegistroDatosModel {
+export class RegistroDatosModel extends SimpleModel {
     constructor (
         public parametro: string,
         public coleccion: string,
         public key: string,
-        public text: string,
-        public suggestions?: Suggest[],
-    ){}
+        // public text: string,
+        // public suggestions?: Suggest[],
+    ) {
+        super('', [])
+    }
 }
 
 
@@ -89,13 +93,15 @@ export class RegistroDatosModel {
  * @param {RespuestaCard} [respuesta] La respuesta que será mostrada en la interfaz
  * @param {'card'} [estiloRespuesta] El estidlo de respuesta que siempre es 'card'.
  */
-export class RespuestaBuscarModel {
+export class RespuestaBuscarModel extends SimpleModel{
     constructor (
         public parametro: string,
         public database: string,
-        public text?: string ,
         public card?: RespuestaCard
-    ){}
+        // public text?: string ,
+    ) {
+        super('', [])
+    }
 }
 
 

@@ -4,7 +4,7 @@
     <!-- * DISEÑO DESKTOP -->
     <ng-container *ngIf="!responsive.small; else mobileDesing">
         <div strechHeight class="col s12 m6" id="intent-form">
-            
+
             <!-- ENTRENAMIENTO -->
             <div strechHeight id="mensaje-container">
                 <div class="row mensaje-content">
@@ -16,6 +16,8 @@
                             </div>
                             <div class="col s2">
                                 <button style="float: right;" mat-raised-button color="primary"
+                                (keydown.enter)="$event.preventDefault()"
+                                (keydown.enter)="$event.stopImmediatePropagation()"
                                 (click)="mensaje_.update()"
                                 [disabled]="!unsaved"
                                 >Guardar</button>
@@ -35,7 +37,7 @@
             <aSmart-respuestas></aSmart-respuestas>
         </div>
     </ng-container>
-    
+
     <!-- * DISEÑO MOBILE -->
     <ng-template #mobileDesing>
         <mat-accordion>
@@ -43,7 +45,7 @@
                 <mat-expansion-panel-header>
                     Mensaje
                 </mat-expansion-panel-header>
-               
+
                 <!-- ENTRENAMIENTO -->
                 <div strechHeight id="mensaje-container">
                     <div class="row mensaje-content">
@@ -51,7 +53,7 @@
                         <aSmart-parametros></aSmart-parametros>
                     </div>
                 </div>
-                
+
             </mat-expansion-panel>
             <mat-expansion-panel>
                 <mat-expansion-panel-header>
@@ -61,5 +63,5 @@
             </mat-expansion-panel>
         </mat-accordion>
     </ng-template>
-    
+
 </div>
