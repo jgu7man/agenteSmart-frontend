@@ -36,35 +36,38 @@ export class CondicionalFormComponent implements OnInit {
         public respuestas_: RespuestasService,
         public _params: ParametrosService
     ) {
-        this.result = new CondicionalModel('', '', '', '');
+        this.result = new CondicionalModel('', '', '', );
     }
 
     async ngOnInit() {
-        console.log( this.result )
     }
 
     disableValue() {
-        if ( this.result.condicion == 'existe' || this.result.condicion == 'no_existe') {
-            return true
-        }
+        return  this.result.condicion == 'existe' || this.result.condicion == 'no_existe'  || !this.result.condicion
+
     }
 
     setParameter() {
         if ( this.result.parametro ) {
-            return this.result.parametro.split( '$' )[ 1 ].split( '.' )[ 0 ]
-        } 
+            return this.result.parametro.split('$').length >= 2 ?
+                this.result.parametro.split('$')[1].split('.')[0] :
+                this.result.parametro.split('$')[0]
+        }
     }
 
     onParamChange(selected: ParamSelected) {
-        
+
+        this.isOriginal = selected.isOriginal
         this.result.parametro = selected.value;
         this.tipoSelected = this.respuestas_.mensajeTypeEntities.find(
-            (t) => t.displayName == selected.value
+            (t) =>{ t.displayName == selected.value}
         );
-        console.log(this.tipoSelected);
-        this.isOriginal = selected.isOriginal
 
         this.onRespChanges.emit(this.result);
+    }
+
+    validateOriginal() {
+        return !this.isOriginal && this.tipoSelected
     }
 
     async catchresult(msg: SimpleModel) {

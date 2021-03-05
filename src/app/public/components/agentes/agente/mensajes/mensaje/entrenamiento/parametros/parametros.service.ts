@@ -71,7 +71,7 @@ export class ParametrosService {
         var paramList = this._mensaje.current.parameters;
         var paramInList = paramList.find(p => p.displayName == param.displayName)
 
-        if (paramInList) {
+        if (!paramInList) {
             await (await this.paramsCollection()).doc(param.displayName).set(
                 {
                     displayName: param.displayName,
@@ -84,11 +84,14 @@ export class ParametrosService {
 
         if (!paramList || paramList.length == 0) {
             paramList = [param];
+            console.log('params defined')
+            console.log( paramList )
             this._mensaje.current.parameters = paramList;
 
             // this.parameterAdded$.next(param);
         } else {
             paramList.push(param);
+            console.log( 'params defined' )
             this._mensaje.current.parameters = paramList;
             // this.parameterAdded$.next(param);
         }
@@ -105,11 +108,9 @@ export class ParametrosService {
 
     // READ PARAM
     getParamByName(displayName: string) {
-        console.log(displayName);
         var paramSelected = this._mensaje.current.parameters.find(
-            (p) => p.displayName == displayName
+            (p) => p.displayName === displayName
         );
-        console.log(paramSelected);
         return paramSelected;
     }
 
@@ -147,6 +148,7 @@ export class ParametrosService {
                 (parameter) => parameter.name == param.name
             );
             paramList[paramIndex] = param;
+            console.log( 'params defined' )
             this._mensaje.current.parameters = paramList;
             return this.store.dispatch(actions.setUnsaved());
         } catch (error) {
@@ -171,7 +173,9 @@ export class ParametrosService {
                 (parameter) => parameter.name == param.name
             );
             paramList.splice(paramIndex, 1);
+            console.log( 'params defined' )
             this._mensaje.current.parameters = paramList;
+            console.log( this._mensaje.current.parameters )
             this.deleteParamInParts(param.displayName);
             return this.store.dispatch(actions.setUnsaved());
         } catch (error) {
@@ -197,7 +201,11 @@ export class ParametrosService {
                             if (parte.alias == displayName)
                                 delete frase.parts[parteIndex].entityType;
                             delete frase.parts[parteIndex].alias;
-                            // frase.parts[parteIndex].selected = false;
+
+                            let partsString = this._frases.stringifyFullPhrase(frase)
+                            let partsRestored = this._frases.createParts(partsString)
+                            frase.parts = partsRestored
+                            console.log(frase)
                             return this._frases.updatePhrase(frase, index);
                         }
                     }

@@ -48,7 +48,7 @@
     <div class="col s8">
 
         <!-- Si no es original muestra las opciones -->
-        <ng-container *ngIf="!isOriginal; else original">
+        <ng-container *ngIf="validateOriginal(); else original">
             <mat-select
                 placeholder="Valor"
                 [(ngModel)]="result.valor"

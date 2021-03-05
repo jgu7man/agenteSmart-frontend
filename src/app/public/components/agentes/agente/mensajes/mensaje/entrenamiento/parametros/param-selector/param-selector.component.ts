@@ -10,9 +10,9 @@ import { Loading } from '../../../../../../../../../gdev-tools/loading/loading.s
     styleUrls: ['./param-selector.component.scss'],
 })
 export class ParamSelectorComponent implements OnInit, AfterViewInit {
-    
-    
-    @Input() paramSelected: string;
+
+
+    @Input() paramSelected: ParamSelected
     @Input() focused: boolean = false;
     @ViewChild('paramSelector') public selector: MatSelect;
     tipoSelected;
@@ -28,41 +28,47 @@ export class ParamSelectorComponent implements OnInit, AfterViewInit {
     ngOnInit(): void {
 
     }
-    
+
     ngAfterViewInit() {
         this._loading.waitFor(1000)
         if ( this.focused ) this.selector.open();
-        console.log( this.respuestas_.paramList )
-        console.log( this.paramSelected )
     }
 
     async onOpenedChange(toggle: boolean) {
-        if (!toggle) {
-            await this._loading.waitFor(500)
-            console.log(this.paramSelected);
-            this.onParamaSelected.emit({
-                value: this.paramSelected,
-                isOriginal: this.isOriginal,
-            });
-        } 
+        // if (!toggle) {
+        //     await this._loading.waitFor(500)
+        //     console.log(this.paramSelected);
+        //     this.onParamaSelected.emit({
+        //         value: this.paramSelected.value,
+        //         isOriginal: this.isOriginal,
+        //     });
+        // }
     }
 
 
     onParamChange(selected: MatSelectChange) {
-        this.paramSelected = selected.value
-        console.log( this.paramSelected );
+        if (!this.paramSelected) this.paramSelected = {value: '', isOriginal: false}
+        this.paramSelected.value = selected.value
         if (this.paramSelected) {
-            let value = this._params.getParamByName(this.paramSelected).value
-                    ? this._params.getParamByName(this.paramSelected).value
-                    : this._params.getParamByName(this.paramSelected).displayName;
-                    
-            this.paramSelected = value        
-            this.isOriginal = value.split('.').length > 1 ? true : false;
-            
+            let paramFound = this._params.getParamByName(this.paramSelected.value)
+            if (paramFound) {
+                let value = paramFound.value
+                ? paramFound.value
+                : paramFound.displayName;
+
+                this.paramSelected.value = value
+                this.isOriginal = value.split('.').length > 1 ? true : false;
+            } else {
+                this.paramSelected.value = `$${this.paramSelected}`
+                this.isOriginal = true
+            }
+
+            this.paramSelected.isOriginal = this.isOriginal
+            this.onParamaSelected.emit(this.paramSelected)
         }
-        
+
     }
-    
+
 }
 
 

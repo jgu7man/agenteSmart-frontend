@@ -141,8 +141,7 @@ export class RespuestaCardComponent implements OnInit {
             if(mensajeFinded) nextMensaje = mensajeFinded
             console.log(nextMensaje);
         })
-        return nextMensaje.contexto
-    }
+        return nextMensaje.contexto ? nextMensaje.contexto : ''    }
 
     /**
      * Obtiene el tipo de respuesta seleccionado del select
@@ -165,7 +164,6 @@ export class RespuestaCardComponent implements OnInit {
 
     /** Recibe los cambios en los formularios hijos como simple, CODICIONAL, BUSCAR Y GRUPO DE DATOS */
     catchResult(msg: any) {
-        console.log(this.result, msg);
         this.result = msg;
     }
 
