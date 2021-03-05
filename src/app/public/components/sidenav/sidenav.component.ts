@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { AgentesService } from '../agentes/agentes.service';
 import { AgenteModel } from '../agentes/init-agente/agente.model';
+import { ResponsiveService } from 'src/app/services/responsive.service';
 
 @Component({
   selector: 'aSmart-sidenav',
@@ -15,9 +16,10 @@ export class SidenavComponent implements OnInit {
   Sidenav: PARENT[]
   constructor (
     private location: Location,
-    public _agentes: AgentesService
+      public _agentes: AgentesService,
+    public responsive: ResponsiveService
   ) {
-    
+
     this.agenteRoutes = [  ]
    }
 
@@ -28,6 +30,10 @@ export class SidenavComponent implements OnInit {
 
   onActive( path ) {
     return this.location.path().includes( path )
+  }
+
+    checkResponsive() {
+        return this.responsive.med || this.responsive.small
   }
 
   setSidenav() {
@@ -48,9 +54,9 @@ export class SidenavComponent implements OnInit {
     ];
   }
 
-  
 
-  
+
+
 
 }
 

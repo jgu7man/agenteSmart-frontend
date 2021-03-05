@@ -1,18 +1,50 @@
 <mat-toolbar
-gdev-color 
-[background]="view == 'dashboard' ? 'dark' : 'bg2'" 
-id="navbar" 
+gdev-color
+[background]="view == 'dashboard' ? 'dark' : 'bg2'"
+id="navbar"
 class="mat-elevation-z5">
-    <span class="hide-on-large-only mobile-menu" (click)="dashboard.toggleMobileMenu.emit()"> <i class="fas fa-bars    "></i> </span>
+    <button mat-icon-button class="hide-on-large-only mobile-menu" [mat-menu-trigger-for]="navbarMenu">
+        <i class="fas fa-bars"></i>
+    </button>
+    <mat-menu #navbarMenu="matMenu">
+        <a mat-menu-item [routerLink]="['/inicio']"
+        routerLinkActive="active">Inicio</a>
+        <a mat-menu-item [routerLink]="['/academia']"
+        routerLinkActive="active">Academia</a>
+        <a mat-menu-item [routerLink]="['/docs']"
+        routerLinkActive="active">Documentación</a>
+        <a mat-menu-item [routerLink]="['/precios' ]"
+        routerLinkActive="active">Precios</a>
+
+    </mat-menu>
+    <!-- <span class="hide-on-large-only mobile-menu" (click)="dashboard.toggleMobileMenu.emit()"> <i class="fas fa-bars    "></i> </span> -->
     <span [routerLink]="['/inicio']" class="logo-area" >
         <div class="app-logo">
             <img src="/assets/icons/as-iso@0.5x.png" alt="Logo Agente Smart">
         </div>
-        <p class="logo-text" gdev-color 
+        <p class="logo-text" gdev-color
         [color]="view == 'dashboard' ? 'bg2' : 'dark'"  >Agente Smart</p>
     </span>
     <span class="espacio"></span>
-    <span class="nav_menu">
+
+    <!-- MENU MOBILE -->
+    <button mat-icon-button class="hide-on-large-only mobile-menu" [mat-menu-trigger-for]="navbarMenu">
+        <i class="fas fa-bars white-text "></i>
+    </button>
+    <mat-menu #navbarMenu="matMenu">
+        <a mat-menu-item [routerLink]="['/inicio']"
+        routerLinkActive="active">Inicio</a>
+        <a mat-menu-item [routerLink]="['/academia']"
+        routerLinkActive="active">Academia</a>
+        <a mat-menu-item [routerLink]="['/docs']"
+        routerLinkActive="active">Documentación</a>
+        <a mat-menu-item [routerLink]="['/precios' ]"
+        routerLinkActive="active">Precios</a>
+
+    </mat-menu>
+
+    <!-- MENÚ DESKTOP -->
+    <span class="nav_menu hide-on-med-and-down">
         <div class="main_menu">
             <a [routerLink]="['/inicio']"
             routerLinkActive="active">Inicio</a>
@@ -24,6 +56,8 @@ class="mat-elevation-z5">
             routerLinkActive="active">Precios</a>
         </div>
     </span>
+
+
     <div class="col right user_log" *ngIf="user; else unlogged">
         <!-- <button mat-button
         [matMenuTriggerFor]="menuProfile"
@@ -36,7 +70,7 @@ class="mat-elevation-z5">
             <button mat-menu-item [routerLink]="['/dashboard']">Dashboard</button>
             <button mat-menu-item (click)="auth.singOut()">Cerrar sesión</button>
         </mat-menu>
-        
+
         <div class="imgProfileContainer"
         [matMenuTriggerFor]="menuProfile">
             <img src="{{user.photoURL}}" alt="">

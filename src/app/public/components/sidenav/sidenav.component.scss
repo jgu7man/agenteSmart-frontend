@@ -22,11 +22,12 @@ mat-list-item {
 }
 
 
-@media screen and (min-width:900 ){
-    .mat-panel-title{
-        display: none
+    @media screen and (min-width:900 ){
+        ::ng-deep mat-panel-title{
+            display: none !important;
+        }
     }
-}
+
 
 
 ::ng-deep .mat-expansion-panel-body {

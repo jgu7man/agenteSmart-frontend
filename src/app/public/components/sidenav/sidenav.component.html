@@ -9,10 +9,10 @@
         [hideToggle]="true"
         >
 
-        <mat-expansion-panel-header 
+        <mat-expansion-panel-header
             [ngClass]="{'amber-text':onActive(parent.routeId) }"
             [routerLink]="parent.route ? [parent.route] : []">
-            <mat-panel-title [color]="'bg1'" gdev-color> {{parent.name}} </mat-panel-title>
+            <mat-panel-title *ngIf="!checkResponsive()" [color]="'bg1'" gdev-color> {{parent.name}} </mat-panel-title>
             <!-- <mat-panel-description> -->
                 <i class="fas {{parent.icon}}" gdev-color [color]="'bg1'"></i>
             <!-- </mat-panel-description> -->
@@ -20,7 +20,7 @@
 
         <div class="collection">
             <a *ngFor="let child of parent.childs"
-            [routerLink]="[child.route]" 
+            [routerLink]="[child.route]"
             routerLinkActive="active"
             class="collection-item"
             gdev-color
@@ -29,5 +29,5 @@
             >{{child.name}}</a>
         </div>
     </mat-expansion-panel>
-    
+
 </mat-accordion>

@@ -14,6 +14,7 @@ gdev-color
     class="side-nav"
     mode="side"
     [opened]="!responsive.small"
+    [ngStyle]="{'width': responsive.med ? '80px': '220px'}"
     position="start"
     gdev-color
     [background]="'dark'"
@@ -27,16 +28,19 @@ gdev-color
     class="test-chat-btn"
     [background]="'dark'"
     >
-      <button mat-raised-button color="accent" (click)="chat_.toggleChatbox()"
-      [disabled]="section != 'agente'">
-      <ng-container *ngIf="responsive.med; else icon">
-          Probar chat
-      </ng-container>
+    <ng-container *ngIf="!responsive.med; else icon">
+        <button mat-raised-button color="accent" (click)="chat_.toggleChatbox()"
+        [disabled]="section != 'agente'">
+            Probar chat
+        </button>
+    </ng-container>
       <ng-template #icon>
-        <i class="fas fa-comment-dots"></i>
+        <button mat-mini-fab color="accent" (click)="chat_.toggleChatbox()"
+        [disabled]="section != 'agente'">
+            <i class="fas fa-comment-dots"></i>
+        </button>
       </ng-template>
 
-      </button>
     </mat-toolbar>
   </mat-drawer>
   <!-- End Left Sidenav -->

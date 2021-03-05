@@ -20,22 +20,24 @@ export class ResponsiveService {
     this.largeWidth = 1380
     this.extraLargeWidth = 1600
 
-    this.stretchHeight = this.small ? 
+    this.stretchHeight = this.small ?
       window.innerHeight - 64 - 49 :
       window.innerHeight - 64
-    
+
   }
 
   get small() {
-    return window.screen.width < this.smallWidth ? true : false
+    return window.innerWidth < this.smallWidth ? true : false
   }
 
-  get med() {
-    return window.screen.width < this.medWidth ? true : false
+    get med() {
+      return window.innerWidth > this.smallWidth
+          && window.innerWidth < this.medWidth
+          ? true : false
   }
 
   get large() {
-    return window.screen.width < this.largeWidth ? true : false
+    return window.innerWidth < this.largeWidth ? true : false
   }
 
   strechHeigth( el: ElementRef ) {
@@ -45,7 +47,7 @@ export class ResponsiveService {
 
     console.log( y, height );
     el.nativeElement.style.height = height + 'px'
-    
+
   }
 
   public get deviceSize() {
@@ -60,5 +62,5 @@ export class ResponsiveService {
     }
   }
 
-  
+
 }
