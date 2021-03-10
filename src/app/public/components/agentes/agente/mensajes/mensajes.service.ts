@@ -125,8 +125,9 @@ export class MensajesService {
             await (await this.mensajesCollection()).doc(resourceID).set(intent)
             this._agente.getIntentList()
             this._loading.toggleWaitingSpinner( 'close' )
-            await this._router.navigateByUrl( '/dashboard/agentes', { skipLocationChange: true } )
-            this._router.navigate([`/dashboard/agente/${ projectId }/mensajes`])
+            await this._router.navigateByUrl('/dashboard/agentes', { skipLocationChange: true }).then(() =>
+                this._router.navigate([`/dashboard/agente/${ projectId }/mensajes`])
+            )
             return this._alerts.sendFloatNotification('Mensaje creado');
 
         } catch (error) {
