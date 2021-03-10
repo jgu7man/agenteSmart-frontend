@@ -16,6 +16,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddContextoDialogComponent } from '../../../../../contextos/add-contexto-dialog/add-contexto-dialog.component';
 import { CurrentMensajeService } from '../../../current-mensaje.service';
 import { ContextSelected } from '../../../../../contextos/contexto-selector/contexto-selector.component';
+import { AngularFireDatabase } from '@angular/fire/database';
 
 @Component({
     selector: 'aSmart-respuesta-card',
@@ -51,19 +52,19 @@ export class RespuestaCardComponent implements OnInit {
         private _cache: CacheService,
         public contextos_: ContextosService,
         private _dialog: MatDialog,
-        private _mensaje: CurrentMensajeService
+        private _mensaje: CurrentMensajeService,
     ) {
         this.result = new SimpleModel('');
 
         this.currentContext = this._cache.getDataKey<string>('currentContexto');
-        this.respuesta = new RespuestaModel('simple', this.result, 0, '*fin');
+        this.respuesta = new RespuestaModel('simple', this.result, 0, '*fin', []);
+
     }
 
     async ngOnInit() {
-        this.nextMensajesList = await this._cache.getAsyncKey<MensajeModel[]>(
-            'nextMensajes'
-        );
         this.contextLists = await this._cache.getDataKey<any>('contextosLists')
+
+        await this.setNextIntents(this.currentContext)
         this.respuestas_.getDataForRespuestas();
         if (this.respuesta.result['suggestions']) {
             if (this.respuesta.result['suggestions'].length)
@@ -74,12 +75,49 @@ export class RespuestaCardComponent implements OnInit {
         );
     }
 
+    async setNextIntents(currentContext?: string) {
+        console.log( this.contextLists )
+        if (this.contextLists) {
+
+            // Set first intent of every context
+            this.nextMensajesList = []
+            var lists = Object.keys(this.contextLists)
+            await this.loading.asyncForEach(lists, async (contextName) => {
+                var contextList: any[] = this.contextLists[contextName]
+                if (contextList[0]) {
+                    this.nextMensajesList.push(contextList[0])
+                }
+            })
+
+            // Set intents related to current context
+            if (currentContext) {
+                var currentList: any[] = this.contextLists[currentContext]
+                console.log( currentList )
+                var currentIntentIndex = currentList.findIndex(
+                    i => i.displayName === this._mensaje.current.displayName
+                )
+                console.log(currentIntentIndex)
+                // Set next intent in the context
+                if (currentList[currentIntentIndex + 1])
+                    this.nextMensajesList.push(currentList[currentIntentIndex + 1])
+                // Set previus intent in the context
+                if (currentList[currentIntentIndex - 1])
+                    this.nextMensajesList.push(currentList[currentIntentIndex + 1])
+                // Set current intent
+                this.nextMensajesList.push(currentList[currentIntentIndex])
+            }
+        } else {
+            this.nextMensajesList = []
+        }
+        console.log( this.nextMensajesList )
+    }
+
 
 
     get activeContextSelector() {
         if ( this.respuesta.tipo == 'simple' ) {
             return true;
-        } else if (!this.currentContext) {
+        } else if (this.currentContext) {
             return false;
         }
     }
@@ -97,27 +135,37 @@ export class RespuestaCardComponent implements OnInit {
     }
 
     async catchContextSelected(selected: ContextSelected) {
-        this.setContextSelected(selected.context);
-        // console.log(continueIntents);
-        // if (continueIntents.length > 0) {
-        //     this.nextMensajesList = continueIntents
-        // } else {
-        //     this.nextMensajesList
-        //         = await this._cache.getAsyncKey<MensajeModel[]>('nextMensajes');
-        // }
-    }
-
-    setContextSelected(contextName?: string) {
+        const contextName = selected.context
         if (contextName) {
-            this.respuesta.outputContext = contextName;
-            // if (this.nextMensajesList && this.nextMensajesList.length > 0)
-            //     this.respuesta.nextIntent = this.nextMensajesList[0].displayName;
+            if (!this.respuesta.outputContext) {
+                this.respuesta.outputContext = []
+            }
+            this.respuesta.outputContext.push(contextName)
+
+            // Search for nextIntentList
+            if (!this.nextMensajesList && this.nextMensajesList.length < 1) {
+                this.respuesta.nextIntent = '*fin';
+            }
         } else {
-            // this.respuesta.nextIntent = '*fin';
-            this.respuesta.outputContext = '';
+            this.respuesta.nextIntent = '*fin';
         }
         return this.respuesta;
     }
+
+    // setContextSelected(contextName?: string) {
+    //     if (contextName) {
+    //         this.respuesta.outputContext = contextName;
+    //         if (this.nextMensajesList && this.nextMensajesList.length > 0) {
+    //             this.respuesta.nextIntent = this.nextMensajesList[0].displayName;
+    //         } else {
+    //             this.respuesta.nextIntent = '*fin';
+    //         }
+    //     } else {
+    //         this.respuesta.nextIntent = '*fin';
+    //         // this.respuesta.outputContext = '';
+    //     }
+    //     return this.respuesta;
+    // }
 
     disableEScondition() {
 
@@ -141,7 +189,7 @@ export class RespuestaCardComponent implements OnInit {
             if(mensajeFinded) nextMensaje = mensajeFinded
             console.log(nextMensaje);
         })
-        return nextMensaje.contexto ? nextMensaje.contexto : ''    }
+        return nextMensaje && nextMensaje.contexto ? nextMensaje.contexto : ''    }
 
     /**
      * Obtiene el tipo de respuesta seleccionado del select
@@ -174,12 +222,16 @@ export class RespuestaCardComponent implements OnInit {
      * @returns {RespuestaModel} Respuesta como objeto sin tipo declarado
      */
     async validateRespuesta(respuestaObj: RespuestaModel) {
-        if (!this.currentContext) {
-            // respuestaObj = this.setContextSelected(respuestaObj.outputContext);
-            respuestaObj.outputContext
-                = await this.setNextContext(respuestaObj.nextIntent)
-        } else { }
 
+        let nextIntentContext =
+            await this.setNextContext(respuestaObj.nextIntent)
+        if (respuestaObj.outputContext.length <= 0  ) {
+            respuestaObj.outputContext =[nextIntentContext]
+        } else {
+            respuestaObj.outputContext.push(nextIntentContext)
+         }
+
+        respuestaObj.outputContext
         let respuestaClean,
             output = {};
         output = { ...respuestaObj.result, ...this.result };

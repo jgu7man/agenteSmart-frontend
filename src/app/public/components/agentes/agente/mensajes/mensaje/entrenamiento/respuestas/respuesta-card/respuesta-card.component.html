@@ -148,35 +148,9 @@
                 <ng-container *ngIf="!sugerenciasActivated">
 
 
-                    <!-- Select next mensaje -->
-                    <div class="row card-row" id="siguiente">
-                        <div class="col s4 resp-label">
-                            Sig. Inter
-                            <i style="font-size:smaller"
-                            class="fas fa-info-circle"
-                            matTooltip="Elige la siguiente interacción con la que continúa la conversación. La interacción que te indique el tipo de mensajes esperados"
-                            ></i>
-                        </div>
-                        <div class="col s8">
-                            <mat-form-field appearance="outline">
-
-                                <mat-select
-                                [disableRipple]="true"
-                                [(ngModel)]="respuesta.nextIntent"
-                                name="mensaje">
-                                    <mat-option value="*fin">
-                                        Termina conversación
-                                    </mat-option>
-                                    <mat-option *ngFor="let mensaje of nextMensajesList" [value]="mensaje.displayName">
-                                        {{mensaje.displayName}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                    </div>
 
                     <!-- Select contexto -->
-                    <!-- <div class="row card-row" *ngIf="activeContextSelector">
+                    <div class="row card-row" >
                         <div class="col s4 resp-label">
                             Contexto
                             <i class="fas fa-info-circle"
@@ -192,11 +166,38 @@
                             </aSmart-contexto-selector>
 
                         </div>
-                    </div> -->
+                    </div>
 
 
                 </ng-container>
 
+
+                <!-- Select next mensaje -->
+                <div class="row card-row" id="siguiente">
+                    <div class="col s4 resp-label">
+                        Sig. Inter
+                        <i style="font-size:smaller"
+                        class="fas fa-info-circle"
+                        matTooltip="Elige la siguiente interacción con la que continúa la conversación. La interacción que te indique el tipo de mensajes esperados"
+                        ></i>
+                    </div>
+                    <div class="col s8">
+                        <mat-form-field appearance="outline">
+
+                            <mat-select
+                            [disableRipple]="true"
+                            [(ngModel)]="respuesta.nextIntent"
+                            name="mensaje">
+                                <mat-option value="*fin">
+                                    Termina conversación
+                                </mat-option>
+                                <mat-option *ngFor="let mensaje of nextMensajesList" [value]="mensaje.displayName">
+                                    {{mensaje.displayName}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
 
 
 

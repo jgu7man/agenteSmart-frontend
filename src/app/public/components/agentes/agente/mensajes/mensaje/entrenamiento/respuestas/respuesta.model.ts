@@ -18,8 +18,8 @@ export class RespuestaModel {
         public result:ResultResponse,
         public index: number,
         public nextIntent?: string,
-        public inputContext?: string,
-        public outputContext?: string | string[],
+        public outputContext?: string[],
+        public inputContext?: string[],
         public accion?:string,
         public id?: string,
     ) {}
@@ -36,7 +36,8 @@ export class RespuestaModel {
 export class SimpleModel {
     constructor (
         public text: string,
-        public suggestions?: Sugerencia[]
+        public suggestions?: Sugerencia[],
+        public asDefault?: boolean | undefined | null
     ){}
 }
 

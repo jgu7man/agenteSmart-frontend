@@ -33,6 +33,11 @@ export class SimpleFormComponent implements OnInit {
         this.toggleSugerencias.emit(change.checked)
     }
 
+    toggleAsdefault(change: MatSlideToggleChange) {
+        this.result.asDefault = change.checked;
+        this.onRespChanges.emit(this.result);
+    }
+
     catchText(text: string) {
         this.result.text = text
         this.onRespChanges.emit(this.result);

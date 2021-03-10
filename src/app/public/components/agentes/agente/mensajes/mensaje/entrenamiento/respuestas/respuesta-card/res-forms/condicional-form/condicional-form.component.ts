@@ -22,14 +22,14 @@ export class CondicionalFormComponent implements OnInit {
     > = new EventEmitter();
 
     condicionesList: Condition[] = [
+        { displayText: 'existe', operator: 'existe' },
+        { displayText: 'no existe', operator: 'no_existe' },
         { displayText: 'igual a', operator: 'igual' },
         { displayText: 'diferente a ', operator: 'diferente' },
         { displayText: 'mayor que', operator: 'mayor' },
         { displayText: 'menor que ', operator: 'menor' },
         { displayText: 'mayor o igual que', operator: 'mayor_igual' },
         { displayText: 'menor o igual que', operator: 'meno_igual' },
-        { displayText: 'existe', operator: 'existe' },
-        { displayText: 'no existe', operator: 'no_existe' },
     ];
 
     constructor(

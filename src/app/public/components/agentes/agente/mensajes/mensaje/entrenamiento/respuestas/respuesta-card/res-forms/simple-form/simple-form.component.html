@@ -27,3 +27,15 @@
 <div class="row" *ngIf="switchSuggestions">
     <aSmart-sugerencias (onSugerenciasChange)="catchSugerencias($event)" [sugerencias]="result.suggestions"></aSmart-sugerencias>
 </div>
+<div class="row" id="asDefault">
+    <div class="col s8 resp-label">
+        Como default
+        <i class="fas fa-info-circle"
+        matTooltip="Si activas esta opción, esta respuesta sólo se mostrará si alguna otra no se reconoce"
+        ></i>
+    </div>
+    <div class="col s2 toggle" >
+        <mat-slide-toggle [checked]="result.asDefault"
+        (change)="toggleAsdefault($event)" ></mat-slide-toggle>
+    </div>
+</div>

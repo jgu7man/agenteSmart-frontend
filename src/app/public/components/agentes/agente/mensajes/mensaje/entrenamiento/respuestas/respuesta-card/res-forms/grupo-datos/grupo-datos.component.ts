@@ -22,9 +22,9 @@ export class GrupoDatosComponent implements OnInit {
     colecciones: ColeccionModel[]
     colSelected: ColeccionModel
 
-    KeySpected: ParamExpected[] 
+    KeySpected: ParamExpected[]
 
-    dataForm: RegistroDatosModel = new RegistroDatosModel('', this.paramSelected, this.dataGroupSelected, '')
+    dataForm: RegistroDatosModel = new RegistroDatosModel('', this.paramSelected, this.dataGroupSelected)
 
     private _RegistroDatosForm = new BehaviorSubject<RegistroDatosModel>(this.dataForm);
     @Input() set RegistroDatosForm(form: RegistroDatosModel) {this._RegistroDatosForm.next(form);}
@@ -57,14 +57,14 @@ export class GrupoDatosComponent implements OnInit {
             console.log(this.colSelected);
         if (this.colSelected) {
             this.colSelected.saveKeys = !this.colSelected.saveKeys ? []
-                : this.colSelected.saveKeys  
+                : this.colSelected.saveKeys
         } else {
             this.colSelected = new ColeccionModel('', [])
         }
     }
 
     catchColSelected(selected: MatSelectChange) {
-        this.setSaveKeys(selected.value) 
+        this.setSaveKeys(selected.value)
     }
 
     validateColeccionOnClick() {
@@ -79,7 +79,7 @@ export class GrupoDatosComponent implements OnInit {
         }
     }
 
-    
+
 
 
 }

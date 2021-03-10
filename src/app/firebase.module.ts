@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { AngularFireModule } from "@angular/fire";
+import { AngularFireDatabaseModule } from "@angular/fire/database";
 import { AngularFirestoreModule } from "@angular/fire/firestore";
 import { AngularFireStorageModule } from "@angular/fire/storage";
 import { AngularFireAuthModule } from "@angular/fire/auth";
@@ -13,6 +14,7 @@ import { AngularFireMessagingModule } from "@angular/fire/messaging";
     imports: [
         CommonModule,
         AngularFireModule.initializeApp(environment.firebaseConfig),
+        AngularFireDatabaseModule,
         AngularFirestoreModule,
         AngularFireStorageModule,
         AngularFireAuthModule,
