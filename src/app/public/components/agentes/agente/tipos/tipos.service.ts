@@ -285,7 +285,11 @@ export class TiposService {
 
 
             if ( claseIndex >= 0 ) {
-                clasesList[ claseIndex ] = clase
+                clasesList = [
+                    ...clasesList.slice(0, claseIndex),
+                    clase,
+                    ...clasesList.slice(claseIndex + 1)
+                ]
             } else {
                 clasesList = [...clasesList, clase]
             }

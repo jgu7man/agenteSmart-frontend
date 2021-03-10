@@ -15,7 +15,7 @@ import { HttpClient } from '@angular/common/http';
 import { AlertService } from '../../../../gdev-tools/alerts/alert.service';
 import { Loading } from '../../../../gdev-tools/loading/loading.service';
 import { SystemEntitiesService } from '../../../../admin/system/system-entities.service';
-import { environment } from '../../../../../environments/environment.prod';
+import { environment } from '../../../../../environments/environment';
 
 @Injectable({
     providedIn: 'root',

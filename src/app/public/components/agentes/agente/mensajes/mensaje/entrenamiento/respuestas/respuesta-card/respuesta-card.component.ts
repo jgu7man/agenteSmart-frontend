@@ -11,7 +11,7 @@ import { Loading } from 'src/app/gdev-tools/loading/loading.service';
 import { CacheService } from '../../../../../../../../../gdev-tools/cache/cache.service';
 import { ContextosService } from '../../../../../contextos/contextos.service';
 import { ContextoModel } from '../../../../../contextos/contexto.model';
-import { MensajeModel } from '../../../../mensaje.model';
+import { IntentModel, MensajeModel } from '../../../../mensaje.model';
 import { MatDialog } from '@angular/material/dialog';
 import { AddContextoDialogComponent } from '../../../../../contextos/add-contexto-dialog/add-contexto-dialog.component';
 import { CurrentMensajeService } from '../../../current-mensaje.service';
@@ -76,7 +76,7 @@ export class RespuestaCardComponent implements OnInit {
     }
 
     async setNextIntents(currentContext?: string) {
-        console.log( this.contextLists )
+        // console.log( this.contextLists )
         if (this.contextLists) {
 
             // Set first intent of every context
@@ -106,10 +106,25 @@ export class RespuestaCardComponent implements OnInit {
                 // Set current intent
                 this.nextMensajesList.push(currentList[currentIntentIndex])
             }
+
+            //  Set uncontext intents
+            var allIntents = this._cache.getDataKey<IntentModel[]>('intents')
+            if (allIntents && allIntents.length > 0) {
+                await this.loading.asyncForEach(allIntents,
+                    (intent: IntentModel) => {
+                        let intentStored = this.nextMensajesList.find(
+                            i => i.displayName === intent.displayName
+                        )
+                        if (intent.displayName != 'Default Context Intent'
+                        && intent.displayName != 'Default Fallback Intent'
+                        && !intentStored) this.nextMensajesList.push(intent)
+                    }
+                )
+            }
         } else {
             this.nextMensajesList = []
         }
-        console.log( this.nextMensajesList )
+        // console.log( this.nextMensajesList )
     }
 
 
@@ -152,20 +167,17 @@ export class RespuestaCardComponent implements OnInit {
         return this.respuesta;
     }
 
-    // setContextSelected(contextName?: string) {
-    //     if (contextName) {
-    //         this.respuesta.outputContext = contextName;
-    //         if (this.nextMensajesList && this.nextMensajesList.length > 0) {
-    //             this.respuesta.nextIntent = this.nextMensajesList[0].displayName;
-    //         } else {
-    //             this.respuesta.nextIntent = '*fin';
-    //         }
-    //     } else {
-    //         this.respuesta.nextIntent = '*fin';
-    //         // this.respuesta.outputContext = '';
-    //     }
-    //     return this.respuesta;
-    // }
+    setContextSelected(contexts?: string[]) {
+        var context: string = ''
+        if (contexts && contexts.length > 0) {
+            if (this.contextLists ) {
+                contexts.forEach(c => {
+                    if (c in this.contextLists) context = c
+                })
+            }
+        }
+        return context;
+    }
 
     disableEScondition() {
 
@@ -189,7 +201,36 @@ export class RespuestaCardComponent implements OnInit {
             if(mensajeFinded) nextMensaje = mensajeFinded
             console.log(nextMensaje);
         })
-        return nextMensaje && nextMensaje.contexto ? nextMensaje.contexto : ''    }
+        return nextMensaje && nextMensaje.contexto ? nextMensaje.contexto : ''
+    }
+
+
+    async setNextIntentContext(change: MatSelectChange) {
+        var allIntents = this._cache.getDataKey<IntentModel[]>('intents')
+        var intentSelected = allIntents.find(i => i.displayName === change.value)
+        if (intentSelected) {
+            var contextStored: string[]
+            if (this.respuesta.outputContext && this.respuesta.outputContext.length > 0) {
+                contextStored = this.respuesta.outputContext
+            }
+            this.respuesta.outputContext = [];
+
+
+            // Validate context of grand-context
+            contextStored.forEach(c => {
+                if (c in this.contextLists)
+                    this.respuesta.outputContext.push(c)
+            })
+
+            this.respuesta.outputContext = [
+                ...intentSelected.inputContextNames.map(c =>
+                    c.slice(c.lastIndexOf('/') + 1) ),
+                ...this.respuesta.outputContext
+            ]
+            console.log( this.respuesta.outputContext )
+        }
+    }
+
 
     /**
      * Obtiene el tipo de respuesta seleccionado del select
@@ -228,7 +269,7 @@ export class RespuestaCardComponent implements OnInit {
         if (respuestaObj.outputContext.length <= 0  ) {
             respuestaObj.outputContext =[nextIntentContext]
         } else {
-            respuestaObj.outputContext.push(nextIntentContext)
+            // respuestaObj.outputContext.push(nextIntentContext)
          }
 
         respuestaObj.outputContext

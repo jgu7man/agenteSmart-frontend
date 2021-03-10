@@ -3,7 +3,7 @@ import { Loading } from '../../../gdev-tools/loading/loading.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AlertService } from '../../../gdev-tools/alerts/alert.service';
 import { CacheService } from '../../../gdev-tools/cache/cache.service';
-import { environment } from '../../../../environments/environment.prod';
+import { environment } from '../../../../environments/environment';
 import { Injectable } from '@angular/core';
 import { Interaction } from '../agentes/agente/conversaciones/conversaciones.model';
 

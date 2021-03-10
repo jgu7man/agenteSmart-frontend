@@ -161,7 +161,7 @@
                         <div class="col s8">
 
                             <aSmart-contexto-selector
-                            [contexto]="respuesta.outputContext"
+                            [contexto]="setContextSelected(respuesta.outputContext)"
                             (sendContextSelected)="catchContextSelected($event)">
                             </aSmart-contexto-selector>
 
@@ -187,6 +187,7 @@
                             <mat-select
                             [disableRipple]="true"
                             [(ngModel)]="respuesta.nextIntent"
+                            (selectionChange)="setNextIntentContext($event)"
                             name="mensaje">
                                 <mat-option value="*fin">
                                     Termina conversación

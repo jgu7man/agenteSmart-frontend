@@ -13,7 +13,7 @@ import { CreatingComponent } from '../creating/creating.component';
 import { AlertService } from '../../../../../gdev-tools/alerts/alert.service';
 import { AgentConfigService } from '../../agente/agent-config/agent-config.service';
 import { ContextoModel } from '../../agente/contextos/contexto.model';
-import { environment } from '../../../../../../environments/environment.prod';
+import { environment } from '../../../../../../environments/environment';
 import { CacheService } from 'src/app/gdev-tools/cache/cache.service';
 
 interface doc {
