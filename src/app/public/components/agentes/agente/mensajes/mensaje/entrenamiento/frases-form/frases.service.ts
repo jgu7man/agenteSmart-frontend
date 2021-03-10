@@ -194,20 +194,20 @@ export class FrasesService {
             // * Convertimos las partes en map para conservar el orden
             let initialParts: Map<number, FraseParte> = new Map()
             frase.parts.forEach((parte, i) => {initialParts.set(i, parte)})
-            console.log(initialParts);
+            // console.log(initialParts);
 
             // * Buscamos en las partes, el texto seleccionado
             let partSelected: [number, FraseParte];
             initialParts.forEach((p, i) => {
                 if (p.text.includes(textSelected)) {partSelected = [i, p]}
             });
-            console.log(partSelected);
+            // console.log(partSelected);
 
             if (partSelected) {
 
                 // * Dividimos la parte encontrada en nuevas partes
                 let newParts: Map<number, FraseParte> = await this.getTextSelectInPart(partSelected[1].text, textSelected)
-                console.log(newParts);
+                // console.log(newParts);
 
 
                 // * Sustituimos la parte eliminada
@@ -217,11 +217,18 @@ export class FrasesService {
                         // console.log('before part selected ',i);
                         resultParts.set(i, p)
                     } else if (i == partSelected[0]) {
+                        // console.log( partSelected[0] )
                         // Define nuevos valores para las nuevas partes donde la parte seleccionada se sustituye por el nuevo mapa, basado en el index de la parte seleccionada y sumando el index de la parte nueva. Así si la parte seleccionada es 1 la primera nueva parte será 1+0=1, y sus consecuententes 1+1=2; 1+2=3...
-                        newParts.forEach((nP, nI) => {
-                            // console.log( 'on part selected ', partSelected[ 0 ] + nI );
-                            resultParts.set(partSelected[0] + nI, nP)
-                        })
+                        // console.log(newParts)
+                        if (newParts.size > 1) {
+                            newParts.forEach((nP, nI) => {
+                                // console.log(nP, nI)
+                                // console.log( 'on part selected ', partSelected[ 0 ] + nI );
+                                resultParts.set(partSelected[0] + nI, nP)
+                            })
+                        } else {
+                            resultParts.set(partSelected[0], newParts.get(1))
+                        }
                     } else {
                         // Continua con la asignación de orden a partir de la longitud de la propiedad asignando uno a uno como el último
                         // console.log( 'after part selected ', resultParts.size);
@@ -229,9 +236,10 @@ export class FrasesService {
                     }
 
                 })
-                console.log( resultParts );
+                // console.log( resultParts );
                 frase.parts = []
                 await this.loading.asyncForEach(resultParts, parte => {
+                    // console.log( parte )
                     return frase.parts.push(parte)
                 })
             }

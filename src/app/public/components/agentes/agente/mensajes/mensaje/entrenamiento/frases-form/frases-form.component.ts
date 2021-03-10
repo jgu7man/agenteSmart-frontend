@@ -110,8 +110,9 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
 
-  onSetPhrase() {
-    this.addPhraseInput = false
+  async onSetPhrase() {
+      this.addPhraseInput = false
+      this.fraseExpanded = undefined
     if ( this.newPhrase ) {
 
       // console.log(this.newPhrase);
@@ -119,10 +120,13 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
         type: 'EXAMPLE',
         parts: this.frases.createParts( this.newPhrase )
       }
-      this.loading.waitFor( 200 )
-      this.frases.addTraningPhrase( NEWPHRASE, this.lastPageIndex ).then( () => {
-        this.newPhrase = ''
-      })
+      await this.loading.waitFor( 200 )
+        this.frases.addTraningPhrase(NEWPHRASE, this.lastPageIndex)
+            .then(async () => {
+                this.newPhrase = ''
+                await this.loading.waitFor(500)
+                this.frasesList.closeAll()
+            })
     }
   }
 
@@ -140,11 +144,11 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if ( textSelected ) {
       // Define variables
-      console.log(textSelected, frase);
+    //   console.log(textSelected, frase);
       var fraseRestructured: FraseEntrenamiento =
       // Find the part that includes text selected and split it
       await this.frases.stractSelectedPart(frase, textSelected)
-      console.log( fraseRestructured);
+    //   console.log( fraseRestructured);
 
 
       this.frases.updatePhrase(fraseRestructured, index)
@@ -159,12 +163,11 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   disableFrase( frase: FraseEntrenamiento ) {
-    let someEntity: boolean = false
-    frase.parts.forEach( parte => {
-      if (parte.entityType || parte.alias) someEntity = true
-    })
-    return someEntity ? false : true
-
+      let someEntity: boolean = false;
+      frase.parts.forEach(parte => {
+          if (parte && (parte.entityType || parte.alias)) someEntity = true
+      });
+      return someEntity ? false : true
   }
 
 

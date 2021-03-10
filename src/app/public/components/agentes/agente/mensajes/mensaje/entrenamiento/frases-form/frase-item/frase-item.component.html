@@ -7,8 +7,8 @@
             </span>
             <span *ngFor="let part of frase.parts" >
 
-                <ng-container *ngIf="part.alias; else unSelected">
-                    <span class="selected" 
+                <ng-container *ngIf="part && part.alias; else unSelected">
+                    <span class="selected"
                     [ngStyle]="{'background':params_.getParamColor(part.alias)}">
                         {{part.text}}
                     </span>
@@ -16,7 +16,7 @@
                 <ng-template #unSelected>
                     {{part.text}}
                 </ng-template>
-                
+
             </span>
         </div>
         <div class="col s3">
@@ -36,12 +36,12 @@
     <div class="row">
         <div class="col s12">
             <mat-form-field>
-                <input 
+                <input
                 (click)="preventOnClick($event)"
                 matInput
                 #inputPhrase
-                type="text" 
-                name="inputPhrase" 
+                type="text"
+                name="inputPhrase"
                 id="inputPhrase"
                 [(ngModel)]="phraseToEdit"
                 (keyup.enter)="onSetPhrase(frase)"

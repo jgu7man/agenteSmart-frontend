@@ -193,7 +193,7 @@ export class CurrentMensajeService {
     mensajeUpdated$: Subject<any> = new Subject()
     /** Actualiza el intent actual en DIALOGFLOW con los cambios hechos en el área de entrenamiento. */
     async update(mensaje?: IntentModel) {
-        console.log( 'updapting' )
+        // console.log( 'updapting' )
         this.loading.toggleWaitingSpinner('open');
 
         try {
@@ -201,9 +201,9 @@ export class CurrentMensajeService {
             // Update current mensaje
             if ( !mensaje ) {
                 const request = await this.updateIntentApiRequest(this.current);
-                console.log(request);
+                // console.log(request);
                 if (request) {
-                    console.info('Se Actualizo Intent:', request);
+                    // console.info('Se Actualizo Intent:', request);
 
                     this._agente.getIntentList()
                     this.store.dispatch(actions.setSaved());
@@ -258,7 +258,7 @@ export class CurrentMensajeService {
                 .toPromise()
                 .then((response) => {
                     if (response) {
-                        console.info('Intent Actualizado:', response);
+                        // console.info('Intent Actualizado:', response);
                         resolve(response['intent']);
                     }
                 })
