@@ -17,6 +17,7 @@ import { AddContextoDialogComponent } from '../../../../../contextos/add-context
 import { CurrentMensajeService } from '../../../current-mensaje.service';
 import { ContextSelected } from '../../../../../contextos/contexto-selector/contexto-selector.component';
 import { AngularFireDatabase } from '@angular/fire/database';
+import { AddMensajeComponent } from '../../../../add-mensaje/add-mensaje.component';
 
 @Component({
     selector: 'aSmart-respuesta-card',
@@ -44,6 +45,8 @@ export class RespuestaCardComponent implements OnInit {
     public sugerenciasActivated: boolean = false
     /** Notifica al componente padre que se ha borrado una respuesta */
     @Output() onDelete: EventEmitter<string> = new EventEmitter();
+
+    switchAddIntent: boolean = false
 
     constructor(
         public respuestas_: RespuestasService,
@@ -232,23 +235,35 @@ export class RespuestaCardComponent implements OnInit {
     }
 
 
+    openAddIntent() {
+        const dialog = this._dialog
+            .open(AddMensajeComponent, {
+            width: "450px",
+            })
+
+        dialog.afterClosed().subscribe(newIntent => {
+            this.nextMensajesList.push(newIntent)
+        })
+    }
+
+
     /**
      * Obtiene el tipo de respuesta seleccionado del select
      * @param {MatSelectChange} tipoSelected - Contiene la propidad valor que es de tipo `TipoEntityType.name`
      */
     onTipoSelected(tipoSelected: MatSelectChange) {
-        let simpleStored = this._mensaje.respuestasList.map(
+        let simpleStored = this._mensaje.respuestasList.filter(
             (r) => r.tipo == 'simple'
         );
-        if (tipoSelected.value == 'simple' && simpleStored.length > 1) {
-            console.log(this._mensaje.respuestasList, tipoSelected.value);
-            this._alerts.sendMessageAlert(
-                'No puedes agregar más de una respuesta simple'
-            );
-        } else {
+        // if (tipoSelected.value == 'simple' && simpleStored.length > 1) {
+        //     console.log(this._mensaje.respuestasList, tipoSelected.value);
+        //     this._alerts.sendMessageAlert(
+        //         'No puedes agregar más de una respuesta simple'
+        //     );
+        // } else {
             this.selectedRes = this.tiposRes.find( t => t.name == tipoSelected.value)
             this.respuesta.tipo = this.selectedRes.name;
-        }
+        // }
     }
 
     /** Recibe los cambios en los formularios hijos como simple, CODICIONAL, BUSCAR Y GRUPO DE DATOS */
@@ -266,17 +281,26 @@ export class RespuestaCardComponent implements OnInit {
 
         let nextIntentContext =
             await this.setNextContext(respuestaObj.nextIntent)
-        if (respuestaObj.outputContext.length <= 0  ) {
+        if (respuestaObj.outputContext && respuestaObj.outputContext.length <= 0  ) {
             respuestaObj.outputContext =[nextIntentContext]
         } else {
             // respuestaObj.outputContext.push(nextIntentContext)
          }
 
+        if (respuestaObj.result.asDefault) {
+            var defaultStored = this._mensaje.respuestasList.filter(
+                (r) => r.result.asDefault
+            )
+            if (defaultStored.length > 0) {
+                this._alerts.sendMessageAlert('No puedes asignar dos respuestas como "Default"')
+            }
+        }
+
         respuestaObj.outputContext
-        let respuestaClean,
-            output = {};
+        let respuestaClean, output = {};
         output = { ...respuestaObj.result, ...this.result };
         let respuesta = output['text'];
+
 
 
         if (!respuesta) {

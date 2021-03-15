@@ -13,6 +13,7 @@ import { ColorService } from '../../../../../gdev-tools/color/color.service';
 import { TiposService } from '../tipos/tipos.service';
 import { TipoEntidadModel } from '../tipos/tipo.model';
 import { CurrentMensajeService } from '../mensajes/mensaje/current-mensaje.service';
+import { TextService } from 'src/app/gdev-tools/text/gdev-text.service';
 
 @Injectable({
     providedIn: 'root',
@@ -28,15 +29,16 @@ export class ContextosService {
     list: ContextoModel[];
 
     constructor(
-        private afs: AngularFirestore,
-        private _alerts: AlertService,
-        private _mensajes: MensajesService,
         private _agente: CurrentAgenteService,
+        private _alerts: AlertService,
         private _cache: CacheService,
-        private loading: Loading,
         private _color: ColorService,
+        private _currentMensaje: CurrentMensajeService,
+        private _mensajes: MensajesService,
+        private _text: TextService,
         private _tipos: TiposService,
-        private _currentMensaje: CurrentMensajeService
+        private afs: AngularFirestore,
+        private loading: Loading,
     ) {
         // Obtiene el contexto de la ruta actual
         this.loading.getRouteQueryParams().subscribe((queryParams) => {
@@ -76,12 +78,15 @@ export class ContextosService {
 
                 // Agrega contexto nuevo
                 if (!contextFinded) {
+
+                    contexto.contextName = this._text.normalize( contexto.contextName).toLowerCase()
+
                     let contextNuevo = await (
                         await this.contextosCollection()
                     ).add(contexto);
                     contextNuevo.update({ id: contextNuevo.id });
                     contexto.id = contextNuevo.id;
-                    
+
                     await this._mensajes.setContextMensaje( contextName )
                     await this._tipos.setContextType( contextName )
 
@@ -89,7 +94,7 @@ export class ContextosService {
                 } else {
                     this._alerts.sendMessageAlert('Contexto duplicado');
                 }
-            
+
             // Actualiza contexto
             } else {
                 // Crea un nuevo contexto
@@ -173,12 +178,12 @@ export class ContextosService {
     // DELETE
 
     async delContext(context: ContextoModel) {
-        
+
         await this.deleteContextFromMensajes( context )
         await this.deleteContextFromIntent( context.contextName )
         await this.deleteContextFromTipo(context.contextName)
         await ( await this.contextosCollection() ).doc( context.id ).delete();
-        
+
         console.log('Context deleted')
         return
     }
@@ -193,27 +198,27 @@ export class ContextosService {
         contextIntent.parameters = contextIntent.parameters.map( c => {
             if (c.displayName !== context) return c
         } )
-        
+
         contextIntent.trainingPhrases = contextIntent.trainingPhrases.map( t => {
             if (t.parts[0].text !== context) return t
         } )
-        
+
         this._currentMensaje.update( contextIntent )
-        return 
+        return
     }
 
 
     private async deleteContextFromTipo( context: string ) {
         const tiposList = await this._cache.getDataKey<TipoEntidadModel[]>( 'contextos' );
         const contextType = tiposList.find( c => c.displayName === context )
-        if ( contextType ) { 
+        if ( contextType ) {
             contextType.entities = contextType.entities.map( entity => {
                 if (entity.value != context) return entity
             } )
             await this._tipos.updateTipo(contextType)
             console.log('Entities list updated')
         }
-        return 
+        return
     }
 
     private async deleteContextFromMensajes( context: ContextoModel ) {
@@ -222,22 +227,22 @@ export class ContextosService {
 
         const mensajes = await
             this._mensajes.getMensajesListByContexto( context );
-    
+
         if (mensajes.length > 0) {
             mensajes.forEach((mensaje: IntentModel) => {
                 let contextToDel = mensaje.contextos.findIndex(
                     (ent) => ent === context.id
                 );
-                
+
                 mensaje.contextos.splice(contextToDel, 1);
                 mensajeRef
                 .doc(mensaje.name)
                 .set({ contextos: mensaje.contextos }, { merge: true });
             } );
-                
+
             console.log('Intents updated')
         }
 
-        return 
+        return
     }
 }

@@ -149,7 +149,7 @@ export class ChatService {
             (sug) => {
                 return {
                     displayText: sug.text,
-                    value: sug.contexto,
+                    value: sug.context,
                 };
             }
         );

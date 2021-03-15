@@ -74,7 +74,7 @@ export class ChatTesterService {
             if (resp instanceof SimpleModel) {
                 if (resp.suggestions.length > 0) {
                     let suggestions: QuickResponse[] = resp.suggestions.map(
-                        (sug) => {return {displayText: sug.text, value: sug.contexto}})
+                        (sug) => {return {displayText: sug.text, value: sug.context}})
                     }
                 } else
                 if (resp instanceof RespuestaBuscarModel) {

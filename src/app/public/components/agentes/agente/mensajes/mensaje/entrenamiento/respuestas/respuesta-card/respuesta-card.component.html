@@ -175,13 +175,13 @@
                 <!-- Select next mensaje -->
                 <div class="row card-row" id="siguiente">
                     <div class="col s4 resp-label">
-                        Sig. Inter
+                        Siguiente
                         <i style="font-size:smaller"
                         class="fas fa-info-circle"
                         matTooltip="Elige la siguiente interacción con la que continúa la conversación. La interacción que te indique el tipo de mensajes esperados"
                         ></i>
                     </div>
-                    <div class="col s8">
+                    <div class="col s7">
                         <mat-form-field appearance="outline">
 
                             <mat-select
@@ -197,6 +197,11 @@
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
+                    </div>
+                    <div class="col s1">
+                        <button mat-icon-button (click)="openAddIntent()" >
+                            <i class="fas fa-plus"></i>
+                        </button>
                     </div>
                 </div>
 

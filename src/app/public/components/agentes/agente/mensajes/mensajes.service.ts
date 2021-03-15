@@ -59,6 +59,7 @@ export class MensajesService {
         const projectId: string = await this._cache.getAsyncKey('projectId');
         //si no se puede hace proxeo de la URL base...
         const intentRequest = { projectId, intent };
+        console.log( intentRequest )
 
         return new Promise<IntentModel>((resolve, reject) => {
             this._http
@@ -92,6 +93,7 @@ export class MensajesService {
         const projectId = this._cache.getDataKey( 'projectId' )
         var nameContext = this._text.normalize( displayName ).toLowerCase()
         nameContext = nameContext.replace(/\s/g, '')
+        contexto = this._text.normalize(contexto).toLowerCase()
         console.log({ displayName,index,contexto });
         try {
 
@@ -107,6 +109,8 @@ export class MensajesService {
                     ]
             } );
 
+
+
             const resourceID = newIntent.name.slice(
                 newIntent.name.lastIndexOf('/') + 1
             );
@@ -116,6 +120,7 @@ export class MensajesService {
                 displayName: newIntent.displayName,
             };
 
+            console.log( intent )
             if (index) intent['index'] = index;
             intent[ 'contexto' ] = contexto
                 ? contexto
@@ -187,10 +192,11 @@ export class MensajesService {
     async getMensajesListByContexto(contexto: ContextoModel) {
         var mensajesList: MensajeModel[] = [];
         if ( contexto.id ) {
-            // console.log(contexto.id);
+            console.log(contexto.id);
             const mensajeCol = await (await this.mensajesCollection())
-                .where('contexto', '==', contexto.id)
-                .orderBy('index', 'asc')
+                .where('contexto', '==', contexto.contextName)
+                // .where('id', '==', contexto.id)
+                // .orderBy('index', 'asc')
                 .get();
 
             // console.log(mensajeCol.docs);
@@ -198,7 +204,7 @@ export class MensajesService {
                 mensajesList.push(mensaje.data());
             });
         }
-        // console.log(mensajesList)
+        console.log(mensajesList)
         return mensajesList;
     }
 

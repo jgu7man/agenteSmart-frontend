@@ -19,7 +19,7 @@ export class SimpleFormComponent implements OnInit {
     switchSuggestions: boolean = false;
 
     constructor(public resService: RespuestasService) {
-        this.result = new SimpleModel('', []);
+        this.result = new SimpleModel('', [], false);
     }
 
     ngOnInit(): void {

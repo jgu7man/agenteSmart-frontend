@@ -158,6 +158,10 @@ export class RespuestasService {
         if (respuesta.id) {
             console.log('update');
 
+            for (let [key, value] of Object.entries(respuesta)) {
+                if(key === undefined) delete respuesta[key];
+            }
+
             (await this.responsesPath())
                 .doc(respuesta.id)
                 .set(respuesta, { merge: true });
@@ -167,6 +171,7 @@ export class RespuestasService {
 
         else {
             console.log('create');
+
 
 
             if (    respuesta.tipo != 'condicional'
@@ -179,7 +184,19 @@ export class RespuestasService {
             else {
 
                 console.log( respuesta )
-                Object.keys(respuesta).forEach(key => { if (respuesta[key] == undefined) delete respuesta[key]})
+                // Object.keys(respuesta).forEach(key => { if (respuesta[key] == undefined) delete respuesta[key]})
+                // Object.keys(respuesta.result).forEach(key => { if (respuesta.result[key] == undefined) delete respuesta.result[key]})
+                for (let [key, value] of Object.entries(respuesta)) {
+                    console.log( respuesta[key] );
+                    if(respuesta[key] === undefined) delete respuesta[key];
+                }
+                let result = respuesta.result
+                for (let [key, value] of Object.entries(result)) {
+                    console.log( result[key] );
+                    if(result[key] === undefined) delete result[key];
+                }
+                respuesta.result = result;
+
                 let res = await (await this.responsesPath()).add(respuesta);
                 await (await this.responsesPath())
                     .doc(res.id)

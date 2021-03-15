@@ -16,7 +16,7 @@ export class ContextoSelectorComponent implements OnInit {
     nuevoContexto;
 
     @Input() contexto: string
-    @Output() sendContextSelected: EventEmitter<ContextSelected> = new EventEmitter();
+    @Output() contextSelected: EventEmitter<ContextSelected> = new EventEmitter();
 
     constructor(private _cache: CacheService, private _dialog: MatDialog) {}
 
@@ -56,7 +56,7 @@ export class ContextoSelectorComponent implements OnInit {
         if (this.contextLists) {
             continueIntents = this.contextLists[context]
         }
-        this.sendContextSelected.emit({context, continueIntents});
+        this.contextSelected.emit({context, continueIntents});
 
     }
 

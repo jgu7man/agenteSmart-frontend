@@ -37,7 +37,7 @@ export class SimpleModel {
     constructor (
         public text: string,
         public suggestions?: Sugerencia[],
-        public asDefault?: boolean | undefined | null
+        public asDefault?: boolean
     ){}
 }
 
@@ -140,7 +140,7 @@ export class RespuestaBinaria {
  */
 export interface Sugerencia {
     text: string
-    contexto:string
+    context:string
 }
 
 

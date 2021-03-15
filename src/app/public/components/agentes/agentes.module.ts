@@ -85,6 +85,7 @@ import { ConversacionComponent } from './agente/conversaciones/conversacion/conv
 import { StartUiComponent } from './agente/start-ui/start-ui.component';
 import { StartTipoComponent } from './agente/start-ui/start-tipo/start-tipo.component';
 import { StartFrasesComponent } from './agente/start-ui/start-frases/start-frases.component';
+import { AddMensajeComponent } from './agente/mensajes/add-mensaje/add-mensaje.component';
 
 
 
@@ -163,6 +164,7 @@ import { StartFrasesComponent } from './agente/start-ui/start-frases/start-frase
     StartUiComponent,
     StartTipoComponent,
     StartFrasesComponent,
+    AddMensajeComponent,
   ],
   imports: [
     CommonModule,

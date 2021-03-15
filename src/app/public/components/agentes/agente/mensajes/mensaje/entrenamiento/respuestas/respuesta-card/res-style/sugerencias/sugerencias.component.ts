@@ -20,7 +20,7 @@ import { ContextSelected } from '../../../../../../../contextos/contexto-selecto
 })
 export class SugerenciasComponent implements OnInit {
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-    newSuggest: Sugerencia = { text: '', contexto: '' };
+    newSuggest: Sugerencia = { text: '', context: '' };
 
     @Input() sugerencias: Sugerencia[] = [];
     @Output() onSugerenciasChange: EventEmitter<Sugerencia[]> = new EventEmitter();
@@ -34,33 +34,34 @@ export class SugerenciasComponent implements OnInit {
 
     onCatchTextMsg(text) {
         this.sugerencias.push(this.newSuggest);
-        this.newSuggest = { text: '', contexto: undefined };
+        this.newSuggest = { text: '', context: undefined };
         console.log(this.sugerencias);
         this.onSugerenciasChange.emit(this.sugerencias);
     }
 
     addText(): void {
-        if (this.newSuggest.contexto) {
-            if (!this.sugerencias) this.sugerencias = [];
-            this.sugerencias.push(this.newSuggest);
-            this.newSuggest = { text: '', contexto: undefined };
-            this.onSugerenciasChange.emit(this.sugerencias);
+        if (!this.sugerencias) this.sugerencias = [];
+        if (!this.newSuggest.context) {
+            delete this.newSuggest.context
         }
+        this.sugerencias.push(this.newSuggest);
+        this.newSuggest = { text: '', context: undefined };
+        this.onSugerenciasChange.emit(this.sugerencias);
     }
     async addContext(selected: ContextSelected) {
         if (this.newSuggest.text) {
             if (!this.sugerencias) this.sugerencias = [];
-            this.newSuggest.contexto = selected.context
+            this.newSuggest.context = selected.context
             this.sugerencias.push(this.newSuggest);
             await this._loading.waitFor(100)
 
             console.log( this.sugerencias )
             this.onSugerenciasChange.emit(this.sugerencias);
-            this.newSuggest = { text: '', contexto: undefined };
+            this.newSuggest = { text: '', context: undefined };
         }
     }
     onEdit(suggest: Sugerencia, index: number) {
-        if (this.newSuggest.contexto != '' || this.newSuggest.text != '') {
+        if (this.newSuggest.context != '' || this.newSuggest.text != '') {
             this.remove(index);
             this.newSuggest = suggest;
         } else {
