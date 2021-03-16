@@ -236,15 +236,21 @@ export class FrasesService {
                     }
 
                 })
-                // console.log( resultParts );
+                console.log(resultParts);
                 frase.parts = []
-                await this.loading.asyncForEach(resultParts, parte => {
-                    // console.log( parte )
-                    return frase.parts.push(parte)
-                })
+                if (!resultParts.get(0)) {
+                    resultParts.forEach(parte => {
+                        frase.parts.push(parte)
+                    })
+                } else {
+                    await this.loading.asyncForEach(resultParts, parte => {
+                        console.log( parte )
+                        return frase.parts.push(parte)
+                    })
+                }
             }
 
-            // console.log(frase);
+            console.log(frase);
             return frase
 
 

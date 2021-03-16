@@ -59,8 +59,12 @@ export class CondicionalFormComponent implements OnInit {
 
         this.isOriginal = selected.isOriginal
         this.result.parametro = selected.value;
+        var selectedSplit = selected.value.split('$')
+        var param = selectedSplit.length > 1
+            ? selectedSplit[1]
+            : selectedSplit[0]
         this.tipoSelected = this.respuestas_.mensajeTypeEntities.find(
-            (t) =>{ t.displayName == selected.value}
+            (t) => t.displayName == param
         );
 
         this.onRespChanges.emit(this.result);

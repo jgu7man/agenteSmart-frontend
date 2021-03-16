@@ -143,7 +143,7 @@ export class CurrentMensajeService {
         this.mensajeName = await this._cache.getAsyncKey<string>('mensajeName', 1)
         this.mensajesPath = await this._agente.getPath('mensajes');
         this.current = await this.findMensaje(this.mensajeName)
-        console.log(this.current)
+        // console.log(this.current)
         if ( this.current ) { this.setCurrent() }
         else {
             await this.loading.waitFor(1000)

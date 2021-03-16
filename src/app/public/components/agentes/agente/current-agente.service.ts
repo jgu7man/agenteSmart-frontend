@@ -234,7 +234,7 @@ export class CurrentAgenteService {
                 .get<IntentModel[]>(this._url + `/${projectId}`, {responseType: 'json',})
                 .pipe(
                     pluck<any, IntentModel[]>('result', 'intents'),
-                    tap(intents => console.log(intents)),
+                    // tap(intents => console.log(intents)),
                     map<IntentModel[], IntentModel[]>((list) => {
                         return list.map((intent) => {
                             intent.name = intent.name.slice(

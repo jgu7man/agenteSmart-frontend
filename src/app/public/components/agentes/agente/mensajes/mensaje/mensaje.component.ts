@@ -28,7 +28,7 @@ export class MensajeComponent implements OnInit, OnDestroy {
     private _route: ActivatedRoute
   ) {
   }
-  
+
   ngOnInit(): void {
     this.getCurrentIntent()
     this.stateSubs = this.store.select('editIntent').subscribe((store) => {
@@ -38,13 +38,13 @@ export class MensajeComponent implements OnInit, OnDestroy {
     });
     this.updateMensaje()
   }
-  
+
   getCurrentIntent() {
     this.intentName = this._route.snapshot.params['name']
     this.currentContexto = this._route.snapshot.queryParams['contexto']
     // console.log(this.intentName, this.currentContexto);
     this._mensaje.getByActivatedRoute(this.intentName, this.currentContexto)
-    
+
   }
 
   updateMensaje() {
@@ -52,21 +52,21 @@ export class MensajeComponent implements OnInit, OnDestroy {
       this.router.events.subscribe( ( val ) => {
         if ( val instanceof NavigationEnd ) {
           console.log('update');
-          
+
           this.getCurrentIntent()
         }
       } )
-    
-    
+
+
   }
-  
-  
+
+
 
   ngOnDestroy(): void {
     this._mensaje.unsubscribe()
     this.inMensaje$.unsubscribe()
     this.stateSubs.unsubscribe()
-    console.log('unsubscribe');
+    // console.log('unsubscribe');
   }
 
 }

@@ -94,7 +94,7 @@ export class MensajesService {
         var nameContext = this._text.normalize( displayName ).toLowerCase()
         nameContext = nameContext.replace(/\s/g, '')
         contexto = this._text.normalize(contexto).toLowerCase()
-        console.log({ displayName,index,contexto });
+        // console.log({ displayName,index,contexto });
         try {
 
             const newIntent = await this.createNewIntent({
@@ -192,7 +192,7 @@ export class MensajesService {
     async getMensajesListByContexto(contexto: ContextoModel) {
         var mensajesList: MensajeModel[] = [];
         if ( contexto.id ) {
-            console.log(contexto.id);
+            // console.log(contexto.id);
             const mensajeCol = await (await this.mensajesCollection())
                 .where('contexto', '==', contexto.contextName)
                 // .where('id', '==', contexto.id)
@@ -204,7 +204,7 @@ export class MensajesService {
                 mensajesList.push(mensaje.data());
             });
         }
-        console.log(mensajesList)
+        // console.log(mensajesList)
         return mensajesList;
     }
 

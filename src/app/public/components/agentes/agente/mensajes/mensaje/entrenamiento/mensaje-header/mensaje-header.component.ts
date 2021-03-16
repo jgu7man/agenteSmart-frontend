@@ -21,7 +21,7 @@ export class MensajeHeaderComponent implements OnInit, OnDestroy {
   // mensaje: IntentModel
   switchEdit: boolean = false
   nameEdited: string
-  
+
   stateSubs: Subscription
   unsaved: boolean
 
@@ -30,7 +30,7 @@ export class MensajeHeaderComponent implements OnInit, OnDestroy {
     private _dialog: MatDialog,
     public location: Location,
     public store: Store<AppState>
-  ) { 
+  ) {
     this.getMensaje()
   }
 
@@ -42,22 +42,22 @@ export class MensajeHeaderComponent implements OnInit, OnDestroy {
       } )
   }
 
-  
-  
+
+
   async getMensaje() {
-    console.log('get');
+    // console.log('get');
     // this.mensaje = await this.mensaje_.getAsync()
     // console.log(this.mensaje);
   }
 
-  
+
 
   toEditName() {
     this.switchEdit = true
     this.nameEdited = this.mensaje_.current.displayName
   }
 
-  
+
 
   updateDisplayName() {
     this.switchEdit = false

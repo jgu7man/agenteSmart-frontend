@@ -26,7 +26,7 @@ export class FraseItemComponent implements OnInit {
     public params_: ParametrosService
   ) { }
 
-  ngOnInit(): void {
+    ngOnInit(): void {
   }
 
   preventOnClick(event) {

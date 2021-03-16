@@ -95,11 +95,11 @@ export class RespuestaCardComponent implements OnInit {
             // Set intents related to current context
             if (currentContext) {
                 var currentList: any[] = this.contextLists[currentContext]
-                console.log( currentList )
+                // console.log( currentList )
                 var currentIntentIndex = currentList.findIndex(
                     i => i.displayName === this._mensaje.current.displayName
                 )
-                console.log(currentIntentIndex)
+                // console.log(currentIntentIndex)
                 // Set next intent in the context
                 if (currentList[currentIntentIndex + 1])
                     this.nextMensajesList.push(currentList[currentIntentIndex + 1])
@@ -155,10 +155,10 @@ export class RespuestaCardComponent implements OnInit {
     async catchContextSelected(selected: ContextSelected) {
         const contextName = selected.context
         if (contextName) {
-            if (!this.respuesta.outputContext) {
-                this.respuesta.outputContext = []
+            if (!this.respuesta.outputContexts) {
+                this.respuesta.outputContexts = []
             }
-            this.respuesta.outputContext.push(contextName)
+            this.respuesta.outputContexts.push(contextName)
 
             // Search for nextIntentList
             if (!this.nextMensajesList && this.nextMensajesList.length < 1) {
@@ -213,24 +213,24 @@ export class RespuestaCardComponent implements OnInit {
         var intentSelected = allIntents.find(i => i.displayName === change.value)
         if (intentSelected) {
             var contextStored: string[]
-            if (this.respuesta.outputContext && this.respuesta.outputContext.length > 0) {
-                contextStored = this.respuesta.outputContext
+            if (this.respuesta.outputContexts && this.respuesta.outputContexts.length > 0) {
+                contextStored = this.respuesta.outputContexts
             }
-            this.respuesta.outputContext = [];
+            this.respuesta.outputContexts = [];
 
 
             // Validate context of grand-context
             contextStored.forEach(c => {
                 if (c in this.contextLists)
-                    this.respuesta.outputContext.push(c)
+                    this.respuesta.outputContexts.push(c)
             })
 
-            this.respuesta.outputContext = [
+            this.respuesta.outputContexts = [
                 ...intentSelected.inputContextNames.map(c =>
                     c.slice(c.lastIndexOf('/') + 1) ),
-                ...this.respuesta.outputContext
+                ...this.respuesta.outputContexts
             ]
-            console.log( this.respuesta.outputContext )
+            console.log( this.respuesta.outputContexts )
         }
     }
 
@@ -279,10 +279,11 @@ export class RespuestaCardComponent implements OnInit {
      */
     async validateRespuesta(respuestaObj: RespuestaModel) {
 
+
         let nextIntentContext =
             await this.setNextContext(respuestaObj.nextIntent)
-        if (respuestaObj.outputContext && respuestaObj.outputContext.length <= 0  ) {
-            respuestaObj.outputContext =[nextIntentContext]
+        if (respuestaObj.outputContexts && respuestaObj.outputContexts.length <= 0  ) {
+            respuestaObj.outputContexts =[nextIntentContext]
         } else {
             // respuestaObj.outputContext.push(nextIntentContext)
          }
@@ -291,12 +292,12 @@ export class RespuestaCardComponent implements OnInit {
             var defaultStored = this._mensaje.respuestasList.filter(
                 (r) => r.result.asDefault
             )
-            if (defaultStored.length > 0) {
+            if (defaultStored.length > 1) {
                 this._alerts.sendMessageAlert('No puedes asignar dos respuestas como "Default"')
             }
         }
 
-        respuestaObj.outputContext
+        respuestaObj.outputContexts
         let respuestaClean, output = {};
         output = { ...respuestaObj.result, ...this.result };
         let respuesta = output['text'];
@@ -333,7 +334,7 @@ export class RespuestaCardComponent implements OnInit {
      */
     async onSave() {
         console.log(this.respuesta.nextIntent);
-        this.respuesta.outputContext
+        this.respuesta.outputContexts
         let cleanRespuesta = await this.validateRespuesta(this.respuesta);
         if (!cleanRespuesta['nextIntent']) {
             cleanRespuesta['nextIntent'] = '*sug'

@@ -323,7 +323,13 @@ export class TiposService {
 
         if ( action == 'add' ) {
             clasesList = clasesList.map( c => c.value === clase.value
-                ? { ...c, synonyms: [ ...c.synonyms, sinonimo ] } : c )
+                ? {
+                    ...c,
+                    synonyms: c.synonyms
+                        ? [...c.synonyms, sinonimo]
+                        : [sinonimo]
+                }
+                : c)
         } else {
             clasesList.map( c => c.value === clase.value
             ? {...c, synonyms: [...c.synonyms.filter(s => s != sinonimo)]}: c)

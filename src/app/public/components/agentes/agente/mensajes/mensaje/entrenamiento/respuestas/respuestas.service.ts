@@ -122,6 +122,7 @@ export class RespuestasService {
      * @return {array} Arreglo de los tipos de datos del mensaje actual
      */
     async getMensajeTipos(paramList: ParametroMensaje[]) {
+        // console.log( paramList )
         this.mensajeTypeEntities  = [];
 
         await this.loading.asyncForEach(paramList,
@@ -132,12 +133,17 @@ export class RespuestasService {
                     (t) => t.displayName == param.displayName
                 );
 
-                // console.log(tipoStored);
+                console.log(tipoStored);
                 if (!tipoStored) {
                     tipoStored = await this._tipos.getByDisplayName( param.entityTypeDisplayName )
-                    await this.loading.waitFor(100);
+                    await this.loading.waitFor(1200);
                     return this.mensajeTypeEntities.push(tipoStored);
                 }
+            }
+            else {
+                var tipoStored = await this._tipos.getByDisplayName( param.entityTypeDisplayName )
+                await this.loading.waitFor(1200);
+                return this.mensajeTypeEntities.push(tipoStored);
             }
 
             }

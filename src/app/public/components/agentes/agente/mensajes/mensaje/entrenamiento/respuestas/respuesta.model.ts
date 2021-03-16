@@ -18,7 +18,7 @@ export class RespuestaModel {
         public result:ResultResponse,
         public index: number,
         public nextIntent?: string,
-        public outputContext?: string[],
+        public outputContexts?: string[],
         public inputContext?: string[],
         public accion?:string,
         public id?: string,

@@ -48,7 +48,7 @@ export class MensajesByContextoComponent implements OnInit {
 
     async getMensajes() {
 
-        console.log( this.contexto )
+        // console.log( this.contexto )
         this.mensajes = await this.mensajes_.getMensajesListByContexto(this.contexto);
         let contextosLists = this._cache.getDataKey('contextosLists');
         let agentContextos = this._cache.getDataKey<ContextoModel[]>('contextos')
@@ -67,7 +67,7 @@ export class MensajesByContextoComponent implements OnInit {
             })
 
         }
-        console.log( this.mensajes )
+        // console.log( this.mensajes )
         this._cache.updateData('contextosLists', contextosLists);
 
     }
