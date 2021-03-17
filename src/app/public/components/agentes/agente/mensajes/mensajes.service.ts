@@ -56,6 +56,12 @@ export class MensajesService {
      *@param projectId id del projecto
      *@param intent displayname nombre del intent */
     async createNewIntent(intent: IntentModel) {
+
+        intent = {
+            webhookState: 'WEBHOOK_STATE_ENABLED_FOR_SLOT_FILLING',
+            ...intent,
+        }
+
         const projectId: string = await this._cache.getAsyncKey('projectId');
         //si no se puede hace proxeo de la URL base...
         const intentRequest = { projectId, intent };

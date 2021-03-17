@@ -16,6 +16,7 @@ import { AlertService } from '../../../../gdev-tools/alerts/alert.service';
 import { Loading } from '../../../../gdev-tools/loading/loading.service';
 import { SystemEntitiesService } from '../../../../admin/system/system-entities.service';
 import { environment } from '../../../../../environments/environment';
+import firebase from 'firebase/app'
 
 @Injectable({
     providedIn: 'root',
@@ -250,5 +251,16 @@ export class CurrentAgenteService {
                     resolve(list);
                 });
         });
+    }
+
+
+    cleanTestChat() {
+        const path = `${this.path}/clientes/TEST`
+        this.fs.doc(path).update({
+            outputContexts: firebase.firestore.FieldValue.delete(),
+            sessionId: firebase.firestore.FieldValue.delete(),
+            sessionParams: firebase.firestore.FieldValue.delete()
+        })
+
     }
 }

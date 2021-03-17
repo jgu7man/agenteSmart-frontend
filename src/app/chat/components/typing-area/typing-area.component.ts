@@ -7,6 +7,7 @@ import { ChatService } from '../chat.service';
 import { CacheService } from '../../../gdev-tools/cache/cache.service';
 import { pluck } from 'rxjs/operators';
 import { Loading } from '../../../gdev-tools/loading/loading.service';
+import { CurrentAgenteService } from 'src/app/public/components/agentes/agente/current-agente.service';
 
 @Component({
   selector: 'gdev-typing-area',
@@ -22,7 +23,8 @@ export class TypingAreaComponent implements OnInit {
     private store: Store<AppState>,
     private _chat: ChatService,
     private _cache: CacheService,
-    private _loading: Loading
+      private _loading: Loading,
+    private _agente: CurrentAgenteService,
   ) {
     this.store.select( 'chat' ).pipe( pluck( 'isOpened' ) )
       .subscribe( async ( opened: boolean ) => {
@@ -45,8 +47,9 @@ export class TypingAreaComponent implements OnInit {
 
   cleanConversation() {
     this.store.dispatch(actions.clean())
-    this._cache.deleteDataKey( 'currentSession' )
-    this._cache.deleteDataKey( 'inputContexts')
+    // this._cache.deleteDataKey( 'currentSession' )
+    // this._cache.deleteDataKey( 'inputContexts')
+      this._agente.cleanTestChat()
   }
 
 }
