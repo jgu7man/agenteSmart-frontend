@@ -2,20 +2,20 @@
 <mat-drawer-container
 [hasBackdrop]="false"
 >
-    <mat-drawer class="contextos-list-container" 
+    <mat-drawer class="contextos-list-container"
     [opened]="true"
     mode="side"
     gdev-color [background]="'cornflowerblue'"
     >
         <aSmart-contextos></aSmart-contextos>
-        
+
     </mat-drawer>
-    
+
     <mat-drawer-content>
         <div class="mensajes-container">
             <aSmart-mensajes-list></aSmart-mensajes-list>
         </div>
-        <div *ngFor="let contexto of agente_.contextosList | sortBy:'asc':'index'"  
+        <div *ngFor="let contexto of (agente_.contextosList$ | async ) | sortBy:'asc':'index'"
         class="mensajes-container">
             <aSmart-mensajes-by-contexto [contexto]="contexto"></aSmart-mensajes-by-contexto>
         </div>

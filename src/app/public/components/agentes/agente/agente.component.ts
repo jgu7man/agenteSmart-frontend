@@ -25,13 +25,14 @@ export class AgenteComponent implements OnInit, OnDestroy {
     private _route: ActivatedRoute,
     public resposive_: ResponsiveService,
     public loading: Loading,
-      private _mensaje: CurrentMensajeService,
+    private _mensaje: CurrentMensajeService,
     private _router: Router
   ) {
 
-    // GET THE CURRENT PROJECT ID
-    this._route.params.subscribe( params => {
-      this._cache.updateData('projectId', params['id'])
+    // ANCHOR GET THE CURRENT PROJECT ID
+    this._route.params.subscribe(params => {
+        this._agente.projectId = params['id']
+        this._cache.updateData('projectId', params['id'])
     })
    }
 
@@ -45,14 +46,16 @@ export class AgenteComponent implements OnInit, OnDestroy {
 
   }
 
-  async loadAgente() {
+    async loadAgente() {
+    // ANCHOR INIZIALIZA EL AGENTE Y TODAS SUS SUBSCRIPCIONES
       this.agente = await this._agente.get()
       let projectId = this._cache.getDataKey('projectId')
       if (!this.agente.started) {
           this._router.navigate([`/dashboard/agente/${ projectId }/start`])
-        } else {
-          this._router.navigate([`/dashboard/agente/${ projectId }/mensajes`])
       }
+    //   else {
+    //       this._router.navigate([`/dashboard/agente/${ projectId }/mensajes`])
+    //   }
       this.loading.toggleWaitingSpinner( 'close' )
   }
 
@@ -66,11 +69,15 @@ export class AgenteComponent implements OnInit, OnDestroy {
 
   ]
 
-  ngOnDestroy() {
-    this._agente.tiposSubs.unsubscribe()
-    this._agente.contextosSubs.unsubscribe()
-    this._agente.tarjetasSubs.unsubscribe()
-  }
+    ngOnDestroy() {
+        this._agente.current = {} as AgenteModel
+        this._agente.unsubscribeIntentList()
+        this._agente.firestoreIntentListSubs.unsubscribe()
+        this._agente.coleccionesSubs.unsubscribe()
+        this._agente.tiposSubs.unsubscribe()
+        this._agente.contextosSubs.unsubscribe()
+        this._agente.tarjetasSubs.unsubscribe()
+    }
 
 }
 

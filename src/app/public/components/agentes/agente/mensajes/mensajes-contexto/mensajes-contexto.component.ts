@@ -10,6 +10,7 @@ import { startWith, distinctUntilChanged } from 'rxjs/operators';
 import { DiagramService } from '../diagram/diagram.service';
 import { DiagramProps } from '../diagram/diagram-data.interface';
 import { CurrentAgenteService } from '../../current-agente.service';
+import { ContextosService } from '../../contextos/contextos.service';
 
 @Component({
     selector: 'aSmart-mensajes-by-contexto',
@@ -32,44 +33,24 @@ export class MensajesByContextoComponent implements OnInit {
         private _cache: CacheService,
         private _alerta: AlertService,
         public diagram_: DiagramService,
-        private _agente: CurrentAgenteService
-    ) {}
+        private _agente: CurrentAgenteService,
+        private _contexts: ContextosService
+    ) {
+    }
 
     async ngOnInit() {
-        this._agente.intentList$
-            .pipe(
-                startWith( [] ),
-                // tap(x => console.log(x.length)),
-                distinctUntilChanged( ( x, y ) => x && x.length
-                    ? x.length == y.length
-                    : x == y) )
-            .subscribe((get) => this.getMensajes());
+        this.getMensajes()
     }
 
     async getMensajes() {
-
-        // console.log( this.contexto )
-        this.mensajes = await this.mensajes_.getMensajesListByContexto(this.contexto);
-        let contextosLists = this._cache.getDataKey('contextosLists');
-        let agentContextos = this._cache.getDataKey<ContextoModel[]>('contextos')
-
-        if (!contextosLists) {
-            contextosLists = { [this.contexto.contextName]: this.mensajes };
-        }
-        else {
-            contextosLists[this.contexto.contextName] = this.mensajes;
-        }
-        if (agentContextos) {
-
-            Object.keys(contextosLists).forEach((name) => {
-                let contexto = agentContextos.find(c => c.contextName == name)
-                if (!contexto) delete contextosLists[name]
+        this._agente.intentList$.pipe(
+            distinctUntilChanged( ( x, y ) => x && ( x.length == y.length))
+        ).subscribe(async () => {
+            await this.mensajes_.getMensajesListByContexto(this.contexto).then(list => {
+                this.mensajes = list
+                this._contexts.setContextosList(this.contexto.contextName, list)
             })
-
-        }
-        // console.log( this.mensajes )
-        this._cache.updateData('contextosLists', contextosLists);
-
+        });
     }
 
     getMensajeRoute(name:string) {
@@ -95,7 +76,7 @@ export class MensajesByContextoComponent implements OnInit {
         if (this.newIntent) {
             let lastIndex = this.mensajes.length;
             console.log(`creado ${this.newIntent}, index: ${lastIndex}`)
-            await this.mensajes_.setMensaje(this.newIntent, lastIndex, contexto);
+            await this.mensajes_.saveNewMensaje(this.newIntent, lastIndex, contexto);
 
         }
     }
@@ -104,7 +85,7 @@ export class MensajesByContextoComponent implements OnInit {
         this.diagram_.object$.next({
             props,
             id,
-            anchors: await this.mensajes_.getFollowingMensajes(id),
+            anchors: await this.mensajes_.getNextMensajes(id),
         });
     }
 }

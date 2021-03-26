@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { MensajesService } from '../mensajes/mensajes.service';
-import { IntentModel } from '../mensajes/mensaje.model';
+import { IntentModel, MensajeModel } from '../mensajes/mensaje.model';
 import { CacheService } from '../../../../../gdev-tools/cache/cache.service';
 import { ContextoModel } from './contexto.model';
 import { CurrentAgenteService } from '../current-agente.service';
@@ -225,24 +225,42 @@ export class ContextosService {
         var mensajesPath = await this._agente.getPath('mensajes');
         const mensajeRef = this.afs.collection(mensajesPath).ref;
 
-        const mensajes = await
-            this._mensajes.getMensajesListByContexto( context );
+        this._mensajes.getMensajesListByContexto(context)
+            .then(mensajes => {
+                if (mensajes.length > 0) {
+                    mensajes.forEach((mensaje: IntentModel) => {
+                        let contextToDel = mensaje.contextos.findIndex(
+                            (ent) => ent === context.id
+                        );
 
-        if (mensajes.length > 0) {
-            mensajes.forEach((mensaje: IntentModel) => {
-                let contextToDel = mensaje.contextos.findIndex(
-                    (ent) => ent === context.id
-                );
+                        mensaje.contextos.splice(contextToDel, 1);
+                        mensajeRef
+                        .doc(mensaje.name)
+                        .set({ contextos: mensaje.contextos }, { merge: true });
+                    } );
 
-                mensaje.contextos.splice(contextToDel, 1);
-                mensajeRef
-                .doc(mensaje.name)
-                .set({ contextos: mensaje.contextos }, { merge: true });
-            } );
+                    console.log('Intents updated')
+                }
+            })
 
-            console.log('Intents updated')
-        }
+
 
         return
+    }
+
+
+    setContextosList(contextName: string, list: MensajeModel[]) {
+        let contextosLists = this._cache.getDataKey('contextosLists');
+        let agentContextos = this._cache.getDataKey<ContextoModel[]>('contextos')
+
+        if (!contextosLists) contextosLists = { [contextName]: list }
+        else contextosLists[contextName] = list
+        if (agentContextos) Object.keys(contextosLists).forEach((name) => {
+                let contexto = agentContextos.find(c => c.contextName == name)
+                if (!contexto) delete contextosLists[name]
+            })
+
+        this._cache.updateData('contextosLists', contextosLists);
+
     }
 }

@@ -19,6 +19,7 @@ export class AgentesService {
      * @private
      * @type {UserInterface} */
     private usuario: UserInterface;
+
     /**
      * Observable de los agentes en FIRESTORE*/
     public agentes$ = new Observable<AgenteModel[]>();

@@ -12,7 +12,7 @@ export class AgentesComponent implements OnInit, AfterViewInit {
 
   constructor (
     public _agentes: AgentesService,
-      public router: Router,
+    public router: Router,
     public _alerts: AlertService,
   ) {}
 

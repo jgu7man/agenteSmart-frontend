@@ -23,14 +23,21 @@ import firebase from 'firebase/app'
 })
 export class CurrentAgenteService {
 
+    // SECTION CURRENT AGENTE
+
+    // # CURRENT AGENT
     /** Estado presente del agente actual */
     public current: AgenteModel;
+    // # PROJECT ID
     /** Almacena el ID de projecto actual */
-    private projectId: string;
+    public projectId: string;
+    // # PATH
     /** Almacena la ruta actual del agente actual del usuario actual */
-    private path: string;
+    public path: string;
+    // # USER
     /** Almacena la información del usuario actual */
-    private usuario: UserInterface;
+    public usuario: UserInterface;
+    // # AGENTE LOADED
     /** Escucha cuando el agente termina de ser cargado */
     public agenteLoaded$: Subject<boolean> = new Subject();
     /** Número de veces que se ha recargado el agente */
@@ -52,6 +59,7 @@ export class CurrentAgenteService {
         // this.getAllIntents();
     }
 
+
     /** Ejecuta el incremento de veces que se ha recargado el agente */
     async listenAgenteLoaded() {
         return await new Promise((resolve) => {
@@ -69,16 +77,17 @@ export class CurrentAgenteService {
     }
 
 
-
+    // # GET PATH
     /** Obtiene la ruta del agente en curso, espera por la respuesta del auth service para obtener el usuario */
-    async getPath(collection?: string) {
-        this.projectId = await this._cache.getAsyncKey<string>('projectId');
+    async getPath(collection?: string): Promise<string> {
         this.usuario = await this._cache.getAsyncKey<UserInterface>('user');
+        // this.projectId = await this._cache.getAsyncKey<string>('projectId');
         this.path = `usuarios/${this.usuario.uid}/agentes/${this.projectId}`;
         return !collection ? this.path : `${this.path}/${collection}`;
     }
 
-    /** Función que se encarga de cargar todos los elementos del agente en curso */
+    // # GET
+    /** Inicializa todos los compoentes del agente */
     async get() {
 
         this.loading.toggleWaitingSpinner('open')
@@ -90,15 +99,15 @@ export class CurrentAgenteService {
 
 
             if (!this.current) {
-                const agenteRES = await this.fs.doc(path).ref.get();
-                console.log(agenteRES.id);
-                this.current = agenteRES.data() as AgenteModel;
+                const agenteDoc = await this.fs.doc(path).ref.get();
+                console.log(agenteDoc.id);
+                this.current = agenteDoc.data() as AgenteModel;
                 this._cache.updateData('currentAgente', this.current);
             }
 
             await this.getIntentList();
             // console.log('intents');
-            await this.getNextMensajesList();
+            await this.getIntentsFromFirestore();
             // console.log('nextMensajes');
             await this.getColeccionesList();
             // console.log('colecciones');
@@ -121,79 +130,125 @@ export class CurrentAgenteService {
     }
 
 
-    // SECTION INTENTS DE DIALOGFLOW
+    // SECTION INTENTS
     // Se obtienen los intents configurados en dialogflow y se almacenan en caché
-    intentList$: Observable<IntentModel[]>;
+    intentList$: BehaviorSubject<IntentModel[]> = new BehaviorSubject([])
+    intentListSubs: Subscription
     /** Retorna  la lista completa de mensajes */
     async getIntentList(): Promise<IntentModel[]> {
-        this.intentList$ = this._cache.listenForChanges<IntentModel[]>('intents')
+        this.intentListSubs = this._cache
+            .listenForChanges<IntentModel[]>('intents')
+            .subscribe(this.intentList$)
 
-        await this.getAllIntents()
-
-        return
+        await this.getDialogFlowIntents()
+        return this.intentList$.getValue()
     }
 
-    nextMensajeList: MensajeModel[] = [];
-    nextMensajeList$: Observable<MensajeModel[]>;
-    nextMensajesSubs: Subscription;
-    async getNextMensajesList() {
+    /** Obtiene respuesta de los intents registrados en el agente de Dialogflow */
+    async getDialogFlowIntents(): Promise<IntentModel[]> {
+        const projectId: string = await this._cache.getAsyncKey('projectId');
+
+        return new Promise<IntentModel[]>((resolve) => {
+            this._http
+                .get<IntentModel[]>(`${this._url}/${projectId}`, {responseType: 'json',})
+                .pipe(
+                    pluck<any, IntentModel[]>('result', 'intents'),
+                    // tap(intents => console.log(intents)),
+                    map<IntentModel[], IntentModel[]>((list) => {
+                        return list.map((intent) => {
+                            intent.name = intent.name.slice(
+                                intent.name.lastIndexOf('/') + 1
+                            );
+                            return intent;
+                        });
+                    })
+                )
+                .toPromise()
+                .then((list) => {
+                    this._cache.updateData('intents', list)
+                    resolve(list);
+                });
+        });
+    }
+
+    /** Se desuscribe de la list de intents */
+    unsubscribeIntentList() {
+        this.intentListSubs.unsubscribe()
+        this.intentList$.next([])
+        this._cache.deleteDataKey('intents')
+    }
+
+
+
+    // nextMensajeList: MensajeModel[] = [];
+    firestoreIntentList$: BehaviorSubject<MensajeModel[]> = new BehaviorSubject([])
+    firestoreIntentListSubs: Subscription;
+    /** GET INTENTS FROM FIRESTORE: Se suscribe a firestore para obtener los intents */
+    async getIntentsFromFirestore():Promise<MensajeModel[]> {
         const path = await this.getPath('mensajes');
-        this.nextMensajesSubs =
+        this.firestoreIntentListSubs =
         this.fs.collection<MensajeModel>(path).valueChanges()
-            .subscribe(list => this._cache.updateData('nextMensajes', list))
-        this.nextMensajeList = await this._cache
-            .getAsyncKey<MensajeModel[]>('nextMensajes', 2)
+            .subscribe(list => {
+                // this._cache.updateData('nextMensajes', list)
+                this.firestoreIntentList$.next(list)
+            })
+        // this.nextMensajeList = await this._cache
+        //     .getAsyncKey<MensajeModel[]>('nextMensajes', 2)
 
-        return this.nextMensajeList;
+        return this.firestoreIntentList$.getValue()
 
     }
 
-    contextosList: ContextoModel[] = [];
-    contextosList$: Observable<ContextoModel[]>
+    unsubscribeFirestoreIntentList() {
+        this.firestoreIntentListSubs.unsubscribe()
+        this.firestoreIntentList$.next([])
+    }
+
+    // !SECTION
+
+
+
+    // contextosList: ContextoModel[] = [];
+    contextosList$: BehaviorSubject<ContextoModel[]> = new BehaviorSubject([])
     contextosSubs: Subscription;
-    /** Retorna la lista de Contextos del agente */
-    async getContextosList() {
+    /** GET CONTEXT LIST Retorna la lista de Contextos del agente */
+    async getContextosList(): Promise<ContextoModel[]> {
         const path = await this.getPath('contextos');
         this.contextosSubs =
             this.fs.collection<ContextoModel>(path).valueChanges()
             .pipe(
                 map<ContextoModel[], ContextoModel[]>
                     ( list => list.filter( c => c.contextName != 'contextos' ) ),
-                tap( list => this._cache.updateData( 'contextos', list ) ) )
-            .subscribe()
-        this.contextosList$ = this._cache.listenForChanges<ContextoModel[]>('contextos')
-        this.contextosList = await this._cache.getAsyncKey<ContextoModel[]>('contextos', 2);
+                // tap(list => this._cache.updateData('contextos', list))
+            ).subscribe(this.contextosList$)
+        // this.contextosList$ = this._cache.listenForChanges<ContextoModel[]>('contextos')
+        // this.contextosList = await this._cache.getAsyncKey<ContextoModel[]>('contextos', 2);
 
-        return this.contextosList
+        return this.contextosList$.getValue()
     }
 
-    tiposList: (TipoEntidadModel | SystemEntitieModel)[];
-    tiposList$: Observable<(TipoEntidadModel | SystemEntitieModel)[]>;
+
+
+    // tiposList: (TipoEntidadModel | SystemEntitieModel)[];
+    tiposList$: BehaviorSubject<(TipoEntidadModel | SystemEntitieModel)[]> = new BehaviorSubject([])
     tiposSubs: Subscription;
-    /** Retorna la lista completa de entidades del agente y las entidades de sistema */
+    /** GET TIPOS LIST Retorna la lista completa de entidades del agente y las entidades de sistema */
     async getTiposList(): Promise<(TipoEntidadModel | SystemEntitieModel)[]> {
         const path = await this.getPath('tipos');
-        this.tiposList$ = this._cache.listenForChanges<(TipoEntidadModel | SystemEntitieModel)[]>('tipos')
-        var changes = this.fs.collection<TipoEntidadModel>(path).valueChanges();
+        // this.tiposList$ = this._cache.listenForChanges<(TipoEntidadModel | SystemEntitieModel)[]>('tipos')
+        var changes = this.fs.collection<TipoEntidadModel>(path).valueChanges()
         var system = of(this._systemEntites.systemEntities);
         // this.tiposList = await this._cache.getAsyncKey('tipos', 2);
 
-        return new Promise<(TipoEntidadModel | SystemEntitieModel)[]>(
-            (resolve) => {
-                this.tiposSubs = zip(changes, system)
-                    .pipe(
-                        map(([userTypes, systemTypes]) => [
-                            ...userTypes,
-                            ...systemTypes,
-                        ])
-                    )
-                    .subscribe((list) => {
-                        this.tiposList = list;
-                        this._cache.updateData('tipos', list);
-                        resolve(this.tiposList);
-                    });
-            }
-        );
+        this.tiposSubs = zip(changes, system)
+            .pipe(
+                map(([userTypes, systemTypes]) => [
+                    ...userTypes,
+                    ...systemTypes,
+                ])
+            )
+            .subscribe(this.tiposList$);
+        return this.tiposList$.getValue()
     }
 
     tarjetasList: TarjetaModel[];
@@ -226,34 +281,9 @@ export class CurrentAgenteService {
         return this.coleccionesList
     }
 
-    /** Obtiene respuesta de los intents registrados en el agente de Dialogflow */
-    async getAllIntents(): Promise<IntentModel[]> {
-        const projectId: string = await this._cache.getAsyncKey('projectId');
-
-        return new Promise<IntentModel[]>((resolve) => {
-            this._http
-                .get<IntentModel[]>(this._url + `/${projectId}`, {responseType: 'json',})
-                .pipe(
-                    pluck<any, IntentModel[]>('result', 'intents'),
-                    // tap(intents => console.log(intents)),
-                    map<IntentModel[], IntentModel[]>((list) => {
-                        return list.map((intent) => {
-                            intent.name = intent.name.slice(
-                                intent.name.lastIndexOf('/') + 1
-                            );
-                            return intent;
-                        });
-                    })
-                )
-                .toPromise()
-                .then((list) => {
-                    this._cache.updateData('intents', list)
-                    resolve(list);
-                });
-        });
-    }
 
 
+    /** CLEAN TEST CHAT: Limpia la sesión de conversación para TestChat del agente */
     cleanTestChat() {
         const path = `${this.path}/clientes/TEST`
         this.fs.doc(path).update({

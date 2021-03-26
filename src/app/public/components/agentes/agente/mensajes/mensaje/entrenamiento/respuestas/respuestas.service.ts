@@ -128,12 +128,11 @@ export class RespuestasService {
         await this.loading.asyncForEach(paramList,
         async (param: ParametroMensaje) => {
 
-            if ( this.mensajeTypeEntities.length > 0 ) {
+            if (this.mensajeTypeEntities.length > 0) {
                 let tipoStored = this.mensajeTypeEntities.find(
-                    (t) => t.displayName == param.displayName
+                    (t) => t && t.displayName == param.displayName
                 );
 
-                console.log(tipoStored);
                 if (!tipoStored) {
                     tipoStored = await this._tipos.getByDisplayName( param.entityTypeDisplayName )
                     await this.loading.waitFor(1200);

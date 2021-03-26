@@ -65,7 +65,7 @@ export class AgentConfigService {
             } );
 
         console.log( 'Process finished' );
-        this._agente.getAllIntents()
+        this._agente.getDialogFlowIntents()
 
         this.loading.toggleWaitingSpinner( 'close' )
         this._alerts.sendFloatNotification(intent+' creado')

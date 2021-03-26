@@ -10,6 +10,8 @@ import { DiagramService } from '../diagram/diagram.service';
 import { TextService } from '../../../../../../gdev-tools/text/gdev-text.service';
 import { ContextoModel } from '../../contextos/contexto.model';
 import { Subscription } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
+import { ContextosService } from '../../contextos/contextos.service';
 @Component({
   selector: 'aSmart-mensajes-list',
   templateUrl: './mensajes-list.component.html',
@@ -30,49 +32,27 @@ export class MensajesListComponent implements OnInit , OnDestroy{
   constructor (
     private _loading: Loading,
     public mensajes_: MensajesService,
-    public agente: CurrentAgenteService,
+      public agente_: CurrentAgenteService,
+    private _contexts:ContextosService,
     public diagram_: DiagramService,
     private _text: TextService,
     private _cache: CacheService
-  ) { }
+  ) {
+      this.getMensajes()
+   }
 
   async ngOnInit() {
-    this.getMensajes()
-    this.agenteSubs = this.agente.agenteLoaded$.subscribe( () => {
-      // console.log("agente cargado")
-      this.getMensajes()
-      // this.listSubs = this.agente.intentList$
-      //   .subscribe( () => {
-      //     console.log("intent cargados")
-      //   } )
-    })
   }
 
   async getMensajes() {
-
-    this.mensajes = await this.mensajes_.getMensajesWithoutContext();
-    let contextosLists = this._cache.getDataKey('contextosLists');
-    let agentContextos: ContextoModel[] = this._cache.getDataKey('contextos')
-
-
-
-    if (!contextosLists) {
-        contextosLists = { ['no-context']: this.mensajes };
-    }
-    else {
-        contextosLists['no-context'] = this.mensajes;
-    }
-    if (agentContextos) {
-        // console.log( agentContextos )
-
-        Object.keys(contextosLists).forEach((name) => {
-            let contexto = agentContextos.find(c => c.contextName == name)
-            if (!contexto) delete contextosLists[name]
+    this.agente_.intentList$.pipe(
+        distinctUntilChanged( ( x, y ) => x && ( x.length == y.length))
+    ).subscribe(async () => {
+        await this.mensajes_.getMensajesWithoutContext().then(list => {
+            this.mensajes = list
+            this._contexts.setContextosList('no-context', list)
         })
-
-    }
-    this._cache.updateData('contextosLists', contextosLists);
-
+    });
 }
 
   async toAddIntent() {
@@ -88,7 +68,7 @@ export class MensajesListComponent implements OnInit , OnDestroy{
 
     if (this.newIntent) {
         let lastIndex = this.mensajes.length;
-        await this.mensajes_.setMensaje(this.newIntent, lastIndex);
+        await this.mensajes_.saveNewMensaje(this.newIntent, lastIndex);
 
     }
   }
@@ -99,13 +79,13 @@ export class MensajesListComponent implements OnInit , OnDestroy{
     return name
   }
 
-  async setDiagramaData(props: DiagramProps, id) {
-    this.diagram_.object$.next({
-        props,
-        id,
-        anchors: await this.mensajes_.getFollowingMensajes(id),
-    });
-}
+    async setDiagramaData(props: DiagramProps, id) {
+        this.diagram_.object$.next({
+            props,
+            id,
+            anchors: await this.mensajes_.getNextMensajes(id)
+        });
+    }
 
 
   trackByName( index, intent: IntentModel ) {
@@ -113,7 +93,7 @@ export class MensajesListComponent implements OnInit , OnDestroy{
   }
 
   ngOnDestroy() {
-    this.agenteSubs.unsubscribe()
+    // this.agenteSubs.unsubscribe()
     if ( this.listSubs ) this.listSubs.unsubscribe()
   }
 
