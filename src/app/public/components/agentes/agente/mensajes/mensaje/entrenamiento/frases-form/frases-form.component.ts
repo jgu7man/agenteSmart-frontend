@@ -12,6 +12,7 @@ import { ParametrosService } from '../parametros/parametros.service';
 import { take, mergeAll, takeLast } from 'rxjs/operators';
 import { CurrentAgenteService } from '../../../../current-agente.service';
 import { MatPaginatorIntl, PageEvent } from '@angular/material/paginator';
+import {reverse} from 'lodash';
 
 @Component({
   selector: 'aSmart-frases-form',
@@ -29,8 +30,8 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
     // paginatiorLabes: MatPaginatorIntl = new MatPaginatorIntl
     currentPage: any[]
     pageSize: number = 10
-    firstPageIndex: number = 0
-    lastPageIndex: number
+    firstIndex: number = 0
+    lastIndex: number
     listenerParamDeleted: Subscription
     mensajeSub: Subscription
     paramAddedSub: Subscription
@@ -61,8 +62,11 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.mensajeSub =
         this.mensaje.current$.subscribe(mensaje => {
             if (mensaje) {
-                this.currentPage = mensaje.trainingPhrases.slice(this.firstPageIndex, this.pageSize)
-                this.getLastIndex(0, this.currentPage.length)
+                let frases = mensaje.trainingPhrases
+                this.currentPage = frases.slice(this.firstIndex, this.pageSize)
+                this.getLastIndex(
+                    this.currentPage.length - this.pageSize,
+                    this.currentPage.length)
             }
         })
 
@@ -71,16 +75,22 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     getLastIndex(startIndex: number, length: number) {
         if (this.pageSize > length) {
-            this.lastPageIndex = length
+            this.lastIndex = length
         } else {
-            this.lastPageIndex = startIndex + this.pageSize
+            this.lastIndex = startIndex + this.pageSize
         }
     }
 
     pageEvent(event: PageEvent) {
-        this.firstPageIndex = event.pageIndex * this.pageSize
-        this.getLastIndex(this.firstPageIndex, event.length)
-        this.currentPage = this.Frases.slice(this.firstPageIndex, this.lastPageIndex)
+        let lastDiff = this.Frases.length - (event.pageIndex * this.pageSize)
+        let firstDiff = lastDiff - this.pageSize
+            firstDiff = firstDiff <= 0 ? 0 : firstDiff
+        this.currentPage = this.Frases.slice(firstDiff, lastDiff)
+        console.log(firstDiff, lastDiff)
+
+        this.firstIndex = event.pageIndex * this.pageSize + 1
+        this.getLastIndex(this.firstIndex, this.currentPage.length)
+        console.log(this.firstIndex, this.lastIndex)
     }
 
     ngAfterViewInit() {
@@ -121,8 +131,10 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
         parts: this.frases.createParts( this.newPhrase )
       }
       await this.loading.waitFor( 200 )
-        this.frases.addTraningPhrase(NEWPHRASE, this.lastPageIndex)
+        this.frases.addTraningPhrase(NEWPHRASE, this.lastIndex)
             .then(async () => {
+                this.currentPage.push(NEWPHRASE, 0)
+                this.currentPage.splice(this.currentPage.length-1, 1)
                 this.newPhrase = ''
                 await this.loading.waitFor(500)
                 this.frasesList.closeAll()

@@ -14,10 +14,26 @@
 
             <!-- READ Muestra las frases -->
 
-            <ng-container *ngIf="Frases.length > 0 || addPhraseInput; else noPhrases">
+            <!-- CREATE Agregar nueva frase -->
+            <li *ngIf="addPhraseInput" class="phrase-item">
+                <mat-form-field appearance="outline"  class="newFrase">
+                    <input
+                    placeholder="Nueva frase de entrenamiento"
+                    matInput
+                    #newPhraseInput
+                    type="text"
+                    name="newPhraseInput"
+                    id="newPhraseInput"
+                    (blur)="addPhraseInput = false"
+                    [(ngModel)]="newPhrase"
+                    (keyup.enter)="newPhrase != '' ? onSetPhrase() : addPhraseInput = false"
+                    >
+                </mat-form-field>
+            </li>
+            <!-- <ng-container *ngIf="Frases.length > 0 || addPhraseInput; else noPhrases"> -->
                 <mat-accordion #frasesList="matAccordion" [multi]="true">
 
-                    <li *ngFor="let frase of currentPage; index as i"
+                    <li *ngFor="let frase of currentPage | sortBy:'desc'; index as i"
                     class="phrase-item"
                     (mouseup)="onSelect(frase, i)"
                     >
@@ -37,31 +53,16 @@
                     </li>
 
                 </mat-accordion>
-            </ng-container>
-            <ng-template #noPhrases>
+            <!-- </ng-container> -->
+            <!-- <ng-template #noPhrases> -->
                 <li class="phrase-item no-frase" (click)="toAddPhrase()">
                     Agrega una frase
                 </li>
-            </ng-template>
+            <!-- </ng-template> -->
 
 
 
-            <!-- CREATE Agregar nueva frase -->
-            <li *ngIf="addPhraseInput" class="phrase-item">
-                <mat-form-field appearance="outline"  class="newFrase">
-                    <input
-                    placeholder="Nueva frase de entrenamiento"
-                    matInput
-                    #newPhraseInput
-                    type="text"
-                    name="newPhraseInput"
-                    id="newPhraseInput"
-                    (blur)="addPhraseInput = false"
-                    [(ngModel)]="newPhrase"
-                    (keyup.enter)="newPhrase != '' ? onSetPhrase() : addPhraseInput = false"
-                    >
-                </mat-form-field>
-            </li>
+
         </ul>
         <mat-paginator
         [length]="Frases.length"
