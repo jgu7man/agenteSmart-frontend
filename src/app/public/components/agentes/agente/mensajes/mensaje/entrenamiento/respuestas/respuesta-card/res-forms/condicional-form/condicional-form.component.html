@@ -56,7 +56,7 @@
                 (selectionChange)="onRespChanges.emit(result)"
             >
                 <mat-option
-                    *ngFor="let valor of tipoSelected.entities"
+                    *ngFor="let valor of entitiesOf(tipoSelected)"
                     [value]="valor.value"
                 >
                     {{ valor.value }}

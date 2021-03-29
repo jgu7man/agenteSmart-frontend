@@ -437,7 +437,7 @@ export class TiposService {
         return this.tiposList.find(t => t.name == name)
     }
     async getByDisplayName(displayName: string) {
-        let list = await this._cache.getAsyncKey<TipoEntidadModel[]>('tipos')
+        let list = this._agente.tiposList$.getValue()
         return list.find(t => t.displayName == displayName)
     }
 

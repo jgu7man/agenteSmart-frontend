@@ -2,7 +2,7 @@ import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { RespuestasService } from '../../../respuestas.service';
 import { CondicionalModel, SimpleModel } from '../../../respuesta.model';
 import { ParametrosService } from '../../../../parametros/parametros.service';
-import { TipoEntidadModel } from '../../../../../../../tipos/tipo.model';
+import { SystemEntitieModel, TipoEntidadModel } from '../../../../../../../tipos/tipo.model';
 import { Loading } from 'src/app/gdev-tools/loading/loading.service';
 import {ParamSelected} from '../../../../parametros/param-selector/param-selector.component';
 
@@ -14,7 +14,7 @@ import {ParamSelected} from '../../../../parametros/param-selector/param-selecto
 export class CondicionalFormComponent implements OnInit {
     paramSelected: string = '';
     isOriginal: boolean = true;
-    tipoSelected: TipoEntidadModel;
+    tipoSelected: TipoEntidadModel | SystemEntitieModel;
 
     @Input() result: CondicionalModel;
     @Output() onRespChanges: EventEmitter<
@@ -78,6 +78,11 @@ export class CondicionalFormComponent implements OnInit {
         this.result.text = msg.text;
         // await this.loading.waitFor(100)
         this.onRespChanges.emit(this.result);
+    }
+
+    entitiesOf(tipoSelected: TipoEntidadModel | SystemEntitieModel) {
+        if (tipoSelected instanceof TipoEntidadModel)
+        return tipoSelected.entities
     }
 }
 

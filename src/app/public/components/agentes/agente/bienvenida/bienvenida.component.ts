@@ -36,7 +36,7 @@ export class BienvenidaComponent implements OnInit {
         this.stateSubs = this.store.subscribe((store) => {
             this.unsaved = store.editIntent.unsaved;
             if (this.unsaved == false) {
-                this.getWelcomeIntent();
+                // this.getWelcomeIntent();
 
             }
         });
@@ -52,18 +52,18 @@ export class BienvenidaComponent implements OnInit {
 
 
     async setIntent() {
-        
+
         this._alerts.sendMessageAlert(
             'No se encontró el intent de bienvenida. Restáuralo en las configuraciones del agente.'
         );
 
-        
+
 
     }
 
     ngOnDestroy() {
         this.stateSubs.unsubscribe();
         this.mensaje_.unsubscribe()
-        
+
     }
 }

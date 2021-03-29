@@ -10,7 +10,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { RespuestaModel } from './respuesta.model';
 import { Subject } from 'rxjs';
 import { TiposService } from '../../../../tipos/tipos.service';
-import { TipoEntidadModel } from '../../../../tipos/tipo.model';
+import { SystemEntitieModel, TipoEntidadModel } from '../../../../tipos/tipo.model';
 import { TarjetaModel } from '../../../../../../tarjetas/tarjeta.model';
 import { pluck, map } from 'rxjs/operators';
 
@@ -43,7 +43,7 @@ export class RespuestasService {
     /** Observable de las respuestas cuando se agregó, editó o eliminó alguna respuesta */
     onRespuestasChanged: Subject<any> = new Subject();
     /** Contiene la lista de tipos de datos */
-    mensajeTypeEntities: TipoEntidadModel[];
+    mensajeTypeEntities: (TipoEntidadModel | SystemEntitieModel)[];
     /** Contiene el tipo de acciones */
     acciones: AccionModel[] = [
         { accion: 'guardar', ruta: '' },
@@ -129,7 +129,7 @@ export class RespuestasService {
         async (param: ParametroMensaje) => {
 
             if (this.mensajeTypeEntities.length > 0) {
-                let tipoStored = this.mensajeTypeEntities.find(
+                let tipoStored:TipoEntidadModel | SystemEntitieModel = this.mensajeTypeEntities.find(
                     (t) => t && t.displayName == param.displayName
                 );
 

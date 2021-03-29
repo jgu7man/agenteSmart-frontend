@@ -138,7 +138,7 @@ export class CurrentAgenteService {
     async getIntentList(): Promise<IntentModel[]> {
         this.intentListSubs = this._cache
             .listenForChanges<IntentModel[]>('intents')
-            .subscribe(this.intentList$)
+            .subscribe(list => this.intentList$.next(list))
 
         await this.getDialogFlowIntents()
         return this.intentList$.getValue()
@@ -247,7 +247,7 @@ export class CurrentAgenteService {
                     ...systemTypes,
                 ])
             )
-            .subscribe(this.tiposList$);
+            .subscribe( list => this.tiposList$.next(list));
         return this.tiposList$.getValue()
     }
 

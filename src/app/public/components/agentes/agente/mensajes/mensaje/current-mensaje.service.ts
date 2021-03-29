@@ -55,6 +55,17 @@ export class CurrentMensajeService {
     ) {  }
 
 
+
+    /** Returna como promesa la referencia a FIRESTORE directa a la colección de los mensajes del usuario y del agente
+     * @return {*} Referencia de firestore
+     */
+    public async mensajesCollection() {
+        this.mensajesPath = await this._agente.getPath('mensajes');
+        const mensajesRef = this.fs.collection(this.mensajesPath).ref;
+        return mensajesRef;
+    }
+
+
     /**
      * Obtiene los parámetros de la ruta cuando se ingresa a editar un mensaje
      * @return {*} Obserbavle con variable 'mensajeName' y 'currentContexto'
@@ -71,14 +82,7 @@ export class CurrentMensajeService {
     }
 
 
-    /** Returna como promesa la referencia a FIRESTORE directa a la colección de los mensajes del usuario y del agente
-     * @return {*} Referencia de firestore
-     */
-    public async mensajesCollection() {
-        this.mensajesPath = await this._agente.getPath('mensajes');
-        const mensajesRef = this.fs.collection(this.mensajesPath).ref;
-        return mensajesRef;
-    }
+
 
 
     /**
@@ -96,21 +100,6 @@ export class CurrentMensajeService {
     }
 
 
-    /**
-     * Busca en la lista de intents del storage un intent que coincida con el parámetro displayName
-     *
-     * @param {string} nameOrDisplayName displayName del intent o name.
-     * Busca a través de ambos
-     * @returns {IntentModel | null} intent completo si existe, si no, retorna null
-     */
-    async findMensaje(nameOrDisplayName: string) {
-        let list = await this._cache.getAsyncKey<IntentModel[]>('intents')
-        // console.log('lista de mensajes',  list);
-        let intent = list.find((m) => m.displayName == nameOrDisplayName);
-        if (!intent) intent = list.find((m) => m.name == nameOrDisplayName);
-        // console.log(intent);
-        return list ? intent ? intent : null : null
-    }
 
     /** Establece en el storage el intent actual y emite un evento para current$ */
     async setCurrent() {
@@ -131,7 +120,7 @@ export class CurrentMensajeService {
             // this.current = mensaje
             this.current$.next(this.current)
         })
-   }
+    }
 
     /** Obtiene el intent actual a partir de la subscripción a los cambios de la ruta */
     async getByActivatedRoute( intentName: string, contexto: string ) {
@@ -153,6 +142,27 @@ export class CurrentMensajeService {
         }
         this.loading.toggleWaitingSpinner('close')
     }
+
+
+    /**
+     * Busca en la lista de intents del storage un intent que coincida con el parámetro displayName
+     *
+     * @param {string} nameOrDisplayName displayName del intent o name.
+     * Busca a través de ambos
+     * @returns {IntentModel | null} intent completo si existe, si no, retorna null
+     */
+    async findMensaje(nameOrDisplayName: string) {
+        let list = await this._cache.getAsyncKey<IntentModel[]>('intents')
+        // console.log('lista de mensajes',  list);
+        let intent = list.find((m) => m.displayName == nameOrDisplayName);
+        if (!intent) intent = list.find((m) => m.name == nameOrDisplayName);
+        // console.log(intent);
+        return list ? intent ? intent : null : null
+    }
+
+
+
+
 
 
 
@@ -190,10 +200,10 @@ export class CurrentMensajeService {
 
 
     // UPDATE MENSAJE ACTUAL
-    mensajeUpdated$: Subject<any> = new Subject()
+    // mensajeUpdated$: Subject<any> = new Subject()
     /** Actualiza el intent actual en DIALOGFLOW con los cambios hechos en el área de entrenamiento. */
     async update(mensaje?: IntentModel) {
-        // console.log( 'updapting' )
+        console.log( mensaje )
         this.loading.toggleWaitingSpinner('open');
 
         try {
@@ -201,7 +211,7 @@ export class CurrentMensajeService {
             // Update current mensaje
             if ( !mensaje ) {
                 const request = await this.updateIntentApiRequest(this.current);
-                // console.log(request);
+                console.log(request);
                 if (request) {
                     // console.info('Se Actualizo Intent:', request);
 
@@ -209,7 +219,7 @@ export class CurrentMensajeService {
                     this.store.dispatch(actions.setSaved());
                     this.loading.toggleWaitingSpinner('close');
                     this._alerts.sendFloatNotification('Mensaje guardado');
-                    return this.mensajeUpdated$.next()
+                    // return this.mensajeUpdated$.next()
                 }
             }
 
@@ -231,34 +241,28 @@ export class CurrentMensajeService {
 
 
 
-    /**
-     * Actualiza el intent actual en DIALOGFLOW a través de la API
-     *
+    /** Actualiza el intent actual en DIALOGFLOW a través de la API
      * @private
      * @param {IntentModel} intent
      * @returns {*}  {Promise<IntentModel>}
      */
     private updateIntentApiRequest(intent: IntentModel): Promise<IntentModel> {
+        console.log( intent )
         let projectId = this._cache.getDataKey('projectId');
         let path = `projects/${projectId}/agent/intents/${intent.name}`;
         intent.name = path;
+        const body = {
+            intent, intetnView: 'INTENT_VIEW_FULL',
+        }
+
+        const headers = { responseType: 'json', }
 
         return new Promise((resolve, reject) => {
-            this._http
-                .put(
-                    this._url,
-                    {
-                        intent: intent,
-                        intetnView: 'INTENT_VIEW_FULL',
-                    },
-                    {
-                        responseType: 'json',
-                    }
-                )
+            this._http.put(this._url, body, {headers})
                 .toPromise()
                 .then((response) => {
                     if (response) {
-                        // console.info('Intent Actualizado:', response);
+                        console.info('Intent Actualizado:', response);
                         resolve(response['intent']);
                     }
                 })
