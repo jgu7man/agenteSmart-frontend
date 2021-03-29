@@ -24,7 +24,7 @@
     <!-- Tipo -->
     <div class="col s4" (click)="toEditTipo()">
         <ng-container *ngIf="!switchTipoSelecter; else tipoSelecter">
-            @{{param.entityTypeDisplayName}}
+            {{param.entityTypeDisplayName}}
         </ng-container>
         <ng-template #tipoSelecter>
             <aSmart-tipo-selector

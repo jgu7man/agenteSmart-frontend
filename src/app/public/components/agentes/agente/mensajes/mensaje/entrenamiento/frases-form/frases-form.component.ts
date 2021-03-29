@@ -133,8 +133,10 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
       await this.loading.waitFor( 200 )
         this.frases.addTraningPhrase(NEWPHRASE, this.lastIndex)
             .then(async () => {
-                this.currentPage.push(NEWPHRASE, 0)
-                this.currentPage.splice(this.currentPage.length-1, 1)
+                if (this.currentPage.length >= this.pageSize) {
+                    this.currentPage.push(NEWPHRASE, 0)
+                    this.currentPage.splice(this.currentPage.length-1, 1)
+                }
                 this.newPhrase = ''
                 await this.loading.waitFor(500)
                 this.frasesList.closeAll()
@@ -171,6 +173,9 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+    onRemoveFrase(index: number) {
+        this.currentPage.splice(index, 1)
+    }
 
 
 

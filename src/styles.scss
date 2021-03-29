@@ -115,6 +115,10 @@ mat-form-field {
 
 ::ng-deep {
     .mat-form-field-underline {
-        bottom: -1em !important;
+        bottom: 0 !important;
     }
+}
+
+.mat-form-field-underline {
+    bottom: 0 !important;
 }

@@ -94,7 +94,7 @@ export class CurrentMensajeService {
     async getCurrent(displayName: string) {
         this.mensajesPath = await this._agente.getPath('mensajes');
         this.current = await this.findMensaje(displayName)
-        console.log(this.current);
+        // console.log(this.current);
         if (this.current) {this.setCurrent()}
         return this.current
     }
@@ -209,7 +209,7 @@ export class CurrentMensajeService {
         try {
 
             // Update current mensaje
-            if ( !mensaje ) {
+            if (!mensaje) {
                 const request = await this.updateIntentApiRequest(this.current);
                 console.log(request);
                 if (request) {

@@ -113,9 +113,14 @@ export class FrasesService {
     stringifyFullPhrase(phrase: FraseEntrenamiento): string {
         let partsString: string[] = []
         phrase.parts.forEach(part => {
-            if (!part.alias) part.alias = '';
-            partsString.push(part.entityType ?
-                `;${part.entityType}~${part.alias}=${part.text};` : part.text);
+            if (part) {
+                if (!part.alias) part.alias = '';
+                partsString.push(
+                    part.entityType
+                    ? `;${part.entityType}~${part.alias}=${part.text};`
+                    : part.text
+                );
+            }
 
         })
         return partsString.join('')
@@ -158,8 +163,10 @@ export class FrasesService {
                     let partSplited = part.split('~')
                     if (partSplited.length > 1) {
                         let param = partSplited[1].split('=')
+                        // REVIEW La entity sumaba @ cada vez que era editado o agragado, se generó una solución
+                        let entity = !partSplited[0].includes('@') ? `@${partSplited[0]}` : partSplited[0]
                         partes.push({
-                            entityType: `@${partSplited[0]}`,
+                            entityType:entity,
                             text: param.length > 1 ? param[1] : param[0],
                             alias: param.length > 1 ? param[0] : '',
                         })
@@ -236,7 +243,7 @@ export class FrasesService {
                     }
 
                 })
-                console.log(resultParts);
+                // console.log(resultParts);
                 frase.parts = []
                 if (!resultParts.get(0)) {
                     resultParts.forEach(parte => {
@@ -244,13 +251,13 @@ export class FrasesService {
                     })
                 } else {
                     await this.loading.asyncForEach(resultParts, parte => {
-                        console.log( parte )
+                        // console.log( parte )
                         return frase.parts.push(parte)
                     })
                 }
             }
 
-            console.log(frase);
+            // console.log(frase);
             return frase
 
 

@@ -44,8 +44,8 @@
                                 <aSmart-frase-item
                                 [frase]="frase"
                                 [index]="i"
-                                >
-                                </aSmart-frase-item>
+                                (onDeleted)="onRemoveFrase(i)"
+                                ></aSmart-frase-item>
                             </mat-expansion-panel-header>
 
                             <aSmart-frase-parameters [fraseIndex]="i" [frase]="frase"></aSmart-frase-parameters>

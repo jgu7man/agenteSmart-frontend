@@ -59,6 +59,7 @@ export class TipoSelectorComponent implements OnInit, OnDestroy {
     }
 
     private _filter(value: string): string[] {
+        console.log( value )
         const filterValue = value.toLowerCase();
         return this.tipos.filter((tipo) =>
             tipo.toLowerCase().includes(filterValue)
@@ -66,6 +67,7 @@ export class TipoSelectorComponent implements OnInit, OnDestroy {
     }
 
     onTipoSelected(event: MatAutocompleteSelectedEvent) {
+        // console.log( event.option.value )
         if (event.option) this.tipoSelected.emit(event.option.value);
     }
 
