@@ -4,9 +4,9 @@ import { MatSelectionList } from '@angular/material/list';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ColeccionesService } from '../../colecciones.service';
 import { MatDrawer } from '@angular/material/sidenav';
-import { AlertService } from '../../../../../gdev-tools/alerts/alert.service';
-import { Loading } from '../../../../../gdev-tools/loading/loading.service';
-import { CacheService } from '../../../../../gdev-tools/cache/cache.service';
+import { GdevAlert } from '../../../../../gdev-tools/src/lib/alert/alert.service';
+import { GdevLoading } from '../../../../../gdev-tools/src/lib/loading/loading.service';
+import { GdevCache } from '../../../../../gdev-tools/src/lib/cache/gdev-cache.service';
 import { UserInterface } from '../../../../../admin/auth/auth.service';
 
 @Component({
@@ -47,10 +47,10 @@ export class BusquedaColeccionComponent implements OnInit {
 
 
   constructor (
-    private _alerta: AlertService,
+    private _alerta: GdevAlert,
     private _colecciones: ColeccionesService,
-    private loading: Loading,
-    private _cache: CacheService
+    private _loading: GdevLoading,
+    private _cache: GdevCache
   ) { }
 
   async ngOnInit() {
@@ -157,7 +157,7 @@ export class BusquedaColeccionComponent implements OnInit {
   async onDeleteDatos() {
     // console.log( this.coleccion.queryData );
     // console.log(this.datosSelectedList);
-    // await this.loading.asyncForEach( this.datosSelectedList,
+    // await this._loading.asyncForEach( this.datosSelectedList,
     //   dato => {
     //     console.log( this.coleccion.queryData);
     //     let datoToDel = this.coleccion.queryData

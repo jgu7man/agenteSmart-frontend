@@ -3,9 +3,9 @@ import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Observable, throwError } from 'rxjs';
-import { CacheService } from 'src/app/gdev-tools/cache/cache.service';
+import { GdevCache } from 'src/app/gdev-tools/src/lib/cache/gdev-cache.service';
 import { catchError, distinct, skip, tap, distinctUntilKeyChanged, map } from 'rxjs/operators';
-import { AlertService } from 'src/app/gdev-tools/alerts/alert.service';
+import { GdevAlert } from 'src/app/gdev-tools/src/lib/alert/alert.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { WhatsappStatus } from './whatsapp-int/messenger.model';
 import { MessengerStatus } from './messenger-int/messenger.model';
@@ -23,8 +23,8 @@ export class IntegracionesService {
   wappSocket$: WebSocketSubject<any>
   constructor (
     private _http: HttpClient,
-    private _cache: CacheService,
-    private _alert: AlertService,
+    private _cache: GdevCache,
+    private _alert: GdevAlert,
     private _fs: AngularFirestore
   ) {
     this.projectId = this._cache.getDataKey( 'projectId' )

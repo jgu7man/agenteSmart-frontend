@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef, Input } from '@angular/core';
-import { TextService } from '../../../../../../services/text.service';
+import { GdevText } from '../../../../../../services/text.service';
 import { ContextosService } from '../contextos.service';
-import { Loading } from '../../../../../../gdev-tools/loading/loading.service';
+import { GdevLoading } from '../../../../../../gdev-tools/src/lib/loading/loading.service';
 import { ContextoModel } from '../contexto.model';
 
 @Component({
@@ -19,9 +19,9 @@ export class AddContextoComponent implements OnInit {
   @Input() lastIndex: number
 
   constructor (
-    private _text: TextService,
+    private _text: GdevText,
     private _contextos: ContextosService,
-    private _loading: Loading
+    private _loading: GdevLoading
   ) {
     
    }

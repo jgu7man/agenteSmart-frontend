@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AgenteModel } from '../init-agente/agente.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthService, UserInterface } from '../../../../admin/auth/auth.service';
-import { CacheService } from '../../../../gdev-tools/cache/cache.service';
+import { GdevCache } from '../../../../gdev-tools/src/lib/cache/gdev-cache.service';
 import { Subject, Observable, Subscription, of, BehaviorSubject, zip, forkJoin } from 'rxjs';
 import { filter, concatAll, pluck, tap, map } from 'rxjs/operators';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
@@ -12,8 +12,8 @@ import { SystemEntitieModel, TipoEntidadModel } from './tipos/tipo.model';
 import { ColeccionModel } from '../../colecciones/collection.interface';
 import { TarjetaModel } from '../../tarjetas/tarjeta.model';
 import { HttpClient } from '@angular/common/http';
-import { AlertService } from '../../../../gdev-tools/alerts/alert.service';
-import { Loading } from '../../../../gdev-tools/loading/loading.service';
+import { GdevAlert } from '../../../../gdev-tools/src/lib/alert/alert.service';
+import { GdevLoading } from '../../../../gdev-tools/src/lib/loading/loading.service';
 import { SystemEntitiesService } from '../../../../admin/system/system-entities.service';
 import { environment } from '../../../../../environments/environment';
 import firebase from 'firebase/app'
@@ -48,11 +48,11 @@ export class CurrentAgenteService {
 
     constructor(
         private fs: AngularFirestore,
-        private _cache: CacheService,
+        private _cache: GdevCache,
         private router: Router,
         private _http: HttpClient,
-        private _alerts: AlertService,
-        private loading: Loading,
+        private _alerts: GdevAlert,
+        private _loading: GdevLoading,
         private _systemEntites: SystemEntitiesService
     ) {
         this.listenFirstLoad();
@@ -90,7 +90,7 @@ export class CurrentAgenteService {
     /** Inicializa todos los compoentes del agente */
     async get() {
 
-        this.loading.toggleWaitingSpinner('open')
+        this._loading.toggleWaitingSpinner('open')
 
         try {
 
@@ -119,11 +119,11 @@ export class CurrentAgenteService {
             // console.log('tarjetas');
 
             this.agenteLoaded$.next(true);
-            this.loading.toggleWaitingSpinner('close');
+            this._loading.toggleWaitingSpinner('close');
             return this.current;
 
         } catch (error) {
-            this.loading.toggleWaitingSpinner('close');
+            this._loading.toggleWaitingSpinner('close');
             console.error(error)
             this._alerts.sendError('Error', error)
         }

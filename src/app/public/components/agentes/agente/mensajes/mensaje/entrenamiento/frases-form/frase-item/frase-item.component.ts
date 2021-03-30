@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ElementRef, ViewChild, Output, EventEmitter } from '@angular/core';
 import { FraseEntrenamiento, FraseParte } from '../../../../mensaje.model';
-import { Loading } from '../../../../../../../../../gdev-tools/loading/loading.service';
+import { GdevLoading } from '../../../../../../../../../gdev-tools/src/lib/loading/loading.service';
 import { FrasesService } from '../frases.service';
 import { ParametrosService } from '../../parametros/parametros.service';
 
@@ -21,7 +21,7 @@ export class FraseItemComponent implements OnInit {
   @Output() onDeleted = new EventEmitter<boolean>()
 
   constructor (
-    private loading: Loading,
+    private _loading: GdevLoading,
     private _frases: FrasesService,
     public params_: ParametrosService
   ) { }
@@ -38,7 +38,7 @@ export class FraseItemComponent implements OnInit {
     this.switchPhraseInput = true
     console.log( phrase );
     this.phraseToEdit = await this._frases.stringifyFullPhrase( phrase )
-    await this.loading.waitFor( 100 )
+    await this._loading.waitFor( 100 )
     this.inputPhrase.nativeElement.focus()
   }
 

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, CollectionReference } from '@angular/fire/firestore';
 import { TarjetaModel } from './tarjeta.model';
-import { AlertService } from 'src/app/gdev-tools/alerts/alert.service';
-import { GdevCommonsService } from 'src/app/gdev-tools/commons/gdev-commons.service';
-import { CacheService } from '../../../gdev-tools/cache/cache.service';
+import { GdevAlert } from 'src/app/gdev-tools/src/lib/alert/alert.service';
+import { GdevCommonsService } from 'src/app/gdev-tools/src/lib/common/services/gdev-commons.service';
+import { GdevCache } from '../../../gdev-tools/src/lib/cache/gdev-cache.service';
 import { UserInterface } from '../../../admin/auth/auth.service';
 
 @Injectable({
@@ -20,9 +20,9 @@ export class TarjetasService {
 
     constructor(
         private fs: AngularFirestore,
-        private _alert: AlertService,
+        private _alert: GdevAlert,
         private _commons: GdevCommonsService,
-        private _cache: CacheService
+        private _cache: GdevCache
     ) {
         this.getTarjetas()
     }

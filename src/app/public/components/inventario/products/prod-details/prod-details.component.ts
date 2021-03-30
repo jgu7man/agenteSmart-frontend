@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { ProdDetalle } from '../product.model';
-import { AlertService } from 'src/app/gdev-tools/alerts/alert.service';
+import { GdevAlert } from 'src/app/gdev-tools/src/lib/alert/alert.service';
 
 @Component({
   selector: 'gdev-prod-details',
@@ -18,7 +18,7 @@ export class ProdDetailsComponent implements OnInit {
   @Output() detailsChanged: EventEmitter<ProdDetalle[]> = new EventEmitter()
 
   constructor (
-    private _alert: AlertService
+    private _alert: GdevAlert
   ) { }
 
   ngOnInit(): void {

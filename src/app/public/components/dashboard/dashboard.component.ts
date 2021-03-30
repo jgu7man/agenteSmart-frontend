@@ -3,10 +3,10 @@ import { ResponsiveService } from 'src/app/services/responsive.service';
 import { NAVLINK } from '../navbar/navlink.interface';
 import { DashboardService } from './dashboard.service';
 import { MatDrawer } from '@angular/material/sidenav';
-import { CacheService } from '../../../gdev-tools/cache/cache.service';
+import { GdevCache } from '../../../gdev-tools/src/lib/cache/gdev-cache.service';
 import { ChatService } from '../../../chat/components/chat.service';
 import { ActivatedRoute } from '@angular/router';
-import { Loading } from 'src/app/gdev-tools/loading/loading.service';
+import { GdevLoading } from 'src/app/gdev-tools/src/lib/loading/loading.service';
 
 @Component({
   selector: 'aSmart-dashboard',
@@ -25,9 +25,9 @@ export class DashboardComponent implements OnInit {
   constructor (
     public responsive: ResponsiveService,
     public dashboard: DashboardService,
-    private _cache: CacheService,
+    private _cache: GdevCache,
     public chat_: ChatService,
-    private _loading: Loading
+    private _loading: GdevLoading
   ) {
     this._loading.collectRouteData().subscribe( routeData => {
       this.section = routeData.data['section']

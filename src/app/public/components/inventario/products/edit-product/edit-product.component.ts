@@ -9,7 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DelProdcutComponent } from '../del-prodcut/del-prodcut.component';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA } from '@angular/cdk/keycodes';
-import { CacheService } from '../../../../../gdev-tools/cache/cache.service';
+import { GdevCache } from '../../../../../gdev-tools/src/lib/cache/gdev-cache.service';
 import { UserInterface } from '../../../../../admin/auth/auth.service';
 import { Subscription } from 'rxjs';
 
@@ -37,7 +37,7 @@ export class EditProductComponent implements OnInit, OnDestroy {
     public location: Location,
     private _dialog: MatDialog,
     private router: Router,
-    private _cache: CacheService
+    private _cache: GdevCache
   ) {
     this.product = undefined
     this.product = new GdevStoreProductModel( '', 0, false, '', '', [], [])

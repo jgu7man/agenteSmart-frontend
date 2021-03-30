@@ -5,9 +5,9 @@ import { GdevStoreProductModel } from './product.model';
 import { Subject } from 'rxjs';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-import { AlertService } from 'src/app/gdev-tools/alerts/alert.service';
+import { GdevAlert } from 'src/app/gdev-tools/src/lib/alert/alert.service';
 import { finalize } from 'rxjs/operators';
-import { CacheService } from '../../../../gdev-tools/cache/cache.service';
+import { GdevCache } from '../../../../gdev-tools/src/lib/cache/gdev-cache.service';
 import { UserInterface } from '../../../../admin/auth/auth.service';
 import { TipoEntidadModel, Clase } from '../../agentes/agente/tipos/tipo.model';
 
@@ -21,8 +21,8 @@ export class GdevStoreProductsService {
     constructor(
         private fs: AngularFirestore,
         private ft: AngularFireStorage,
-        private _alerts: AlertService,
-        private _cache: CacheService
+        private _alerts: GdevAlert,
+        private _cache: GdevCache
     ) {
         this.usuario = this._cache.getDataKey('user');
     }

@@ -2,7 +2,7 @@ import { Component, Input, OnInit, Output, EventEmitter, ViewChild, AfterViewIni
 import { ParametrosService } from '../parametros.service';
 import { RespuestasService } from '../../respuestas/respuestas.service';
 import {MatSelect, MatSelectChange} from '@angular/material/select';
-import { Loading } from '../../../../../../../../../gdev-tools/loading/loading.service';
+import { GdevLoading } from '../../../../../../../../../gdev-tools/src/lib/loading/loading.service';
 
 @Component({
     selector: 'aSmart-param-selector',
@@ -21,7 +21,7 @@ export class ParamSelectorComponent implements OnInit, AfterViewInit {
 
     constructor(
         private _params: ParametrosService,
-        private _loading: Loading,
+        private _loading: GdevLoading,
         public respuestas_: RespuestasService,
     ) {}
 

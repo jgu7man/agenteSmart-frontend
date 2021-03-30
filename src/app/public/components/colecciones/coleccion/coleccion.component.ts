@@ -3,7 +3,7 @@ import { ColeccionModel } from '../collection.interface';
 import { ColeccionesService } from '../colecciones.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DelColeccionComponent } from '../del-coleccion/del-coleccion.component';
-import { AlertService } from '../../../../gdev-tools/alerts/alert.service';
+import { GdevAlert } from '../../../../gdev-tools/src/lib/alert/alert.service';
 
 @Component({
   selector: 'aSmart-coleccion',
@@ -20,7 +20,7 @@ export class ColeccionComponent implements OnInit {
 
   constructor (
     public colecciones: ColeccionesService,
-    private _alerta: AlertService,
+    private _alerta: GdevAlert,
     private _dialog: MatDialog
   ) {
     this.coleccion = new ColeccionModel('', [], [])

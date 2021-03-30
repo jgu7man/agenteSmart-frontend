@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ContextoModel } from '../contexto.model';
 import { ContextosService } from '../contextos.service';
-import { Loading } from '../../../../../../gdev-tools/loading/loading.service';
+import { GdevLoading } from '../../../../../../gdev-tools/src/lib/loading/loading.service';
 
 @Component({
   templateUrl: './add-contexto-dialog.component.html',
@@ -14,7 +14,7 @@ export class AddContextoDialogComponent implements OnInit {
     public dialog_: MatDialogRef<AddContextoDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public nuevoContexto: ContextoModel,
     private _contextos: ContextosService,
-    private loading: Loading
+    private _loading: GdevLoading
   ) { }
 
   ngOnInit(): void {
@@ -22,9 +22,9 @@ export class AddContextoDialogComponent implements OnInit {
 
 
   async onSave() {
-    this.loading.toggleWaitingSpinner('open')
+    this._loading.toggleWaitingSpinner('open')
     let contexto = await this._contextos.setContext(this.nuevoContexto)
-    this.loading.toggleWaitingSpinner('close')
+    this._loading.toggleWaitingSpinner('close')
     this.dialog_.close(contexto)
   }
 

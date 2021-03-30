@@ -1,9 +1,9 @@
-import { AlertService } from 'src/app/gdev-tools/alerts/alert.service';
+import { GdevAlert } from 'src/app/gdev-tools/src/lib/alert/alert.service';
 import { IntentModel } from './mensaje.model';
 import { Component, OnInit } from '@angular/core';
 import { MensajesService} from './mensajes.service'
 import { CurrentAgenteService } from '../current-agente.service';
-import { Loading } from '../../../../../gdev-tools/loading/loading.service';
+import { GdevLoading } from '../../../../../gdev-tools/src/lib/loading/loading.service';
 
 
 @Component({
@@ -15,13 +15,13 @@ export class MensajesComponent implements OnInit {
 
   constructor(
     private _mensajes:MensajesService,
-    private _alerta: AlertService,
+    private _alerta: GdevAlert,
     public agente_: CurrentAgenteService,
-    private loading: Loading
+    private _loading: GdevLoading
   ) { }
 
   async ngOnInit() {
-    await this.loading.waitFor(5000)
+    await this._loading.waitFor(5000)
     // console.log( this.agente_.contextosList )
   }
   

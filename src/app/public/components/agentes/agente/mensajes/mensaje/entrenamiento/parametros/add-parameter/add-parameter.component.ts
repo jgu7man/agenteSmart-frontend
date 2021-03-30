@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, ElementRef, ViewChild } from '@angular/core';
 import { ParametroMensaje } from '../../../../mensaje.model';
 import { ParametrosService } from '../parametros.service';
-import { Loading } from '../../../../../../../../../gdev-tools/loading/loading.service';
+import { GdevLoading } from '../../../../../../../../../gdev-tools/src/lib/loading/loading.service';
 
 @Component({
   selector: 'aSmart-add-parameter',
@@ -16,7 +16,7 @@ export class AddParameterComponent implements OnInit {
 
   constructor (
     public paramsService: ParametrosService,
-    private loading: Loading
+    private _loading: GdevLoading
   ) { }
 
   async ngOnInit() {
@@ -27,7 +27,7 @@ export class AddParameterComponent implements OnInit {
       mandatory: false,
       isList: false
     }
-    await this.loading.waitFor(200)
+    await this._loading.waitFor(200)
     this.displayName.nativeElement.focus()
   }
 

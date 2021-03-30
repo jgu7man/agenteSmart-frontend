@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { CacheService } from '../../../../../../gdev-tools/cache/cache.service';
+import { GdevCache } from '../../../../../../gdev-tools/src/lib/cache/gdev-cache.service';
 import { ContextoModel } from '../contexto.model';
 import { MatDialog } from '@angular/material/dialog';
 import { AddContextoDialogComponent } from '../add-contexto-dialog/add-contexto-dialog.component';
@@ -18,7 +18,7 @@ export class ContextoSelectorComponent implements OnInit {
     @Input() contexto: string
     @Output() contextSelected: EventEmitter<ContextSelected> = new EventEmitter();
 
-    constructor(private _cache: CacheService, private _dialog: MatDialog) {}
+    constructor(private _cache: GdevCache, private _dialog: MatDialog) {}
 
     ngOnInit(): void {
         this.getContextList();

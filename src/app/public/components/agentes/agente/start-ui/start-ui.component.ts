@@ -1,9 +1,9 @@
-import { CacheService } from './../../../../../gdev-tools/cache/cache.service';
+import { GdevCache } from './../../../../../gdev-tools/src/lib/cache/gdev-cache.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
-import { AlertService } from 'src/app/gdev-tools/alerts/alert.service';
+import { GdevAlert } from 'src/app/gdev-tools/src/lib/alert/alert.service';
 
 @Component({
   templateUrl: './start-ui.component.html',
@@ -17,9 +17,9 @@ export class StartUiComponent implements OnInit {
     constructor(
         private _formBuilder: FormBuilder,
         private _fs: AngularFirestore,
-        private _cache: CacheService,
+        private _cache: GdevCache,
         private _router: Router,
-        private _alerts: AlertService
+        private _alerts: GdevAlert
     ) { }
 
     ngOnInit() {

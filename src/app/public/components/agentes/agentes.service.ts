@@ -4,9 +4,9 @@ import { AgenteModel } from './init-agente/agente.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
-import { CacheService } from '../../../gdev-tools/cache/cache.service';
-import { Loading } from '../../../gdev-tools/loading/loading.service';
-import { AlertService } from '../../../gdev-tools/alerts/alert.service';
+import { GdevCache } from '../../../gdev-tools/src/lib/cache/gdev-cache.service';
+import { GdevLoading } from '../../../gdev-tools/src/lib/loading/loading.service';
+import { GdevAlert } from '../../../gdev-tools/src/lib/alert/alert.service';
 import { tap, catchError } from 'rxjs/operators';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment  } from "src/environments/environment";
@@ -28,9 +28,9 @@ export class AgentesService {
     constructor(
         private fs: AngularFirestore,
         private router: Router,
-        private _cache: CacheService,
-        private loading: Loading,
-        private _alerts: AlertService,
+        private _cache: GdevCache,
+        private _loading: GdevLoading,
+        private _alerts: GdevAlert,
         private _http: HttpClient
     ) {
         this.listenAgentes();
@@ -73,7 +73,7 @@ export class AgentesService {
     //         const agentesCol = await this.afs.collection( 'usuarios' ).ref
     //             .doc( this.usuario.uid ).collection( 'agentes' ).get()
 
-    //         await this.loading.asyncForEach( agentesCol.docs, agente => {
+    //         await this._loading.asyncForEach( agentesCol.docs, agente => {
     //             this.agentes.push( agente.data() as AgenteModel )
     //         } )
 

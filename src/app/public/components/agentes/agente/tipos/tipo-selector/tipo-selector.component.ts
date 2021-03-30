@@ -12,7 +12,7 @@ import { startWith, map } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { TiposService } from '../tipos.service';
 import { CurrentAgenteService } from '../../current-agente.service';
-import { CacheService } from '../../../../../../gdev-tools/cache/cache.service';
+import { GdevCache } from '../../../../../../gdev-tools/src/lib/cache/gdev-cache.service';
 import { TipoEntidadModel } from '../tipo.model';
 
 @Component({
@@ -33,7 +33,7 @@ export class TipoSelectorComponent implements OnInit, OnDestroy {
     constructor(
         private _tipos: TiposService,
         private _agente: CurrentAgenteService,
-        private _cache: CacheService
+        private _cache: GdevCache
     ) {}
 
     async ngOnInit() {

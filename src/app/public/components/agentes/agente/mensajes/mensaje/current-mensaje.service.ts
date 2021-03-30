@@ -5,15 +5,15 @@ import { CurrentAgenteService } from '../../current-agente.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { IntentModel } from '../mensaje.model';
 import { Subject, Subscription, forkJoin, Observable } from 'rxjs';
-import { Loading } from '../../../../../../gdev-tools/loading/loading.service';
+import { GdevLoading } from '../../../../../../gdev-tools/src/lib/loading/loading.service';
 import { map, pluck, tap, debounceTime } from 'rxjs/operators';
-import { CacheService } from '../../../../../../gdev-tools/cache/cache.service';
+import { GdevCache } from '../../../../../../gdev-tools/src/lib/cache/gdev-cache.service';
 import { RespuestaModel } from './entrenamiento/respuestas/respuesta.model';
-import { AlertService } from '../../../../../../gdev-tools/alerts/alert.service';
+import { GdevAlert } from '../../../../../../gdev-tools/src/lib/alert/alert.service';
 import { Store } from '@ngrx/store';
 import { MensajeState } from '../mensaje.model';
 import * as actions from './store/mensaje.actions';
-import { GdevCommonsService } from '../../../../../../gdev-tools/commons/gdev-commons.service';
+import { GdevCommonsService } from '../../../../../../gdev-tools/src/lib/common/services/gdev-commons.service';
 import { Location } from '@angular/common';
 import { environment } from '../../../../../../../environments/environment';
 
@@ -43,11 +43,11 @@ export class CurrentMensajeService {
 
     constructor(
         private fs: AngularFirestore,
-        private loading: Loading,
+        private _loading: GdevLoading,
         private store: Store<MensajeState>,
         private _agente: CurrentAgenteService,
-        private _cache: CacheService,
-        private _alerts: AlertService,
+        private _cache: GdevCache,
+        private _alerts: GdevAlert,
         private _http: HttpClient,
         private _commons: GdevCommonsService,
         private _router: Router,
@@ -72,10 +72,10 @@ export class CurrentMensajeService {
      */
     private getParams() {
         return forkJoin({
-            ['mensajeName']: this.loading
+            ['mensajeName']: this._loading
                 .getRouteParams()
                 .pipe(pluck('name')),
-            ['currentContexto']: this.loading
+            ['currentContexto']: this._loading
                 .getRouteQueryParams()
                 .pipe(pluck('contexto')),
         });
@@ -124,7 +124,7 @@ export class CurrentMensajeService {
 
     /** Obtiene el intent actual a partir de la subscripción a los cambios de la ruta */
     async getByActivatedRoute( intentName: string, contexto: string ) {
-        this.loading.toggleWaitingSpinner('open')
+        this._loading.toggleWaitingSpinner('open')
         this._cache.updateData('currentContexto', contexto)
         this._cache.updateData('mensajeName', intentName)
 
@@ -135,12 +135,12 @@ export class CurrentMensajeService {
         console.log(this.current)
         if ( this.current ) { this.setCurrent() }
         else {
-            await this.loading.waitFor(1000)
+            await this._loading.waitFor(1000)
             const projectId: string = this._cache.getDataKey('projectId');
             this._alerts.sendFloatNotification( 'Error al cargar el intent. Parece que fue eliminado' )
             this._router.navigate( [ `/dashboard/agente/${ projectId }/mensajes` ] )
         }
-        this.loading.toggleWaitingSpinner('close')
+        this._loading.toggleWaitingSpinner('close')
     }
 
 
@@ -204,7 +204,7 @@ export class CurrentMensajeService {
     /** Actualiza el intent actual en DIALOGFLOW con los cambios hechos en el área de entrenamiento. */
     async update(mensaje?: IntentModel) {
         console.log( mensaje )
-        this.loading.toggleWaitingSpinner('open');
+        this._loading.toggleWaitingSpinner('open');
 
         try {
 
@@ -217,7 +217,7 @@ export class CurrentMensajeService {
 
                     this._agente.getIntentList()
                     this.store.dispatch(actions.setSaved());
-                    this.loading.toggleWaitingSpinner('close');
+                    this._loading.toggleWaitingSpinner('close');
                     this._alerts.sendFloatNotification('Mensaje guardado');
                     // return this.mensajeUpdated$.next()
                 }
@@ -228,14 +228,14 @@ export class CurrentMensajeService {
             else {
                 await this.updateIntentApiRequest( mensaje );
                 this._agente.getIntentList()
-                this.loading.toggleWaitingSpinner('close');
+                this._loading.toggleWaitingSpinner('close');
                 return
             }
 
         } catch (error) {
             console.error(error);
             this._alerts.sendError( 'No se pudo guardar', error )
-            this.loading.toggleWaitingBar();
+            this._loading.toggleWaitingBar();
         }
     }
 
@@ -317,7 +317,7 @@ export class CurrentMensajeService {
      * @returns {*}  {Promise<any>}
      */
     public deleteIntentRequest( intentId: string ): Promise<any> {
-        this.loading.toggleWaitingSpinner('open')
+        this._loading.toggleWaitingSpinner('open')
         return new Promise((resolve, reject) => {
             const projectId: string = this._cache.getDataKey('projectId');
 

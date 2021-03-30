@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AgentesService } from '../agentes.service';
 import { AgenteModel, ImageUri } from '../init-agente/agente.model';
 import { UserInterface } from '../../../../admin/auth/auth.service';
-import { CacheService } from '../../../../gdev-tools/cache/cache.service';
+import { GdevCache } from '../../../../gdev-tools/src/lib/cache/gdev-cache.service';
 
 @Component({
   selector: 'aSmart-edit-agente',
@@ -21,7 +21,7 @@ export class EditAgenteComponent implements OnInit {
   constructor (
     private _route: ActivatedRoute,
     public agentes_: AgentesService,
-    private _cache: CacheService
+    private _cache: GdevCache
   ) {
     this.projectId = this._route.snapshot.params[ 'id' ]
     this.agente = new AgenteModel( '', '', 'es-419', 'America/New_York', '', this.avatar )

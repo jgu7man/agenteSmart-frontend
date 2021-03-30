@@ -1,9 +1,9 @@
 import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ElementRef } from '@angular/core';
-import { TextService } from '../../../../../../services/text.service';
+import { GdevText } from '../../../../../../services/text.service';
 import { ContextosService } from '../contextos.service';
 import { CurrentAgenteService } from '../../current-agente.service';
 import { ContextoModel } from '../contexto.model';
-import { Loading } from '../../../../../../gdev-tools/loading/loading.service';
+import { GdevLoading } from '../../../../../../gdev-tools/src/lib/loading/loading.service';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
@@ -24,9 +24,9 @@ export class ContextoComponent implements OnInit {
   @Output() contextEdited: EventEmitter<any> = new EventEmitter()
 
   constructor (
-    private _text: TextService,
+    private _text: GdevText,
     private _contextos: ContextosService,
-    private _loading: Loading
+    private _loading: GdevLoading
   ) {
     
    }

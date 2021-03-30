@@ -6,7 +6,7 @@ import { Location } from '@angular/common';
 import { COMMA } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { UserInterface } from '../../../../../admin/auth/auth.service';
-import { CacheService } from '../../../../../gdev-tools/cache/cache.service';
+import { GdevCache } from '../../../../../gdev-tools/src/lib/cache/gdev-cache.service';
 
 @Component({
   selector: 'gdev-add-product',
@@ -30,7 +30,7 @@ export class AddProductComponent implements OnInit {
     public _products: GdevStoreProductsService,
     // private _categorias: GdevStoreCategoriesService,
     public location: Location,
-    private _cache: CacheService
+    private _cache: GdevCache
   ) {
     this.product = undefined
     this.product = new GdevStoreProductModel( '', 0, false, '', '', [], [])

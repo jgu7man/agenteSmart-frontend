@@ -3,12 +3,12 @@ import { ResponsiveService } from '../../../../../services/responsive.service';
 import { CurrentAgenteService } from '../current-agente.service';
 import { IntentModel } from '../mensajes/mensaje.model';
 import { CurrentMensajeService } from '../mensajes/mensaje/current-mensaje.service';
-import { CacheService } from '../../../../../gdev-tools/cache/cache.service';
-import { AlertService } from '../../../../../gdev-tools/alerts/alert.service';
+import { GdevCache } from '../../../../../gdev-tools/src/lib/cache/gdev-cache.service';
+import { GdevAlert } from '../../../../../gdev-tools/src/lib/alert/alert.service';
 import { AppState } from '../../../../../app.state';
 import { Store } from '@ngrx/store';
 import { Subscription, Subject, Observable } from 'rxjs';
-import { Loading } from '../../../../../gdev-tools/loading/loading.service';
+import { GdevLoading } from '../../../../../gdev-tools/src/lib/loading/loading.service';
 import { first, take } from 'rxjs/operators';
 
 @Component({
@@ -24,15 +24,15 @@ export class BienvenidaComponent implements OnInit {
         public responsive: ResponsiveService,
         private _agente: CurrentAgenteService,
         public mensaje_: CurrentMensajeService,
-        private _alerts: AlertService,
+        private _alerts: GdevAlert,
         public store: Store<AppState>,
-        private loading: Loading,
-        private _cache: CacheService
+        private _loading: GdevLoading,
+        private _cache: GdevCache
     ) {}
 
     ngOnInit(): void {
         this.getWelcomeIntent()
-        // this.loading.toggleWaitingSpinner(true)
+        // this._loading.toggleWaitingSpinner(true)
         this.stateSubs = this.store.subscribe((store) => {
             this.unsaved = store.editIntent.unsaved;
             if (this.unsaved == false) {
@@ -47,7 +47,7 @@ export class BienvenidaComponent implements OnInit {
         this.intent$ = this._cache.listenForChanges<IntentModel>('currentIntent')
         await this.mensaje_.getCurrent('Default Welcome Intent')
         // await this.intent$.pipe(take(1)).toPromise()
-        // this.loading.toggleWaitingSpinner(false)
+        // this._loading.toggleWaitingSpinner(false)
     }
 
 

@@ -1,5 +1,5 @@
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { TextService } from './../../../../../gdev-tools/text/gdev-text.service';
+import { GdevText } from './../../../../../gdev-tools/src/lib/text/gdev-text.service';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError, Subject } from 'rxjs';
@@ -10,11 +10,11 @@ import { UserInterface } from 'src/app/admin/auth/auth.service';
 import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { CreatingComponent } from '../creating/creating.component';
-import { AlertService } from '../../../../../gdev-tools/alerts/alert.service';
+import { GdevAlert } from '../../../../../gdev-tools/src/lib/alert/alert.service';
 import { AgentConfigService } from '../../agente/agent-config/agent-config.service';
 import { ContextoModel } from '../../agente/contextos/contexto.model';
 import { environment } from '../../../../../../environments/environment';
-import { CacheService } from 'src/app/gdev-tools/cache/cache.service';
+import { GdevCache } from 'src/app/gdev-tools/src/lib/cache/gdev-cache.service';
 
 interface doc {
     user: string,
@@ -33,11 +33,11 @@ export class CrearAgenteService {
         private _auth: AuthService,
         private afs: AngularFirestore,
         private router: Router,
-        private _text: TextService,
+        private _text: GdevText,
         private _dialog: MatDialog,
-        private _alerts: AlertService,
+        private _alerts: GdevAlert,
         private _config: AgentConfigService,
-        private _cache: CacheService
+        private _cache: GdevCache
     ) { }
 
     waitFor = ( ms ) => new Promise( r => setTimeout( r, ms ) )

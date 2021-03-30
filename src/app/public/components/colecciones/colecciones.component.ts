@@ -7,7 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddColeccionComponent } from './add-coleccion/add-coleccion.component';
 import { CurrentAgenteService } from '../agentes/agente/current-agente.service';
 import { Subscription, Observable } from 'rxjs';
-import { CacheService } from '../../../gdev-tools/cache/cache.service';
+import { GdevCache } from '../../../gdev-tools/src/lib/cache/gdev-cache.service';
 
 @Component({
   selector: 'aSmart-colecciones',
@@ -23,7 +23,7 @@ export class ColeccionesComponent implements OnInit, OnDestroy {
     public colecciones_: ColeccionesService,
     private _dialog: MatDialog,
     public agente: CurrentAgenteService,
-    private _cache: CacheService
+    private _cache: GdevCache
   ) {
     this.coleccionSelected = new ColeccionModel( ''  )
    }

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { IntentModel } from '../../../mensaje.model';
-import { CacheService } from '../../../../../../../../gdev-tools/cache/cache.service';
+import { GdevCache } from '../../../../../../../../gdev-tools/src/lib/cache/gdev-cache.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -14,7 +14,7 @@ export class BreadcumsComponent implements OnInit {
   contexto
   @Input() intentIndex
   constructor (
-    private _cache: CacheService,
+    private _cache: GdevCache,
     private _route: ActivatedRoute,
   ) {
   }

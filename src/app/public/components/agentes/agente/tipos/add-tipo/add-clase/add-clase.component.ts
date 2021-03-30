@@ -11,8 +11,8 @@ import { COMMA, ENTER, TAB } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Clase, TipoEntidadModel } from '../../tipo.model';
 import { TiposService } from '../../tipos.service';
-import { Loading } from '../../../../../../../gdev-tools/loading/loading.service';
-import { TextService } from 'src/app/services/text.service';
+import { GdevLoading } from '../../../../../../../gdev-tools/src/lib/loading/loading.service';
+import { GdevText } from 'src/app/services/text.service';
 
 @Component({
     selector: 'aSmart-add-clase',
@@ -32,8 +32,8 @@ export class AddClaseComponent implements OnInit {
 
     constructor (
         public tipos_: TiposService,
-        private loading: Loading,
-        private _text: TextService
+        private _loading: GdevLoading,
+        private _text: GdevText
     ) {
         if (this.clase) this.clase.synonyms = [];
     }
@@ -71,7 +71,7 @@ export class AddClaseComponent implements OnInit {
             this.newClaseSinonimos.push(this.clase.value);
             // console.log(this.clase);
             this.switchSinonimosInput = true;
-            this.loading.waitFor(100);
+            this._loading.waitFor(100);
             this.sinonimosInput.nativeElement.focus();
             this.tipos_.setSinonimo(
                 this.tipo.name,

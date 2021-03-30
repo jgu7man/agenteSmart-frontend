@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { ParametrosService } from '../../../parametros/parametros.service';
-import { Loading } from '../../../../../../../../../../gdev-tools/loading/loading.service';
+import { GdevLoading } from '../../../../../../../../../../gdev-tools/src/lib/loading/loading.service';
 import { FrasesService } from '../../frases.service';
 import { MensajesService } from '../../../../../mensajes.service';
 import { CurrentMensajeService } from '../../../../current-mensaje.service';
@@ -31,7 +31,7 @@ export class PartParameterComponent implements OnInit {
 
   constructor (
     private _params: ParametrosService,
-    private loading: Loading,
+    private _loading: GdevLoading,
       private _mensaje: CurrentMensajeService,
     private _frases: FrasesService,
   ) { }
@@ -43,7 +43,7 @@ export class PartParameterComponent implements OnInit {
 
   async toSelectTipo() {
     this.switchEntitySelector = true
-    await this.loading.waitFor( 100 )
+    await this._loading.waitFor( 100 )
     // this.partEntityInput.nativeElement.focus()
   }
 

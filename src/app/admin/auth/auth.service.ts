@@ -7,8 +7,8 @@ import { of, Observable, Subject } from 'rxjs';
 import { switchMap, debounceTime } from 'rxjs/operators';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 // import * as google from 'googleapis'
-import { Loading } from '../../gdev-tools/loading/loading.service';
-import {CacheService} from '../../gdev-tools/cache/cache.service';
+import { GdevLoading } from '../../gdev-tools/src/lib/loading/loading.service';
+import {GdevCache} from '../../gdev-tools/src/lib/cache/gdev-cache.service';
 // import * as firebase from 'firebase/app';
 // import 'firebase/auth';
 
@@ -30,8 +30,8 @@ export class AuthService {
     private afs: AngularFirestore,
     private router: Router,
     private _http: HttpClient,
-    private loading: Loading,
-    private _cache: CacheService,
+    private _loading: GdevLoading,
+    private _cache: GdevCache,
     ) {
       console.time('user')
       

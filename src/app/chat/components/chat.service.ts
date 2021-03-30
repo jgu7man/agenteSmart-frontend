@@ -12,7 +12,7 @@ import {
 } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
 import { AppState } from '../../app.state';
-import { CacheService } from '../../gdev-tools/cache/cache.service';
+import { GdevCache } from '../../gdev-tools/src/lib/cache/gdev-cache.service';
 import { HttpClient } from '@angular/common/http';
 import {
     ResultResponse,
@@ -40,7 +40,7 @@ export class ChatService {
 
     constructor(
         private _store: Store<AppState>,
-        private _cache: CacheService,
+        private _cache: GdevCache,
         private _http: HttpClient
     ) {
         this.sendMessage();

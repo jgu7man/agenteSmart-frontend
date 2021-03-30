@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { ParametroMensaje } from '../../../../mensaje.model';
 import { ParametrosService } from '../parametros.service';
-import { Loading } from '../../../../../../../../../gdev-tools/loading/loading.service';
+import { GdevLoading } from '../../../../../../../../../gdev-tools/src/lib/loading/loading.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
@@ -20,7 +20,7 @@ export class ParamRowComponent implements OnInit {
 
   constructor (
     public params_: ParametrosService,
-    private loading: Loading
+    private _loading: GdevLoading
   ) { }
 
   ngOnInit(): void {
@@ -34,7 +34,7 @@ export class ParamRowComponent implements OnInit {
   async toEditDisplayName() {
     this.switchNameInput = true
     this.prevDisplayName = this.param.displayName
-    await this.loading.waitFor( 100 )
+    await this._loading.waitFor( 100 )
     this.displayNameInput.nativeElement.focus()
   }
 

@@ -2,12 +2,12 @@ import {Component, OnInit} from '@angular/core';
 import { MensajeModel, IntentModel } from '../../mensajes/mensaje.model';
 import { CurrentAgenteService } from '../../current-agente.service';
 import { CurrentMensajeService } from '../../mensajes/mensaje/current-mensaje.service';
-import { AlertService } from '../../../../../../gdev-tools/alerts/alert.service';
-import { Loading } from '../../../../../../gdev-tools/loading/loading.service';
+import { GdevAlert } from '../../../../../../gdev-tools/src/lib/alert/alert.service';
+import { GdevLoading } from '../../../../../../gdev-tools/src/lib/loading/loading.service';
 import { RespuestaModel, SimpleModel, ResultResponse } from '../../mensajes/mensaje/entrenamiento/respuestas/respuesta.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { MatDialogRef } from '@angular/material/dialog';
-import { CacheService } from '../../../../../../gdev-tools/cache/cache.service';
+import { GdevCache } from '../../../../../../gdev-tools/src/lib/cache/gdev-cache.service';
 
 @Component({
     templateUrl: './config-retroceso.component.html',
@@ -22,18 +22,18 @@ export class ConfigRetrocesoComponent implements OnInit {
     constructor (
         private _agente: CurrentAgenteService,
         public mensaje_: CurrentMensajeService,
-        private _alerts: AlertService,
-        private loading: Loading,
+        private _alerts: GdevAlert,
+        private _loading: GdevLoading,
         private fs: AngularFirestore,
         public dialog_: MatDialogRef<ConfigRetrocesoComponent>,
-        private _cache: CacheService
+        private _cache: GdevCache
     ) {
         this.result = new SimpleModel('', [])
         this.respuesta = new RespuestaModel('simple',this.result,0)
     }
 
     ngOnInit(): void {
-        // this.loading.toggleWaitingSpinner( true )
+        // this._loading.toggleWaitingSpinner( true )
         
         this.getFallbackIntent()
     }
@@ -54,7 +54,7 @@ export class ConfigRetrocesoComponent implements OnInit {
         }
 
         
-        // this.loading.toggleWaitingSpinner(false)
+        // this._loading.toggleWaitingSpinner(false)
     }
 
     catchText(respuesta) {

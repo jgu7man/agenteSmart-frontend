@@ -3,7 +3,7 @@ import { GdevStoreProductModel } from '../product.model';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GdevStoreProductsService } from '../products.service';
 import { Router } from '@angular/router';
-import { AlertService } from 'src/app/gdev-tools/alerts/alert.service';
+import { GdevAlert } from 'src/app/gdev-tools/src/lib/alert/alert.service';
 
 @Component({
   templateUrl: './del-prodcut.component.html',
@@ -17,7 +17,7 @@ export class DelProdcutComponent implements OnInit {
     @Inject( MAT_DIALOG_DATA ) private productId: string,
     private _products: GdevStoreProductsService,
     private _router: Router,
-    private _alerta: AlertService
+    private _alerta: GdevAlert
   ) {
     this.product = new GdevStoreProductModel( '', 0, false, '', '', [], [])
   }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AgenteModel, ImageUri } from '../agente.model';
 import { CrearAgenteService } from './crear-agente.service';
-import { CacheService } from '../../../../../gdev-tools/cache/cache.service';
+import { GdevCache } from '../../../../../gdev-tools/src/lib/cache/gdev-cache.service';
 import { UserInterface } from '../../../../../admin/auth/auth.service';
 
 @Component({
@@ -17,7 +17,7 @@ export class FormCrearAgenteComponent implements OnInit {
   avatar: ImageUri = { url:'', alt:''}
   constructor(
     private _agente: CrearAgenteService,
-    private _cache: CacheService
+    private _cache: GdevCache
   ) {
     this.agente = new AgenteModel( '', '', 'es-419', 'America/New_York', '', this.avatar )
     this.user = this._cache.getDataKey( 'user' )

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { ColorService } from '../gdev-tools/color/color.service';
+import { GdevColor } from '../gdev-tools/src/lib/color/gdev-color.service';
 
 @Component({
   selector: 'aSmart-public',
@@ -11,7 +11,7 @@ export class PublicComponent implements OnInit {
 
   
   constructor (
-    private _color: ColorService
+    private _color: GdevColor
   ) {
     this._color.ColorPalette = {
       primary: '#3079F1',

@@ -13,7 +13,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../../../../../app.state';
 import * as actions from '../store/tipo.actions';
 import { Router } from '@angular/router';
-import { CacheService } from '../../../../../../gdev-tools/cache/cache.service';
+import { GdevCache } from '../../../../../../gdev-tools/src/lib/cache/gdev-cache.service';
 
 @Component({
     selector: 'aSmart-tipo',
@@ -33,7 +33,7 @@ export class TipoComponent implements OnInit {
         public tipos_: TiposService,
         private store: Store<AppState>,
         private _router: Router,
-        private _cache: CacheService
+        private _cache: GdevCache
     ) {
         this.projectId = this._cache.getDataKey('projectId')
      }

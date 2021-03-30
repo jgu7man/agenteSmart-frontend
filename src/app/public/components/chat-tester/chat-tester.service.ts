@@ -4,7 +4,7 @@ import { distinctUntilChanged, tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { QuickResponse, Image } from '../../../chat/store/chat.model';
 import { HttpClient } from '@angular/common/http';
-import { CacheService } from '../../../gdev-tools/cache/cache.service';
+import { GdevCache } from '../../../gdev-tools/src/lib/cache/gdev-cache.service';
 import { ResultResponse, SimpleModel, CondicionalModel, RegistroDatosModel, RespuestaBuscarModel } from '../agentes/agente/mensajes/mensaje/entrenamiento/respuestas/respuesta.model';
 import {threadId} from 'worker_threads';
 import { Store } from '@ngrx/store';
@@ -23,7 +23,7 @@ export class ChatTesterService {
     constructor (
         private _chat: ChatService,
         private _http: HttpClient,
-        private _cache: CacheService,
+        private _cache: GdevCache,
         private _store: Store<AppState>
     ) {
         this.sendMessage();

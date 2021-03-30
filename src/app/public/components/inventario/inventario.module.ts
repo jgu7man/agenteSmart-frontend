@@ -8,7 +8,7 @@ import { AddProductComponent } from './products/add-product/add-product.componen
 import { DelProdcutComponent } from './products/del-prodcut/del-prodcut.component';
 import { EditProductComponent } from './products/edit-product/edit-product.component';
 import { ProdDetailsComponent } from './products/prod-details/prod-details.component';
-import { GdevToolsModule } from '../../../gdev-tools/gdev-tools.module';
+import { GdevToolsModule } from '../../../gdev-tools/src/lib/gdev-tools.module';
 import { MaterialModule } from 'src/app/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 

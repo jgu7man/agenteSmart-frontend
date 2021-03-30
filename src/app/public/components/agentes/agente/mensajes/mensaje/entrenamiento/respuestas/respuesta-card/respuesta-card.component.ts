@@ -1,4 +1,4 @@
-import { AlertService } from 'src/app/gdev-tools/alerts/alert.service';
+import { GdevAlert } from 'src/app/gdev-tools/src/lib/alert/alert.service';
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import {
@@ -7,8 +7,8 @@ import {
     ResultResponse,
 } from '../respuesta.model';
 import { RespuestasService } from '../respuestas.service';
-import { Loading } from 'src/app/gdev-tools/loading/loading.service';
-import { CacheService } from '../../../../../../../../../gdev-tools/cache/cache.service';
+import { GdevLoading } from 'src/app/gdev-tools/src/lib/loading/loading.service';
+import { GdevCache } from '../../../../../../../../../gdev-tools/src/lib/cache/gdev-cache.service';
 import { ContextosService } from '../../../../../contextos/contextos.service';
 import { ContextoModel } from '../../../../../contextos/contexto.model';
 import { IntentModel, MensajeModel } from '../../../../mensaje.model';
@@ -50,9 +50,9 @@ export class RespuestaCardComponent implements OnInit {
 
     constructor(
         public respuestas_: RespuestasService,
-        private _alerts: AlertService,
-        private loading: Loading,
-        private _cache: CacheService,
+        private _alerts: GdevAlert,
+        private _loading: GdevLoading,
+        private _cache: GdevCache,
         public contextos_: ContextosService,
         private _dialog: MatDialog,
         private _mensaje: CurrentMensajeService,
@@ -85,7 +85,7 @@ export class RespuestaCardComponent implements OnInit {
             // Set first intent of every context
             this.nextMensajesList = []
             var lists = Object.keys(this.contextLists)
-            await this.loading.asyncForEach(lists, async (contextName) => {
+            await this._loading.asyncForEach(lists, async (contextName) => {
                 var contextList: any[] = this.contextLists[contextName]
                 if (contextList[0]) {
                     this.nextMensajesList.push(contextList[0])
@@ -113,7 +113,7 @@ export class RespuestaCardComponent implements OnInit {
             //  Set uncontext intents
             var allIntents = this._cache.getDataKey<IntentModel[]>('intents')
             if (allIntents && allIntents.length > 0) {
-                await this.loading.asyncForEach(allIntents,
+                await this._loading.asyncForEach(allIntents,
                     (intent: IntentModel) => {
                         let intentStored = this.nextMensajesList.find(
                             i => i.displayName === intent.displayName
@@ -196,7 +196,7 @@ export class RespuestaCardComponent implements OnInit {
         var nextMensaje: MensajeModel
         var lists = Object.keys(this.contextLists)
         console.log(nextIntent);
-        await this.loading.asyncForEach(lists, async (contextName) => {
+        await this._loading.asyncForEach(lists, async (contextName) => {
             console.log(this.contextLists[contextName]);
             let mensajeFinded = this.contextLists[contextName].find(
                 intent => intent.displayName == nextIntent
@@ -316,7 +316,7 @@ export class RespuestaCardComponent implements OnInit {
             );
         } else {
             var respuestaKeys = Object.keys(respuestaObj);
-            await this.loading.asyncForEach(respuestaKeys, (key) => {
+            await this._loading.asyncForEach(respuestaKeys, (key) => {
                 if (respuestaObj[key] === undefined) delete respuestaObj[key];
                 return;
             });

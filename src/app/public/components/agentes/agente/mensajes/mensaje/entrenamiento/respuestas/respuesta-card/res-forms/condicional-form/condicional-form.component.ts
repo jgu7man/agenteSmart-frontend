@@ -3,7 +3,7 @@ import { RespuestasService } from '../../../respuestas.service';
 import { CondicionalModel, SimpleModel } from '../../../respuesta.model';
 import { ParametrosService } from '../../../../parametros/parametros.service';
 import { SystemEntitieModel, TipoEntidadModel } from '../../../../../../../tipos/tipo.model';
-import { Loading } from 'src/app/gdev-tools/loading/loading.service';
+import { GdevLoading } from 'src/app/gdev-tools/src/lib/loading/loading.service';
 import {ParamSelected} from '../../../../parametros/param-selector/param-selector.component';
 
 @Component({
@@ -76,7 +76,7 @@ export class CondicionalFormComponent implements OnInit {
 
     async catchresult(msg: SimpleModel) {
         this.result.text = msg.text;
-        // await this.loading.waitFor(100)
+        // await this._loading.waitFor(100)
         this.onRespChanges.emit(this.result);
     }
 

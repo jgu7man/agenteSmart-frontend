@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from 'src/app/material.module';
 import { AgentesRoutingModule } from './agentes-routing.module';
-import { GdevToolsModule } from '../../../gdev-tools/gdev-tools.module';
+import { GdevToolsModule } from '../../../gdev-tools/src/lib/gdev-tools.module';
 
 import { AgentesComponent } from './agentes.component';
 import { AgenteComponent } from './agente/agente.component';

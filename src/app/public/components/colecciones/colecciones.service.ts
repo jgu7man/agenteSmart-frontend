@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import { ColeccionModel } from './collection.interface';
 import { AngularFirestore,  CollectionReference } from '@angular/fire/firestore';
-import { CacheService} from '../../../gdev-tools/cache/cache.service';
-import { AlertService} from '../../../gdev-tools/alerts/alert.service';
+import { GdevCache} from '../../../gdev-tools/src/lib/cache/gdev-cache.service';
+import { GdevAlert} from '../../../gdev-tools/src/lib/alert/alert.service';
 import { UserInterface} from '../../../admin/auth/auth.service';
 
 @Injectable({
@@ -19,8 +19,8 @@ export class ColeccionesService {
 
     constructor (
         private fs: AngularFirestore,
-        private _cache: CacheService,
-        private _alerts: AlertService,
+        private _cache: GdevCache,
+        private _alerts: GdevAlert,
     ) {
         // Inicia las colecciones
         this.getColecciones()

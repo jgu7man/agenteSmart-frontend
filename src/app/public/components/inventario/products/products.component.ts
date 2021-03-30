@@ -1,10 +1,10 @@
 // import { GdevStoreCategoriesService } from './../categories/categories.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { GdevStoreProductModel } from './product.model';
-import { GdevIndexService } from 'src/app/gdev-tools/query-index/gdev-index.service';
+import { GdevIndexService } from 'src/app/gdev-tools/src/lib/index/gdev-index.service';
 import { MatSelectionListChange, MatSelectionList } from '@angular/material/list';
 import { MatDrawer } from '@angular/material/sidenav';
-import { CacheService } from '../../../../gdev-tools/cache/cache.service';
+import { GdevCache } from '../../../../gdev-tools/src/lib/cache/gdev-cache.service';
 import { UserInterface } from '../../../../admin/auth/auth.service';
 
 @Component({
@@ -28,7 +28,7 @@ export class ProductsComponent implements OnInit {
   constructor (
     // private _categories: GdevStoreCategoriesService,
     public _index: GdevIndexService,
-    private _cache: CacheService
+    private _cache: GdevCache
   ) {
     this.usuario = this._cache.getDataKey('user')
   }
@@ -61,7 +61,7 @@ export class ProductsComponent implements OnInit {
     this._index.queryData.subscribe( data => {
       this.products = data
     } )
-    this._index.loadingQuery.subscribe( resp => {
+    this._index.GdevLoadingQuery.subscribe( resp => {
       if ( resp ) {
         this.products = []
       } 

@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CacheService } from 'src/app/gdev-tools/cache/cache.service';
-import { AlertService } from 'src/app/gdev-tools/alerts/alert.service';
+import { GdevCache } from 'src/app/gdev-tools/src/lib/cache/gdev-cache.service';
+import { GdevAlert } from 'src/app/gdev-tools/src/lib/alert/alert.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Interaction } from './conversaciones.model';
-import { Loading } from 'src/app/gdev-tools/loading/loading.service';
+import { GdevLoading } from 'src/app/gdev-tools/src/lib/loading/loading.service';
 import { FraseEntrenamiento, IntentModel } from '../mensajes/mensaje.model';
 import { environment } from 'src/environments/environment';
 
@@ -20,10 +20,10 @@ export class ConversacionesService {
 
 
     constructor (
-        private _cache: CacheService,
-        private _alert: AlertService,
+        private _cache: GdevCache,
+        private _alert: GdevAlert,
         private _fs: AngularFirestore,
-        private _loading: Loading,
+        private _loading: GdevLoading,
         private _http: HttpClient,
     ) {
         this.projectId = this._cache.getDataKey( 'projectId' )

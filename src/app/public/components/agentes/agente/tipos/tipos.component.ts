@@ -1,6 +1,6 @@
 import { AddTipoComponent } from './add-tipo/add-tipo.component';
 import { Component, OnInit, ViewChild, ViewChildren, QueryList, AfterViewInit, OnDestroy } from '@angular/core';
-import { Loading } from '../../../../../gdev-tools/loading/loading.service';
+import { GdevLoading } from '../../../../../gdev-tools/src/lib/loading/loading.service';
 import { TiposService } from './tipos.service';
 import { Observable, Subscription } from 'rxjs';
 import { CurrentAgenteService } from '../current-agente.service';
@@ -36,7 +36,7 @@ export class TiposComponent implements OnInit,  OnDestroy {
     public tipos_: TiposService,
     public agente_: CurrentAgenteService,
     private _dialog: MatDialog,
-    private loading: Loading,
+    private _loading: GdevLoading,
     private store: Store<AppState>,
     public systemEntities_: SystemEntitiesService
   ) {

@@ -1,6 +1,6 @@
 import { ClaseItemComponent } from './../../tipos/tipo/clase-item/clase-item.component';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { CacheService } from './../../../../../../gdev-tools/cache/cache.service';
+import { GdevCache } from './../../../../../../gdev-tools/src/lib/cache/gdev-cache.service';
 import { TiposService } from './../../tipos/tipos.service';
 import { Clase, TipoEntidadModel } from './../../tipos/tipo.model';
 import { Component, OnInit, ViewChild, ElementRef, ViewChildren, QueryList, Output, EventEmitter, OnDestroy } from '@angular/core';
@@ -31,7 +31,7 @@ export class StartTipoComponent implements OnInit, OnDestroy {
 
     constructor (
         public tipos_: TiposService,
-        private _cache: CacheService
+        private _cache: GdevCache
     ) {
         this.tipo = new TipoEntidadModel('palabrasclave','KIND_LIST','AUTO_EXPANSION_MODE_DEFAULT',[], true)
         this.projectId = this._cache.getDataKey('projectId')

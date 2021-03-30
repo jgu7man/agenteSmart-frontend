@@ -1,4 +1,4 @@
-import { Loading } from 'src/app/gdev-tools/loading/loading.service';
+import { GdevLoading } from 'src/app/gdev-tools/src/lib/loading/loading.service';
 import { Directive, ElementRef, Input, OnInit, AfterViewInit } from '@angular/core';
 
 @Directive( {
@@ -20,7 +20,7 @@ export class StretchDirective implements OnInit{
 
     constructor (
         private elementRef: ElementRef,
-        private loading: Loading
+        private _loading: GdevLoading
     ) {
     }
 
@@ -43,7 +43,7 @@ export class StretchDirective implements OnInit{
     }
     
     async heightStreched() {
-        await this.loading.waitFor( 5000 )
+        await this._loading.waitFor( 5000 )
         var y = this.elementRef.nativeElement.getBoundingClientRect().y
         console.log(this.elementRef.nativeElement.id);
         var height = this.deviceSize != 'small' ? 

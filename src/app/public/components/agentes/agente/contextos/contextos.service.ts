@@ -2,18 +2,18 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { MensajesService } from '../mensajes/mensajes.service';
 import { IntentModel, MensajeModel } from '../mensajes/mensaje.model';
-import { CacheService } from '../../../../../gdev-tools/cache/cache.service';
+import { GdevCache } from '../../../../../gdev-tools/src/lib/cache/gdev-cache.service';
 import { ContextoModel } from './contexto.model';
 import { CurrentAgenteService } from '../current-agente.service';
 import { distinctUntilKeyChanged } from 'rxjs/operators';
-import { AlertService } from '../../../../../gdev-tools/alerts/alert.service';
-import { Loading } from '../../../../../gdev-tools/loading/loading.service';
+import { GdevAlert } from '../../../../../gdev-tools/src/lib/alert/alert.service';
+import { GdevLoading } from '../../../../../gdev-tools/src/lib/loading/loading.service';
 import { Subject, Subscription } from 'rxjs';
-import { ColorService } from '../../../../../gdev-tools/color/color.service';
+import { GdevColor } from '../../../../../gdev-tools/src/lib/color/gdev-color.service';
 import { TiposService } from '../tipos/tipos.service';
 import { TipoEntidadModel } from '../tipos/tipo.model';
 import { CurrentMensajeService } from '../mensajes/mensaje/current-mensaje.service';
-import { TextService } from 'src/app/gdev-tools/text/gdev-text.service';
+import { GdevText } from 'src/app/gdev-tools/src/lib/text/gdev-text.service';
 
 @Injectable({
     providedIn: 'root',
@@ -30,18 +30,18 @@ export class ContextosService {
 
     constructor(
         private _agente: CurrentAgenteService,
-        private _alerts: AlertService,
-        private _cache: CacheService,
-        private _color: ColorService,
+        private _alerts: GdevAlert,
+        private _cache: GdevCache,
+        private _color: GdevColor,
         private _currentMensaje: CurrentMensajeService,
         private _mensajes: MensajesService,
-        private _text: TextService,
+        private _text: GdevText,
         private _tipos: TiposService,
         private afs: AngularFirestore,
-        private loading: Loading,
+        private _loading: GdevLoading,
     ) {
         // Obtiene el contexto de la ruta actual
-        this.loading.getRouteQueryParams().subscribe((queryParams) => {
+        this._loading.getRouteQueryParams().subscribe((queryParams) => {
             this.currentContexto = queryParams['contexto'];
         });
     }

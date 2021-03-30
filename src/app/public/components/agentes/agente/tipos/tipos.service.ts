@@ -1,15 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Loading } from '../../../../../gdev-tools/loading/loading.service';
+import { GdevLoading } from '../../../../../gdev-tools/src/lib/loading/loading.service';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { CacheService } from '../../../../../gdev-tools/cache/cache.service';
+import { GdevCache } from '../../../../../gdev-tools/src/lib/cache/gdev-cache.service';
 import { CurrentAgenteService } from '../current-agente.service';
 import { TipoEntidadModel, Clase } from './tipo.model';
-import { TextService } from '../../../../../services/text.service';
+import { GdevText } from '../../../../../services/text.service';
 import { Subject, Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AuthService } from '../../../../../admin/auth/auth.service';
-import { AlertService } from '../../../../../gdev-tools/alerts/alert.service';
+import { GdevAlert } from '../../../../../gdev-tools/src/lib/alert/alert.service';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/app.state';
 import * as actions from './store/tipo.actions'
@@ -17,7 +17,7 @@ import { TipoState } from './store/tipo.state';
 import { environment } from "src/environments/environment";
 import { ContextosService } from '../contextos/contextos.service';
 import { ContextoModel } from '../contextos/contexto.model';
-import { ColorService } from 'src/app/gdev-tools/color/color.service';
+import { GdevColor } from 'src/app/gdev-tools/src/lib/color/gdev-color.service';
 
 @Injectable( {
     providedIn: 'root'
@@ -40,16 +40,16 @@ export class TiposService {
 
 
     constructor (
-        private loading: Loading,
+        private _loading: GdevLoading,
         private fs: AngularFirestore,
-        private _cache: CacheService,
+        private _cache: GdevCache,
         private _agente: CurrentAgenteService,
-        private _text: TextService,
+        private _text: GdevText,
         private _http: HttpClient,
         private _auth: AuthService,
-        private _alerts: AlertService,
+        private _alerts: GdevAlert,
         private store: Store<AppState>,
-        private _color: ColorService
+        private _color: GdevColor
     ) {
 
         this.tiposCollection()
@@ -84,8 +84,8 @@ export class TiposService {
 
     /** Prepara la entity para ser creada en el backend, obtiene el ID:name y guarda los datos en firestore */
     async createTipo( tipo: TipoEntidadModel ) {
-        // Loading animation
-        this.loading.toggleWaitingSpinner( 'open' )
+        // GdevLoading animation
+        this._loading.toggleWaitingSpinner( 'open' )
         // Prepare name
         let projectId = this._cache.getDataKey( 'projectId' )
         tipo.displayName = this._text.normalize( tipo.displayName )
@@ -109,7 +109,7 @@ export class TiposService {
             await ( await this.tiposCollection() ).doc( resourceID ).set( newTipo )
             this.store.dispatch(actions.addTipo({tipo: newTipo}))
 
-            this.loading.toggleWaitingSpinner('close');
+            this._loading.toggleWaitingSpinner('close');
             return newTipo
 
 
@@ -141,7 +141,7 @@ export class TiposService {
                     if ( err ) {
                         console.error(err);
 
-                        this.loading.toggleWaitingSpinner( 'close' )
+                        this._loading.toggleWaitingSpinner( 'close' )
                         this._alerts.sendError( 'No fué posible crear ese Tipo en este momento. Intentelo de nuevo porfavor.', err )
                         this.closeCreateDialog.next()
                     }
@@ -159,8 +159,8 @@ export class TiposService {
 
     /** Prepara la entity para ser actualizada en el backend y posterior lo guarda en Firestore */
     async updateTipo( tipo: TipoEntidadModel ) {
-        // Loading animation
-        this.loading.toggleWaitingSpinner( 'open' )
+        // GdevLoading animation
+        this._loading.toggleWaitingSpinner( 'open' )
 
         console.log(tipo)
         // clean object
@@ -173,7 +173,7 @@ export class TiposService {
         const resourceID = tipo.name.slice( tipo.name.lastIndexOf( "/" ) + 1 );
         console.log( resourceID );
         await ( await this.tiposCollection() ).doc( resourceID ).set( tipo, { merge: true } )
-        this.loading.toggleWaitingSpinner( 'close' )
+        this._loading.toggleWaitingSpinner( 'close' )
 
         // Update cache
         const tiposList = this._cache.getDataKey<TipoEntidadModel[]>( 'tipos' )
@@ -183,8 +183,8 @@ export class TiposService {
 
 
 
-        // End loading animation
-        this.loading.toggleWaitingSpinner( 'close' )
+        // End GdevLoading animation
+        this._loading.toggleWaitingSpinner( 'close' )
 
         return tipo.name
     }
@@ -207,7 +207,7 @@ export class TiposService {
                 .catch( err => {
                     if ( err ) {
                         console.error(err)
-                        this.loading.toggleWaitingSpinner( 'close' )
+                        this._loading.toggleWaitingSpinner( 'close' )
                         this._alerts.sendError( 'No fué posible crear ese Tipo en este momento.', err )
                         this.closeCreateDialog.next()
                     }
@@ -218,8 +218,8 @@ export class TiposService {
 
 
     async createTipoContextos(tipo: TipoEntidadModel) {
-        // Loading animation
-        this.loading.toggleWaitingSpinner( 'open' )
+        // GdevLoading animation
+        this._loading.toggleWaitingSpinner( 'open' )
         // Prepare name
         tipo.displayName = this._text.normalize( tipo.displayName )
         // clean object
@@ -237,12 +237,12 @@ export class TiposService {
         await (await this.tiposCollection()).doc(resourceID).set(newTipo)
 
         // create contexts
-        await this.loading.asyncForEach(newEntity.entities,
+        await this._loading.asyncForEach(newEntity.entities,
             async (entity, index) => {
             this.saveContext(entity, index)
         })
 
-        this.loading.toggleWaitingSpinner( 'close' )
+        this._loading.toggleWaitingSpinner( 'close' )
 
     }
 
@@ -485,12 +485,12 @@ export class TiposService {
 
 
     async deleteTipo(tipoName: string) {
-        this.loading.toggleWaitingSpinner('open')
+        this._loading.toggleWaitingSpinner('open')
         const currentId = tipoName.slice( tipoName.lastIndexOf( '/' ) + 1)
         await this._deleteEntityType( currentId )
         await (await this.tiposCollection()).doc(currentId).delete()
         this._alerts.sendFloatNotification('Exito elimando ese tipo de dato.', "ok", 0, "bottom", "left")
-        this.loading.toggleWaitingSpinner('close')
+        this._loading.toggleWaitingSpinner('close')
         return
     }
 

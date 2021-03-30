@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject, Output, EventEmitter } from '@angular/core';
 import {MatDialog, MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import { AuthService } from '../../auth.service';
-import { CacheService } from '../../../../gdev-tools/cache/cache.service';
+import { GdevCache } from '../../../../gdev-tools/src/lib/cache/gdev-cache.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -15,7 +15,7 @@ export class LoginButtonComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     public _auth: AuthService,
-    private _cache: CacheService,
+    private _cache: GdevCache,
     private _router: Router
   ) { }
 

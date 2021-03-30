@@ -2,8 +2,8 @@ import { AppState } from './../../../app.state';
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Input } from '@angular/core';
 import { Interaction, MessageType, QuickResponse, Image } from '../../store/chat.model';
 import { BehaviorSubject } from 'rxjs';
-import { TextService } from '../../../gdev-tools/text/gdev-text.service';
-import { Loading } from '../../../gdev-tools/loading/loading.service';
+import { GdevText } from '../../../gdev-tools/src/lib/text/gdev-text.service';
+import { GdevLoading } from '../../../gdev-tools/src/lib/loading/loading.service';
 import { Store } from '@ngrx/store';
 import * as actions from '../../store/chat.actions'
 import { ChatService } from '../chat.service';
@@ -23,8 +23,8 @@ export class ConversationComponent implements OnInit, AfterViewInit {
   @ViewChild( 'messagesContainer' ) public messagesContainer: ElementRef
 
   constructor (
-    private _text: TextService,
-      private loading: Loading,
+    private _text: GdevText,
+      private _loading: GdevLoading,
       private store: Store<AppState>,
       private _chat: ChatService
   ) { }
@@ -36,7 +36,7 @@ export class ConversationComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this._conv.subscribe( async conv => {
       this.messages = conv
-      await this.loading.waitFor(100)
+      await this._loading.waitFor(100)
       this.messagesContainer.nativeElement.scrollTop =
         this.messagesContainer.nativeElement.scrollHeight + 50
     })

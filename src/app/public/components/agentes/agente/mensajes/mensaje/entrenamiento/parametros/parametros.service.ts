@@ -11,12 +11,12 @@ import {
 import { CurrentMensajeService } from '../../current-mensaje.service';
 import { Subject } from 'rxjs';
 import { FrasesService } from '../frases-form/frases.service';
-import { Loading } from '../../../../../../../../gdev-tools/loading/loading.service';
-import { AlertService } from '../../../../../../../../gdev-tools/alerts/alert.service';
+import { GdevLoading } from '../../../../../../../../gdev-tools/src/lib/loading/loading.service';
+import { GdevAlert } from '../../../../../../../../gdev-tools/src/lib/alert/alert.service';
 import { Store } from '@ngrx/store';
 import * as actions from '../../store/mensaje.actions';
-import { ColorService } from '../../../../../../../../gdev-tools/color/color.service';
-import { CacheService } from '../../../../../../../../gdev-tools/cache/cache.service';
+import { GdevColor } from '../../../../../../../../gdev-tools/src/lib/color/gdev-color.service';
+import { GdevCache } from '../../../../../../../../gdev-tools/src/lib/cache/gdev-cache.service';
 
 @Injectable({
     providedIn: 'root',
@@ -39,12 +39,12 @@ export class ParametrosService {
         private _agente: CurrentAgenteService,
         private _mensaje: CurrentMensajeService,
         private _frases: FrasesService,
-        private loading: Loading,
-        private _alerts: AlertService,
+        private _loading: GdevLoading,
+        private _alerts: GdevAlert,
         private store: Store<MensajeState>,
-        private _color: ColorService,
+        private _color: GdevColor,
         private fs: AngularFirestore,
-        private _cache: CacheService
+        private _cache: GdevCache
     ) {
         this.getFirestoredParams()
     }
@@ -190,11 +190,11 @@ export class ParametrosService {
     private async deleteParamInParts(displayName: string) {
         const frasesList = this._mensaje.current.trainingPhrases;
 
-        await this.loading.asyncForEach(
+        await this._loading.asyncForEach(
             frasesList,
             async (frase: FraseEntrenamiento, index) => {
                 // Busca en las partes donde hay el parámetro eliminado
-                return this.loading.asyncForEach(
+                return this._loading.asyncForEach(
                     frase.parts,
                     (parte: FraseParte, parteIndex) => {
                         if (parte.alias) {

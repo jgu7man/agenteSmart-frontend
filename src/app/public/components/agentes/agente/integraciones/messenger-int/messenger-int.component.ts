@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { CacheService } from 'src/app/gdev-tools/cache/cache.service';
-import { AlertService } from 'src/app/gdev-tools/alerts/alert.service';
+import { GdevCache } from 'src/app/gdev-tools/src/lib/cache/gdev-cache.service';
+import { GdevAlert } from 'src/app/gdev-tools/src/lib/alert/alert.service';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { IntegracionesService } from '../integraciones.service';
 import { MessengerStatus } from './messenger.model';
@@ -16,8 +16,8 @@ export class MessengerIntComponent implements OnInit {
     msnStatus: MessengerStatus
     constructor (
         private copy: Clipboard,
-        private _cache: CacheService,
-    private _alert: AlertService,
+        private _cache: GdevCache,
+    private _alert: GdevAlert,
     public _integration: IntegracionesService
   ) {
     this.projectId = this._cache.getDataKey( 'projectId' );

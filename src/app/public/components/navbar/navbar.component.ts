@@ -3,7 +3,7 @@ import { AuthService } from 'src/app/admin/auth/auth.service';
 import { UserInterface } from '../../../admin/auth/auth.service';
 import { DashboardService } from '../dashboard/dashboard.service';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-import { Loading } from '../../../gdev-tools/loading/loading.service';
+import { GdevLoading } from '../../../gdev-tools/src/lib/loading/loading.service';
 import { take, debounceTime, tap } from 'rxjs/operators';
 import { fromEvent, Subscription } from 'rxjs';
 
@@ -23,7 +23,7 @@ export class NavbarComponent implements OnInit, OnChanges {
     public dashboard: DashboardService,
     private _route: ActivatedRoute,
     private _router: Router,
-    private _loading: Loading
+    private _loading: GdevLoading
   ) { 
     this.getCurrentPage()
   }

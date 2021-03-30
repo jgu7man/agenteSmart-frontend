@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertService } from 'src/app/gdev-tools/alerts/alert.service';
+import { GdevAlert } from 'src/app/gdev-tools/src/lib/alert/alert.service';
 import { IntegracionesService } from '../integraciones.service';
 import { WhatsappStatus } from './messenger.model';
-import { Loading } from '../../../../../../gdev-tools/loading/loading.service';
+import { GdevLoading } from '../../../../../../gdev-tools/src/lib/loading/loading.service';
 
 @Component({
   selector: 'aSmart-whatsapp-int',
@@ -16,8 +16,8 @@ export class WhatsappIntComponent implements OnInit {
   waConnection: boolean
   constructor (
     private _integration: IntegracionesService,
-    private _alert: AlertService,
-    private _loading: Loading
+    private _alert: GdevAlert,
+    private _loading: GdevLoading
   ) {
     this.waStatus = {
       status: 'DISCONNECTED',

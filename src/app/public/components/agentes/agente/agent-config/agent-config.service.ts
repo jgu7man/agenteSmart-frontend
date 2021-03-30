@@ -3,9 +3,9 @@ import { IntentModel } from '../mensajes/mensaje.model';
 import { CurrentAgenteService } from '../current-agente.service';
 import { MensajesService } from '../mensajes/mensajes.service';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Loading } from 'src/app/gdev-tools/loading/loading.service';
-import { AlertService } from 'src/app/gdev-tools/alerts/alert.service';
-import { CacheService } from 'src/app/gdev-tools/cache/cache.service';
+import { GdevLoading } from 'src/app/gdev-tools/src/lib/loading/loading.service';
+import { GdevAlert } from 'src/app/gdev-tools/src/lib/alert/alert.service';
+import { GdevCache } from 'src/app/gdev-tools/src/lib/cache/gdev-cache.service';
 import { CurrentMensajeService } from '../mensajes/mensaje/current-mensaje.service';
 
 @Injectable({
@@ -16,9 +16,9 @@ export class AgentConfigService {
       private _agente: CurrentAgenteService,
       private _mensajes: MensajesService,
       private fs: AngularFirestore,
-      private loading: Loading,
-      private _alerts: AlertService,
-      private _cache: CacheService,
+      private _loading: GdevLoading,
+      private _alerts: GdevAlert,
+      private _cache: GdevCache,
       private _mensaje: CurrentMensajeService
     ) {}
 
@@ -27,7 +27,7 @@ export class AgentConfigService {
     ) {
 
         // Init process
-        this.loading.toggleWaitingSpinner('open')
+        this._loading.toggleWaitingSpinner('open')
         var intentList: IntentModel[] = await this._cache.getAsyncKey<IntentModel[]>('intents')
 
         console.log( 'Search for intent' );
@@ -67,7 +67,7 @@ export class AgentConfigService {
         console.log( 'Process finished' );
         this._agente.getDialogFlowIntents()
 
-        this.loading.toggleWaitingSpinner( 'close' )
+        this._loading.toggleWaitingSpinner( 'close' )
         this._alerts.sendFloatNotification(intent+' creado')
     }
 }

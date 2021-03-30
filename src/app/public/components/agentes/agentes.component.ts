@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewChecked, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertService } from 'src/app/gdev-tools/alerts/alert.service';
+import { GdevAlert } from 'src/app/gdev-tools/src/lib/alert/alert.service';
 import { AgentesService } from './agentes.service';
 
 @Component({
@@ -13,7 +13,7 @@ export class AgentesComponent implements OnInit, AfterViewInit {
   constructor (
     public _agentes: AgentesService,
     public router: Router,
-    public _alerts: AlertService,
+    public _alerts: GdevAlert,
   ) {}
 
   async ngOnInit() {

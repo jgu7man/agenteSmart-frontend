@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { CacheService } from 'src/app/gdev-tools/cache/cache.service';
-import { Loading } from 'src/app/gdev-tools/loading/loading.service';
+import { GdevCache } from 'src/app/gdev-tools/src/lib/cache/gdev-cache.service';
+import { GdevLoading } from 'src/app/gdev-tools/src/lib/loading/loading.service';
 import { ContextSelected } from '../../contextos/contexto-selector/contexto-selector.component';
 import { MensajeModel } from '../mensaje.model';
 import { MensajesService } from '../mensajes.service';
@@ -18,8 +18,8 @@ export class AddMensajeComponent implements OnInit {
     context: string = ''
 
     constructor(
-        private loading: Loading,
-        private _cache: CacheService,
+        private _loading: GdevLoading,
+        private _cache: GdevCache,
         private _mensajes: MensajesService,
         public dialog: MatDialogRef<AddMensajeComponent>
     ) { }
@@ -35,7 +35,7 @@ export class AddMensajeComponent implements OnInit {
     }
 
   async onAddIntent() {
-    this.loading.toggleWaitingSpinner('open')
+    this._loading.toggleWaitingSpinner('open')
     this.switchAddIntent = false;
 
     if (this.newIntent) {

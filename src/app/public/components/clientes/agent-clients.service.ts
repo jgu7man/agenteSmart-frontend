@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { Loading } from '../../../gdev-tools/loading/loading.service';
+import { GdevLoading } from '../../../gdev-tools/src/lib/loading/loading.service';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { AlertService } from '../../../gdev-tools/alerts/alert.service';
-import { CacheService } from '../../../gdev-tools/cache/cache.service';
+import { GdevAlert } from '../../../gdev-tools/src/lib/alert/alert.service';
+import { GdevCache } from '../../../gdev-tools/src/lib/cache/gdev-cache.service';
 import { environment } from '../../../../environments/environment';
 import { Injectable } from '@angular/core';
 import { Interaction } from '../agentes/agente/conversaciones/conversaciones.model';
@@ -20,10 +20,10 @@ export class AgentClientsService {
 
 
     constructor (
-        private _cache: CacheService,
-        private _alert: AlertService,
+        private _cache: GdevCache,
+        private _alert: GdevAlert,
         private _fs: AngularFirestore,
-        private _loading: Loading,
+        private _loading: GdevLoading,
         private _http: HttpClient,
     ) {
         this.projectId = this._cache.getDataKey( 'projectId' )

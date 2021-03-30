@@ -4,14 +4,14 @@ import {FraseEntrenamiento, FraseParte, IntentModel} from '../../../mensaje.mode
 import {CurrentAgenteService} from '../../../../current-agente.service';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {CurrentMensajeService} from '../../current-mensaje.service';
-import {CacheService} from '../../../../../../../../gdev-tools/cache/cache.service';
-import {Loading} from '../../../../../../../../gdev-tools/loading/loading.service';
+import {GdevCache} from '../../../../../../../../gdev-tools/src/lib/cache/gdev-cache.service';
+import {GdevLoading} from '../../../../../../../../gdev-tools/src/lib/loading/loading.service';
 import {Subject} from 'rxjs';
-import {AlertService} from '../../../../../../../../gdev-tools/alerts/alert.service';
+import {GdevAlert} from '../../../../../../../../gdev-tools/src/lib/alert/alert.service';
 import {Store} from '@ngrx/store';
 import * as actions from '../../store/mensaje.actions'
 import {map, first, debounceTime} from 'rxjs/operators';
-import {TextService} from '../../../../../../../../gdev-tools/text/gdev-text.service';
+import {GdevText} from '../../../../../../../../gdev-tools/src/lib/text/gdev-text.service';
 
 @Injectable({
     providedIn: 'root'
@@ -26,10 +26,10 @@ export class FrasesService {
         // private fs: AngularFirestore,
         private _agente: CurrentAgenteService,
         private _mensaje: CurrentMensajeService,
-        private loading: Loading,
-        private alert: AlertService,
+        private _loading: GdevLoading,
+        private alert: GdevAlert,
         private store: Store<MensajeState>,
-        private _text: TextService
+        private _text: GdevText
     ) {
 
         this._mensaje.current$.pipe(
@@ -250,7 +250,7 @@ export class FrasesService {
                         frase.parts.push(parte)
                     })
                 } else {
-                    await this.loading.asyncForEach(resultParts, parte => {
+                    await this._loading.asyncForEach(resultParts, parte => {
                         // console.log( parte )
                         return frase.parts.push(parte)
                     })

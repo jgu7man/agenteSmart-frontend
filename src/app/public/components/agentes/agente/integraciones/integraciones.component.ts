@@ -1,7 +1,7 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, OnInit } from '@angular/core';
-import { AlertService } from 'src/app/gdev-tools/alerts/alert.service';
-import { CacheService } from 'src/app/gdev-tools/cache/cache.service';
+import { GdevAlert } from 'src/app/gdev-tools/src/lib/alert/alert.service';
+import { GdevCache } from 'src/app/gdev-tools/src/lib/cache/gdev-cache.service';
 
 
 
@@ -17,8 +17,8 @@ export class IntegracionesComponent implements OnInit {
 
   
   constructor (
-    private _cache: CacheService,
-    private _alert: AlertService
+    private _cache: GdevCache,
+    private _alert: GdevAlert
   ) {
     this.projectId = this._cache.getDataKey('projectId');
    }

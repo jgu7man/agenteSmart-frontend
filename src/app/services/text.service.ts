@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({providedIn:'root'})
-export class TextService {
+export class GdevText {
     
     constructor () { }
     

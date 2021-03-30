@@ -1,13 +1,13 @@
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { Loading } from 'src/app/gdev-tools/loading/loading.service';
-import { CacheService } from 'src/app/gdev-tools/cache/cache.service';
+import { GdevLoading } from 'src/app/gdev-tools/src/lib/loading/loading.service';
+import { GdevCache } from 'src/app/gdev-tools/src/lib/cache/gdev-cache.service';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { TextService } from '../../../../../services/text.service';
+import { GdevText } from '../../../../../services/text.service';
 import { CurrentAgenteService } from '../current-agente.service';
 import { ContextoModel } from '../contextos/contexto.model';
-import { AlertService } from '../../../../../gdev-tools/alerts/alert.service';
+import { GdevAlert } from '../../../../../gdev-tools/src/lib/alert/alert.service';
 import { of, Subject, BehaviorSubject, Observable } from 'rxjs';
 import { IntentModel, MensajeModel } from './mensaje.model';
 import { map, tap } from 'rxjs/operators';
@@ -33,11 +33,11 @@ export class MensajesService {
     constructor(
         private _http: HttpClient,
         private fs: AngularFirestore,
-        private _cache: CacheService,
-        private _alerts: AlertService,
+        private _cache: GdevCache,
+        private _alerts: GdevAlert,
         private _agente: CurrentAgenteService,
-        private _loading: Loading,
-        private _text: TextService,
+        private _loading: GdevLoading,
+        private _text: GdevText,
         private _current: CurrentMensajeService,
         private _router: Router
     ) {}

@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { RespuestasService } from '../../../respuestas.service';
-import { CacheService } from '../../../../../../../../../../../gdev-tools/cache/cache.service';
+import { GdevCache } from '../../../../../../../../../../../gdev-tools/src/lib/cache/gdev-cache.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { RespuestaBuscarModel } from '../../../respuesta.model';
 import { BehaviorSubject } from 'rxjs';
@@ -8,7 +8,7 @@ import { distinctUntilKeyChanged } from 'rxjs/operators';
 import { CurrentAgenteService } from '../../../../../../../current-agente.service';
 import { MatSelectChange } from '@angular/material/select';
 import { TarjetaModel } from '../../../../../../../../../tarjetas/tarjeta.model';
-import { AlertService } from '../../../../../../../../../../../gdev-tools/alerts/alert.service';
+import { GdevAlert } from '../../../../../../../../../../../gdev-tools/src/lib/alert/alert.service';
 
 @Component({
   selector: 'aSmart-buscar-form',
@@ -37,9 +37,9 @@ export class BuscarFormComponent implements OnInit {
 
   constructor (
     public respuestas_: RespuestasService,
-    private _cache: CacheService,
+    private _cache: GdevCache,
     public agente_: CurrentAgenteService,
-    private _alerts: AlertService
+    private _alerts: GdevAlert
   ) {
     this.tarjetas = this._cache.getDataKey<TarjetaModel[]>('tarjetas')
     this.respuesta = new RespuestaBuscarModel('', this.paramSelected, )

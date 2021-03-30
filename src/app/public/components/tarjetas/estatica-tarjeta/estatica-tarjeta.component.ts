@@ -2,7 +2,7 @@ import { RespuestaCard } from './../../agentes/agente/mensajes/mensaje/entrenami
 import {Component, OnInit, ViewChild, ElementRef, Output, EventEmitter, Input} from '@angular/core';
 import {Observable} from 'rxjs';
 // import {RespuestaCard} from '../../agentes/agente/mensajes/mensaje/entrenamiento/respuestas/respuesta.model';
-import {CacheService} from '../../../../gdev-tools/cache/cache.service';
+import {GdevCache} from '../../../../gdev-tools/src/lib/cache/gdev-cache.service';
 import {UserInterface} from '../../../../admin/auth/auth.service';
 
 @Component({
@@ -24,7 +24,7 @@ export class EstaticaTarjetaComponent implements OnInit {
     }
 
     constructor (
-        private _cache: CacheService
+        private _cache: GdevCache
     ) {}
 
 

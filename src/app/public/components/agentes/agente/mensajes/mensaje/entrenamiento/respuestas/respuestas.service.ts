@@ -1,10 +1,10 @@
-import { AlertService } from 'src/app/gdev-tools/alerts/alert.service';
+import { GdevAlert } from 'src/app/gdev-tools/src/lib/alert/alert.service';
 import { Injectable } from '@angular/core';
 import { IntentModel, ParametroMensaje } from '../../../mensaje.model';
 import { AccionModel } from '../../../../acciones/accion.model';
 import { CurrentMensajeService } from '../../current-mensaje.service';
-import { CacheService } from 'src/app/gdev-tools/cache/cache.service';
-import { Loading } from 'src/app/gdev-tools/loading/loading.service';
+import { GdevCache } from 'src/app/gdev-tools/src/lib/cache/gdev-cache.service';
+import { GdevLoading } from 'src/app/gdev-tools/src/lib/loading/loading.service';
 import { CurrentAgenteService } from '../../../../current-agente.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { RespuestaModel } from './respuesta.model';
@@ -68,9 +68,9 @@ export class RespuestasService {
         private fs: AngularFirestore,
         private _agente: CurrentAgenteService,
         private _mensaje: CurrentMensajeService,
-        private _cache: CacheService,
-        private loading: Loading,
-        private _alerts: AlertService,
+        private _cache: GdevCache,
+        private _loading: GdevLoading,
+        private _alerts: GdevAlert,
         private _tipos: TiposService,
     ) {
         this.getDataForRespuestas();
@@ -80,7 +80,7 @@ export class RespuestasService {
      * @returns {string} Referencia de la colección de mensajes en firestore
      */
     async responsesPath() {
-        this.loading.waitFor(100);
+        this._loading.waitFor(100);
         let mensajeName = this._mensaje.current.name;
         let mensajeRef = (await this._mensaje.mensajesCollection()).doc(
             mensajeName
@@ -125,7 +125,7 @@ export class RespuestasService {
         // console.log( paramList )
         this.mensajeTypeEntities  = [];
 
-        await this.loading.asyncForEach(paramList,
+        await this._loading.asyncForEach(paramList,
         async (param: ParametroMensaje) => {
 
             if (this.mensajeTypeEntities.length > 0) {
@@ -135,13 +135,13 @@ export class RespuestasService {
 
                 if (!tipoStored) {
                     tipoStored = await this._tipos.getByDisplayName( param.entityTypeDisplayName )
-                    await this.loading.waitFor(1200);
+                    await this._loading.waitFor(1200);
                     return this.mensajeTypeEntities.push(tipoStored);
                 }
             }
             else {
                 var tipoStored = await this._tipos.getByDisplayName( param.entityTypeDisplayName )
-                await this.loading.waitFor(1200);
+                await this._loading.waitFor(1200);
                 return this.mensajeTypeEntities.push(tipoStored);
             }
 
@@ -225,7 +225,7 @@ export class RespuestasService {
     ) {
 
         var resCant: boolean[] = []
-        await this.loading.asyncForEach(this._mensaje.respuestasList,
+        await this._loading.asyncForEach(this._mensaje.respuestasList,
             (res: RespuestaModel) => {
                 if (res.tipo == kind) resCant.push(true)
             });

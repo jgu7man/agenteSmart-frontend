@@ -21,8 +21,8 @@ import { AuthModule, } from './admin/auth/auth.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
-import { LoadingModule } from './gdev-tools/loading/loading.module';
-import { GdevAlertModule } from './gdev-tools/alerts/gdev-alert.module';
+import { GdevLoadingModule } from './gdev-tools/src/lib/loading/loading.module';
+import { GdevAlertModule } from './gdev-tools/src/lib/alert/alert.module';
 
 // * RX
 import { StoreModule } from '@ngrx/store';
@@ -48,7 +48,7 @@ import { appReducers } from './app.state';
     AdminModule,
     AdminRoutingModule,
     AuthModule,
-    LoadingModule,
+    GdevLoadingModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     StoreModule.forRoot(appReducers),
     StoreDevtoolsModule.instrument( { maxAge: 25, logOnly: environment.production } ),

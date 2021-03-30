@@ -4,9 +4,9 @@ import { AgenteModel } from '../init-agente/agente.model';
 import { DashboardService } from '../../dashboard/dashboard.service';
 import { NAVLINK } from '../../navbar/navlink.interface';
 import { ResponsiveService } from '../../../../services/responsive.service';
-import { CacheService } from '../../../../gdev-tools/cache/cache.service';
+import { GdevCache } from '../../../../gdev-tools/src/lib/cache/gdev-cache.service';
 import { CurrentAgenteService } from './current-agente.service';
-import { Loading } from '../../../../gdev-tools/loading/loading.service';
+import { GdevLoading } from '../../../../gdev-tools/src/lib/loading/loading.service';
 import { CurrentMensajeService } from './mensajes/mensaje/current-mensaje.service';
 
 @Component({
@@ -21,10 +21,10 @@ export class AgenteComponent implements OnInit, OnDestroy {
   constructor (
     private _agente: CurrentAgenteService,
     private _dashboard: DashboardService,
-    private _cache: CacheService,
+    private _cache: GdevCache,
     private _route: ActivatedRoute,
     public resposive_: ResponsiveService,
-    public loading: Loading,
+    public _loading: GdevLoading,
     private _mensaje: CurrentMensajeService,
     private _router: Router
   ) {
@@ -56,7 +56,7 @@ export class AgenteComponent implements OnInit, OnDestroy {
     //   else {
     //       this._router.navigate([`/dashboard/agente/${ projectId }/mensajes`])
     //   }
-      this.loading.toggleWaitingSpinner( 'close' )
+      this._loading.toggleWaitingSpinner( 'close' )
   }
 
   agentLinks:NAVLINK[] = [

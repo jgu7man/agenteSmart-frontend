@@ -4,9 +4,9 @@ import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/app.state';
 import * as actions from '../../store/chat.actions'
 import { ChatService } from '../chat.service';
-import { CacheService } from '../../../gdev-tools/cache/cache.service';
+import { GdevCache } from '../../../gdev-tools/src/lib/cache/gdev-cache.service';
 import { pluck } from 'rxjs/operators';
-import { Loading } from '../../../gdev-tools/loading/loading.service';
+import { GdevLoading } from '../../../gdev-tools/src/lib/loading/loading.service';
 import { CurrentAgenteService } from 'src/app/public/components/agentes/agente/current-agente.service';
 
 @Component({
@@ -22,8 +22,8 @@ export class TypingAreaComponent implements OnInit {
   constructor (
     private store: Store<AppState>,
     private _chat: ChatService,
-    private _cache: CacheService,
-      private _loading: Loading,
+    private _cache: GdevCache,
+      private _loading: GdevLoading,
     private _agente: CurrentAgenteService,
   ) {
     this.store.select( 'chat' ).pipe( pluck( 'isOpened' ) )

@@ -9,7 +9,7 @@ import { RespuestaModel, SimpleModel } from './respuesta.model';
 import { RespuestasService } from './respuestas.service';
 import { Subscription } from 'rxjs';
 import { RespuestaCardComponent } from './respuesta-card/respuesta-card.component';
-import { Loading } from 'src/app/gdev-tools/loading/loading.service';
+import { GdevLoading } from 'src/app/gdev-tools/src/lib/loading/loading.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { CurrentMensajeService } from '../../current-mensaje.service';
 
@@ -30,7 +30,7 @@ export class RespuestasComponent implements OnInit, OnDestroy {
 
     constructor(
         private _respuestas: RespuestasService,
-        private loading: Loading,
+        private _loading: GdevLoading,
         public mensaje_: CurrentMensajeService
     ) {
         this.newOutputMensaje = new SimpleModel('', []);
@@ -54,7 +54,7 @@ export class RespuestasComponent implements OnInit, OnDestroy {
         this.mensaje_.respuestasList.push(
             new RespuestaModel(undefined, this.newOutputMensaje, lastIndex, '*fin')
         );
-        await this.loading.waitFor(500);
+        await this._loading.waitFor(500);
         this.cards.last.switchEditResp = true;
     }
 

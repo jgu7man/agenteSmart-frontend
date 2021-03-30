@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { ColorService } from './gdev-tools/color/color.service';
-import { CacheService } from './gdev-tools/cache/cache.service';
+import { GdevColor } from './gdev-tools/src/lib/color/gdev-color.service';
+import { GdevCache } from './gdev-tools/src/lib/cache/gdev-cache.service';
 
 @Component({
   selector: 'app-root',
@@ -11,9 +11,9 @@ export class AppComponent implements OnInit {
   title = 'AgenteSmart-frontend';
 
   constructor (
-    private _color: ColorService,
+    private _color: GdevColor,
     private body: ElementRef,
-    private _cache: CacheService
+    private _cache: GdevCache
   ) {
     this._cache.cacheTagName = 'as-data'
     

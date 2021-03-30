@@ -13,14 +13,10 @@ import { UsuariosComponent } from './components/usuarios/usuarios.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
 
-import { ColorThemeModule } from '../gdev-tools/color/color-theme.module';
 
 import { AgentesModule } from './components/agentes/agentes.module';
-import { GdevResponsiveModule } from '../gdev-tools/responsive/gdev-responsive.module';
-import { GdevTextModule } from '../gdev-tools/text/gdev-text.module';
-import { GdevAlertModule } from '../gdev-tools/alerts/gdev-alert.module';
 import { InventarioModule } from './components/inventario/inventario.module';
-import { GdevToolsModule } from '../gdev-tools/gdev-tools.module';
+import { GdevToolsModule } from '../gdev-tools/src/lib/gdev-tools.module';
 import { ChatTesterModule } from './components/chat-tester/chat-tester.module';
 import { ChatModule } from '../chat/chat.module';
 import { InicioComponent } from './components/pages/inicio/inicio.component';

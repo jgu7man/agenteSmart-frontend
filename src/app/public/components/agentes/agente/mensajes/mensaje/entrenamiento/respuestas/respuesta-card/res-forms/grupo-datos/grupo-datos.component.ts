@@ -4,9 +4,9 @@ import {CurrentMensajeService} from '../../../../../current-mensaje.service';
 import {RegistroDatosModel} from '../../../respuesta.model';
 import {BehaviorSubject} from 'rxjs';
 import {distinctUntilKeyChanged, tap} from 'rxjs/operators';
-import {AlertService} from '../../../../../../../../../../../gdev-tools/alerts/alert.service';
+import {GdevAlert} from '../../../../../../../../../../../gdev-tools/src/lib/alert/alert.service';
 import {ColeccionModel, ParamExpected} from '../../../../../../../../../colecciones/collection.interface';
-import {CacheService} from '../../../../../../../../../../../gdev-tools/cache/cache.service';
+import {GdevCache} from '../../../../../../../../../../../gdev-tools/src/lib/cache/gdev-cache.service';
 import { MatSelectChange } from '@angular/material/select';
 
 @Component({
@@ -35,8 +35,8 @@ export class GrupoDatosComponent implements OnInit {
     constructor (
         public agente_: CurrentAgenteService,
         public mensaje_: CurrentMensajeService,
-        public _alerts: AlertService,
-        private _cache: CacheService
+        public _alerts: GdevAlert,
+        private _cache: GdevCache
     ) {
         this.colSelected = new ColeccionModel('', [])
     }

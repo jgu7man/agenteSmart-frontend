@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, ViewChildren, QueryList, ViewEncapsulation, AfterViewInit, OnDestroy, OnChanges } from '@angular/core';
 import { FraseEntrenamiento, FraseParte } from '../../../mensaje.model';
-import { Loading } from '../../../../../../../../gdev-tools/loading/loading.service';
+import { GdevLoading } from '../../../../../../../../gdev-tools/src/lib/loading/loading.service';
 import { FrasesService } from './frases.service';
 import { ActivatedRoute } from '@angular/router';
 import { CurrentMensajeService } from '../../current-mensaje.service';
@@ -43,7 +43,7 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   constructor (
-    private loading: Loading,
+    private _loading: GdevLoading,
     public frases: FrasesService,
     public mensaje: CurrentMensajeService,
       private _params: ParametrosService,
@@ -115,7 +115,7 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
   // CREATE frase
   async toAddPhrase() {
     this.addPhraseInput = true
-    await this.loading.waitFor( 200 )
+    await this._loading.waitFor( 200 )
     this.newPhraseInput.nativeElement.focus()
   }
 
@@ -130,7 +130,7 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
         type: 'EXAMPLE',
         parts: this.frases.createParts( this.newPhrase )
       }
-      await this.loading.waitFor( 200 )
+      await this._loading.waitFor( 200 )
         this.frases.addTraningPhrase(NEWPHRASE, this.lastIndex)
             .then(async () => {
                 if (this.currentPage.length >= this.pageSize) {
@@ -138,7 +138,7 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.currentPage.splice(this.currentPage.length-1, 1)
                 }
                 this.newPhrase = ''
-                await this.loading.waitFor(500)
+                await this._loading.waitFor(500)
                 this.frasesList.closeAll()
             })
     }

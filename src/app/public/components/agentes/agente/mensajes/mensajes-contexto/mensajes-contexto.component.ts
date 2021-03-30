@@ -1,10 +1,10 @@
-import { AlertService } from 'src/app/gdev-tools/alerts/alert.service';
+import { GdevAlert } from 'src/app/gdev-tools/src/lib/alert/alert.service';
 import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
-import { Loading } from 'src/app/gdev-tools/loading/loading.service';
+import { GdevLoading } from 'src/app/gdev-tools/src/lib/loading/loading.service';
 import { AgenteModel } from '../../../init-agente/agente.model';
 import { MensajesService } from '../mensajes.service';
 import { IntentModel } from '../mensaje.model';
-import { CacheService } from 'src/app/gdev-tools/cache/cache.service';
+import { GdevCache } from 'src/app/gdev-tools/src/lib/cache/gdev-cache.service';
 import { ContextoModel } from '../../contextos/contexto.model';
 import { startWith, distinctUntilChanged } from 'rxjs/operators';
 import { DiagramService } from '../diagram/diagram.service';
@@ -28,10 +28,10 @@ export class MensajesByContextoComponent implements OnInit {
     @ViewChild('intentNuevo') intentNuevo: ElementRef;
 
     constructor(
-        private _loading: Loading,
+        private _loading: GdevLoading,
         public mensajes_: MensajesService,
-        private _cache: CacheService,
-        private _alerta: AlertService,
+        private _cache: GdevCache,
+        private _alerta: GdevAlert,
         public diagram_: DiagramService,
         private _agente: CurrentAgenteService,
         private _contexts: ContextosService
