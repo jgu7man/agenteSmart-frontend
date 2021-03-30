@@ -16,7 +16,19 @@ export class AppComponent implements OnInit {
     private _cache: GdevCache
   ) {
     this._cache.cacheTagName = 'as-data'
-    
+    this._color.ColorPalette = {
+        primary: '#3079F1',
+        accent: '#EFA130',
+        dark: '#141e66',
+        danger: '',
+        bg1: '#CCE1FF',
+        bg2: '#FFF4E6',
+        bg3: '#F3F8FF',
+        complement1: '#1F5699',
+        complement2: '',
+        complement3: '',
+        complement4: ''
+      }
   }
   
   ngOnInit() {

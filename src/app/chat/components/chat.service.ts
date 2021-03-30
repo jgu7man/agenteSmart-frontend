@@ -45,7 +45,9 @@ export class ChatService {
     ) {
         this.sendMessage();
         this._projectId = this._cache.getDataKey<string>('projectId');
-        this._clientId = this._cache.getDataKey<UserInterface>('user').uid;
+        const user = this._cache.getDataKey<UserInterface>('user');
+        console.log( user )
+        this._clientId = user ? user.uid : ''
     }
 
     opened = this._store.select('chat').pipe(map((chat) => chat.isOpened));

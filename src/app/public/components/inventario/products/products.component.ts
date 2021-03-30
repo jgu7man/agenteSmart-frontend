@@ -61,7 +61,7 @@ export class ProductsComponent implements OnInit {
     this._index.queryData.subscribe( data => {
       this.products = data
     } )
-    this._index.GdevLoadingQuery.subscribe( resp => {
+    this._index.loadingQuery.subscribe( resp => {
       if ( resp ) {
         this.products = []
       } 
