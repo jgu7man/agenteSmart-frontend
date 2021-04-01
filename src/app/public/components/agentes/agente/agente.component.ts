@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AgenteModel } from '../init-agente/agente.model';
 import { DashboardService } from '../../dashboard/dashboard.service';
-import { NAVLINK } from '../../navbar/navlink.interface';
+import { iNavlink } from '../../navbar/navlink.interface';
 import { ResponsiveService } from '../../../../services/responsive.service';
 import { GdevCache } from '../../../../gdev-tools/src/lib/cache/gdev-cache.service';
 import { CurrentAgenteService } from './current-agente.service';
@@ -17,16 +17,18 @@ import { CurrentMensajeService } from './mensajes/mensaje/current-mensaje.servic
 export class AgenteComponent implements OnInit, OnDestroy {
 
   public agente: AgenteModel
+  public projectId: string
 
   constructor (
     private _agente: CurrentAgenteService,
-    private _dashboard: DashboardService,
     private _cache: GdevCache,
     private _route: ActivatedRoute,
+    private _mensaje: CurrentMensajeService,
+    private _router: Router,
+    public dashboard_: DashboardService,
     public resposive_: ResponsiveService,
     public _loading: GdevLoading,
-    private _mensaje: CurrentMensajeService,
-    private _router: Router
+    public responsive: ResponsiveService
   ) {
 
     // ANCHOR GET THE CURRENT PROJECT ID
@@ -41,10 +43,12 @@ export class AgenteComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadAgente()
     if ( this.resposive_.small ) {
-      this._dashboard.setMobileNavbar(this.agentLinks)
+      this.dashboard_.setMobileNavbar(this.agentLinks)
     }
 
   }
+
+
 
     async loadAgente() {
     // ANCHOR INIZIALIZA EL AGENTE Y TODAS SUS SUBSCRIPCIONES
@@ -59,7 +63,7 @@ export class AgenteComponent implements OnInit, OnDestroy {
       this._loading.toggleWaitingSpinner( 'close' )
   }
 
-  agentLinks:NAVLINK[] = [
+  agentLinks:iNavlink[] = [
     { path: 'bienvenida', label: 'Bienvenida', icon: 'fa-filter' },
     { path: 'mensajes', label: 'Flujo', icon:'fa-sitemap' },
     { path: 'tipos', label: 'Tipos', icon:'fa-list-alt' },

@@ -56,3 +56,30 @@
 
     <router-outlet></router-outlet>
 </div>
+
+
+
+<!-- ## Mobile agente navbar -->
+<nav
+  *ngIf="responsive.small"
+  class="nav-footer"
+  id="footer"
+  gdev-color [background]="'acent'"
+  mat-tab-nav-bar
+>
+  <button mat-button
+  (click)="dashboard_
+  .toggleSidenav$.next()">
+    Menú
+  </button>
+
+  <a mat-tab-link
+  *ngFor="let item of dashboard_.mobileNavbar$ | async"
+  [routerLink]="['/dashboard/agente/',projectId, item.path]"
+  routerLinkActive="active"
+  #rla="routerLinkActive"
+  [active]="rla.isActive">
+    <span> {{item.label}} </span>
+  </a>
+</nav>
+<!-- !## Mobile agente navbar -->

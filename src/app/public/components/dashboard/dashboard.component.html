@@ -1,4 +1,5 @@
 <aSmart-navbar></aSmart-navbar>
+
 <mat-drawer-container
 id="dashboard_container"
 strechHeight
@@ -8,46 +9,47 @@ gdev-color
 [hasBackdrop]="testChat.opened">
 
 
-<!-- Left sidebar -->
+  <!-- ## Left sidebar -->
   <mat-drawer
-    #sideNav
-    class="side-nav"
-    mode="side"
-    [opened]="!responsive.small"
-    [ngStyle]="{'width': responsive.med ? '80px': '220px'}"
-    position="start"
-    gdev-color
-    [background]="'dark'"
-    [disableClose]="true"
-    [autoFocus]="false"
+  #sidenav
+  class="side-nav"
+  mode="side"
+  [opened]="!responsive_.small"
+  [ngStyle]="{'width': responsive_.med ? '80px': '220px'}"
+  position="start"
+  gdev-color
+  [background]="'dark'"
+  [disableClose]="true"
+  [autoFocus]="false"
   >
-
+    <!-- Routas del lado izquierdo -->
     <aSmart-sidenav></aSmart-sidenav>
+
+    <!-- Botón del Chat Tester -->
     <mat-toolbar
     gdev-color
     class="test-chat-btn"
     [background]="'dark'"
     >
-    <ng-container *ngIf="!responsive.med; else icon">
+      <ng-container *ngIf="!responsive_.med; else icon">
         <button mat-raised-button color="accent" (click)="chat_.toggleChatbox()"
         [disabled]="section != 'agente'">
-            Probar chat
+          Probar chat
         </button>
-    </ng-container>
+      </ng-container>
       <ng-template #icon>
         <button mat-mini-fab color="accent" (click)="chat_.toggleChatbox()"
         [disabled]="section != 'agente'">
-            <i class="fas fa-comment-dots"></i>
+          <i class="fas fa-comment-dots"></i>
         </button>
       </ng-template>
-
     </mat-toolbar>
   </mat-drawer>
-  <!-- End Left Sidenav -->
+  <!-- !## End Left Sidenav -->
 
 
 
-  <!-- Test chat -->
+  <!-- # Test chat -->
   <mat-drawer #testChat [opened]="chat_.opened | async" class="test-chat" mode="over" position="end">
     <gdev-chat-container></gdev-chat-container>
   </mat-drawer>
@@ -55,30 +57,13 @@ gdev-color
 
 
 
-  <!-- Dashboard -->
+  <!-- # Dashboard -->
   <mat-drawer-content strechHeight id="dashboard_area"  gdev-color [background]="'bg1'">
     <router-outlet></router-outlet>
   </mat-drawer-content>
+
 </mat-drawer-container>
 
 
 
-<!-- Mobile navbar -->
-<nav
-  *ngIf="responsive.small"
-  class="nav-footer"
-  id="footer"
-  gdev-color [background]="'acent'"
-  mat-tab-nav-bar
->
-  <button mat-button (click)="sideNav.toggle()">Menú</button>
-  <a mat-tab-link
-        *ngFor="let item of mobileNavbar"
-        [routerLink]="['/dashboard/agente/',projectId, item.path]"
-        routerLinkActive="active"
-        #rla="routerLinkActive"
-        [active]="rla.isActive">
 
-        <span> {{item.label}} </span>
-    </a>
-</nav>

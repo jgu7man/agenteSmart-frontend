@@ -29,53 +29,52 @@ import { ClientesComponent } from './components/clientes/clientes.component';
 import { StartUiComponent } from './components/agentes/agente/start-ui/start-ui.component';
 
 const routes: Routes = [
-    {
-        path: '', component: PublicComponent, children: [
-            {path: '', redirectTo: 'inicio', pathMatch: 'full'},
-            {path: 'inicio', component: InicioComponent, data: {page: 'home'}, },
-            {path: 'docs', component: DocsComponent, data: {page: 'docs'}, children:[
-                { path: 'messenger-integration', component: MessengerIntegrationComponent, data: {page: 'messenger-integration'}}
-            ]},
-            { path: 'legal', component: LegalComponent,data: {page: 'legal'}, children: [
-                { path: 'tratamiento-de-datos', component: TratamientoDatosComponent, data:{page:'tratamiento_datos'} },
-            ] },
-            { path: 'precios', component: PreciosComponent, data: {page: 'precios'}}
-        ],
-    },
-    { path: 'dashboard', component: DashboardComponent, data: {page: 'dashboard'}, children:
-        [
-            { path: '', redirectTo: 'agentes', pathMatch: 'full' },
+    // # Public pages
+    { path: '', component: PublicComponent, children: [
+        {path: '', redirectTo: 'inicio', pathMatch: 'full'},
+        {path: 'inicio', component: InicioComponent, data: {page: 'home'}, },
+        {path: 'docs', component: DocsComponent, data: {page: 'docs'}, children:[
+            { path: 'messenger-integration', component: MessengerIntegrationComponent, data: {page: 'messenger-integration'}}
+        ]},
+        { path: 'legal', component: LegalComponent,data: {page: 'Legal'}, children: [
+            { path: 'tratamiento-de-datos', component: TratamientoDatosComponent, data:{page:'tratamiento_datos'} },
+        ] },
+        { path: 'precios', component: PreciosComponent, data: {page: 'Precios'}}
+    ]},
 
-            { path: 'agentes', component: AgentesComponent },
-            { path: 'crear_agente', component: InitAgenteComponent },
-            { path: 'editar_agente/:id', component: EditAgenteComponent, },
-            { path: 'agente/:id', component: AgenteComponent, data: {section: 'agente'}, children:
-                [
-                    // { path: '', redirectTo: 'mensajes', pathMatch: 'full', },
-                    { path: 'start', component: StartUiComponent },
-                    { path: 'bienvenida', component: BienvenidaComponent },
-                    { path: 'mensajes', component: MensajesComponent },
-                    { path: 'mensaje/:name', component: MensajeComponent, },
-                    { path: 'tipos', component: TiposComponent },
-                    { path: 'configuraciones', component: AgentConfigComponent },
-                    { path: 'opciones', component: OpcionesComponent },
-                    { path:  'integraciones', component: IntegracionesComponent},
-                    { path:  'conversaciones', component: ConversacionesComponent},
-                ],
-            },
-            { path: 'tarjetas', component: TarjetasComponent },
-            { path: 'colecciones', component: ColeccionesComponent },
+    // # Dashboard
+    { path: 'dashboard', component: DashboardComponent, data: {page: 'Dashboard'}, children: [
+        { path: '', redirectTo: 'agentes', pathMatch: 'full' },
 
-            { path: 'inventario', component: ProductsComponent },
-            { path: 'products/add', component: AddProductComponent },
-            {
-                path: 'products/edit/:id',
-                component: EditProductComponent,
-            },
+        { path: 'agentes', component: AgentesComponent, data: {page: 'Agentes'}},
+        { path: 'crear_agente', component: InitAgenteComponent, data: {page: 'Crear agente'}},
+        { path: 'editar_agente/:id', component: EditAgenteComponent, },
+        { path: 'agente/:id', component: AgenteComponent, data: {section: 'Agente'}, children:
+            [
+                // { path: '', redirectTo: 'mensajes', pathMatch: 'full', },
+                { path: 'start', component: StartUiComponent },
+                { path: 'bienvenida', component: BienvenidaComponent },
+                { path: 'mensajes', component: MensajesComponent },
+                { path: 'mensaje/:name', component: MensajeComponent, },
+                { path: 'tipos', component: TiposComponent },
+                { path: 'configuraciones', component: AgentConfigComponent },
+                { path: 'opciones', component: OpcionesComponent },
+                { path:  'integraciones', component: IntegracionesComponent},
+                { path:  'conversaciones', component: ConversacionesComponent},
+            ],
+        },
+        { path: 'tarjetas', component: TarjetasComponent },
+        { path: 'colecciones', component: ColeccionesComponent },
 
-            { path: 'clientes', component: ClientesComponent },
-        ],
-    },
+        { path: 'inventario', component: ProductsComponent },
+        { path: 'products/add', component: AddProductComponent },
+        {
+            path: 'products/edit/:id',
+            component: EditProductComponent,
+        },
+
+        { path: 'clientes', component: ClientesComponent },
+    ],},
 ];
 
 const routerOptions: ExtraOptions = {

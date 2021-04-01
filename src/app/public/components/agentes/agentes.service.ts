@@ -1,3 +1,4 @@
+import { filter, switchMap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { UserInterface } from '../../../admin/auth/auth.service';
 import { AgenteModel } from './init-agente/agente.model';
@@ -22,7 +23,7 @@ export class AgentesService {
 
     /**
      * Observable de los agentes en FIRESTORE*/
-    public agentes$ = new Observable<AgenteModel[]>();
+  public agentes$ = new Observable<AgenteModel[]>();
     private restURL = environment.restURL
 
     constructor(
@@ -33,57 +34,24 @@ export class AgentesService {
         private _alerts: GdevAlert,
         private _http: HttpClient
     ) {
-        this.listenAgentes();
+      this.agentes$ = this._cache
+        .listenForChanges<AgenteModel[]>('agentes')
+        .pipe()
     }
 
     /** Establece la suscripción a los agentes */
-    private async listenAgentes() {
-        this.usuario = await this._cache.getAsyncKey('user');
-
-        try {
-            this.agentes$ = this.fs
-            .collection('usuarios')
-            .doc(this.usuario.uid)
-            .collection<AgenteModel>('agentes')
-            .valueChanges()
-            .pipe(
-                tap((agentes) =>
-                    this._cache.updateData<AgenteModel[]>(
-                        'agentesList',
-                        agentes
-                    )
-                )
-            );
-        } catch (error) {
-            console.error(error)
-            this._alerts.sendError('No fue posible conectarse a la base de datos.', error)
-        }
-
-
+    listenAgentes(userId: string) {
+      return this.fs.collection('usuarios')
+        .doc(userId)
+        .collection<AgenteModel>('agentes')
+        .valueChanges()
+        .pipe(
+            tap((agentes) =>
+              this._cache.updateData<AgenteModel[]>
+                ('agentes', agentes)
+            )
+        )
     }
-
-    // async loadAgentes() {
-    //     this.agentes = await this._cache.getDataKey( 'agentesList' )
-    //     if ( !this.agentes ) {
-    //         this.agentes = []
-
-    //         // Obtiene el usuario autenticado
-    //         this.usuario = await this._auth.getCurrentUser()
-
-    //         const agentesCol = await this.afs.collection( 'usuarios' ).ref
-    //             .doc( this.usuario.uid ).collection( 'agentes' ).get()
-
-    //         await this._loading.asyncForEach( agentesCol.docs, agente => {
-    //             this.agentes.push( agente.data() as AgenteModel )
-    //         } )
-
-    //         this._cache.updateData('agentesList', this.agentes)
-
-    //     }
-
-    //     return this.agentes
-
-    // }
 
 
     /** Obtiene un agente llamado por id

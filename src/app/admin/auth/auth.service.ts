@@ -19,12 +19,12 @@ import {GdevCache} from '../../gdev-tools/src/lib/cache/gdev-cache.service';
   providedIn: 'root'
 } )
 export class AuthService {
-  
+
   user$: Observable<any>
-  
+
   authenticated$: Subject<any> = new Subject()
-  
-  
+
+
   constructor (
     private afAuth: AngularFireAuth,
     private afs: AngularFirestore,
@@ -34,16 +34,16 @@ export class AuthService {
     private _cache: GdevCache,
     ) {
       console.time('user')
-      
+
     //? Método para cargar el usuario autenticado de manera asíncrona
     this.user$ = this.afAuth.authState.pipe(
-      switchMap(user => { return user ? 
+      switchMap(user => { return user ?
          this.afs.doc<UserInterface>(`usuarios/${user.uid}`).valueChanges() :
          of(null);
       })
     )
-    
-    
+
+
    }
 
   async getAuthUser() {
@@ -52,28 +52,28 @@ export class AuthService {
         .subscribe( res => resolve( res ) )
     })
   }
-  
+
   async getCurrentUser(): Promise<UserInterface> {
     let user = await this._cache.getAsyncKey('user') as UserInterface
     return user
   }
-  
-  
 
-  
-  
-  
+
+
+
+
+
    // ? Iniciar sesión con una cuenta google
   async googleSingIn() {
-   
+
 
     // Abre el popup de autenticación
     const provider = new firebase.auth.GoogleAuthProvider();
         provider.setCustomParameters({'prompt': 'select_account'})
     var credential = await this.afAuth.signInWithPopup(provider)
-      
-    
-      
+
+
+
     // Guardar los datos de cliente nuevo en firebase
     return this.updateUserData(credential.user)
 
@@ -84,7 +84,7 @@ export class AuthService {
     const userRef: AngularFirestoreDocument<UserInterface> = this.afs.doc(`usuarios/${uid}`);
     const userDoc = await this.afs.collection('usuarios').ref.doc(uid).get()
     const dateRegist = new Date()
-    
+
     // Si no existe, se agrega fecha de registro
     if (userDoc.exists) {
       var data = { uid, email, displayName, photoURL }
@@ -99,7 +99,7 @@ export class AuthService {
       // localStorage.setItem('mii', JSON.stringify(newData))
     }
 
-    
+
     this.router.navigate(['']);
   }
 
@@ -107,18 +107,18 @@ export class AuthService {
   // ? Obtiene token
   async getToken() {
     const provider = new firebase.auth.GoogleAuthProvider();
-    
+
     var credential = await (await this.afAuth.signInWithPopup(provider))
     console.log( credential )
-    
+
     var json = await credential.credential.toJSON()
     console.log(json)
     var accessToken = json[ 'oauthAccessToken' ]
     localStorage.setItem('access_token', accessToken)
 
     console.log({accessToken})
-    return 
-    
+    return
+
   }
 
 
@@ -134,7 +134,7 @@ export class AuthService {
   }
 
 
-  
+
 
 
 
@@ -163,7 +163,7 @@ export class AuthService {
   //     body, { headers: headers } )
   // }
 
-  
+
 
 }
 
@@ -173,5 +173,5 @@ export interface UserInterface {
     email: string;
     photoURL?: string;
     displayName?: string;
-    
+
     }

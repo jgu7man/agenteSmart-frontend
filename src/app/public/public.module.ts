@@ -9,7 +9,7 @@ import { PublicRoutingModule } from "./public-routing.module";
 import { LoginComponent } from './components/navbar/login/login.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { AuthModule } from '../admin/auth/auth.module';
-import { UsuariosComponent } from './components/usuarios/usuarios.component';
+import { UsuariosComponent } from './components/usuarios_/usuarios.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
 

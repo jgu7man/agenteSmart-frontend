@@ -1,7 +1,6 @@
-import { Component, OnInit, Inject, Output, EventEmitter } from '@angular/core';
-import {MatDialog, MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import { AuthService } from '../../auth.service';
-import { GdevCache } from '../../../../gdev-tools/src/lib/cache/gdev-cache.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -10,43 +9,27 @@ import { Router } from '@angular/router';
   styleUrls: ['./login-button.component.scss']
 })
 export class LoginButtonComponent implements OnInit {
-  private agente = null;
+
+  /** Emite al navbar cuando el usuario se autenticó */
   @Output() isLogged: EventEmitter<any> = new EventEmitter()
   constructor(
-    public dialog: MatDialog,
-    public _auth: AuthService,
-    private _cache: GdevCache,
+    private _dialog: MatDialog,
+    private _auth: AuthService,
     private _router: Router
   ) { }
 
-  ngOnInit() {
-    this._auth.user$.pipe().subscribe( user => {
-      if ( user )
-      {
-        this.isLogged.emit( user )
-        this._cache.updateData('user', user)
-      }
+  ngOnInit() {}
 
-    })
-  }
-
+  // # OPEN LOGIN DIALOG
+  /** Abre el cuadro de diálogo para que el usario inicie sesión en Google */
   openDialog(): void {
-    let user = this._cache.getDataKey( 'user' )
-    if ( user ) {
-      this._router.navigate(['/dashboard'])
-    } else {
-      const dialogRef = this.dialog.open(LoginButtonDialog, {
-        width: '350px',
-      });
-
-      dialogRef.afterClosed().subscribe( () => {
-        this._auth.googleSingIn().then( () => {
-            console.log( 'se autenticó' )
-            this._router.navigate(['/dashboard'])
-        })
-      });
-
-    }
+    this._dialog.open(LoginButtonDialog, {
+      width: '350px',
+    }).afterClosed().subscribe( () => {
+      this._auth.googleSingIn().then( () => {
+          this._router.navigate(['/dashboard'])
+      })
+    });
   }
 
 
