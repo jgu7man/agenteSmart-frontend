@@ -32,9 +32,10 @@ export class AgenteComponent implements OnInit, OnDestroy {
   ) {
 
     // ANCHOR GET THE CURRENT PROJECT ID
-    this._route.params.subscribe(params => {
-        this._agente.projectId = params['id']
-        this._cache.updateData('projectId', params['id'])
+    // NOTE INIZIALITE THE CURRENT AGENT
+    this._route.params.subscribe(async params => {
+      ( await this._agente.setCurrentAgente(params['id'])
+      ).subscribe()
     })
    }
 
@@ -51,16 +52,11 @@ export class AgenteComponent implements OnInit, OnDestroy {
 
 
     async loadAgente() {
-    // ANCHOR INIZIALIZA EL AGENTE Y TODAS SUS SUBSCRIPCIONES
-      this.agente = await this._agente.get()
+      this.agente = await this._cache.getAsyncKey('currentAgente')
       let projectId = this._cache.getDataKey('projectId')
       if (!this.agente.started) {
           this._router.navigate([`/dashboard/agente/${ projectId }/start`])
       }
-    //   else {
-    //       this._router.navigate([`/dashboard/agente/${ projectId }/mensajes`])
-    //   }
-      this._loading.toggleWaitingSpinner( 'close' )
   }
 
   agentLinks:iNavlink[] = [
@@ -76,9 +72,9 @@ export class AgenteComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this._agente.current = {} as AgenteModel
         this._agente.unsubscribeIntentList()
-        this._agente.firestoreIntentListSubs.unsubscribe()
+        // this._agente.firestoreIntentListSubs.unsubscribe()
         this._agente.coleccionesSubs.unsubscribe()
-        this._agente.tiposSubs.unsubscribe()
+        // this._agente.tiposSubs.unsubscribe()
         this._agente.contextosSubs.unsubscribe()
         this._agente.tarjetasSubs.unsubscribe()
     }

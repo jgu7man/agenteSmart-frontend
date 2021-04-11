@@ -51,7 +51,8 @@ export class ParametrosService {
 
     /** Obtiene constante actualizado la ruta del mensaje en curso para los métodos del CRUD */
     private async paramsCollection() {
-        this.mensajesPath = await this._agente.getPath(`parametros`);
+      const agentePath = this._cache.getDataKey('agentePath')
+      this.mensajesPath = agentePath + `/parametros`
         const mensajesRef = this.fs.collection(this.mensajesPath).ref;
         return mensajesRef;
     }
@@ -115,8 +116,9 @@ export class ParametrosService {
     }
 
     firestoredParams: any[] = []
-    async getFirestoredParams() {
-        this.mensajesPath = await this._agente.getPath(`parametros`);
+  async getFirestoredParams() {
+      const agentePath = this._cache.getDataKey('agentePath')
+        this.mensajesPath = agentePath + `/parametros`
         this.fs.collection(this.mensajesPath).valueChanges()
             .subscribe(async list => {
                 this._cache.updateData('parametros', list)

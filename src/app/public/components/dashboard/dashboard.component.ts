@@ -31,7 +31,7 @@ export class DashboardComponent implements OnInit, OnDestroy{
   ) {
     this.setTitles()
     this.listenNavbarToggle()
-    this.inisializationSubs = this.dashboard_.initializeDashboard()
+    this.inisializationSubs = this.dashboard_.initializeDashboard().subscribe()
   }
 
   ngOnInit() {}

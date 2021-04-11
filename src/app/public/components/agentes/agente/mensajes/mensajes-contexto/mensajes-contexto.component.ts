@@ -43,7 +43,7 @@ export class MensajesByContextoComponent implements OnInit {
     }
 
     async getMensajes() {
-        this._agente.intentList$.pipe(
+        this.mensajes_.list$.pipe(
             distinctUntilChanged( ( x, y ) => x && ( x.length == y.length))
         ).subscribe(async () => {
             await this.mensajes_.getMensajesListByContexto(this.contexto).then(list => {

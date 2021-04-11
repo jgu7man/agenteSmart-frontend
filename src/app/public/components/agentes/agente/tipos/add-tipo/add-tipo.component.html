@@ -1,24 +1,17 @@
 <mat-dialog-content>
-    <mat-form-field style="min-width: 100%;">
-        <input 
-        matInput
-        type="text" 
-        #addInput
-        name="addInput" 
-        id="addInput"
-        [(ngModel)]="newTipo.displayName"
-        (keydown)="delSpaces($event)"
-        
-        >
-    </mat-form-field>                            
+  <mat-form-field style="min-width: 100%">
+    <input
+      matInput
+      type="text"
+      #addInput
+      name="addInput"
+      id="addInput"
+      [(ngModel)]="newTipo.displayName"
+      (keydown)="delSpaces($event)"
+    />
+  </mat-form-field>
 </mat-dialog-content>
-<mat-dialog-actions
-style="display: flex; justify-content: space-around;">
-    <button mat-raised-button
-    (click)="cancel()"
-    >Cancelar</button>
-    <button mat-raised-button
-    (click)="onAddTipo()"
-    color="primary"
-    >Crear</button>
+<mat-dialog-actions style="display: flex; justify-content: space-around">
+  <button mat-raised-button (click)="cancel()">Cancelar</button>
+  <button mat-raised-button (click)="onAddTipo()" color="primary">Crear</button>
 </mat-dialog-actions>

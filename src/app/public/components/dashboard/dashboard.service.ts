@@ -1,4 +1,4 @@
-import { Subscription } from 'rxjs';
+import { of, Subscription } from 'rxjs';
 import { Injectable, EventEmitter } from '@angular/core';
 import { Subject, Observable, BehaviorSubject } from 'rxjs';
 import { AgentesService } from '../agentes/agentes.service';
@@ -6,7 +6,7 @@ import { GdevStoreProductsService } from '../inventario/products/products.servic
 import { iNavlink } from '../navbar/navlink.interface';
 import { GdevCache } from 'src/app/gdev-tools/src/public-api';
 import { UserInterface } from 'src/app/admin/auth/auth.service';
-import { filter, flatMap } from 'rxjs/operators';
+import { filter, flatMap, map, tap } from 'rxjs/operators';
 
 @Injectable({providedIn: 'root'})
 export class DashboardService {
@@ -30,9 +30,11 @@ export class DashboardService {
   initializeDashboard() {
     return this._cache.listenForChanges
       <UserInterface>('user').pipe(
+        // tap(console.log),
         filter(user => !!user),
         flatMap(user => this._agentes.listenAgentes(user.uid))
-      ).subscribe()
+        // Another flatMap as you like
+      )
   }
 
 

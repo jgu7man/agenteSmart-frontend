@@ -10,7 +10,7 @@ import { DiagramService } from '../diagram/diagram.service';
 import { GdevText } from '../../../../../../gdev-tools/src/lib/text/gdev-text.service';
 import { ContextoModel } from '../../contextos/contexto.model';
 import { Subscription } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
+import { distinctUntilChanged, filter } from 'rxjs/operators';
 import { ContextosService } from '../../contextos/contextos.service';
 @Component({
   selector: 'aSmart-mensajes-list',
@@ -45,7 +45,11 @@ export class MensajesListComponent implements OnInit , OnDestroy{
   }
 
   async getMensajes() {
-    this.agente_.intentList$.pipe(
+    if (!this.mensajes_.list$) {
+      this.mensajes_.list$ = this._cache.listenForChanges<IntentModel[]>('intents')
+      .pipe(filter(list => !!list))
+    }
+    this.mensajes_.list$.pipe(
         distinctUntilChanged( ( x, y ) => x && ( x.length == y.length))
     ).subscribe(async () => {
         await this.mensajes_.getMensajesWithoutContext().then(list => {

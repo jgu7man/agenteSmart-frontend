@@ -34,7 +34,7 @@ export class ConfigRetrocesoComponent implements OnInit {
 
     ngOnInit(): void {
         // this._loading.toggleWaitingSpinner( true )
-        
+
         this.getFallbackIntent()
     }
 
@@ -44,7 +44,8 @@ export class ConfigRetrocesoComponent implements OnInit {
             (i) => i.displayName == 'Default Fallback Intent'
         );
 
-        this.respuestaPath = await this._agente.getPath(`mensajes/${this.intent.name}/respuestas`)
+      const agentePath = this._cache.getDataKey('agentePath');
+        this.respuestaPath = agentePath + `/mensajes/${this.intent.name}/respuestas`
         const respuestasCol = await this.fs.collection(this.respuestaPath).ref.get()
 
         if (respuestasCol.size > 0) {
@@ -53,21 +54,21 @@ export class ConfigRetrocesoComponent implements OnInit {
             this.result = this.respuesta.result
         }
 
-        
+
         // this._loading.toggleWaitingSpinner(false)
     }
 
     catchText(respuesta) {
         this.result.text = respuesta
     }
-    
+
 
     saveRespuesta() {
         this.respuesta.result = {...this.result}
         Object.keys(this.respuesta).forEach(key => { if (this.respuesta[key] == undefined) delete this.respuesta[key]})
-        
+
         try {
-            
+
             if ( this.respuesta.id ) {
                 console.log( 'edited', {...this.respuesta} )
                 this.fs.collection(this.respuestaPath).doc(this.respuesta.id).set({...this.respuesta})

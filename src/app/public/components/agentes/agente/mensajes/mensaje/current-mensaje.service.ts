@@ -16,338 +16,336 @@ import * as actions from './store/mensaje.actions';
 import { GdevCommonsService } from '../../../../../../gdev-tools/src/lib/common/services/gdev-commons.service';
 import { Location } from '@angular/common';
 import { environment } from '../../../../../../../environments/environment';
-
-
+import { MensajesService } from '../mensajes.service';
 
 @Injectable({
-    providedIn: 'root',
+  providedIn: 'root',
 })
 export class CurrentMensajeService {
+  /** Informa cuando el intent actual ha cambiado */
+  public current$: Subject<IntentModel> = new Subject();
+  /** Contiene el intent actual y sus cambios */
+  public current: IntentModel;
+  /** Contiene el nombre del contexto actual */
+  public currentContexto: string;
+  /** Suscripción a los parámetros de la ruta activa */
+  private paramSubs: Subscription;
+  /** Contiene el nombre del intent actual */
+  private mensajeName: string;
+  /** Contiene la ruta de FIRESTORE del mensaje actual */
+  private mensajesPath: string;
+  /** Contiene la ruta a la API */
+  private _url = environment.restURL + 'intent';
+  private intentListSubs: Subscription;
+  private intentList$: Observable<IntentModel[]>;
 
-    /** Informa cuando el intent actual ha cambiado */
-    public current$: Subject<IntentModel> = new Subject();
-    /** Contiene el intent actual y sus cambios */
-    public current: IntentModel;
-    /** Contiene el nombre del contexto actual */
-    public currentContexto: string;
-    /** Suscripción a los parámetros de la ruta activa */
-    private paramSubs: Subscription
-    /** Contiene el nombre del intent actual */
-    private mensajeName: string;
-    /** Contiene la ruta de FIRESTORE del mensaje actual */
-    private mensajesPath: string;
-    /** Contiene la ruta a la API */
-    private _url = environment.restURL + 'intent';
-    private intentListSubs: Subscription
-    private intentList$: Observable<IntentModel[]>
+  constructor(
+    private fs: AngularFirestore,
+    private _loading: GdevLoading,
+    private store: Store<MensajeState>,
+    private _agente: CurrentAgenteService,
+    private _cache: GdevCache,
+    private _alerts: GdevAlert,
+    private _http: HttpClient,
+    private _commons: GdevCommonsService,
+    private _router: Router,
+    private _location: Location,
+    private _mensajes: MensajesService
+  ) {}
 
-    constructor(
-        private fs: AngularFirestore,
-        private _loading: GdevLoading,
-        private store: Store<MensajeState>,
-        private _agente: CurrentAgenteService,
-        private _cache: GdevCache,
-        private _alerts: GdevAlert,
-        private _http: HttpClient,
-        private _commons: GdevCommonsService,
-        private _router: Router,
-        private _location: Location
-    ) {  }
+  /** Returna como promesa la referencia a FIRESTORE directa a la colección de los mensajes del usuario y del agente
+   * @return {*} Referencia de firestore
+   */
+  public mensajesCollection() {
+    const agentePath = this._cache.getDataKey('agentePath');
+    this.mensajesPath = `${agentePath}/mensajes`;
+    const mensajesRef = this.fs.collection(this.mensajesPath).ref;
+    return mensajesRef;
+  }
 
+  /**
+   * Obtiene los parámetros de la ruta cuando se ingresa a editar un mensaje
+   * @return {*} Obserbavle con variable 'mensajeName' y 'currentContexto'
+   */
+  private getParams() {
+    return forkJoin({
+      ['mensajeName']: this._loading.getRouteParams().pipe(pluck('name')),
+      ['currentContexto']: this._loading
+        .getRouteQueryParams()
+        .pipe(pluck('contexto')),
+    });
+  }
 
-
-    /** Returna como promesa la referencia a FIRESTORE directa a la colección de los mensajes del usuario y del agente
-     * @return {*} Referencia de firestore
-     */
-    public async mensajesCollection() {
-        this.mensajesPath = await this._agente.getPath('mensajes');
-        const mensajesRef = this.fs.collection(this.mensajesPath).ref;
-        return mensajesRef;
+  /**
+   * Obtiene el mensaje actual de la lista de intents y lo asigna como actual
+   *
+   * @param {string} displayName displayName del mensaje
+   * @returns {IntentModel} intent actual
+   */
+  async getCurrent(displayName: string) {
+    const agentePath = this._cache.getDataKey('agentePath');
+    this.mensajesPath = `${agentePath}/mensajes`;
+    this.current = await this.findMensaje(displayName);
+    // console.log(this.current);
+    if (this.current) {
+      this.setCurrent();
     }
+    return this.current;
+  }
 
+  /** Establece en el storage el intent actual y emite un evento para current$ */
+  async setCurrent() {
+    console.log(this.current);
 
-    /**
-     * Obtiene los parámetros de la ruta cuando se ingresa a editar un mensaje
-     * @return {*} Obserbavle con variable 'mensajeName' y 'currentContexto'
-     */
-    private getParams() {
-        return forkJoin({
-            ['mensajeName']: this._loading
-                .getRouteParams()
-                .pipe(pluck('name')),
-            ['currentContexto']: this._loading
-                .getRouteQueryParams()
-                .pipe(pluck('contexto')),
-        });
-    }
+    this.current$.next(this.current);
+    this._cache.updateData('currentContexto', this.currentContexto);
+    this._cache.updateData('currentIntent', this.current);
+    this.getRespuestasList();
 
-
-
-
-
-    /**
-     * Obtiene el mensaje actual de la lista de intents y lo asigna como actual
-     *
-     * @param {string} displayName displayName del mensaje
-     * @returns {IntentModel} intent actual
-     */
-    async getCurrent(displayName: string) {
-        this.mensajesPath = await this._agente.getPath('mensajes');
-        this.current = await this.findMensaje(displayName)
-        // console.log(this.current);
-        if (this.current) {this.setCurrent()}
-        return this.current
-    }
-
-
-
-    /** Establece en el storage el intent actual y emite un evento para current$ */
-    async setCurrent() {
-        console.log(this.current);
-
+    this.intentList$ = this._cache.listenForChanges<IntentModel[]>('intents');
+    this.intentListSubs = this.intentList$
+      .pipe(
+        debounceTime(1000),
+        // tap(emit => console.log(emit)),
+        map((list) => list.find((intent) => intent.name == this.current.name))
+      )
+      .subscribe((mensaje) => {
+        this.current = { ...mensaje, ...this.current };
+        // this.current = mensaje
         this.current$.next(this.current);
-        this._cache.updateData('currentContexto', this.currentContexto);
-        this._cache.updateData('currentIntent', this.current);
-        this.getRespuestasList();
+      });
+  }
 
-        this.intentList$ = this._cache.listenForChanges<IntentModel[]>('intents')
-        this.intentListSubs = this.intentList$.pipe(
-            debounceTime(1000),
-            // tap(emit => console.log(emit)),
-            map(list => list.find(intent => intent.name == this.current.name))
-        ).subscribe(mensaje => {
-            this.current = {...mensaje, ...this.current}
-            // this.current = mensaje
-            this.current$.next(this.current)
+  /** Obtiene el intent actual a partir de la subscripción a los cambios de la ruta */
+  async getByActivatedRoute(intentName: string, contexto: string) {
+    this._loading.toggleWaitingSpinner('open');
+    this._cache.updateData('currentContexto', contexto);
+    this._cache.updateData('mensajeName', intentName);
+
+    this.currentContexto = await this._cache.getAsyncKey<string>(
+      'currentContexto',
+      1
+    );
+    this.mensajeName = await this._cache.getAsyncKey<string>('mensajeName', 1);
+    const agentePath = this._cache.getDataKey('agentePath');
+    this.mensajesPath = `${agentePath}/mensajes`;
+    this.current = await this.findMensaje(this.mensajeName);
+    console.log(this.current);
+    if (this.current) {
+      this.setCurrent();
+    } else {
+      await this._loading.waitFor(1000);
+      const projectId: string = this._cache.getDataKey('projectId');
+      this._alerts.sendFloatNotification(
+        'Error al cargar el intent. Parece que fue eliminado'
+      );
+      this._router.navigate([`/dashboard/agente/${projectId}/mensajes`]);
+    }
+    this._loading.toggleWaitingSpinner('close');
+  }
+
+  /**
+   * Busca en la lista de intents del storage un intent que coincida con el parámetro displayName
+   *
+   * @param {string} nameOrDisplayName displayName del intent o name.
+   * Busca a través de ambos
+   * @returns {IntentModel | null} intent completo si existe, si no, retorna null
+   */
+  async findMensaje(nameOrDisplayName: string) {
+    let list = await this._cache.getAsyncKey<IntentModel[]>('intents');
+    // console.log('lista de mensajes',  list);
+    let intent = list.find((m) => m.displayName == nameOrDisplayName);
+    if (!intent) intent = list.find((m) => m.name == nameOrDisplayName);
+    // console.log(intent);
+    return list ? (intent ? intent : null) : null;
+  }
+
+  respuestasSubs: Subscription;
+  respuestasList: RespuestaModel[];
+  /**
+   * Se suscribe a los cambios de FIRESTORE para obtener las respuestas del intent actual y estble la variable de respuestasList con la lista actualizada. También inserta la lista de respuestas en el storage
+   *
+   * @returns {RespuestaModel} Array de respuestas actualizado
+   */
+  async getRespuestasList() {
+    const mensajeName = await (
+      await this._cache.getAsyncKey<IntentModel>('currentIntent')
+    ).name;
+    const agentePath = this._cache.getDataKey('agentePath');
+    const respuestasPath = `${agentePath}/mensajes/${mensajeName}/respuestas`;
+
+    var changes = this.fs
+      .collection<RespuestaModel>(respuestasPath)
+      .valueChanges();
+
+    this.respuestasSubs = changes.subscribe((respuestas) => {
+      this.respuestasList = this._commons.sortBy<RespuestaModel>(
+        respuestas,
+        'index'
+      );
+      this._cache.updateData('currentRespuestas', respuestas);
+    });
+
+    // console.log({respuestasPath});
+    this.respuestasList = await this._cache.getAsyncKey<RespuestaModel[]>(
+      'currentRespuestas'
+    );
+
+    return this.respuestasList;
+  }
+
+  // UPDATE MENSAJE ACTUAL
+  // mensajeUpdated$: Subject<any> = new Subject()
+  /** Actualiza el intent actual en DIALOGFLOW con los cambios hechos en el área de entrenamiento. */
+  async update(mensaje?: IntentModel) {
+    console.log(mensaje);
+    this._loading.toggleWaitingSpinner('open');
+
+    try {
+      // Update current mensaje
+      if (!mensaje) {
+        const request = await this.updateIntentApiRequest(this.current);
+        console.log(request);
+        if (request) {
+          // console.info('Se Actualizo Intent:', request);
+
+          this._mensajes.getDialogFlowIntents();
+          // this.store.dispatch(actions.setSaved());
+          this._loading.toggleWaitingSpinner('close');
+          this._alerts.sendFloatNotification('Mensaje guardado');
+          // return this.mensajeUpdated$.next()
+        }
+      }
+
+      // Update another mensaje
+      else {
+        await this.updateIntentApiRequest(mensaje);
+        this._mensajes.getDialogFlowIntents();
+        this._loading.toggleWaitingSpinner('close');
+        return;
+      }
+    } catch (error) {
+      console.error(error);
+      this._alerts.sendError('No se pudo guardar', error);
+      this._loading.toggleWaitingBar();
+    }
+  }
+
+  /** Actualiza el intent actual en DIALOGFLOW a través de la API
+   * @private
+   * @param {IntentModel} intent
+   * @returns {*}  {Promise<IntentModel>}
+   */
+  private updateIntentApiRequest(intent: IntentModel): Promise<IntentModel> {
+    console.log(intent);
+    let projectId = this._cache.getDataKey('projectId');
+    let path = `projects/${projectId}/agent/intents/${intent.name}`;
+    intent.name = path;
+    const body = {
+      intent,
+      intetnView: 'INTENT_VIEW_FULL',
+    };
+
+    const headers = { responseType: 'json' };
+
+    return new Promise((resolve, reject) => {
+      this._http
+        .put(this._url, body, { headers })
+        .toPromise()
+        .then((response) => {
+          if (response) {
+            console.info('Intent Actualizado:', response);
+            resolve(response['intent']);
+          }
         })
-    }
-
-    /** Obtiene el intent actual a partir de la subscripción a los cambios de la ruta */
-    async getByActivatedRoute( intentName: string, contexto: string ) {
-        this._loading.toggleWaitingSpinner('open')
-        this._cache.updateData('currentContexto', contexto)
-        this._cache.updateData('mensajeName', intentName)
-
-        this.currentContexto = await this._cache.getAsyncKey<string>('currentContexto', 1)
-        this.mensajeName = await this._cache.getAsyncKey<string>('mensajeName', 1)
-        this.mensajesPath = await this._agente.getPath('mensajes');
-        this.current = await this.findMensaje(this.mensajeName)
-        console.log(this.current)
-        if ( this.current ) { this.setCurrent() }
-        else {
-            await this._loading.waitFor(1000)
-            const projectId: string = this._cache.getDataKey('projectId');
-            this._alerts.sendFloatNotification( 'Error al cargar el intent. Parece que fue eliminado' )
-            this._router.navigate( [ `/dashboard/agente/${ projectId }/mensajes` ] )
-        }
-        this._loading.toggleWaitingSpinner('close')
-    }
-
-
-    /**
-     * Busca en la lista de intents del storage un intent que coincida con el parámetro displayName
-     *
-     * @param {string} nameOrDisplayName displayName del intent o name.
-     * Busca a través de ambos
-     * @returns {IntentModel | null} intent completo si existe, si no, retorna null
-     */
-    async findMensaje(nameOrDisplayName: string) {
-        let list = await this._cache.getAsyncKey<IntentModel[]>('intents')
-        // console.log('lista de mensajes',  list);
-        let intent = list.find((m) => m.displayName == nameOrDisplayName);
-        if (!intent) intent = list.find((m) => m.name == nameOrDisplayName);
-        // console.log(intent);
-        return list ? intent ? intent : null : null
-    }
-
-
-
-
-
-
-
-
-    respuestasSubs: Subscription;
-    respuestasList: RespuestaModel[];
-    /**
-     * Se suscribe a los cambios de FIRESTORE para obtener las respuestas del intent actual y estble la variable de respuestasList con la lista actualizada. También inserta la lista de respuestas en el storage
-     *
-     * @returns {RespuestaModel} Array de respuestas actualizado
-     */
-    async getRespuestasList() {
-        const mensajeName = await (await this._cache.getAsyncKey<IntentModel>('currentIntent')).name
-        const respuestasPath = await this._agente.getPath(
-            `mensajes/${mensajeName}/respuestas`
-        );
-
-
-
-        var changes = this.fs
-        .collection<RespuestaModel>(respuestasPath)
-        .valueChanges()
-
-        this.respuestasSubs = changes.subscribe((respuestas) => {
-            this.respuestasList = this._commons.sortBy<RespuestaModel>(respuestas, 'index')
-            this._cache.updateData('currentRespuestas', respuestas);
+        .catch((err) => {
+          if (err) {
+            console.error(err);
+          }
+          reject(err);
         });
+    });
+  }
 
-        // console.log({respuestasPath});
-        this.respuestasList = await this._cache.getAsyncKey<RespuestaModel[]>('currentRespuestas');
+  /**
+   * Actualiza el nombre del mensaje en DIALOGFLOW y en FIRESTORE
+   *
+   * @param {string} mensajeName name del intent
+   * @param {string} displayName displayName nuevo
+   */
+  async updateMensajeName(mensajeName: string, displayName: string) {
+    this.current.displayName = displayName;
+    await this.updateIntentApiRequest(this.current);
+    await (await this.mensajesCollection()).doc(mensajeName).update({
+      displayName: displayName,
+    });
+  }
 
-        return this.respuestasList
+  /**
+   * Elimina el intent en DIALOGFLOW y después en FIRESTORE
+   *
+   * @param {string} mensajeName name del intent
+   * @returns {*}
+   */
+  async delete(mensajeName: string) {
+    //params intentName (ultima cadena)
+    // REVIEW Falta testear esta función.
+    const projectId: string = this._cache.getDataKey('projectId');
+    const request = await this.deleteIntentRequest(mensajeName);
+    if (request) {
+      console.log(mensajeName);
+      await (await this.mensajesCollection()).doc(mensajeName).delete();
+      await this._router.navigateByUrl(`/dashboard`, {
+        skipLocationChange: true,
+      });
+      this._router.navigate([`/dashboard/agente/${projectId}/mensajes`]);
     }
 
+    return;
+  }
 
+  /**
+   * Elimina el intent desde la API
+   * @private
+   * @param {string} intentId
+   * @returns {*}  {Promise<any>}
+   */
+  public deleteIntentRequest(intentId: string): Promise<any> {
+    this._loading.toggleWaitingSpinner('open');
+    return new Promise((resolve, reject) => {
+      const projectId: string = this._cache.getDataKey('projectId');
 
-    // UPDATE MENSAJE ACTUAL
-    // mensajeUpdated$: Subject<any> = new Subject()
-    /** Actualiza el intent actual en DIALOGFLOW con los cambios hechos en el área de entrenamiento. */
-    async update(mensaje?: IntentModel) {
-        console.log( mensaje )
-        this._loading.toggleWaitingSpinner('open');
-
-        try {
-
-            // Update current mensaje
-            if (!mensaje) {
-                const request = await this.updateIntentApiRequest(this.current);
-                console.log(request);
-                if (request) {
-                    // console.info('Se Actualizo Intent:', request);
-
-                    this._agente.getIntentList()
-                    this.store.dispatch(actions.setSaved());
-                    this._loading.toggleWaitingSpinner('close');
-                    this._alerts.sendFloatNotification('Mensaje guardado');
-                    // return this.mensajeUpdated$.next()
-                }
-            }
-
-
-            // Update another mensaje
-            else {
-                await this.updateIntentApiRequest( mensaje );
-                this._agente.getIntentList()
-                this._loading.toggleWaitingSpinner('close');
-                return
-            }
-
-        } catch (error) {
-            console.error(error);
-            this._alerts.sendError( 'No se pudo guardar', error )
-            this._loading.toggleWaitingBar();
-        }
-    }
-
-
-
-    /** Actualiza el intent actual en DIALOGFLOW a través de la API
-     * @private
-     * @param {IntentModel} intent
-     * @returns {*}  {Promise<IntentModel>}
-     */
-    private updateIntentApiRequest(intent: IntentModel): Promise<IntentModel> {
-        console.log( intent )
-        let projectId = this._cache.getDataKey('projectId');
-        let path = `projects/${projectId}/agent/intents/${intent.name}`;
-        intent.name = path;
-        const body = {
-            intent, intetnView: 'INTENT_VIEW_FULL',
-        }
-
-        const headers = { responseType: 'json', }
-
-        return new Promise((resolve, reject) => {
-            this._http.put(this._url, body, {headers})
-                .toPromise()
-                .then((response) => {
-                    if (response) {
-                        console.info('Intent Actualizado:', response);
-                        resolve(response['intent']);
-                    }
-                })
-                .catch((err) => {
-                    if (err) { console.error(err)}
-                    reject(err);
-                });
+      this._http
+        .delete(this._url + `/${intentId}/project/${projectId}`)
+        .toPromise()
+        .then((response) => {
+          resolve(true);
+        })
+        .catch((err) => {
+          if (err) {
+            console.log(err);
+            this._alerts.sendError(
+              'No es posible elimnar intent, intentelo de nuevo, porfavor.',
+              err
+            );
+          }
+          // reject(true);
         });
+    });
+  }
+
+  /** Desuscribe todos los datos en este servicio */
+  unsubscribe() {
+    this.store.dispatch(actions.getOutMensaje());
+    this._cache.deleteDataKey('currentIntent');
+    this._cache.deleteDataKey('currentRespuestas');
+    if (this.respuestasSubs) {
+      this.respuestasSubs.unsubscribe();
     }
-
-    /**
-     * Actualiza el nombre del mensaje en DIALOGFLOW y en FIRESTORE
-     *
-     * @param {string} mensajeName name del intent
-     * @param {string} displayName displayName nuevo
-     */
-    async updateMensajeName(mensajeName: string, displayName: string) {
-        this.current.displayName = displayName
-        await this.updateIntentApiRequest(this.current)
-        await (await this.mensajesCollection()).doc(mensajeName).update({
-            displayName: displayName,
-        });
+    if (this.intentListSubs) {
+      this.intentListSubs.unsubscribe();
     }
-
-    /**
-     * Elimina el intent en DIALOGFLOW y después en FIRESTORE
-     *
-     * @param {string} mensajeName name del intent
-     * @returns {*}
-     */
-    async delete(mensajeName: string) {
-        //params intentName (ultima cadena)
-        // REVIEW Falta testear esta función.
-        const projectId: string = this._cache.getDataKey('projectId');
-        const request = await this.deleteIntentRequest(mensajeName);
-        if ( request ) {
-            console.log(mensajeName)
-            await (await this.mensajesCollection())
-                .doc(mensajeName)
-                .delete();
-            await this._router.navigateByUrl( `/dashboard`, { skipLocationChange: true } )
-            this._router.navigate([`/dashboard/agente/${ projectId }/mensajes`])
-        }
-
-        return
-    }
-
-    /**
-     * Elimina el intent desde la API
-     * @private
-     * @param {string} intentId
-     * @returns {*}  {Promise<any>}
-     */
-    public deleteIntentRequest( intentId: string ): Promise<any> {
-        this._loading.toggleWaitingSpinner('open')
-        return new Promise((resolve, reject) => {
-            const projectId: string = this._cache.getDataKey('projectId');
-
-            this._http
-                .delete(this._url + `/${intentId}/project/${projectId}`)
-                .toPromise()
-                .then((response) => {
-                    resolve(true);
-                })
-                .catch((err) => {
-                    if ( err ) {
-                        console.log(err);
-                        this._alerts.sendError(
-                            'No es posible elimnar intent, intentelo de nuevo, porfavor.',
-                            err
-                        );
-                    }
-                    // reject(true);
-                });
-        });
-    }
-
-    /** Desuscribe todos los datos en este servicio */
-    unsubscribe() {
-        this.store.dispatch(actions.getOutMensaje());
-        this._cache.deleteDataKey('currentIntent')
-        this._cache.deleteDataKey( 'currentRespuestas' )
-        if ( this.respuestasSubs ) { this.respuestasSubs.unsubscribe() }
-        if ( this.intentListSubs ) { this.intentListSubs.unsubscribe() }
-        if ( this.paramSubs ) this.paramSubs.unsubscribe()
-        // console.log('unsubscribe');
-    }
+    if (this.paramSubs) this.paramSubs.unsubscribe();
+    // console.log('unsubscribe');
+  }
 }

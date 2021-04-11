@@ -55,9 +55,10 @@ export class AgentConfigService {
             defaultIntent.name.lastIndexOf('/') + 1
         );
 
-        console.log('Save on firestore');
+      console.log('Save on firestore');
+      let path = this._cache.getDataKey<string>('agentePath')
         await this.fs
-            .collection(await this._agente.getPath('mensajes'))
+            .collection(path+'/mensajes')
             .doc(resourceID)
             .set( {
                 name: resourceID,
@@ -65,7 +66,7 @@ export class AgentConfigService {
             } );
 
         console.log( 'Process finished' );
-        this._agente.getDialogFlowIntents()
+        this._mensajes.getDialogFlowIntents()
 
         this._loading.toggleWaitingSpinner( 'close' )
         this._alerts.sendFloatNotification(intent+' creado')

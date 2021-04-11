@@ -1,153 +1,100 @@
 <div id="tipo-body" *ngIf="tipo">
-    
-    <!-- OPCIONES DE ENTIDAD -->
-    <div class="row">
-        <div class="col s12" id="tipo-options">
+  <!-- ## OPCIONES DE ENTIDAD -->
+  <div class="row">
+    <div class="col s12" id="tipo-options">
+      <mat-checkbox
+        [color]="'primary'"
+        (change)="onKindChange($event)"
+        [checked]="tipo.kind == 'KIND_MAP'"
+      >
+        Activar sinónimos
+      </mat-checkbox>
 
-            <mat-checkbox 
-            [color]="'primary'"
-            (change)="onKindChange($event)" 
-            [checked]="tipo.body.kind == 'KIND_MAP'">
-                Activar sinónimos
-            </mat-checkbox>
-            
-            <mat-checkbox 
-            [color]="'primary'"
-            (change)="onExpanptionChange($event)" 
-            [checked]="tipo.body.autoExpansionMode == 'AUTO_EXPANSION_MODE_DEFAULT'">
-                Auto expansión
-            </mat-checkbox>
-            
-            <mat-checkbox 
-            [color]="'primary'"
-            (change)="onFuzzyChange($event)"
-            [checked]="tipo.body.enableFuzzyExtraction" >
-                Activar coincidencia parcial
-            </mat-checkbox>
+      <mat-checkbox
+        [color]="'primary'"
+        (change)="onExpantionChange($event)"
+        [checked]="tipo.autoExpansionMode == 'AUTO_EXPANSION_MODE_DEFAULT'"
+      >
+        Auto expansión
+      </mat-checkbox>
 
-        </div>
+      <mat-checkbox
+        [color]="'primary'"
+        (change)="onFuzzyChange($event)"
+        [checked]="tipo.enableFuzzyExtraction"
+      >
+        Activar coincidencia parcial
+      </mat-checkbox>
     </div>
+  </div>
 
-    <!-- TERMINA OPCIONES DE ENTIDAD -->
+  <!-- !## OPCIONES DE ENTIDAD -->
 
+  <!-- ## INICIA CLASES CRUD -->
+  <div class="row">
+    <div class="col s12">
+      <h6>Clases del tipo de dato</h6>
 
-
-
-    <!-- INICIA CLASES CRUD -->
-    <div class="row">
-        <div class="col s12">
-            <h6> Clases del tipo de dato</h6>
-
-
-           
-           
-           
-           
-            <!-- UPDATE Clases con sinónimos -->
-            <mat-card *ngIf="tipo.body.kind == 'KIND_MAP'; else lista">
-                <mat-card-content>
-                    <div class="row">
-                        <div class="col s3">Clase</div>
-                        <div class="col s9">Sinónimos</div>
-                    </div>
-                    
-                    <ul class="clase-list collection">
-                    
-                    <!-- READ CLASES DE TIPO -->
-                        <li class="clase-item collection-item" *ngFor="let clase of tipo.body.entities">
-                            <div class="row">
-                                <aSmart-clase-item 
-                                    (claseEdited)="toEditClase($event)"
-                                    [clase]="clase" 
-                                    [claseId]="clase.value" 
-                                    [tipo]="tipo.body"
-                                ></aSmart-clase-item>
-
-                            </div>
-                        </li>
-            
-                        <!-- CREATE CLASE DE TIPO -->
-                        <ng-template #addClase>
-                            <li class="clase-item collection-item" [ngClass]="{'collection-item': switchAddClase}">
-                                <aSmart-add-clase 
-                                [tipo]="tipo.body"
-                                >
-                                </aSmart-add-clase>    
-                            </li>
-                        </ng-template>
-                    </ul>
-                    <!-- TO CREATE -->
-                    <ng-container *ngIf="!switchAddClase; else addClase">
-                        <button 
-                        mat-button 
-                        (click)="switchAddClase = true"
-                        [disabled]="!tipo.name"
-                        >
-                            Agregar nueva clase
-                        </button>
-                    </ng-container>
-
-                </mat-card-content>
-            </mat-card>
+      <!-- ## Clases con sinónimos -->
+      <mat-card >
+        <mat-card-content>
+          <!-- Table head -->
+          <div class="row">
+            <div class="col s3">Clase</div>
+            <div class="col s9"
+            *ngIf="tipo.kind == 'KIND_MAP'"
+            >Sinónimos</div>
+          </div>
 
 
+          <!-- READ lista CLASES DE TIPO -->
+          <ul class="clase-list collection">
+            <li
+              class="clase-item collection-item"
+              *ngFor="let clase of tipo.entities"
+            >
+            <!-- UPDATE CLASE  -->
+              <div class="row">
+                <aSmart-clase-item
+                  (claseEdited)="toEditClase($event)"
+                  [claseId]="clase.value"
+                  [kind]="tipo.kind"
+                ></aSmart-clase-item>
+              </div>
+            </li>
 
-
-
-
-
-
-
-
-
-
-
-
-            <!-- UPDATE Clases sin sinónimos -->
-            <ng-template #lista>
-                <mat-card>
-                    <mat-card-content>
-                        <ul class="clase-list collection">
-
-
-                            <!-- READ CLASES DE TIPO -->
-                            <li class="clase-item collection-item" *ngFor="let clase of tipo.body.entities;">
-                                <div class="row">
-                                    <aSmart-clase-item 
-                                    (closeClaseEdit)="toEditClase($event)"
-                                    [clase]="clase" 
-                                    [claseId]="clase.value" 
-                                    [tipo]="tipo.body"
-                                    ></aSmart-clase-item>
-    
-                                </div>
-                            </li>
-                
-                            <!-- CREATE CLASE DE TIPO -->
-                            <ng-template #addClase>
-                                <li class="clase-item collection-item" [ngClass]="{'collection-item': switchAddClase}">
-                                    <aSmart-add-clase 
-                                    [tipo]="tipo.body"
-                                    >
-                                    </aSmart-add-clase>    
-                                </li>
-                            </ng-template>
-                            
-                            <!-- TO CREATE -->
-                            <ng-container *ngIf="!switchAddClase; else addClase">
-                                <button 
-                                mat-button 
-                                (click)="switchAddClase = true"
-                                >
-                                    Agregar nueva clase
-                                </button>
-                            </ng-container>
-                        </ul>
-                    </mat-card-content>
-                </mat-card>
+            <!-- CREATE CLASE DE TIPO -->
+            <ng-template #addClase>
+              <li
+                class="clase-item collection-item"
+                [ngClass]="{ 'collection-item': switchAddClase }"
+              >
+                <div class="row">
+                  <aSmart-clase-item
+                    (claseEdit)="toEditClase($event)"
+                    [ClaseInput]="true"
+                    [kind]="tipo.kind"
+                  ></aSmart-clase-item>
+                </div>
+              </li>
             </ng-template>
+          </ul>
+          <!-- TO CREATE -->
+          <ng-container *ngIf="!switchAddClase; else addClase">
+            <button
+              mat-button
+              (click)="switchAddClase = true"
+              [disabled]="!tipo.name"
+            >
+              Agregar nueva clase
+            </button>
+          </ng-container>
+        </mat-card-content>
+      </mat-card>
+      <!-- !## Clases con sinónimos -->
 
-        </div>
+
     </div>
-    
+  </div>
+  <!-- !## CLASES CRUD -->
 </div>

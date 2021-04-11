@@ -40,7 +40,7 @@ export class NavbarComponent implements OnInit {
     this._loading.getCurrentActivatedRoute().subscribe(() => {
       this._loading.collectRouteData().subscribe((data) => {
         this.view = data.data['page'];
-        console.log( this.view )
+        // console.log( this.view )
       });
     })
   }

@@ -43,7 +43,7 @@ import { SimpleFormComponent } from './agente/mensajes/mensaje/entrenamiento/res
 
 import { TiposComponent } from './agente/tipos/tipos.component';
 import { AddTipoComponent } from './agente/tipos/add-tipo/add-tipo.component';
-import { AddClaseComponent } from './agente/tipos/add-tipo/add-clase/add-clase.component';
+import { EditClaseComponent } from './agente/tipos/tipo/edit-clase/edit-clase.component';
 import { TipoComponent } from './agente/tipos/tipo/tipo.component';
 import { ClaseItemComponent } from './agente/tipos/tipo/clase-item/clase-item.component';
 import { TipoBodyComponent } from './agente/tipos/tipo/tipo-body/tipo-body.component';
@@ -124,7 +124,7 @@ import { AddMensajeComponent } from './agente/mensajes/add-mensaje/add-mensaje.c
     SimpleFormComponent,
     TiposComponent,
     AddTipoComponent,
-    AddClaseComponent,
+    EditClaseComponent,
     TipoComponent,
     ClaseItemComponent,
     TipoBodyComponent,
@@ -177,7 +177,7 @@ import { AddMensajeComponent } from './agente/mensajes/add-mensaje/add-mensaje.c
     QRCodeModule
   ],
   providers: [
-    
+
   ],
   entryComponents: [CreatingComponent, ConfigRetrocesoComponent, AddContextoDialogComponent]
 })

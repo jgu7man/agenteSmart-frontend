@@ -1,23 +1,32 @@
 <aSmart-mensajes-diagram></aSmart-mensajes-diagram>
-<mat-drawer-container
-[hasBackdrop]="false"
->
-    <mat-drawer class="contextos-list-container"
+<mat-drawer-container [hasBackdrop]="false">
+  <!-- # CONTEXT AREA -->
+  <mat-drawer
+    class="contextos-list-container"
     [opened]="true"
     mode="side"
-    gdev-color [background]="'cornflowerblue'"
+    gdev-color
+    [background]="'cornflowerblue'"
+  >
+    <aSmart-contextos></aSmart-contextos>
+  </mat-drawer>
+
+  <!-- # INTENTS AREA -->
+  <mat-drawer-content>
+    <!-- MENSAJES SIN CONTEXTO -->
+    <div class="mensajes-container">
+      <aSmart-mensajes-list></aSmart-mensajes-list>
+    </div>
+
+    <!-- MENSAJES POR CONTEXTO -->
+    <div *ngFor="
+    let contexto of contextos_.list$ | async
+    | sortBy: 'asc':'index'"
+    class="mensajes-container"
     >
-        <aSmart-contextos></aSmart-contextos>
-
-    </mat-drawer>
-
-    <mat-drawer-content>
-        <div class="mensajes-container">
-            <aSmart-mensajes-list></aSmart-mensajes-list>
-        </div>
-        <div *ngFor="let contexto of (agente_.contextosList$ | async ) | sortBy:'asc':'index'"
-        class="mensajes-container">
-            <aSmart-mensajes-by-contexto [contexto]="contexto"></aSmart-mensajes-by-contexto>
-        </div>
-    </mat-drawer-content>
+      <aSmart-mensajes-by-contexto
+        [contexto]="contexto"
+      ></aSmart-mensajes-by-contexto>
+    </div>
+  </mat-drawer-content>
 </mat-drawer-container>

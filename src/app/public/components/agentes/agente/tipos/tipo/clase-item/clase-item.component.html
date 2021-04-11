@@ -1,46 +1,61 @@
-<ng-container *ngIf="!ClaseInput; else editClase">
-    <ng-container *ngIf="tipo.kind == 'KIND_MAP'; else noSino">
-        <div class="col s2 m3">
-            <span> {{clase.value}} </span>
-        </div>
-        <div class="col s8 m8">
-            <mat-chip-list>
-                <mat-chip *ngFor="let sinonimo of clase.synonyms" >{{sinonimo}}</mat-chip>
-            </mat-chip-list>
-        </div>
-        <div class="col s2 m1">
-            <button mat-icon-button [mat-menu-trigger-for]="claseMenu" >
-                <i class="fas fa-ellipsis-v"></i>
-            </button>
-            <mat-menu #claseMenu="matMenu">
-                <button mat-menu-item (click)="ClaseInput = true">Editar</button>
-                <button mat-menu-item (click)="onDelClase()">Eliminar</button>
-            </mat-menu>
-        </div>
+<ng-container *ngIf="clase; else empty">
+  <!-- ## READ CLASE -->
+  <ng-container *ngIf="!ClaseInput; else editClase">
+    <!-- ## SINONIMOS -->
+    <ng-container *ngIf="kind == 'KIND_MAP'; else lista">
+      <div class="col s2 m3">
+        <span> {{ clase.value }} </span>
+      </div>
+      <div class="col s8 m8">
+        <mat-chip-list>
+          <mat-chip *ngFor="let sinonimo of clase.synonyms">
+            {{ sinonimo }}
+          </mat-chip>
+        </mat-chip-list>
+      </div>
+      <div class="col s2 m1">
+        <button mat-icon-button [mat-menu-trigger-for]="claseMenu">
+          <i class="fas fa-ellipsis-v"></i>
+        </button>
+        <mat-menu #claseMenu="matMenu">
+          <button mat-menu-item (click)="ClaseInput = true">Editar</button>
+          <button mat-menu-item (click)="onDelClase()">Eliminar</button>
+        </mat-menu>
+      </div>
     </ng-container>
+    <!-- !## SINONIMOS -->
 
-    <ng-template #noSino>
-        <div class="col s10 m11">
-            <span> {{clase.value}} </span>
-        </div>
-        <div class="col s2 m1">
-            <button mat-icon-button [mat-menu-trigger-for]="claseMenu" >
-                <i class="fas fa-ellipsis-v"></i>
-            </button>
-            <mat-menu #claseMenu="matMenu">
-                <button mat-menu-item (click)="ClaseInput = true">Editar</button>
-                <button mat-menu-item (click)="onDelClase()">Eliminar</button>
-            </mat-menu>
-        </div>
+    <!-- ## LIST -->
+    <ng-template #lista>
+      <div class="col s10 m11">
+        <span> {{ clase.value }} </span>
+      </div>
+      <div class="col s2 m1">
+        <button mat-icon-button [mat-menu-trigger-for]="claseMenu">
+          <i class="fas fa-ellipsis-v"></i>
+        </button>
+        <mat-menu #claseMenu="matMenu">
+          <button mat-menu-item (click)="ClaseInput = true">Editar</button>
+          <button mat-menu-item (click)="onDelClase()">Eliminar</button>
+        </mat-menu>
+      </div>
     </ng-template>
-</ng-container>
+    <!-- !## LIST -->
+  </ng-container>
+  <!-- !## READ CLASE -->
 
 
-<ng-template #editClase>
-    <aSmart-add-clase
-    [clase]="clase"
-    [tipo]="tipo"
-    (claseDone)="onClaseDone($event)"
-    ></aSmart-add-clase>
+  <!-- ## EDIT CLASE -->
+  <ng-template #editClase>
+    <aSmart-edit-clase
+      [clase]="clase"
+      [kind]="kind"
+      (claseDone)="this.ClaseInput = false;"
+    ></aSmart-edit-clase>
+  </ng-template>
+  <!-- !## EDIT CLASE -->
+  </ng-container>
+  <ng-template #empty>
+
 </ng-template>
 

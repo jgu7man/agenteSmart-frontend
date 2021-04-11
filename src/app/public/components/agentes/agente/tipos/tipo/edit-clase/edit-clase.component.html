@@ -1,7 +1,6 @@
 <!-- AGREGAR CLASES SIN SINÓNIMO -->
 
-<ng-container *ngIf="tipo.kind != 'KIND_MAP'; else sinonimos">
-    <div class="col s10 m11">
+    <div class="col" [ngClass]="{'s12 m11': kind == 'KIND_LIST', 's3': kind == 'KIND_MAP'}">
         <mat-form-field>
             <input
                 placeholder="nueva clase"
@@ -11,39 +10,19 @@
                 matInput
                 [(ngModel)]="newClaseItem"
                 (keyup)="delSpaces($event)"
-                (blur)="newClaseItem ? onAddClase($event) : claseDone.emit(false)"
-                (keyup.ENTER)="onAddClase($event); $event.target.blur()"
+                (keydown.Tab)="onAddClase($event);false"
+                (keyup.ENTER)="onAddClase($event); false"
                 (keyup.esc)="claseDone.emit(false)"
             />
         </mat-form-field>
     </div>
-</ng-container>
-
-
 
 
 <!-- AGREGAR CLASE CON SINÓNIMOS -->
 
-<ng-template #sinonimos>
-    <div class="col s3">
-        <mat-form-field style="width: 100%;">
-            <input
-            placeholder="nueva clase"
-            type="text"
-            name="addClaseItem"
-            id="addClaseItem"
-            matInput
-            [(ngModel)]="newClaseItem"
-            (keydown.Tab)="onAddClase($event);false"
-            />
-        </mat-form-field>
-    </div>
-
-
-
     <!-- * AGREGAR SINÓNIMOS -->
 
-    <div class="col s7 m8">
+    <div class="col s7 m8" *ngIf="kind== 'KIND_MAP'" >
         <mat-form-field style="width: 100%;">
             <mat-chip-list
             class="mat-chip-list-stacked"
@@ -75,8 +54,10 @@
         <button mat-button  (click)="setClase()">
             <i class="fas fa-check"></i>
         </button>
+        <button mat-button (click)="claseDone.emit(false)" >
+            <i class="fas fa-times"></i>
+        </button>
     </div>
-</ng-template>
 
 
 

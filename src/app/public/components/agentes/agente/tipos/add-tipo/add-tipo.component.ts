@@ -1,64 +1,78 @@
-import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { TipoEntidadModel, Clase } from '../tipo.model';
-import { GdevLoading } from '../../../../../../gdev-tools/src/lib/loading/loading.service';
-import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
+import { TipoEntidadModel } from '../tipo.model';
 import { TiposService } from '../tipos.service';
-import { MatExpansionPanel } from '@angular/material/expansion';
 import { MatDialogRef } from '@angular/material/dialog';
-import { Subject, Subscription } from 'rxjs';
-
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'aSmart-add-tipo',
   templateUrl: './add-tipo.component.html',
-  styleUrls: ['./add-tipo.component.scss']
+  styleUrls: ['./add-tipo.component.scss'],
 })
 export class AddTipoComponent implements OnInit, OnDestroy {
+  /** Almacena el nuevo tipo en blanco */
+  public newTipo: TipoEntidadModel;
+  private dialgoSubs: Subscription;
 
-  newTipo: TipoEntidadModel
-  dialgoSubs: Subscription
-  
-  
-  constructor (
+  constructor(
     private dialog: MatDialogRef<AddTipoComponent>,
-    public tiposService: TiposService,
+    private _tipos: TiposService
   ) {
-    this.newTipo = new TipoEntidadModel( '', 'KIND_LIST', 'AUTO_EXPANSION_MODE_UNSPECIFIED', [], false )
-   }
+    this.resetNewTipo()
+  }
 
   ngOnInit(): void {
-    this.dialgoSubs = this.tiposService.closeCreateDialog
-      .subscribe( () => { this.dialog.close() })
+    // Se suscribe al llamado de ser cerrado este Dialog cuando existe un error
+    this.dialgoSubs = this._tipos.closeCreateDialog
+      .subscribe(() => this.dialog.close() );
   }
 
-
+  /** Deja todo en blanco y cierra el `MatDialog` */
   cancel() {
-    this.newTipo = new TipoEntidadModel(  '', 'KIND_LIST', 'AUTO_EXPANSION_MODE_UNSPECIFIED', [], false )
-    this.dialog.close()
+    this.resetNewTipo()
+    this.dialog.close();
   }
 
-
+  /** Hace el llamado a la API para crear el tipo */
   async onAddTipo() {
     console.log('creando: ', this.newTipo);
-    if ( this.newTipo.displayName != '' ) {
-      this.tiposService.createTipo( this.newTipo )
-        .then( newTipo => { this.dialog.close( newTipo ) } )
+    if (this.newTipo.displayName != '') {
+      this._tipos.createTipo(this.newTipo)
+        .then((newTipo) => {
+          this.dialog.close(newTipo);
+        })
+        .catch((error) => {
+          console.error(error);
+          this.dialog.close()
+        })
     }
   }
 
-  
-  delSpaces( e ) {
-    if ( e.which === 32 ) {
+  delSpaces(e) {
+    if (e.which === 32) {
       e.stopPropagation();
-      return false
+      return false;
     } else if (e.which === 13) {
       e.stopPropagation();
     }
+  }
 
+  /** Establece el tipo en blanco */
+  resetNewTipo() {
+    this.newTipo = new TipoEntidadModel(
+      '',
+      'KIND_LIST',
+      'AUTO_EXPANSION_MODE_UNSPECIFIED',
+      [],
+      false
+    );
   }
 
   ngOnDestroy() {
-    this.dialgoSubs.unsubscribe()
+    this.dialgoSubs.unsubscribe();
   }
-
 }

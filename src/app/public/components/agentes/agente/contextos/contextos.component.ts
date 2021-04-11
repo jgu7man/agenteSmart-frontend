@@ -31,7 +31,7 @@ export class ContextosComponent implements OnInit, OnDestroy {
     private _loading: GdevLoading,
     public agente_: CurrentAgenteService
   ) {
-    this.contextos.getAllContexts()
+    // this.contextos.getAllContexts()
   }
 
   async ngOnInit() {
@@ -53,14 +53,14 @@ export class ContextosComponent implements OnInit, OnDestroy {
     await this._loading.waitFor( 100 )
     this.addContext.contextoNuevo.nativeElement.focus()
   }
-  
 
-  
+
+
   drop( event: CdkDragDrop<any> ) {
     moveItemInArray( this.list, event.previousIndex, event.currentIndex )
     this.contextos.updateIndex(this.list)
   }
-  
+
   grabEffect( element ) {
     var el:HTMLElement = element.target
     el.classList.add('grabbed')
@@ -71,22 +71,22 @@ export class ContextosComponent implements OnInit, OnDestroy {
     el.classList.remove( 'grabbed' )
   }
 
-  
+
 
   async getContextos() {
     // let contextos = await this._contextos.getAllContexts( )
     // this.contextos = contextos.length > 0 ? contextos : undefined
   }
 
-  
+
 
   ngOnDestroy(): void {
     this.contextos.unsubscribeAllContext()
   }
 
-  
 
-  
+
+
 
   toDeleteContext( contexto ) {
     this.contextos.delContext( contexto ).then( () => {
