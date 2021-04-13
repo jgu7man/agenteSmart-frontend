@@ -22,6 +22,7 @@ export class PartParameterComponent implements OnInit {
 
   switchEntitySelector: boolean = false
   paramName: any = ''
+  param: ParametroMensaje
 
   @ViewChild( 'partEntityInput' ) partEntityInput: ElementRef
 
@@ -52,11 +53,12 @@ export class PartParameterComponent implements OnInit {
     this.tipoSelected.emit( this.parte )
 
     if ( typeof this.parte.alias == 'string' ) {
-      var param: ParametroMensaje = {
+      this.param = {
         displayName: this.paramName,
-        entityTypeDisplayName: tipoSelected
+        entityTypeDisplayName: tipoSelected.startsWith('@')
+          ? tipoSelected
+          : '@' + tipoSelected
       }
-
 
     }
   }
@@ -79,8 +81,9 @@ export class PartParameterComponent implements OnInit {
 
       var param: ParametroMensaje = {
         displayName: this.paramName,
-        entityTypeDisplayName: this.parte.entityType,
-        value: `$${this.paramName}`
+        entityTypeDisplayName: this.parte.entityType.startsWith('@')
+          ? this.parte.entityType : '@'+this.parte.entityType,
+        value: this.paramName.startsWith('$') ? this.paramName : `$${this.paramName}`
       }
 
       this._params.addParam(param)

@@ -41,6 +41,7 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
   pageSize: number = 10;
   firstIndex: number = 0;
   lastIndex: number;
+  pageIndex: number = 0
   listenerParamDeleted: Subscription;
   frasesSub: Subscription;
   paramAddedSub: Subscription;
@@ -71,16 +72,18 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     this.frasesSub = this.$frases.list$.subscribe((frases) => {
       this.frasesList = frases
-        this.firstIndex = (frases.length-1)- this.pageSize
         this.currentPage = frases.slice(this.firstIndex, this.pageSize)
-        this.getLastIndex(
-          this.currentPage.length - this.pageSize,
+      this.getLastIndex(
+          this.firstIndex,
           this.currentPage.length
         );
     });
   }
 
-  getLastIndex(startIndex: number, length: number) {
+  getLastIndex(
+    startIndex: number,
+    length: number
+  ) {
     if (this.pageSize > length) {
       this.lastIndex = length;
     } else {
@@ -89,14 +92,14 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   pageEvent(event: PageEvent) {
-    let lastDiff = this.frasesList.length - (event.pageIndex * this.pageSize);
-    let firstDiff = lastDiff - this.pageSize;
-    firstDiff = firstDiff <= 0 ? 0 : firstDiff;
-    this.currentPage = this.frasesList.slice(firstDiff, lastDiff);
-    console.log(firstDiff, lastDiff);
-
+    // let lastDiff = this.frasesList.length - (event.pageIndex * this.pageSize);
+    // let firstDiff = lastDiff - this.pageSize;
+    // firstDiff = firstDiff <= 0 ? 0 : firstDiff;
     this.firstIndex = event.pageIndex * this.pageSize + 1;
     this.getLastIndex(this.firstIndex, this.currentPage.length);
+    this.currentPage = this.frasesList.slice(this.firstIndex-1, this.lastIndex-1);
+    console.log(this.currentPage.length, this.firstIndex, this.lastIndex);
+
     console.log(this.firstIndex, this.lastIndex);
   }
 
@@ -130,14 +133,14 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
         parts: this.$frases.createParts(this.newPhrase),
       };
       await this._loading.waitFor(200);
-      this.$frases.addTraningPhrase(NEWPHRASE, this.lastIndex)
+      this.$frases.addTraningPhrase(NEWPHRASE)
         .then(async () => {
           console.log( this.currentPage.length == this.pageSize )
         if (this.currentPage.length == this.pageSize) {
-          this.currentPage.push(NEWPHRASE, 0);
-          console.log( this.currentPage[0] )
-          this.currentPage.splice(this.currentPage.length - 1, 1);
-          console.log( this.currentPage[this.currentPage.length - 1] )
+          this.pageIndex = Math.ceil((this.frasesList.length / this.pageSize) - 1)
+          this.firstIndex = this.pageIndex * this.pageSize
+          this.lastIndex = this.frasesList.length
+          this.currentPage = this.frasesList.slice(this.firstIndex, this.lastIndex)
         }
         this.newPhrase = '';
         await this._loading.waitFor(500);

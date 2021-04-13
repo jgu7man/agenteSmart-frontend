@@ -15,7 +15,7 @@ import {
   TipoEntidadModel,
 } from '../../../../tipos/tipo.model';
 import { TarjetaModel } from '../../../../../../tarjetas/tarjeta.model';
-import { pluck, map } from 'rxjs/operators';
+import { pluck, map, take, filter, distinctUntilKeyChanged, debounceTime } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -100,9 +100,13 @@ export class RespuestasService {
     // console.log(this.currentContext);
     // this.currentMensaje = this._mensaje.current$.getValue()
     // console.log(this.currentMensaje);
-    this._mensaje.current$.subscribe((mensaje) => {
+    this._mensaje.current$
+      .pipe(
+        filter(mensaje => !!mensaje),
+        distinctUntilKeyChanged('displayName'),
+        debounceTime(5000)
+      ).subscribe((mensaje) => {
       if (mensaje) {
-        // console.log(mensaje);
         this.paramList = mensaje.parameters;
         this.getMensajeTipos(this.paramList);
       }
@@ -115,17 +119,27 @@ export class RespuestasService {
    * @return {array} Arreglo de los tipos de datos del mensaje actual
    */
   async getMensajeTipos(paramList: ParametroMensaje[]) {
-    // console.log( paramList )
+    const tipos = await this._cache.getAsyncKey<any[]>('tipos')
+    const sysTipos = await this._cache.getAsyncKey<any[]>('sysTipos')
+    const allTipos: (TipoEntidadModel | SystemEntitieModel)[] = tipos.concat(sysTipos)
+
     const entities = this.mensajeTypeEntities$.getValue();
     paramList.forEach((param) => {
-      let tipoStored: TipoEntidadModel | SystemEntitieModel = entities.find(
-        (t) => t && t.displayName == param.displayName
-      );
-      if (!tipoStored)
-        this.mensajeTypeEntities$.next([
-          ...this.mensajeTypeEntities$.getValue(),
-          tipoStored,
-        ]);
+      let splited = param.entityTypeDisplayName.split('@')
+      let paramEntity = splited[1]
+      if( paramEntity !== undefined){
+        let tipoStored: TipoEntidadModel | SystemEntitieModel = entities.find(
+          (t) => t && t.displayName == paramEntity
+        );
+        // console.log(tipoStored)
+        if (!tipoStored || tipoStored === undefined) {
+          tipoStored = allTipos.find(t => t.displayName == paramEntity)
+          this.mensajeTypeEntities$.next([
+            ...this.mensajeTypeEntities$.getValue(),
+            tipoStored,
+          ]);
+        }
+      }
     });
 
     return this.mensajeTypeEntities$;

@@ -36,7 +36,7 @@
       <!-- <ng-container *ngIf="Frases.length > 0 || addPhraseInput; else noPhrases"> -->
       <mat-accordion #accordeon="matAccordion" [multi]="false">
         <li
-          *ngFor="let frase of currentPage | sortBy: 'desc'; index as i"
+          *ngFor="let frase of currentPage; index as i"
           class="phrase-item"
           (mouseup)="onSelect(frase, i)"
         >
@@ -73,6 +73,8 @@
     <mat-paginator
       [length]="mensaje.trainingPhrases.length"
       [pageSize]="10"
+      [showFirstLastButtons]="true"
+      [pageIndex]="pageIndex"
       (page)="pageEvent($event)"
     ></mat-paginator>
   </div>

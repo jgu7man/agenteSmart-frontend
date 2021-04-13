@@ -160,7 +160,7 @@ export class ParametrosService {
         (parameter) => parameter.name == param.name
       );
       parameters.splice(paramIndex, 1);
-      console.log('params defined');
+      console.log('params deleted');
       this._mensaje.current$.next({
         ...this._mensaje.current$.getValue(),
         parameters
@@ -178,24 +178,26 @@ export class ParametrosService {
    */
   private async deleteParamInParts(displayName: string) {
     const trainingPhrases = this._mensaje.current$.getValue().trainingPhrases;
-
+    // displayName = displayName.split('@')[1]
     await this._loading.asyncForEach(
       trainingPhrases,
       async (frase: FraseEntrenamiento, index) => {
         // Busca en las partes donde hay el parámetro eliminado
-        return this._loading.asyncForEach(
+        return await this._loading.asyncForEach(
           frase.parts,
           (parte: FraseParte, parteIndex) => {
             if (parte.alias) {
-              if (parte.alias == displayName)
+              if (parte.alias == displayName){
                 delete frase.parts[parteIndex].entityType;
-              delete frase.parts[parteIndex].alias;
+                delete frase.parts[parteIndex].alias;
 
-              let partsString = this._frases.stringifyFullPhrase(frase);
-              let partsRestored = this._frases.createParts(partsString);
-              frase.parts = partsRestored;
-              console.log(frase);
-              return this._frases.updatePhrase(frase);
+                let partsString = this._frases.stringifyFullPhrase(frase);
+                let partsRestored = this._frases.createParts(partsString);
+                frase.parts = partsRestored;
+
+                return this._frases.updatePhrase(frase);
+              }
+
             }
           }
         );
