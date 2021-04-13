@@ -1,4 +1,4 @@
-<div class="mat-elevation-z4" id="mensaje-header" *ngIf="mensaje_.current as mensaje" >
+<div class="mat-elevation-z4" id="mensaje-header" *ngIf="(mensaje_.current$ | async) as mensaje" >
     <div class="row align-cols">
         <div class="col s2 m1 goback-btn">
             <button mat-button (click)="location.back()" >
@@ -6,7 +6,7 @@
             </button>
         </div>
         <div class="col s7 m9">
-            <aSmart-breadcums [intentIndex]="mensaje.index"></aSmart-breadcums>
+            <!-- <aSmart-breadcums [intentIndex]="mensaje.index"></aSmart-breadcums> -->
         </div>
         <div class="col s2">
             <button style="float: right;" mat-raised-button color="primary"
@@ -22,10 +22,10 @@
             </ng-container>
             <ng-template #editMensaje>
                 <mat-form-field>
-                    <input 
+                    <input
                     matInput
-                    type="text" 
-                    name="displayName" 
+                    type="text"
+                    name="displayName"
                     id="displayName"
                     #displayName
                     (keyup.enter)="updateDisplayName()"
@@ -34,7 +34,7 @@
                     >
                 </mat-form-field>
             </ng-template>
-            
+
         </div>
         <div class="col s2 m1 menu-btn">
             <button mat-button [mat-menu-trigger-for]="menuMensaje">

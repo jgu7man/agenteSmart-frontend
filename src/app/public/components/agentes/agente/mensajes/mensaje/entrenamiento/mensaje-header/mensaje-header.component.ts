@@ -31,7 +31,6 @@ export class MensajeHeaderComponent implements OnInit, OnDestroy {
     public location: Location,
     public store: Store<AppState>
   ) {
-    this.getMensaje()
   }
 
   ngOnInit(): void {
@@ -43,33 +42,26 @@ export class MensajeHeaderComponent implements OnInit, OnDestroy {
   }
 
 
-
-  async getMensaje() {
-    // console.log('get');
-    // this.mensaje = await this.mensaje_.getAsync()
-    // console.log(this.mensaje);
-  }
-
-
-
   toEditName() {
     this.switchEdit = true
-    this.nameEdited = this.mensaje_.current.displayName
+    this.nameEdited = this.mensaje_.current$.getValue().displayName
   }
 
 
 
   updateDisplayName() {
     this.switchEdit = false
-    this.mensaje_.current.displayName = this.nameEdited
-    this.mensaje_.updateMensajeName( this.mensaje_.current.name, this.nameEdited )
+    this.mensaje_.current$.next({
+      ...this.mensaje_.current$.getValue(),
+      displayName: this.nameEdited
+    })
     this.nameEdited = undefined
   }
 
   toDelMensaje() {
     var dialog = this._dialog.open( DelMensajeDialogComponent, {
       minWidth: '400px',
-      data: this.mensaje_.current.name
+      data: this.mensaje_.current$.getValue().name
     } )
 
     dialog.afterClosed().subscribe( () => {

@@ -16,7 +16,7 @@ export class ParametrosComponent implements OnInit, OnDestroy {
   switchAddParameter: boolean = false
 
   constructor (
-    public mensaje: CurrentMensajeService,
+    public mensaje_: CurrentMensajeService,
     public params: ParametrosService
   ) { }
 
@@ -27,17 +27,17 @@ export class ParametrosComponent implements OnInit, OnDestroy {
     // this.listenParamDeleted$ = this.params.parameterDeleted$
     //   .subscribe( () => { this.loadParams() })
   }
-  
-  
+
+
   async loadParams() {
-    
+
   }
 
   toAddParam() {
     this.switchAddParameter = true
   }
 
-  
+
   ngOnDestroy() {
     // this.listenNewParam$.unsubscribe()
     // this.listenParamDeleted$.unsubscribe()

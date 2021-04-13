@@ -85,7 +85,6 @@ export class CurrentAgenteService {
     this._cache.updateData('projectId', projectId);
     this.current = await this._agentes.loadOneAgente(projectId);
     this._cache.updateData('currentAgente', this.current);
-    console.log( 'dash' )
     return this._dashboard.initializeDashboard()
       .pipe(
         flatMap(() => this.getPath()),
@@ -97,6 +96,7 @@ export class CurrentAgenteService {
         flatMap(() => this.loadFirestoreList('colecciones')),
         map(data => {
           this._alerts.sendFloatNotification('Agente cargado')
+          this.agenteLoaded$.next(true)
           console.log( 'loaded' )
           return true
         })

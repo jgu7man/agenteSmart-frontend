@@ -64,7 +64,7 @@ export class RespuestaCardComponent implements OnInit {
 
     }
 
-    async ngOnInit() {
+  async ngOnInit() {
         this.contextLists = await this._cache.getDataKey<any>('contextosLists')
 
         await this.setNextIntents(this.currentContext)
@@ -95,9 +95,9 @@ export class RespuestaCardComponent implements OnInit {
             // Set intents related to current context
             if (currentContext) {
                 var currentList: any[] = this.contextLists[currentContext]
-                // console.log( currentList )
+                const current = this._mensaje.current$.getValue()
                 var currentIntentIndex = currentList.findIndex(
-                    i => i.displayName === this._mensaje.current.displayName
+                    i => i.displayName === current.displayName
                 )
                 // console.log(currentIntentIndex)
                 // Set next intent in the context
@@ -252,9 +252,9 @@ export class RespuestaCardComponent implements OnInit {
      * @param {MatSelectChange} tipoSelected - Contiene la propidad valor que es de tipo `TipoEntityType.name`
      */
     onTipoSelected(tipoSelected: MatSelectChange) {
-        let simpleStored = this._mensaje.respuestasList.filter(
-            (r) => r.tipo == 'simple'
-        );
+        // let simpleStored = this._mensaje.respuestasList$.filter(
+        //     (r) => r.tipo == 'simple'
+        // );
         // if (tipoSelected.value == 'simple' && simpleStored.length > 1) {
         //     console.log(this._mensaje.respuestasList, tipoSelected.value);
         //     this._alerts.sendMessageAlert(
@@ -289,7 +289,8 @@ export class RespuestaCardComponent implements OnInit {
          }
 
         if (respuestaObj.result.asDefault) {
-            var defaultStored = this._mensaje.respuestasList.filter(
+          var defaultStored = this._mensaje.respuestasList$
+            .getValue().filter(
                 (r) => r.result.asDefault
             )
             if (defaultStored.length > 1) {

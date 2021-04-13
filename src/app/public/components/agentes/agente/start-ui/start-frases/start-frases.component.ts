@@ -49,7 +49,7 @@ export class StartFrasesComponent implements OnInit {
 
     async getWelcomeIntent() {
         this.intent$ = this._cache.listenForChanges<IntentModel>('currentIntent')
-        await this.mensaje_.getCurrent('Default Welcome Intent')
+        await this.mensaje_.setCurrent('Default Welcome Intent')
         // await this.intent$.pipe(take(1)).toPromise()
         // this._loading.toggleWaitingSpinner(false)
     }

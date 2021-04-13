@@ -9,22 +9,24 @@
             </button>
         </div>
     </div>
-    
-    <div class="row respuestasList" *ngIf="mensaje_.respuestasList; else sinRespuestas">
+
+
+    <div class="row respuestasList" *ngIf="(mensaje_.respuestasList$ | async) as respuestas">
+      <ng-container *ngIf="respuestas.length; else sinRespuestas">
+
         <div class="respuestaItem"
-        *ngFor="let respuesta of mensaje_.respuestasList">
+        *ngFor="let respuesta of respuestas">
             <aSmart-respuesta-card
             [respuesta]="respuesta"
             (onDelete)="deleteRespuesta(respuesta.id, respuesta.index)"
             ></aSmart-respuesta-card>
         </div>
+      </ng-container>
+      <ng-template #sinRespuestas>
+        <div class="col s12 center">
+            Aún no has agregado respuestas
+        </div>
+      </ng-template>
     </div>
 
-    <ng-template #sinRespuestas>
-        <div class="row">
-            <div class="col s12 center">
-                Aún no has agregado respuestas
-            </div>
-        </div>
-    </ng-template>
 </div>

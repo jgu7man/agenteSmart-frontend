@@ -22,17 +22,19 @@
             matInput
             type="text"
             [(ngModel)]="paramName"
-            (keyup.enter)="addParameter($event);"
-            (blur)="paramName ? addParameter($event) : null"
+            name="paramName"
             >
         </mat-form-field>
 
     </div>
 
     <!-- Eliminar parametro -->
-    <div class="col s3 m2 delParam">
+    <div class="col s3 m2 paramOptions">
         <button mat-icon-button (click)="onDelete.emit()">
             <i class="fas fa-times red-text"></i>
+        </button>
+        <button mat-icon-button (click)="addParameter()">
+            <i class="fas fa-check green-text"></i>
         </button>
     </div>
 

@@ -5,7 +5,6 @@ import { GdevCache } from 'src/app/gdev-tools/src/lib/cache/gdev-cache.service';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { GdevText } from '../../../../../services/text.service';
-import { CurrentAgenteService } from '../current-agente.service';
 import { ContextoModel } from '../contextos/contexto.model';
 import { GdevAlert } from '../../../../../gdev-tools/src/lib/alert/alert.service';
 import { of, Subject, BehaviorSubject, Observable } from 'rxjs';

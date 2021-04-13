@@ -16,7 +16,6 @@ import { first, take } from 'rxjs/operators';
     styleUrls: ['./bienvenida.component.scss'],
 })
 export class BienvenidaComponent implements OnInit {
-    intent$: Observable<IntentModel> = new Observable();
     stateSubs: Subscription;
     unsaved: boolean;
 
@@ -32,7 +31,6 @@ export class BienvenidaComponent implements OnInit {
 
     ngOnInit(): void {
         this.getWelcomeIntent()
-        // this._loading.toggleWaitingSpinner(true)
         this.stateSubs = this.store.subscribe((store) => {
             this.unsaved = store.editIntent.unsaved;
             if (this.unsaved == false) {
@@ -44,21 +42,14 @@ export class BienvenidaComponent implements OnInit {
     }
 
     async getWelcomeIntent() {
-        this.intent$ = this._cache.listenForChanges<IntentModel>('currentIntent')
-        await this.mensaje_.getCurrent('Default Welcome Intent')
-        // await this.intent$.pipe(take(1)).toPromise()
-        // this._loading.toggleWaitingSpinner(false)
+        await this.mensaje_.setCurrent('Default Welcome Intent')
     }
 
 
     async setIntent() {
-
-        this._alerts.sendMessageAlert(
-            'No se encontró el intent de bienvenida. Restáuralo en las configuraciones del agente.'
-        );
-
-
-
+      this._alerts.sendMessageAlert(
+          'No se encontró el intent de bienvenida. Restáuralo en las configuraciones del agente.'
+      );
     }
 
     ngOnDestroy() {

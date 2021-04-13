@@ -57,18 +57,16 @@ export class PartParameterComponent implements OnInit {
         entityTypeDisplayName: tipoSelected
       }
 
-      this._params.addParam(param).then(() => {
-        this.parte.alias = this.paramName
-      } )
+
     }
   }
 
 
-  addParameter( event ) {
-    event.stopImmediatePropagation()
+  addParameter(  ) {
+    // event.stopImmediatePropagation()
 
     // console.log(this._mensaje.current.parameters, this.paramName);
-    var paramStored = this._mensaje.current.parameters
+    var paramStored = this._mensaje.current$.getValue().parameters
       .find(p => p.displayName == this.paramName);
     this.parte.alias = this.paramName
 

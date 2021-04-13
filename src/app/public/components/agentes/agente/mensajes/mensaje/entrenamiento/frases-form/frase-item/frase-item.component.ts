@@ -58,7 +58,7 @@ export class FraseItemComponent implements OnInit {
       PHRASE.parts = this._frases.createParts( this.phraseToEdit )
 
       console.log( PHRASE );
-      this._frases.updatePhrase( PHRASE, this.index )
+      this._frases.updatePhrase( PHRASE,  )
 
     }
 

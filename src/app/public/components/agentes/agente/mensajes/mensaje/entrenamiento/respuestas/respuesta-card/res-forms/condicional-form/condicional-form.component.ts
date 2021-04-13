@@ -63,11 +63,10 @@ export class CondicionalFormComponent implements OnInit {
         var param = selectedSplit.length > 1
             ? selectedSplit[1]
             : selectedSplit[0]
-        this.tipoSelected = this.respuestas_.mensajeTypeEntities.find(
-            (t) => t.displayName == param
-        );
+      this.tipoSelected = this.respuestas_.mensajeTypeEntities$
+        .getValue().find( (t) => t.displayName == param );
 
-        this.onRespChanges.emit(this.result);
+      this.onRespChanges.emit(this.result);
     }
 
     validateOriginal() {

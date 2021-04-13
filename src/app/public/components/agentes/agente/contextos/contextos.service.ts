@@ -149,7 +149,7 @@ export class ContextosService {
     return this.afs.collection<ContextoModel>(this.contextosPath,
       // ref => ref.orderBy('index')
     ).valueChanges().pipe(
-      tap((list) => console.log( list )),
+      // tap((list) => console.log( list )),
       tap((list => this._cache.updateData('contextos', list)))
     )
   }

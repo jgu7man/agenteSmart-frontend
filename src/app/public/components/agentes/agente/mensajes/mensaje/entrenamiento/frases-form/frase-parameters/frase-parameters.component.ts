@@ -8,15 +8,15 @@ import { FrasesService } from '../frases.service';
   styleUrls: ['./frase-parameters.component.scss']
 })
 export class FraseParametersComponent implements OnInit {
-  
+
   @Input() frase: FraseEntrenamiento
   @Input() fraseIndex: number
-  @Output() tipoSelected = new EventEmitter<FraseParte>() 
+  @Output() tipoSelected = new EventEmitter<FraseParte>()
   tipos: string[] = []
-  
+
 
   constructor (
-    
+
     private _frase: FrasesService
   ) { }
 
@@ -26,12 +26,12 @@ export class FraseParametersComponent implements OnInit {
 
   setTipoFrase( parte: FraseParte,  partIndex: number ) {
       this.frase.parts[ partIndex ] = parte
-      this._frase.updatePhrase( this.frase, this.fraseIndex )
+      this._frase.updatePhrase( this.frase )
   }
 
   onParamAdded(parte: FraseParte, index: number) {
     this.frase.parts[ index ] = parte
-    this._frase.updatePhrase(this.frase, this.fraseIndex)
+    this._frase.updatePhrase(this.frase)
   }
 
 
@@ -42,13 +42,13 @@ export class FraseParametersComponent implements OnInit {
     var restoredPartText = this._frase.stringifyFullPhrase( this.frase )
     this.frase.parts = this._frase.createParts( restoredPartText )
     // console.log(this.frase);
-    this._frase.updatePhrase(this.frase, this.fraseIndex )
+    this._frase.updatePhrase(this.frase )
     // var newParts = this._frase.createParts( restoredPartText )
     // console.log(newParts);
-    
+
   }
 
-  
+
 
 
 }

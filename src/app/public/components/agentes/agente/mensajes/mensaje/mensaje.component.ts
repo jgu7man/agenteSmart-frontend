@@ -31,7 +31,8 @@ export class MensajeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getCurrentIntent()
-    this.stateSubs = this.store.select('editIntent').subscribe((store) => {
+    this.stateSubs = this.store.select('editIntent')
+      .subscribe((store) => {
       if ( store.unsaved == false ) {
         this.getCurrentIntent()
       }
@@ -43,7 +44,7 @@ export class MensajeComponent implements OnInit, OnDestroy {
     this.intentName = this._route.snapshot.params['name']
     this.currentContexto = this._route.snapshot.queryParams['contexto']
     // console.log(this.intentName, this.currentContexto);
-    this._mensaje.getByActivatedRoute(this.intentName, this.currentContexto)
+    this._mensaje.setCurrent(this.intentName, this.currentContexto)
 
   }
 
@@ -55,9 +56,7 @@ export class MensajeComponent implements OnInit, OnDestroy {
 
           this.getCurrentIntent()
         }
-      } )
-
-
+      })
   }
 
 

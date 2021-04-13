@@ -206,7 +206,6 @@ export class TiposService {
     const path = this._cache.getDataKey('agentePath')
     return this.getAllEntities().pipe(
       tap((list) => {
-        console.log( list )
         this._cache.updateData('tipos', list)
       }),
       // flatMap(() => this._afs

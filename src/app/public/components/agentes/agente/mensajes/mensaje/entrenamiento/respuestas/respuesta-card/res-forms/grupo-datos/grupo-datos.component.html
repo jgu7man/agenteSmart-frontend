@@ -1,12 +1,12 @@
 <!-- Parámetro -->
-<div class="row">
+<div class="row" *ngIf="(mensaje_.current$|async) as mensaje">
     <div class="col s4 resp-label">
         Guardar
     </div>
     <div class="col s8">
         <mat-select placeholder="parámetro" [(ngModel)]="dataForm.parametro" name="param"
         (selectionChange)="edited.emit(dataForm)">
-            <mat-option *ngFor="let param of mensaje_.current.parameters" [value]="param.displayName">
+            <mat-option *ngFor="let param of mensaje.parameters" [value]="param.displayName">
                 {{param.displayName}}
             </mat-option>
         </mat-select>

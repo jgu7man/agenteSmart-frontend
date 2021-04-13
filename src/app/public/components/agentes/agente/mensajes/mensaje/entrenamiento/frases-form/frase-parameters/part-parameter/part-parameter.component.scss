@@ -1,9 +1,16 @@
-.delParam {
+.paramOptions {
     opacity: 0;
     transition: all .3s;
+    display: flex;
+    padding: 0;
+    .mat-icon-button {
+      width:30px;
+      height: 30px;
+      margin: 0
+    }
 }
 
-.param-row:hover .delParam {
+.param-row:hover .paramOptions {
     opacity: 1;
 }
 

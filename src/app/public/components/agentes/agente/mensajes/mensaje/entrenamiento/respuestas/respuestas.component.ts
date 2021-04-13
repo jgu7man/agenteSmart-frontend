@@ -20,7 +20,7 @@ import { CurrentMensajeService } from '../../current-mensaje.service';
 })
 export class RespuestasComponent implements OnInit, OnDestroy {
     /** Respuestas obtenidas de la función de obtener respuestas */
-    respuestasList: RespuestaModel[] = [];
+    // respuestasList: RespuestaModel[] = [];
     /** Modelo de inicio para crear una nueva respuesta simple */
     newOutputMensaje: SimpleModel;
     /** Suscripción a los cambios de la lista de respuestas */
@@ -34,10 +34,10 @@ export class RespuestasComponent implements OnInit, OnDestroy {
         public mensaje_: CurrentMensajeService
     ) {
         this.newOutputMensaje = new SimpleModel('', []);
-        this._respuestas.getDataForRespuestas();
+      this._respuestas.getDataForRespuestas();
     }
 
-    ngOnInit(): void {
+  ngOnInit(): void {
         this.respuestasChangesSubs = this._respuestas.onRespuestasChanged.subscribe(
             () => {
                 this.newOutputMensaje = new SimpleModel('', []);
@@ -50,29 +50,33 @@ export class RespuestasComponent implements OnInit, OnDestroy {
      * con la creación de la misma y la abre por defecto
      */
     async addRespuesta() {
-        let lastIndex = this.mensaje_.respuestasList.length;
-        this.mensaje_.respuestasList.push(
-            new RespuestaModel(undefined, this.newOutputMensaje, lastIndex, '*fin')
-        );
+        let lastIndex = this.mensaje_.respuestasList$.getValue().length;
+      this.mensaje_.respuestasList$.next([
+        ...this.mensaje_.respuestasList$.getValue(),
+        new RespuestaModel(undefined, this.newOutputMensaje, lastIndex, '*fin')
+        ]
+      );
         await this._loading.waitFor(500);
         this.cards.last.switchEditResp = true;
     }
 
-    
+
     trackResponseById(index: number, respuesta: RespuestaModel) {
         return respuesta.index;
     }
 
     public deleteRespuesta(respuestaId, index) {
-        console.log(this.mensaje_.respuestasList);
-        let resToDel = this.mensaje_.respuestasList.findIndex(
+      console.log(this.mensaje_.respuestasList$);
+      const respuestas = this.mensaje_.respuestasList$.getValue()
+        let resToDel = respuestas.findIndex(
             (res) => res.id === respuestaId);
-        
+
         if (resToDel >= 0) {
             this._respuestas.delRespuesta(respuestaId)
         }
-            this.mensaje_.respuestasList.splice(resToDel,1)
-            
+        respuestas.splice(resToDel, 1)
+      this.mensaje_.respuestasList$.next(respuestas)
+
     }
 
     /** Se desuscribe de los cambios en la lista de respuestas */
