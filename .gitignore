@@ -49,3 +49,4 @@ src/environments/environment.ts
 
 .prettierrc
 src/environments/environment.debug.ts
+.vscode/settings.json

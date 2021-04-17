@@ -224,13 +224,15 @@ export class MensajesService {
     `${this._url}/${projectId}`,
     { responseType: 'json' }
     ).pipe(
-        pluck<any, IntentModel[]>('result', 'intents'),
-        map<IntentModel[], IntentModel[]>((list) => {
-          return list.map((intent) => {
+      tap(data => console.log( data )),
+      pluck<any, IntentModel[]>('result', 'intents'),
+      map<IntentModel[], IntentModel[]>((list) => {
+        return list.map((intent) => {
             intent.name = intent.name.slice(intent.name.lastIndexOf('/') + 1);
             return intent;
           });
         }),
+        tap(data => console.log( data )),
         tap((list) => this._cache.updateData('intents', list))
       );
   }
@@ -251,6 +253,7 @@ export class MensajesService {
     if (contexto.id) {
       const mensajeCol = await this.mensajesCollection().ref
         .where('contexto', '==', contexto.contextName)
+        .orderBy('index')
         .get();
       await this._loading.asyncForEach(mensajeCol.docs, (mensaje) => {
         mensajesList.push(mensaje.data());
@@ -309,5 +312,22 @@ export class MensajesService {
           return resolve(following);
         });
     });
+  }
+
+  async orderContextMensajes(list: IntentModel[]) {
+    const intentsRef = await this.fs
+      .collection(`${this.mensajesPath}`).ref
+
+    const batch = this.fs.firestore.batch()
+
+    await this._loading.asyncForEach(list, (m, i) => {
+      m.index = i
+      let id = m.name.slice(m.name.lastIndexOf('/')+ 1)
+      batch.update(intentsRef.doc(id), {...m})
+      return m
+    })
+
+    return batch.commit()
+
   }
 }

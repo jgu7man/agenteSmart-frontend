@@ -33,7 +33,7 @@ export class RespuestasService {
    */
   nextMensaje: string;
   /** El contexto actual */
-  currentContext: string;
+  // currentContext: string;
   /** Contiene la lista de parámetros */
   paramList: ParametroMensaje[];
   /** La ruta a la base de datos de los mensajes */
@@ -93,57 +93,58 @@ export class RespuestasService {
 
   /** Obtiene la data del mensaje en curso */
   async getDataForRespuestas() {
-    this.currentContext = await this._cache.getAsyncKey<string>(
-      'currentContexto',
-      1
-    );
+    // this.currentContext = await this._cache.getAsyncKey<string>(
+    //   'currentContexto',
+    //   1
+    // );
     // console.log(this.currentContext);
     // this.currentMensaje = this._mensaje.current$.getValue()
     // console.log(this.currentMensaje);
-    this._mensaje.current$
-      .pipe(
-        filter(mensaje => !!mensaje),
-        distinctUntilKeyChanged('displayName'),
-        debounceTime(5000)
-      ).subscribe((mensaje) => {
-      if (mensaje) {
-        this.paramList = mensaje.parameters;
-        this.getMensajeTipos(this.paramList);
-      }
-    });
+    // this._mensaje.current$
+    //   .pipe(
+    //     filter(mensaje => !!mensaje),
+    //     distinctUntilKeyChanged('displayName'),
+    //     debounceTime(5000)
+    //   ).subscribe((mensaje) => {
+    //   if (mensaje) {
+    //     console.log( 'cargó current', mensaje )
+    //     this.paramList = mensaje.parameters;
+    //     this.getMensajeTipos(this.paramList);
+    //   }
+    // });
 
     return;
   }
 
-  /** Obtiene los tipos de datos del mensaje actual
-   * @return {array} Arreglo de los tipos de datos del mensaje actual
-   */
-  async getMensajeTipos(paramList: ParametroMensaje[]) {
-    const tipos = await this._cache.getAsyncKey<any[]>('tipos')
-    const sysTipos = await this._cache.getAsyncKey<any[]>('sysTipos')
-    const allTipos: (TipoEntidadModel | SystemEntitieModel)[] = tipos.concat(sysTipos)
+  // /** Obtiene los tipos de datos del mensaje actual
+  //  * @return {array} Arreglo de los tipos de datos del mensaje actual
+  //  */
+  // async getMensajeTipos(paramList: ParametroMensaje[]) {
+  //   const tipos = await this._cache.getAsyncKey<any[]>('tipos')
+  //   const sysTipos = await this._cache.getAsyncKey<any[]>('sysTipos')
+  //   const allTipos: (TipoEntidadModel | SystemEntitieModel)[] = tipos.concat(sysTipos)
 
-    const entities = this.mensajeTypeEntities$.getValue();
-    paramList.forEach((param) => {
-      let splited = param.entityTypeDisplayName.split('@')
-      let paramEntity = splited[1]
-      if( paramEntity !== undefined){
-        let tipoStored: TipoEntidadModel | SystemEntitieModel = entities.find(
-          (t) => t && t.displayName == paramEntity
-        );
-        // console.log(tipoStored)
-        if (!tipoStored || tipoStored === undefined) {
-          tipoStored = allTipos.find(t => t.displayName == paramEntity)
-          this.mensajeTypeEntities$.next([
-            ...this.mensajeTypeEntities$.getValue(),
-            tipoStored,
-          ]);
-        }
-      }
-    });
+  //   const entities = this.mensajeTypeEntities$.getValue();
+  //   paramList.forEach((param) => {
+  //     let splited = param.entityTypeDisplayName.split('@')
+  //     let paramEntity = splited[1]
+  //     if( paramEntity !== undefined){
+  //       let tipoStored: TipoEntidadModel | SystemEntitieModel = entities.find(
+  //         (t) => t && t.displayName == paramEntity
+  //       );
+  //       // console.log(tipoStored)
+  //       if (!tipoStored || tipoStored === undefined) {
+  //         tipoStored = allTipos.find(t => t.displayName == paramEntity)
+  //         this.mensajeTypeEntities$.next([
+  //           ...this.mensajeTypeEntities$.getValue(),
+  //           tipoStored,
+  //         ]);
+  //       }
+  //     }
+  //   });
 
-    return this.mensajeTypeEntities$;
-  }
+  //   return this.mensajeTypeEntities$;
+  // }
 
   /**
    * Agrega o actualiza respuestas al mensaje en curso en FIRESTORE
@@ -230,6 +231,21 @@ export class RespuestasService {
       console.error(error);
       this._alerts.sendMessageAlert('No se pudo eliminar');
     }
+  }
+
+
+  async updateRespuestasOrder(list: RespuestaModel[]) {
+    const respRef = await this.responsesRef()
+    const batch = this.fs.firestore.batch()
+
+    await this._loading.asyncForEach(list, (r, i) => {
+      r.index = i
+      batch.update(respRef.doc(r.id), {...r})
+      return r
+    })
+
+    return batch.commit()
+
   }
 }
 

@@ -70,12 +70,15 @@ export class AgenteComponent implements OnInit, OnDestroy {
   ]
 
     ngOnDestroy() {
-        this._agente.current = {} as AgenteModel
-        this._agente.unsubscribeIntentList()
-        // this._agente.firestoreIntentListSubs.unsubscribe()
+      this._agente.current = {} as AgenteModel
+      this._agente.unsubscribeIntentList()
+      // this._agente.firestoreIntentListSubs.unsubscribe()
+      if (this._agente.coleccionesSubs)
         this._agente.coleccionesSubs.unsubscribe()
         // this._agente.tiposSubs.unsubscribe()
+      if(this._agente.contextosSubs)
         this._agente.contextosSubs.unsubscribe()
+      if(this._agente.tarjetasSubs)
         this._agente.tarjetasSubs.unsubscribe()
     }
 

@@ -1,12 +1,12 @@
 <!-- Respuesta -->
 <div class="row">
-    <div class="col s4 resp-label">
+    <div class="col s12 resp-label">
         Respuesta
         <i style="font-size:smaller" class="fas fa-info-circle"
         matTooltip="El mensaje que tu agente responderá"
         ></i>
     </div>
-    <div class="col s8">
+    <div class="col s12">
         <div class="row text-box">
             <aSmart-respuesta-text [text]="result.text" (onTextEvent)="catchText($event)"></aSmart-respuesta-text>
         </div>

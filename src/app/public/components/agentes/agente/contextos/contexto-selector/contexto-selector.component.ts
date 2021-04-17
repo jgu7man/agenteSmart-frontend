@@ -22,7 +22,7 @@ export class ContextoSelectorComponent implements OnInit {
 
     ngOnInit(): void {
         this.getContextList();
-        console.log(this.contexto);
+        // console.log(this.contexto);
     }
 
     getContextList() {
@@ -55,7 +55,8 @@ export class ContextoSelectorComponent implements OnInit {
         let continueIntents = []
         if (this.contextLists) {
             continueIntents = this.contextLists[context]
-        }
+      }
+      // console.log( {context, continueIntents} )
         this.contextSelected.emit({context, continueIntents});
 
     }

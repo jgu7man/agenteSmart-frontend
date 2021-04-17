@@ -19,7 +19,7 @@
       <ng-container *ngIf="!switchEditResp; else editResp">
         <!-- SIGUIENTE MENSAJE -->
         <div class="row align-cols">
-          <div class="col s10 res-ref" (click)="switchEditResp = true">
+          <div class="col s10 res-ref" (click)="emitOpened()">
             <div [ngSwitch]="respuesta.tipo">
               <div [ngSwitch]="respuesta.nextIntent">
                 <div *ngSwitchCase="'*fin'">

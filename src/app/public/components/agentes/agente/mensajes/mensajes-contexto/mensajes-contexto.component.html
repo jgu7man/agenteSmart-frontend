@@ -1,20 +1,22 @@
 <div class="mensajes-content">
-   
+
     <!-- * Lista de mensajes -->
-    <div class="mensajes-list">
-        <mat-card *ngFor="let mensaje of mensajes; trackBy:trackByName" 
+    <div class="mensajes-list" cdkDropList cdkDropListOrientation="horizontal"
+    (cdkDropListDropped)="drop($event)" [cdkDropListData]="contexto.contextName">
+        <mat-card *ngFor="let mensaje of mensajes; trackBy:trackByName"
         [routerLink]="['../mensaje', getMensajeRoute(mensaje.name)]"
         [queryParams]="{'contexto': contexto.contextName}"
-        > 
-            <mat-card-content diagramElement 
-            (getDiagramData)="setDiagramaData($event, mensaje.name)" 
+        cdkDrag cdkDragBoundary="mensajes-list"
+        >
+            <mat-card-content diagramElement
+            (getDiagramData)="setDiagramaData($event, mensaje.name)"
             class="mensaje-card">
                 <p class="mensaje-name"> <b>{{mensaje.displayName}}</b> </p>
             </mat-card-content>
         </mat-card>
     </div>
-    
-    
+
+
     <!-- * Agregado de mensaje nueva -->
     <div class="row addIntent-area">
         <div class="add-intent" [ngClass]="{'activate': switchAddIntent}" *ngIf="!switchAddIntent; else addIntent" (click)="toAddIntent()">
@@ -24,14 +26,13 @@
             <mat-card>
                 <mat-card-content>
                     <mat-form-field>
-                        <input matInput 
-                        type="text" 
-                        name="intentName" 
+                        <input matInput
+                        type="text"
+                        name="intentName"
                         id="intentName"
                         #intentNuevo
-                        (keyup.enter)="onAddIntent(contexto.id)"
+                        (keyup.enter)="onAddIntent(contexto.contextName)"
                         (keyup.Esc)="$event.target.blur()"
-                        (blur)="newIntent == '' ? switchAddIntent = false : onAddIntent(contexto.id)"
                         [(ngModel)]="newIntent"
                         >
                     </mat-form-field>
@@ -39,9 +40,9 @@
             </mat-card>
         </ng-template>
     </div>
-    
-    
-    
-                
-            
+
+
+
+
+
 </div>

@@ -12,6 +12,7 @@ import { RespuestaCardComponent } from './respuesta-card/respuesta-card.componen
 import { GdevLoading } from 'src/app/gdev-tools/src/lib/loading/loading.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { CurrentMensajeService } from '../../current-mensaje.service';
+import { distinctUntilKeyChanged, filter, flatMap, tap } from 'rxjs/operators';
 
 @Component({
     selector: 'aSmart-respuestas',
@@ -20,13 +21,15 @@ import { CurrentMensajeService } from '../../current-mensaje.service';
 })
 export class RespuestasComponent implements OnInit, OnDestroy {
     /** Respuestas obtenidas de la función de obtener respuestas */
-    // respuestasList: RespuestaModel[] = [];
+    respuestasList: RespuestaModel[] = [];
     /** Modelo de inicio para crear una nueva respuesta simple */
     newOutputMensaje: SimpleModel;
     /** Suscripción a los cambios de la lista de respuestas */
     respuestasChangesSubs: Subscription;
     /** Lista de componentes de respuestas */
-    @ViewChildren(RespuestaCardComponent) cards: QueryList<RespuestaCardComponent>;
+  @ViewChildren(RespuestaCardComponent) cards: QueryList<RespuestaCardComponent>;
+
+  openedCard: number;
 
     constructor(
         private _respuestas: RespuestasService,
@@ -35,6 +38,16 @@ export class RespuestasComponent implements OnInit, OnDestroy {
     ) {
         this.newOutputMensaje = new SimpleModel('', []);
       this._respuestas.getDataForRespuestas();
+      // this.mensaje_.current$.pipe(
+      //   filter(mensaje => 'name' in mensaje),
+      //   tap(mensaje => console.log(mensaje)),
+      //   distinctUntilKeyChanged('name'),
+      //   flatMap(() => this.mensaje_.respuestasList$)
+      // ).subscribe(data => {
+      //   console.log(data)
+
+      //   this.respuestasList = data
+      // })
     }
 
   ngOnInit(): void {
@@ -76,6 +89,18 @@ export class RespuestasComponent implements OnInit, OnDestroy {
         }
         respuestas.splice(resToDel, 1)
       this.mensaje_.respuestasList$.next(respuestas)
+
+    }
+
+  onOpened(index) {
+    this.openedCard = index
+  }
+
+
+  drop(event: CdkDragDrop<RespuestaModel[]>) {
+      let respuestas = this.mensaje_.respuestasList$.getValue()
+      moveItemInArray(respuestas, event.previousIndex, event.currentIndex);
+      this._respuestas.updateRespuestasOrder(respuestas)
 
     }
 

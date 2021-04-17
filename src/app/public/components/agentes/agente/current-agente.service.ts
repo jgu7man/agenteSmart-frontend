@@ -87,14 +87,23 @@ export class CurrentAgenteService {
     this._cache.updateData('currentAgente', this.current);
     return this._dashboard.initializeDashboard()
       .pipe(
+        // tap(data => console.log( 'dashboard', data)),
         flatMap(() => this.getPath()),
+        // tap(data => console.log( 'path', data)),
         flatMap(() => this._mensajes.getDialogFlowIntents()),
+        // tap(data => console.log( 'intent', data)),
         flatMap(() => this._tipos.getTiposList()),
+        // tap(data => console.log( 'tipos', data)),
         flatMap(() => this.loadFirestoreList('mensajes')),
+        // tap(data => console.log( 'mensajes', data)),
         flatMap(() => this._contexts.getAllContexts()),
+        // tap(data => console.log( 'context', data)),
         flatMap(() => this.loadFirestoreList('tarjetas')),
+        // tap(data => console.log( 'tarjetas', data)),
         flatMap(() => this.loadFirestoreList('colecciones')),
+        // tap(data => console.log( 'colecciones', data)),
         map(data => {
+          // console.log( data )
           this._alerts.sendFloatNotification('Agente cargado')
           this.agenteLoaded$.next(true)
           console.log( 'loaded' )

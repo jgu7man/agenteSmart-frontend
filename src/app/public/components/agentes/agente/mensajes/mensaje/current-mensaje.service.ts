@@ -3,10 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CurrentAgenteService } from '../../current-agente.service';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { IntentModel } from '../mensaje.model';
-import { Subject, Subscription, forkJoin, Observable, BehaviorSubject } from 'rxjs';
+import { IntentModel, ParametroMensaje } from '../mensaje.model';
+import { Subject, Subscription, forkJoin, Observable, BehaviorSubject, of } from 'rxjs';
 import { GdevLoading } from '../../../../../../gdev-tools/src/lib/loading/loading.service';
-import { map, pluck, tap, debounceTime, flatMap } from 'rxjs/operators';
+import { map, pluck, tap, debounceTime, flatMap, filter, take } from 'rxjs/operators';
 import { GdevCache } from '../../../../../../gdev-tools/src/lib/cache/gdev-cache.service';
 import { RespuestaModel } from './entrenamiento/respuestas/respuesta.model';
 import { GdevAlert } from '../../../../../../gdev-tools/src/lib/alert/alert.service';
@@ -17,19 +17,21 @@ import { GdevCommonsService } from '../../../../../../gdev-tools/src/lib/common/
 import { Location } from '@angular/common';
 import { environment } from '../../../../../../../environments/environment';
 import { MensajesService } from '../mensajes.service';
+import { SystemEntitieModel, TipoEntidadModel } from '../../tipos/tipo.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CurrentMensajeService {
-  /** Informa cuando el intent actual ha cambiado */
-  public current$: BehaviorSubject<IntentModel> = new BehaviorSubject({
+  emptyIntent = {
     trainingPhrases: [],
     contextos:[],
     inputContextNames: [],
     outputContexts: [],
     parameters: [],
-  });
+  }
+  /** Informa cuando el intent actual ha cambiado */
+  public current$: BehaviorSubject<IntentModel> = new BehaviorSubject(this.emptyIntent);
   /** Contiene el intent actual y sus cambios */
   // public current: IntentModel;
   /** Contiene el nombre del contexto actual */
@@ -46,6 +48,7 @@ export class CurrentMensajeService {
   private intentList$: Observable<IntentModel[]>;
   respuestasSubs: Subscription;
   respuestasList$: BehaviorSubject<RespuestaModel[]> = new BehaviorSubject([]);
+  currentSubscription: Subscription
 
 
   constructor(
@@ -89,35 +92,38 @@ export class CurrentMensajeService {
 
 
   /** Establece en el storage el intent actual y emite un evento para current$ */
-  async setCurrent(displayName: string, contexto?: string) {
+  async setCurrent(displayNameOname: string, contexto?: string) {
     const agentePath = this._cache.getDataKey('agentePath');
     this.mensajesPath = `${agentePath}/mensajes`;
 
     this.currentContexto = contexto
-    this.intentName = displayName
+    this.intentName = displayNameOname
     this._cache.updateData('currentContexto', this.currentContexto);
-    // this._cache.updateData('currentIntent', this.current);
-
-    this._agente.agenteLoaded$.pipe(
-      flatMap(() => this._cache.listenForChanges<IntentModel[]>('intents')
-        .pipe(// tap(emit => console.log(emit)),
-          debounceTime(1000),
-          map(() =>  this.findIntent(displayName))
-      )),
+    of(this._cache.getDataKey('intents')).pipe(
+      tap((data)=> console.log( data )),
+      map(() => this.findIntent(displayNameOname)),
       tap((mensaje) => {
-        // console.log( 'cambios en los intent', mensaje )
+        this.findIntent(displayNameOname)
         this.current$.next(mensaje)
+        this.getMensajeTipos(mensaje.parameters)
       }),
       flatMap((mensaje) => this.getRespuestasList(mensaje.name))
     ).subscribe(data => {
       console.log('mensaje loaded')
     })
+
+
   }
 
-  findIntent(displayName: string) {
-    const list = this._cache.getDataKey<IntentModel[]>( 'intents' )
+  findIntent(displayNameOname: string) {
+    // console.log( displayNameOname )
+    const list = this._cache.getDataKey<IntentModel[]>('intents')
     const projectId: string = this._cache.getDataKey('projectId');
-    let intent = list.find((intent) => intent.displayName == displayName)
+
+    let intent = list.find((intent) =>
+      intent.displayName == displayNameOname || intent.name == displayNameOname
+    )
+
     if (!intent) {
       this._alerts.sendFloatNotification(
         'Error al cargar el intent. Parece que fue eliminado'
@@ -157,7 +163,8 @@ export class CurrentMensajeService {
     const agentePath = this._cache.getDataKey('agentePath');
     const respuestasPath = `${agentePath}/mensajes/${mensajeName}/respuestas`;
     this._cache.listenForChanges<RespuestaModel[]>('currentRespuestas')
-    .subscribe(this.respuestasList$)
+      .pipe(filter(response => !!response))
+    .subscribe(data => {this.respuestasList$.next(data)})
 
     return this.fs
       .collection<RespuestaModel>(respuestasPath)
@@ -169,6 +176,39 @@ export class CurrentMensajeService {
       )
 
 
+  }
+
+  mensajeTypeEntities$: BehaviorSubject<
+    (TipoEntidadModel | SystemEntitieModel)[]
+  > = new BehaviorSubject([]);
+  /** Obtiene los tipos de datos del mensaje actual
+   * @return {array} Arreglo de los tipos de datos del mensaje actual
+   */
+   async getMensajeTipos(paramList: ParametroMensaje[]) {
+    const tipos = await this._cache.getAsyncKey<any[]>('tipos')
+    const sysTipos = await this._cache.getAsyncKey<any[]>('sysTipos')
+    const allTipos: (TipoEntidadModel | SystemEntitieModel)[] = tipos.concat(sysTipos)
+
+    const entities = this.mensajeTypeEntities$.getValue();
+    paramList.forEach((param) => {
+      let splited = param.entityTypeDisplayName.split('@')
+      let paramEntity = splited[1]
+      if( paramEntity !== undefined){
+        let tipoStored: TipoEntidadModel | SystemEntitieModel = entities.find(
+          (t) => t && t.displayName == paramEntity
+        );
+        // console.log(tipoStored)
+        if (!tipoStored || tipoStored === undefined) {
+          tipoStored = allTipos.find(t => t.displayName == paramEntity)
+          this.mensajeTypeEntities$.next([
+            ...this.mensajeTypeEntities$.getValue(),
+            tipoStored,
+          ]);
+        }
+      }
+    });
+
+    return this.mensajeTypeEntities$;
   }
 
   // UPDATE MENSAJE ACTUAL
@@ -191,11 +231,18 @@ export class CurrentMensajeService {
         console.log(request);
         if (request) {
           // console.info('Se Actualizo Intent:', request);
+          this._mensajes.getDialogFlowIntents()
+            .pipe(take(1))
+            .subscribe(() => {
+              console.log( 'changes' )
+              this.setCurrent(request.displayName)
 
-          this._mensajes.getDialogFlowIntents();
+            });
+
           this.store.dispatch(actions.setSaved());
-          this._loading.toggleWaitingSpinner('close');
           this._alerts.sendFloatNotification('Guardado');
+          this._loading.toggleWaitingSpinner('close');
+
           // return this.mensajeUpdated$.next()
         } else {
           this._alerts.sendMessageAlert('No se pudo guardar')
@@ -302,9 +349,11 @@ export class CurrentMensajeService {
 
   /** Desuscribe todos los datos en este servicio */
   unsubscribe() {
+    // if (this.currentSubscription) this.currentSubscription.unsubscribe()
     this.store.dispatch(actions.getOutMensaje());
     this._cache.deleteDataKey('currentIntent');
     this._cache.deleteDataKey('currentRespuestas');
+    this.current$.next(this.emptyIntent)
     if (this.respuestasSubs) {
       this.respuestasSubs.unsubscribe();
     }

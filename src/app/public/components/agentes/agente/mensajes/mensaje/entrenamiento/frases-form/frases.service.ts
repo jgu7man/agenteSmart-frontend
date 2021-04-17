@@ -67,7 +67,7 @@ export class FrasesService {
   // UPDATE
   async updatePhrase(frase: FraseEntrenamiento) {
     const index = this.findFraseIndex(frase)
-    console.log( index )
+    // console.log( index )
     try {
       const trainingPhrases = this._mensaje.current$.getValue().trainingPhrases;
       trainingPhrases[index] = frase;
@@ -286,7 +286,7 @@ export class FrasesService {
         fList.parts[0].text  === frase.parts[0].text
       )
     }
-    console.log( fraseIndex )
+    // console.log( fraseIndex )
 
     return fraseIndex
   }

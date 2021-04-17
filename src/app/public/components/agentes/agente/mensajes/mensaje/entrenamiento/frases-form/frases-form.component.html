@@ -71,6 +71,7 @@
     </ul>
 
     <mat-paginator
+    *ngIf="mensaje.trainingPhrases"
       [length]="mensaje.trainingPhrases.length"
       [pageSize]="10"
       [showFirstLastButtons]="true"

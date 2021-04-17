@@ -31,7 +31,8 @@ export class AddMensajeComponent implements OnInit {
         this.context = selected.context
         const contextLists = this._cache.getDataKey('contextosLists')
         const contextListSelected: MensajeModel[] = contextLists[selected.context]
-        this.lastIndex = contextListSelected.length
+      this.lastIndex = contextListSelected.length ? contextListSelected.length : 0
+      console.log( this.lastIndex  )
     }
 
   async onAddIntent() {

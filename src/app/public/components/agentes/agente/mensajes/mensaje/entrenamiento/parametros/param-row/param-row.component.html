@@ -1,7 +1,7 @@
 <div class="row">
 
     <!-- Display name -->
-    <div class="col s4" (click)="toEditDisplayName()">
+    <div class="col s3" (click)="toEditDisplayName()">
         <ng-container *ngIf="!switchNameInput; else nameInput">
             <span [ngStyle]="{'background':params_.getParamColor(param.displayName)}"
             class="paramName">{{param.displayName}}</span>
@@ -44,7 +44,7 @@
         ></aSmart-param-value>
     </div>
 
-    <!-- <div class="col s1">
+    <div class="col s1">
         <mat-checkbox
         (change)="onMandatoryChange($event)"
         [(ngModel)]="param.mandatory"
@@ -56,7 +56,7 @@
         (change)="onIslistChange($event)"
         [(ngModel)]="param.isList"
         ></mat-checkbox>
-    </div> -->
+    </div>
 
     <div class="col s1">
         <button mat-icon-button [mat-menu-trigger-for]="paramMenu">

@@ -43,6 +43,7 @@ export class DashboardComponent implements OnInit, OnDestroy{
       .subscribe((routeData) => {
         var section = routeData.data['section'];
         var page = routeData.data['page'];
+        // console.log( page, section )
         this._title.setTitle(`${page}${section ? ' - ' + section : ''}`);
         this.section = section;
       });

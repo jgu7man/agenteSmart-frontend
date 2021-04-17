@@ -3,7 +3,7 @@
     <div class="row align-cols suggest-row" *ngFor="let sugerencia of sugerencias; index as i">
         <div class="col s10">
             {{ sugerencia.text }} <br />
-            <span style="font-size: x-small">{{ sugerencia.contexto }}</span>
+            <span style="font-size: x-small">{{ sugerencia.context }}</span>
         </div>
         <div class="col s2">
             <button mat-icon-button [mat-menu-trigger-for]="suggestMenu">
@@ -33,9 +33,20 @@
                     </mat-form-field>
                 </div>
                 <div class="col s12">
-                    <aSmart-contexto-selector [contexto]="newSuggest.context" (sendContextSelected)="addContext($event)" ></aSmart-contexto-selector>
+                    <aSmart-contexto-selector [contexto]="newSuggest.context" (contextSelected)="addContext($event)" ></aSmart-contexto-selector>
                 </div>
             </div>
         </mat-card-content>
+        <!-- <mat-card-actions
+        style="display: flex; justify-content: space-around;">
+            <button mat-raised-button
+
+            >Cerrar</button>
+            <button mat-raised-button
+            color="primary"
+            #add="matButton"
+            (click)="addText()"
+            >Agregar</button>
+        </mat-card-actions> -->
     </mat-card>
 </div>

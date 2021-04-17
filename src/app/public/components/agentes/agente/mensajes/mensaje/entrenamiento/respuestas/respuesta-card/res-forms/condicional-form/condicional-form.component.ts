@@ -8,6 +8,7 @@ import {
 } from '../../../../../../../tipos/tipo.model';
 import { GdevLoading } from 'src/app/gdev-tools/src/lib/loading/loading.service';
 import { ParamSelected } from '../../../../parametros/param-selector/param-selector.component';
+import { CurrentMensajeService } from '../../../../../current-mensaje.service';
 
 @Component({
   selector: 'aSmart-condicional-form',
@@ -34,8 +35,9 @@ export class CondicionalFormComponent implements OnInit {
   ];
 
   constructor(
-    public respuestas_: RespuestasService,
-    public _params: ParametrosService
+    // public respuestas_: RespuestasService,
+    public _params: ParametrosService,
+    private _mensaje: CurrentMensajeService
   ) {
     this.result = new CondicionalModel('', '', '');
   }
@@ -63,11 +65,13 @@ export class CondicionalFormComponent implements OnInit {
     this.result.parametro = selected.value;
     var selectedSplit = selected.value.split('$');
     var param = selectedSplit.length > 1 ? selectedSplit[1] : selectedSplit[0];
-    console.log( this.respuestas_.mensajeTypeEntities$.getValue() )
-    this.tipoSelected = this.respuestas_.mensajeTypeEntities$
+    console.log( param )
+    console.log( this._mensaje.mensajeTypeEntities$.getValue() )
+    this.tipoSelected = this._mensaje.mensajeTypeEntities$
       .getValue()
       .find((t) => t && t.displayName == param);
 
+    console.log( this.tipoSelected )
     this.onRespChanges.emit(this.result);
   }
 
@@ -82,7 +86,9 @@ export class CondicionalFormComponent implements OnInit {
   }
 
   entitiesOf(tipoSelected: TipoEntidadModel | SystemEntitieModel) {
-    if (tipoSelected instanceof TipoEntidadModel) return tipoSelected.entities;
+    if ( 'entities' in tipoSelected) {
+      return tipoSelected.entities;
+    }
   }
 }
 

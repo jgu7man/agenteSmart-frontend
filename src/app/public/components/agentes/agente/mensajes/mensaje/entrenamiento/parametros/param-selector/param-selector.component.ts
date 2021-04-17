@@ -1,15 +1,18 @@
-import { Component, Input, OnInit, Output, EventEmitter, ViewChild, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { Component, Input, OnInit, Output, EventEmitter, ViewChild, AfterViewInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { ParametrosService } from '../parametros.service';
 import { RespuestasService } from '../../respuestas/respuestas.service';
 import {MatSelect, MatSelectChange} from '@angular/material/select';
 import { GdevLoading } from '../../../../../../../../../gdev-tools/src/lib/loading/loading.service';
+import { CurrentMensajeService } from '../../../current-mensaje.service';
+import { ParametroMensaje } from '../../../../mensaje.model';
 
 @Component({
     selector: 'aSmart-param-selector',
     templateUrl: './param-selector.component.html',
     styleUrls: ['./param-selector.component.scss'],
 })
-export class ParamSelectorComponent implements OnInit, AfterViewInit {
+export class ParamSelectorComponent implements OnInit, AfterViewInit, OnDestroy{
 
 
     @Input() paramSelected: ParamSelected
@@ -17,13 +20,21 @@ export class ParamSelectorComponent implements OnInit, AfterViewInit {
     @ViewChild('paramSelector') public selector: MatSelect;
     tipoSelected;
     isOriginal
-    @Output() onParamaSelected: EventEmitter<ParamSelected> = new EventEmitter();
+  @Output() onParamaSelected: EventEmitter<ParamSelected> = new EventEmitter();
+  paramList: ParametroMensaje[]
+  paramsSubscription: Subscription
 
     constructor(
         private _params: ParametrosService,
         private _loading: GdevLoading,
-        public respuestas_: RespuestasService,
-    ) {}
+      public respuestas_: RespuestasService,
+        private _mensaje: CurrentMensajeService
+    ) {
+      this.paramsSubscription
+      this._mensaje.current$.subscribe(({ parameters }) => {
+        this.paramList = parameters
+      })
+    }
 
     ngOnInit(): void {
 
@@ -67,7 +78,11 @@ export class ParamSelectorComponent implements OnInit, AfterViewInit {
             this.onParamaSelected.emit(this.paramSelected)
         }
 
-    }
+  }
+
+  ngOnDestroy() {
+    if (this.paramsSubscription) this.paramsSubscription.unsubscribe()
+  }
 
 }
 

@@ -45,6 +45,7 @@ export class RespuestaCardComponent implements OnInit {
   public sugerenciasActivated: boolean = false;
   /** Notifica al componente padre que se ha borrado una respuesta */
   @Output() onDelete: EventEmitter<string> = new EventEmitter();
+  @Output() opened: EventEmitter<void> = new EventEmitter();
 
   switchAddIntent: boolean = false;
 
@@ -75,6 +76,11 @@ export class RespuestaCardComponent implements OnInit {
     this.selectedRes = this.tiposRes.find(
       (tipo) => tipo.name == this.respuesta.tipo
     );
+  }
+
+  emitOpened() {
+    this.switchEditResp = true
+    this.opened.emit()
   }
 
   async setNextIntents(currentContext?: string) {
@@ -190,6 +196,7 @@ export class RespuestaCardComponent implements OnInit {
 
   async setNextContext(nextIntent: string) {
     var nextMensaje: MensajeModel;
+    this._cache.getDataKey('contextLists')
     var lists = Object.keys(this.contextLists);
     console.log(nextIntent);
     await this._loading.asyncForEach(lists, async (contextName) => {
@@ -235,6 +242,7 @@ export class RespuestaCardComponent implements OnInit {
   openAddIntent() {
     const dialog = this._dialog.open(AddMensajeComponent, {
       width: '450px',
+      minHeight: 450
     });
 
     dialog.afterClosed().subscribe((newIntent) => {

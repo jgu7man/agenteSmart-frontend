@@ -135,7 +135,7 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
       await this._loading.waitFor(200);
       this.$frases.addTraningPhrase(NEWPHRASE)
         .then(async () => {
-          console.log( this.currentPage.length == this.pageSize )
+          // console.log( this.currentPage.length == this.pageSize )
         if (this.currentPage.length == this.pageSize) {
           this.pageIndex = Math.ceil((this.frasesList.length / this.pageSize) - 1)
           this.firstIndex = this.pageIndex * this.pageSize
@@ -160,7 +160,7 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
       var fraseRestructured: FraseEntrenamiento =
       // Find the part that includes text selected and split it
       await this.$frases.stractSelectedPart(frase, textSelected);
-      console.log( fraseRestructured);
+      // console.log( fraseRestructured);
 
       this.$frases.updatePhrase(fraseRestructured);
       await this._loading.waitFor(100)
@@ -177,7 +177,7 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   openedPanel(event) {
-    console.log( event )
+    // console.log( event )
   }
 
   onRemoveFrase(index: number) {
