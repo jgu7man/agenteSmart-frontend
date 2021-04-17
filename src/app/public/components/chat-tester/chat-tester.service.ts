@@ -76,14 +76,14 @@ export class ChatTesterService {
                     let suggestions: QuickResponse[] = resp.suggestions.map(
                         (sug) => {return {displayText: sug.text, value: sug.context}})
                     }
-                } else
-                if (resp instanceof RespuestaBuscarModel) {
-                    // this._chat.reciveMessage(resp.card.title)
-                    // this._chat.reciveMessage(resp.card.subtitle)
-                    // this._chat.reciveMessage(resp.card.imageUri)
-                    // this._chat.reciveMessage(resp.card.body)
-                    // this._chat.reciveMessage(resp.card.buttons)
                 } else {
+                // if (resp instanceof RespuestaBuscarModel) {
+                //     // this._chat.reciveMessage(resp.card.title)
+                //     // this._chat.reciveMessage(resp.card.subtitle)
+                //     // this._chat.reciveMessage(resp.card.imageUri)
+                //     // this._chat.reciveMessage(resp.card.body)
+                //     // this._chat.reciveMessage(resp.card.buttons)
+                // } else {
                     // this._chat.reciveMessage(resp.text);
 
                 }

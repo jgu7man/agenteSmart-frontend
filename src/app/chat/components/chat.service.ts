@@ -132,6 +132,7 @@ export class ChatService {
                         this.sendCard(resp.card);
                     } else {
                         console.log( 'Texto' )
+                        console.log( resp.text )
                         this._store.dispatch(
                             actions.recive({ message: resp.text })
                         );
