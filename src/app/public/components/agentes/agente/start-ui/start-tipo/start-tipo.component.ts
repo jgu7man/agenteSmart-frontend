@@ -77,7 +77,6 @@ export class StartTipoComponent implements OnInit, OnDestroy {
         const claseToEdit = this.ClaseItemList.find(
             (claseItem) => claseItem.claseId == id
         );
-        claseToEdit.switchClaseInput();
     }
 
     onKindChange(event: MatCheckboxChange) {
