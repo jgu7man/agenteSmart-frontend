@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { TipoEntidadModel, Clase } from './../tipo.model';
-import { EventEmitter, Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { GdevAlert, GdevCache, GdevLoading } from 'src/app/gdev-tools/src/public-api';
-import { tap, distinctUntilChanged, startWith } from 'rxjs/operators';
+import { distinctUntilChanged, startWith } from 'rxjs/operators';
 import { TipoState } from '../store/tipo.state';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { environment } from 'src/environments/environment';
@@ -13,9 +13,14 @@ import { environment } from 'src/environments/environment';
 })
 export class CurrentTipoService {
 
+  /** Estado en tiempo real del Tipo de dato seleccionado */
   current$: BehaviorSubject<TipoState>
   /** Obtine y almacena la ruta a la API */
   private _url = environment.restURL + 'entity';
+  /** Tipo de dato que será activado */
+  activatedToEdit: string
+  /** Activa el campo de agregado de clase */
+  switchAddClase: boolean
 
   constructor(
     private _cache: GdevCache,
@@ -27,11 +32,13 @@ export class CurrentTipoService {
     this.resetCurrent()
   }
 
+  /** Obtiene la ruta a la colección de firestore */
   get tiposPath() {
     let agentePath = this._cache.getDataKey('agentePath');
     return `${agentePath}/tipos`;
   }
 
+  /** Define el tipo de dato seleccionado */
   setCurrentTipo(tipo: TipoState) {
     tipo.saved = true
     this.current$.next(tipo)
@@ -39,9 +46,9 @@ export class CurrentTipoService {
       startWith(tipo),
       distinctUntilChanged((x,y) => JSON.stringify(x) === JSON.stringify(y))
     )
-      // .pipe(tap(this.current$))
   }
 
+  /** Establece el estado del botón de guardado como guardado */
   async onSave() {
     const tipo = this.current$.getValue()
     return this.updateTipo(tipo.body)
@@ -69,16 +76,6 @@ export class CurrentTipoService {
       .doc(resourceID)
       .set(tipo, { merge: true });
 
-    // this._loading.toggleWaitingSpinner('close');
-
-    // Update cache
-    // const tiposList = this._cache.getDataKey<TipoEntidadModel[]>('tipos');
-    // const tipoIndex = tiposList.findIndex((t) => t.name === 'resourceID');
-    // tiposList[tipoIndex] = tipo;
-    // this._cache.updateData('tipos', tiposList);
-
-    // End GdevLoading animation
-    console.log( 'done!' )
     this._loading.toggleWaitingSpinner('close');
 
     return tipo.name;
@@ -94,9 +91,6 @@ export class CurrentTipoService {
           console.info('Entity updated', result);
           this._alerts.sendFloatNotification('Tipo guardado');
           resolve(true);
-          // if ( result[ 'status' ] == "Success" ) {
-          //     //exito creado
-          // }
         })
         .catch((err) => {
           if (err) {
@@ -112,6 +106,7 @@ export class CurrentTipoService {
     });
   }
 
+  /** Edita el DisplayName del tipo de dato en la memoria */
   editDisplayName(displayName: string) {
     this.current$.next({
       ...this.current$.getValue(),
@@ -124,6 +119,7 @@ export class CurrentTipoService {
   }
 
 
+  /** Obtiene la clase que solicita */
   getClase(name?: string): Clase {
     const tipo = this.current$.getValue()
     if ( name || tipo.body.entities) {
@@ -161,16 +157,10 @@ export class CurrentTipoService {
         }
       };
       this.current$.next(current);
-      // this.store.dispatch(actions.editTipo({ tipo: this.current }));
     } else {
       current.body.entities = [clase]
       current.saved = false
       this.current$.next(current);
-      // let list = this._cache.getDataKey<TipoEntidadModel[]>('tipos');
-      // list
-      // console.log(this.claseList);
-      // console.error(`${tipoName} no encontrado`);
-
     }
 
     return;
@@ -183,16 +173,18 @@ export class CurrentTipoService {
   action: 'add' | 'del'
   ) {
 
+    // Obtener los datos actuales
     var current = this.current$.getValue()
     var clasesList: Clase[] = current.body.entities;
     var claseIndex = clasesList.findIndex((c) => c.value === clase.value);
+
+    // Si no existe la clase, se agrega a la lista actual
     if (claseIndex < 0) {
-      clasesList = [...clasesList, clase];
       clase['synonyms'] = [];
-    } else {
-      clasesList = [...clasesList];
+      clasesList = [...clasesList, clase];
     }
 
+    // Agrega o elimina el sinónimo
     if (action == 'add') {
       clasesList = clasesList.map((c) =>
         c.value === clase.value
@@ -210,6 +202,7 @@ export class CurrentTipoService {
       );
     }
 
+    // Actualiza el Tipo de dato seleccionado y lo regresa al estado
     current = {
       ...current,
       saved: false,

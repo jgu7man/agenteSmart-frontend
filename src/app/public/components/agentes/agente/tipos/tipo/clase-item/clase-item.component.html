@@ -1,6 +1,6 @@
 <ng-container *ngIf="clase; else editClase">
   <!-- ## READ CLASE -->
-  <ng-container *ngIf="!ClaseInput; else editClase">
+  <ng-container *ngIf="tipo_.activatedToEdit != clase.value || activateEdit else editClase">
     <!-- ## SINONIMOS -->
     <ng-container *ngIf="kind == 'KIND_MAP'; else lista">
       <div class="col s2 m3">
@@ -18,7 +18,7 @@
           <i class="fas fa-ellipsis-v"></i>
         </button>
         <mat-menu #claseMenu="matMenu">
-          <button mat-menu-item (click)="ClaseInput = true">Editar</button>
+          <button mat-menu-item (click)="tipo_.activatedToEdit = clase.value">Editar</button>
           <button mat-menu-item (click)="onDelClase()">Eliminar</button>
         </mat-menu>
       </div>
@@ -35,7 +35,7 @@
           <i class="fas fa-ellipsis-v"></i>
         </button>
         <mat-menu #claseMenu="matMenu">
-          <button mat-menu-item (click)="ClaseInput = true">Editar</button>
+          <button mat-menu-item (click)="tipo_.activatedToEdit = clase.value">Editar</button>
           <button mat-menu-item (click)="onDelClase()">Eliminar</button>
         </mat-menu>
       </div>
@@ -51,9 +51,7 @@
   <aSmart-edit-clase
     [clase]="clase"
     [kind]="kind"
-    (claseDone)="this.ClaseInput = false;"
+    (claseDone)="onClaseDone()"
   ></aSmart-edit-clase>
 </ng-template>
-<!-- !## EDIT CLASE -->
-<!-- <ng-template #empty></ng-template> -->
 

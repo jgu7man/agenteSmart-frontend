@@ -74,31 +74,32 @@ export class EditClaseComponent implements OnInit, OnDestroy{
   /** Resetea los campos para uno nuevo y envía la clase creada a la creación de un item de lista o un mapa de sinónimos */
   onAddClase(event) {
     event.stopPropagation();
+
+    // Define la clase y prepara la siguiente
     if (this.newClaseItem) {
       this.clase = { value: this.newClaseItem };
       this.newClaseItem = '';
     }
-    console.log(this.kind, this.clase);
+
+    // Si es lista o si es mapa
     if (this.kind == 'KIND_MAP') {
-      this.newClaseSinonimos.push(this.clase.value);
-      // console.log(this.clase);
-      this.switchSinonimosInput = true;
-      this._loading.waitFor(1000)
-      this.sinonimosInput.nativeElement.focus();
+      // Desactiva el agregado de clase
+      this.tipo_.switchAddClase = false
+      // Define la clase nueva para continuar con la edición
+      this.tipo_.activatedToEdit = this.clase.value
+      // Agrega la clase nueva como sinónimo también
       this.tipo_.setSinonimo(
         this.clase,
         this.clase.value,
         'add'
       );
     } else {
-      console.log( this.clase);
       this.tipo_.setClase(this.clase);
     }
   }
 
   /** Cierra la edición de la clase y resetea los campos */
   async setClase() {
-    // await this.tipo_.pushCurrent();
     this.claseDone.emit(true);
     this.newClaseItem = '';
     this.newClaseSinonimos = [];
@@ -107,8 +108,7 @@ export class EditClaseComponent implements OnInit, OnDestroy{
   /** Agrega sinónimo del "chips field" */
   addSinonimo(event: MatChipInputEvent) {
     if (event.value) {
-      this.newClaseSinonimos.push(event.value.trim());
-      this.tipo_.setSinonimo( this.clase, event.value, 'add');
+      this.tipo_.setSinonimo( this.clase, event.value.trim(), 'add');
     }
     event.input.value = '';
   }

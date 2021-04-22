@@ -1,56 +1,56 @@
-<div class="container" *ngIf="(tipo_.current$ | async) as tipo">
-    <div class="row">
-        <div class="col s1">
-            <button mat-icon-button
-            (click)="onClose()"
-            >
-                <i class="fas fa-times fa-lg"></i>
-            </button>
-        </div>
-        <div class="col s8">
+<div class="container" *ngIf="tipo_.current$ | async as tipo">
+  <div class="row">
 
-            <!-- UPDATE tipo name -->
-            <mat-form-field>
-                <input
-                matInput
-                type="text"
-                #editInput
-                name="editInput"
-                [value]="tipo.body.displayName"
-                (change)="tipo_.editDisplayName($event)"
-                (keydown)="delSpaces($event)"
-                >
-            </mat-form-field>
-        </div>
-
-        <div class="col s2">
-            <button
-            mat-raised-button
-            [color]="'primary'"
-            (click)="tipo_.onSave()"
-            [disabled]="tipo.saved"
-            >Guardar</button>
-
-        </div>
-
-        <div class="col s1">
-            <button mat-icon-button [mat-menu-trigger-for]="tipoMenu">
-                <i class="fas fa-ellipsis-v"></i>
-            </button>
-            <mat-menu #tipoMenu="matMenu">
-                <button mat-menu-item
-                (click)="delete(tipo.name)">
-                    Eliminar
-                </button>
-            </mat-menu>
-        </div>
+    <!-- CERRAR PANEL -->
+    <div class="col s1">
+      <button mat-icon-button (click)="onClose()">
+        <i class="fas fa-times fa-lg"></i>
+      </button>
     </div>
 
-    <!-- Tipo body to update -->
-    <div class="row">
-        <div class="col s12">
-            <aSmart-tipo-body [tipo]="tipo.body"></aSmart-tipo-body>
-        </div>
+
+    <!-- UPDATE tipo name -->
+    <div class="col s8">
+      <mat-form-field>
+        <input
+          matInput
+          type="text"
+          #editInput
+          name="editInput"
+          [value]="tipo.body.displayName"
+          (change)="tipo_.editDisplayName($event)"
+          (keydown)="delSpaces($event)"
+        />
+      </mat-form-field>
     </div>
 
+    <!-- BOTÓN DE GUARDADO -->
+    <div class="col s2">
+      <button
+        mat-raised-button
+        [color]="'primary'"
+        (click)="tipo_.onSave()"
+        [disabled]="tipo.saved"
+      >
+        Guardar
+      </button>
+    </div>
+
+    <!-- OPCIONES -->
+    <div class="col s1">
+      <button mat-icon-button [mat-menu-trigger-for]="tipoMenu">
+        <i class="fas fa-ellipsis-v"></i>
+      </button>
+      <mat-menu #tipoMenu="matMenu">
+        <button mat-menu-item (click)="delete(tipo.name)">Eliminar</button>
+      </mat-menu>
+    </div>
+  </div>
+
+  <!-- Tipo body to update -->
+  <div class="row">
+    <div class="col s12">
+      <aSmart-tipo-body [tipo]="tipo.body"></aSmart-tipo-body>
+    </div>
+  </div>
 </div>

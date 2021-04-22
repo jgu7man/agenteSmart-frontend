@@ -10,7 +10,7 @@ import { CurrentTipoService } from '../current-tipo.service';
 })
 export class ClaseItemComponent implements OnInit {
   /** Recibe y establece la configuración de la vista, si es edición o lectura */
-  @Input() ClaseInput: boolean = false;
+  @Input() activateEdit: boolean
   /** Recibe la clase que se mostrará o editará */
   private _claseId : BehaviorSubject<string> = new BehaviorSubject('');
   @Input() set claseId(id: string) { this._claseId.next(id); }
@@ -27,7 +27,7 @@ export class ClaseItemComponent implements OnInit {
   public clase: Clase;
 
   constructor(
-    private tipo_: CurrentTipoService
+    public tipo_: CurrentTipoService
   ) {
     this._claseId.subscribe(id => {
       this.clase = this.tipo_.getClase(this.claseId)
@@ -38,17 +38,11 @@ export class ClaseItemComponent implements OnInit {
 
   }
 
-  /** Activador que se usa desde el padre para cambiar a edición */
-  @Input() switchClaseInput() {
-    this.ClaseInput = !this.ClaseInput;
-  }
-
   // # onClaseDone
   /** Cuando la clase es dejada de usar por tab, enter o desenfocar, define si será editada o sólo cerrada */
-  onClaseDone(edited: boolean) {
-    this.ClaseInput = false;
-    if (edited) this.claseEdited.emit(this.clase);
-    else this.closeClase.emit(true);
+  onClaseDone() {
+    this.tipo_.activatedToEdit = undefined
+    this.tipo_.switchAddClase = false
   }
 
   // # onDeleteClase

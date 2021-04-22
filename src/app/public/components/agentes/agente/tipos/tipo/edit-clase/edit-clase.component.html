@@ -1,63 +1,62 @@
 <!-- AGREGAR CLASES SIN SINÓNIMO -->
 
-    <div class="col" [ngClass]="{'s12 m11': kind == 'KIND_LIST', 's3': kind == 'KIND_MAP'}">
-        <mat-form-field>
-            <input
-                placeholder="nueva clase"
-                type="text"
-                name="addClaseItem"
-                id="addClaseItem"
-                matInput
-                [(ngModel)]="newClaseItem"
-                (keyup)="delSpaces($event)"
-                (keydown.Tab)="onAddClase($event);false"
-                (keyup.ENTER)="onAddClase($event); false"
-                (keyup.esc)="claseDone.emit(false)"
-            />
-        </mat-form-field>
-    </div>
+<div
+  class="col"
+  [ngClass]="{ s6: kind == 'KIND_LIST', s3: kind == 'KIND_MAP' }"
+>
+  <mat-form-field>
+    <input
+      placeholder="nueva clase"
+      type="text"
+      name="addClaseItem"
+      id="addClaseItem"
+      matInput
+      [(ngModel)]="newClaseItem"
+      (keyup)="delSpaces($event)"
+      (keydown.Tab)="onAddClase($event); (false)"
+      (keyup.ENTER)="onAddClase($event); (false)"
+    />
+  </mat-form-field>
+</div>
 
 
-<!-- AGREGAR CLASE CON SINÓNIMOS -->
+<!-- * AGREGAR SINÓNIMOS -->
 
-    <!-- * AGREGAR SINÓNIMOS -->
+<div class="col s7" *ngIf="kind == 'KIND_MAP'">
+  <mat-form-field class="chip-list" style="width: 100%">
+    <mat-chip-list
+      class="mat-chip-list-stacked"
+      #newSinonimosList
+      aria-label="Sinónimos"
+      [aria-orientation]="'horizontal'"
+    >
+      <mat-chip
+        *ngFor="let sinonimo of newClaseSinonimos"
+        [selectable]="true"
+        [removable]="true"
+        (removed)="delSinonimo(sinonimo)"
+      >
+        {{ sinonimo }}
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+      <input
+        placeholder="nuevo sinónimo: presiona coma (,) para agregar"
+        style="max-height: 1em"
+        #sinonimosInput
+        [matChipInputFor]="newSinonimosList"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        (matChipInputTokenEnd)="addSinonimo($event)"
+      />
+    </mat-chip-list>
+  </mat-form-field>
+</div>
 
-    <div class="col s7 m8" *ngIf="kind== 'KIND_MAP'" >
-        <mat-form-field style="width: 100%;">
-            <mat-chip-list
-            class="mat-chip-list-stacked"
-            #newSinonimosList
-            aria-label="Sinónimos"
-            [aria-orientation]="'horizontal'"
-            >
-                <mat-chip
-                *ngFor="let sinonimo of newClaseSinonimos"
-                [selectable]="true"
-                [removable]="true"
-                (removed)="delSinonimo(sinonimo)"
-                >
-                    {{ sinonimo }}
-                    <mat-icon matChipRemove>cancel</mat-icon>
-                </mat-chip>
-                <input
-                    placeholder="nuevo sinónimo: presiona coma (,) para agregar"
-                    style="max-height: 1em;"
-                    #sinonimosInput
-                    [matChipInputFor]="newSinonimosList"
-                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                    (matChipInputTokenEnd)="addSinonimo($event)"
-                />
-            </mat-chip-list>
-        </mat-form-field>
-    </div>
-    <div class="col s2 m1">
-        <button mat-button  (click)="setClase()">
-            <i class="fas fa-check"></i>
-        </button>
-        <button mat-button (click)="claseDone.emit(true)" >
-            <i class="fas fa-times"></i>
-        </button>
-    </div>
-
-
-
+<!-- BOTONES DE SALIDA -->
+<div class="col s2">
+  <button mat-button (click)="setClase()">
+    <i class="fas fa-check green-text"></i>
+  </button>
+  <button mat-button (click)="claseDone.emit(true)">
+    <i class="fas fa-times red-text"></i>
+  </button>
+</div>

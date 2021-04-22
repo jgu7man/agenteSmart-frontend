@@ -1,4 +1,6 @@
 <mat-drawer-container [hasBackdrop]="true">
+
+  <!-- PANEL DE TIPO ELEGIDO -->
   <mat-drawer style="width: 100%" #currentTipo [mode]="'over'" position="start">
     <aSmart-tipo
       *ngIf="tipoSelected"
@@ -6,11 +8,16 @@
       (closePanel)="onClose()"
     ></aSmart-tipo>
   </mat-drawer>
+
+  <!-- CONTENIDO DE LA VISTA -->
   <mat-drawer-content>
     <div class="container">
       <div class="row">
+
+        <!-- USER ENTITIES -->
         <div class="col s12 m6">
           <mat-card class="dashboard-section-card">
+
             <mat-card-header class="dashboard-section-header">
               <mat-card-title class="dashboard-section-title">
                 <h2>Tipos de dato</h2>
@@ -23,6 +30,7 @@
                 cada interacción.
               </mat-card-subtitle>
             </mat-card-header>
+
             <mat-card-content>
               <mat-selection-list
                 #listPanel
@@ -35,7 +43,7 @@
                   [value]="tipo"
                   [disabled]="tipo.displayName == 'productos'"
                 >
-                  {{ tipo.displayName }}
+                  @{{ tipo.displayName }}
                   <div
                     mat-line
                     style="font-size: x-small"
@@ -49,6 +57,9 @@
             </mat-card-content>
           </mat-card>
         </div>
+
+
+        <!-- SYSTEM ENTITIES -->
         <div class="col s12 m6">
           <mat-card>
             <mat-card-header>
@@ -71,7 +82,7 @@
                   >
                     <mat-expansion-panel>
                       <mat-expansion-panel-header>
-                        {{ type.displayName }}
+                        @{{ type.displayName }}
                       </mat-expansion-panel-header>
                       <b>Ejemplos:</b>
                       <ul class="collection">
@@ -89,7 +100,9 @@
             </mat-card-content>
           </mat-card>
         </div>
+        <!-- system entities ends -->
       </div>
     </div>
   </mat-drawer-content>
+  <!-- CONTENIDO DE LA VISTA ENDS -->
 </mat-drawer-container>

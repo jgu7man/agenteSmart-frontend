@@ -6,7 +6,6 @@ import {
   EventEmitter,
   OnDestroy,
 } from '@angular/core';
-import { TipoEntidadModel } from '../tipo.model';
 import { TiposService } from '../tipos.service';
 import { CurrentTipoService } from './current-tipo.service';
 import { TipoState } from '../store/tipo.state';
@@ -18,8 +17,7 @@ import { TipoState } from '../store/tipo.state';
 })
 export class TipoComponent implements OnInit, OnDestroy {
 
-  /** Static info of current tipo */
-  // tipo: TipoState;
+
   /** Emits on close panel request or after save */
   @Output() closePanel = new EventEmitter<any>();
 
@@ -30,10 +28,9 @@ export class TipoComponent implements OnInit, OnDestroy {
   }
 
   @Input() set selected(tipo: TipoState) {
-    // this.tipo.body = tipo
     this.tipo_.setCurrentTipo(tipo)
       .subscribe(changes => {
-        console.log( changes )
+        // console.log( changes )
         // this.tipo.saved = false
       })
   }

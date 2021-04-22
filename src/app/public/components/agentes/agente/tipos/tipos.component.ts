@@ -1,16 +1,11 @@
 import { AddTipoComponent } from './add-tipo/add-tipo.component';
-import { Component, OnInit, ViewChild, ViewChildren, QueryList, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewChildren, QueryList, OnDestroy } from '@angular/core';
 import { GdevLoading } from '../../../../../gdev-tools/src/lib/loading/loading.service';
 import { TiposService } from './tipos.service';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { CurrentAgenteService } from '../current-agente.service';
 import { MatDialog } from '@angular/material/dialog';
 import { TipoComponent } from './tipo/tipo.component';
-import { Store } from '@ngrx/store';
 import { TipoState } from './store/tipo.state';
-import * as actions from './store/tipo.actions'
-import { TipoEntidadModel, SystemEntitieModel } from './tipo.model';
-import { AppState } from '../../../../../app.state';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MatSelectionList, MatSelectionListChange } from '@angular/material/list';
 import { SystemEntitiesService } from '../../../../../admin/system/system-entities.service';
@@ -45,7 +40,6 @@ export class TiposComponent implements OnInit,  OnDestroy {
    }
 
   ngOnInit(): void {
-    // this.tipos_.updateProductType()
   }
 
   onSelected( selected: MatSelectionListChange ) {
@@ -72,12 +66,11 @@ export class TiposComponent implements OnInit,  OnDestroy {
 
   onClose(): void {
     this.tipoDrawer.close()
-    this.tipoDrawer
+    this.listPanel.deselectAll()
     delete this.tipoSelected
   }
 
   ngOnDestroy() {
-    // this.store.dispatch( actions.getOut() )
     this.tipos_.unsubscribe()
     delete this.tipoSelected
   }
