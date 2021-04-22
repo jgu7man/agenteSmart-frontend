@@ -1,4 +1,4 @@
-<ng-container *ngIf="clase; else empty">
+<ng-container *ngIf="clase; else editClase">
   <!-- ## READ CLASE -->
   <ng-container *ngIf="!ClaseInput; else editClase">
     <!-- ## SINONIMOS -->
@@ -45,17 +45,15 @@
   <!-- !## READ CLASE -->
 
 
-  <!-- ## EDIT CLASE -->
-  <ng-template #editClase>
-    <aSmart-edit-clase
-      [clase]="clase"
-      [kind]="kind"
-      (claseDone)="this.ClaseInput = false;"
-    ></aSmart-edit-clase>
-  </ng-template>
-  <!-- !## EDIT CLASE -->
-  </ng-container>
-  <ng-template #empty>
-
+</ng-container>
+<!-- ## EDIT CLASE -->
+<ng-template #editClase>
+  <aSmart-edit-clase
+    [clase]="clase"
+    [kind]="kind"
+    (claseDone)="this.ClaseInput = false;"
+  ></aSmart-edit-clase>
 </ng-template>
+<!-- !## EDIT CLASE -->
+<!-- <ng-template #empty></ng-template> -->
 

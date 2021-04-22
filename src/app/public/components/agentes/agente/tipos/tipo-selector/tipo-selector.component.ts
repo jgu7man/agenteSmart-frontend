@@ -57,7 +57,7 @@ export class TipoSelectorComponent implements OnInit, OnDestroy {
       await this._loading.waitFor(2000)
       this._tipos.list$.pipe(
         startWith([]),
-        map<any[], any[]>(list => list.map(t => t.displayName)),
+        map<any[], any[]>(list => list ? list.map(t => t.displayName) : []),
       ).subscribe((list) => { this.tipos = list });
       // this._tipos.getTiposList();
   }

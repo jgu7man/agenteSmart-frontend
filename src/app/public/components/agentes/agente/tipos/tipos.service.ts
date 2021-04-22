@@ -111,7 +111,7 @@ export class TiposService {
     console.log({ entityType: { ...entityType } });
     return new Promise((resolve, reject) => {
       this._http.post(
-          `$${this._url}/${this.projectId}`,
+          `${this._url}/${this.projectId}`,
           { entityType: { ...entityType } },
           { responseType: 'json' }
         ).toPromise()
