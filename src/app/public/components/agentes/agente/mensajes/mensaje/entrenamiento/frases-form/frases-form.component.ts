@@ -72,7 +72,10 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     this.frasesSub = this.$frases.list$.subscribe((frases) => {
       this.frasesList = frases
-        this.currentPage = frases.slice(this.firstIndex, this.pageSize)
+      this.lastIndex = this.lastIndex ? this.lastIndex : this.pageSize
+
+      this.currentPage = this.frasesList.slice(this.firstIndex, this.lastIndex)
+
       this.getLastIndex(
           this.firstIndex,
           this.currentPage.length
@@ -84,23 +87,28 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
     startIndex: number,
     length: number
   ) {
+
     if (this.pageSize > length) {
-      this.lastIndex = length;
+      this.lastIndex = length + startIndex;
     } else {
       this.lastIndex = startIndex + this.pageSize;
     }
   }
 
   pageEvent(event: PageEvent) {
-    // let lastDiff = this.frasesList.length - (event.pageIndex * this.pageSize);
-    // let firstDiff = lastDiff - this.pageSize;
-    // firstDiff = firstDiff <= 0 ? 0 : firstDiff;
-    this.firstIndex = event.pageIndex * this.pageSize + 1;
-    this.getLastIndex(this.firstIndex, this.currentPage.length);
-    this.currentPage = this.frasesList.slice(this.firstIndex-1, this.lastIndex-1);
-    console.log(this.currentPage.length, this.firstIndex, this.lastIndex);
 
-    console.log(this.firstIndex, this.lastIndex);
+    this.firstIndex = event.pageIndex == 0 ? 0
+      : (event.pageIndex * this.pageSize);
+
+    let trim = (event.pageIndex * this.pageSize) + this.pageSize
+
+
+    this.currentPage = this.frasesList.slice(this.firstIndex, trim);
+
+    this.getLastIndex(this.firstIndex, this.currentPage.length);
+    // console.log(this.currentPage.length, this.firstIndex, this.lastIndex);
+
+    // console.log(this.firstIndex, this.lastIndex);
   }
 
   ngAfterViewInit() {
@@ -165,7 +173,6 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
       this.$frases.updatePhrase(fraseRestructured);
       await this._loading.waitFor(100)
       this.fraseExpanded = index
-      // console.log(this.currentPage[this.fraseExpanded])
     }
   }
 

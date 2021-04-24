@@ -1,9 +1,29 @@
+@mixin scrollbar {
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent
+  }
+  &::-webkit-scrollbar-button {
+    display:none
+  }
+  &::-webkit-scrollbar-thumb{
+    background: #141e66;
+    border: none;
+    box-shadow: -1px -1px 10px -3px rgb(0 0 0 / 50%);
+  }
+}
+
 #intent-form {
     background: #fff;
     box-shadow: 2px 0px 4px rgba($color: #000000, $alpha: 0.5);
     padding-bottom: 4em;
-    overflow-y: auto;
+    overflow-y: scroll;
+    max-height: 85vh;
+    overflow-x: hidden !important;
 }
+
 
 .intent-panel {
     max-height: 70vh;
@@ -12,4 +32,6 @@
 #resp-manager {
     overflow-y: auto;
     padding-bottom: 4em;
+    max-height: 85vh;
+    overflow-x: hidden !important;
 }

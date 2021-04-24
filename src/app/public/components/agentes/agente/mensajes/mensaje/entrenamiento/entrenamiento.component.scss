@@ -1,7 +1,8 @@
 #mensaje-container {
     overflow: auto;
+    max-height: 85vh;
 }
 
 #mensaje-container::-webkit-scrollbar {
-    display: none;
+    display: block;
 }

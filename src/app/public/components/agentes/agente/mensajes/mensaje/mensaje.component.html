@@ -1,5 +1,7 @@
 <div class="row">
     <waiting-bar></waiting-bar>
+
+    <!-- Desktop -->
     <ng-container *ngIf="!responsive.small; else mobileDesing">
         <div strechHeight  class="col s6" id="intent-form">
             <aSmart-entrenamiento></aSmart-entrenamiento>
@@ -8,6 +10,8 @@
             <aSmart-respuestas></aSmart-respuestas>
         </div>
     </ng-container>
+
+    <!-- Mobile -->
     <ng-template #mobileDesing>
         <mat-accordion>
             <mat-expansion-panel class="intent-panel" [expanded]="true">
@@ -24,5 +28,5 @@
             </mat-expansion-panel>
         </mat-accordion>
     </ng-template>
-    
+
 </div>
