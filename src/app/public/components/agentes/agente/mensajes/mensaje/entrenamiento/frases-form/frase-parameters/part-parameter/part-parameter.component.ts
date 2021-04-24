@@ -9,6 +9,7 @@ import { GdevLoading } from '../../../../../../../../../../gdev-tools/src/lib/lo
 import { FrasesService } from '../../frases.service';
 import { MensajesService } from '../../../../../mensajes.service';
 import { CurrentMensajeService } from '../../../../current-mensaje.service';
+import { GdevText } from 'src/app/gdev-tools/src/public-api';
 
 @Component({
   selector: 'aSmart-part-parameter',
@@ -35,6 +36,7 @@ export class PartParameterComponent implements OnInit {
     private _loading: GdevLoading,
       private _mensaje: CurrentMensajeService,
     private _frases: FrasesService,
+    private _text: GdevText
   ) { }
 
   ngOnInit(): void {
@@ -46,6 +48,26 @@ export class PartParameterComponent implements OnInit {
     this.switchEntitySelector = true
     await this._loading.waitFor( 100 )
     // this.partEntityInput.nativeElement.focus()
+  }
+
+  reformatText(event: any) { // listen keypress event; not keydown o keyup
+    var k;
+    k = event.charCode;  // k = event.keyCode;  (Both can be used)
+    return ((k > 64 && k < 91) // allow letters
+      || (k >= 48 && k <= 57) // allow numbers
+      || (k > 96 && k < 123) // allow numpads
+      || k == 8 // allow backspace
+      // || k == 32  // allow space
+      // || k == 188 // allow comma
+      // || k == 189 // allow dash
+      // || k == 190 // allow perdiod (dot)
+      // || k == 95 // allow underscore
+    );
+  }
+
+  normalize(value: any) {
+    console.log( value )
+    this.paramName = this._text.normalize(value)
   }
 
   onTipoSelected(tipoSelected: string) {

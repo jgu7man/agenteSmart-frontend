@@ -23,6 +23,8 @@
             type="text"
             [(ngModel)]="paramName"
             name="paramName"
+            (keypress)="reformatText($event)"
+            (change)="normalize($event)"
             >
         </mat-form-field>
 
