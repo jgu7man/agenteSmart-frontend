@@ -2,18 +2,19 @@ import { Injectable } from '@angular/core';
 
 @Injectable({providedIn:'root'})
 export class GdevText {
-    
+
     constructor () { }
-    
+
 
     normalize(text: string) {
-        var from = "ÃÀÁÄÂÈÉËÊÌÍÏÎÒÓÖÔÙÚÜÛãàáäâèéëêìíïîòóöôùúüûÑñÇç",
+        if( text ){
+          var from = "ÃÀÁÄÂÈÉËÊÌÍÏÎÒÓÖÔÙÚÜÛãàáäâèéëêìíïîòóöôùúüûÑñÇç",
             to = "AAAAAEEEEIIIIOOOOUUUUaaaaaeeeeiiiioooouuuunncc",
             mapping = {};
-    
+
         for ( var i = 0, j = from.length; i < j; i++ )
             mapping[ from.charAt( i ) ] = to.charAt( i );
-    
+
             var ret = [];
             for ( var i = 0, j = text.length; i < j; i++ ) {
                 var c = text.charAt( i );
@@ -23,11 +24,12 @@ export class GdevText {
                     ret.push( c );
             }
             return ret.join( '' );
-        
+
+        }
 
     }
 
 
-    
+
 
 }

@@ -7,6 +7,8 @@ import { AddContextoComponent } from './add-contexto/add-contexto.component';
 import { ContextoComponent } from './contexto/contexto.component';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { CurrentAgenteService } from '../current-agente.service';
+import { flatMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'aSmart-contextos',
@@ -20,6 +22,7 @@ export class ContextosComponent implements OnInit, OnDestroy {
   switchAddContext: boolean = false
   switchEditContext: boolean = false
   list: ContextoModel[]
+  list$: Observable<ContextoModel[]>
   contextToEdit: string
 
   @ViewChild(AddContextoComponent) addContext: AddContextoComponent
@@ -31,7 +34,17 @@ export class ContextosComponent implements OnInit, OnDestroy {
     private _loading: GdevLoading,
     public agente_: CurrentAgenteService
   ) {
-    // this.contextos.getAllContexts()
+
+    this.list$ = this.contextos.list$
+      ? this.contextos.list$
+      : this.agente_.loaded$.pipe(
+        flatMap(() => this.contextos.list$)
+      )
+
+      this.list$.subscribe(list => {
+        this.list = list;
+      })
+
   }
 
   async ngOnInit() {

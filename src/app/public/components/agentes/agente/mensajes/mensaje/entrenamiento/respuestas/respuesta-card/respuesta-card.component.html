@@ -191,9 +191,9 @@
                   <mat-option value="*fin"> Termina conversación </mat-option>
                   <mat-option
                     *ngFor="let mensaje of nextMensajesList"
-                    [value]="mensaje.displayName"
+                    [value]="mensaje?.displayName"
                   >
-                    {{ mensaje.displayName }}
+                    {{ mensaje?.displayName }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>

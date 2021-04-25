@@ -4,7 +4,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthService, UserInterface } from '../../../../admin/auth/auth.service';
 import { GdevCache } from '../../../../gdev-tools/src/lib/cache/gdev-cache.service';
 import { Subject, Observable, Subscription, of, BehaviorSubject, zip, forkJoin } from 'rxjs';
-import { filter, concatAll, pluck, tap, map, flatMap, debounceTime } from 'rxjs/operators';
+import { filter, concatAll, pluck, tap, map, flatMap, debounceTime, distinctUntilKeyChanged, distinctUntilChanged } from 'rxjs/operators';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { IntentModel, MensajeState, MensajeModel } from './mensajes/mensaje.model';
 import { ContextoModel } from './contextos/contexto.model';
@@ -43,7 +43,7 @@ export class CurrentAgenteService {
   public usuario: UserInterface;
   // # AGENTE LOADED
   /** Escucha cuando el agente termina de ser cargado */
-  public agenteLoaded$: Subject<boolean> = new Subject();
+  public loaded$: Subject<boolean> = new Subject();
   /** Número de veces que se ha recargado el agente */
   private loads = 0;
   /** Almacena la URL del API */
@@ -87,25 +87,27 @@ export class CurrentAgenteService {
     this._cache.updateData('currentAgente', this.current);
     return this._dashboard.initializeDashboard()
       .pipe(
-        // tap(data => console.log( 'dashboard', data)),
+        tap(() => console.group('init')),
         flatMap(() => this.getPath()),
-        // tap(data => console.log( 'path', data)),
-        flatMap(() => this._mensajes.getDialogFlowIntents()),
-        // tap(data => console.log( 'intent', data)),
-        flatMap(() => this._tipos.getTiposList()),
-        // tap(data => console.log( 'tipos', data)),
+        distinctUntilChanged(),
+        tap(data => console.log( 'path', data)),
         flatMap(() => this.loadFirestoreList('mensajes')),
-        // tap(data => console.log( 'mensajes', data)),
+        tap(data => console.log( 'mensajes', data)),
         flatMap(() => this._contexts.getAllContexts()),
-        // tap(data => console.log( 'context', data)),
+        tap(data => console.log( 'context', data)),
+        flatMap(() => this._mensajes.getDialogFlowIntents()),
+        tap(data => console.log( 'intent', data)),
+        flatMap(() => this._tipos.getTiposList()),
+        tap(data => console.log( 'tipos', data)),
         flatMap(() => this.loadFirestoreList('tarjetas')),
-        // tap(data => console.log( 'tarjetas', data)),
+        tap(data => console.log( 'tarjetas', data)),
         flatMap(() => this.loadFirestoreList('colecciones')),
-        // tap(data => console.log( 'colecciones', data)),
+        tap(data => console.log( 'colecciones', data)),
         map(data => {
-          // console.log( data )
+          console.log(data)
+          console.groupEnd()
           this._alerts.sendFloatNotification('Agente cargado')
-          this.agenteLoaded$.next(true)
+          this.loaded$.next(true)
           console.log( 'loaded' )
           return true
         })
@@ -123,10 +125,10 @@ export class CurrentAgenteService {
     return of( this.path );
     // this.projectId = await this._cache.getAsyncKey<string>('projectId');
   }
-
-  /** Función para la ruta en común de llamdas a firestore para cargar las listas del agente */
   private loadFirestoreList(collection: string) {
     return this.fs
+
+  /** Función para la ruta en común de llamdas a firestore para cargar las listas del agente */
       .collection(`${this.path}/${collection}`)
       .valueChanges()
       .pipe(

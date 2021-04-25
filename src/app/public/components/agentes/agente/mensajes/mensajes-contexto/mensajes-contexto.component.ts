@@ -50,6 +50,7 @@ export class MensajesByContextoComponent implements OnInit {
     this.mensajes_.list$
       .pipe(distinctUntilChanged((x, y) => x && x.length == y.length))
       .subscribe(async () => {
+        console.log( 'context mensajes' )
         await this.mensajes_
           .getMensajesListByContexto(this.contexto)
           .then((list) => {

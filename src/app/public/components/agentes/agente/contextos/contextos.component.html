@@ -13,7 +13,7 @@ cdkDropListOrientation="vertical"
         </div>
     </div>
 
-    <ng-container *ngFor="let contexto of (contextos.list$ | async) | sortBy:'asc':'index'">
+    <ng-container *ngFor="let contexto of list | sortBy:'asc':'index'">
         <div class="col s12 en-Column"
         cdkDrag cdkDragLockAxis="y"
         *ngIf="contexto.contextName != 'contextos'"
@@ -63,7 +63,7 @@ cdkDropListOrientation="vertical"
                 <ng-template #addContext>
                     <aSmart-add-contexto
                     (contextAdded)="getContextos()"
-                    [lastIndex]="contextos.list.length"
+                    [lastIndex]="list.length"
                     (unfocus)="switchAddContext = false">
                     </aSmart-add-contexto>
                 </ng-template>

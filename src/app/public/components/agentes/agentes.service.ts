@@ -47,7 +47,7 @@ public agentes$ = new Observable<AgenteModel[]>();
       .valueChanges()
       .pipe(
         debounceTime(1000),
-        map(agentes => this._cache.updateData('agentes', agentes))
+        tap(agentes => this._cache.updateData('agentes', agentes))
       )
   }
 

@@ -242,7 +242,7 @@ export class RespuestaCardComponent implements OnInit {
   openAddIntent() {
     const dialog = this._dialog.open(AddMensajeComponent, {
       width: '450px',
-      minHeight: 450
+      // minHeight: 450
     });
 
     dialog.afterClosed().subscribe((newIntent) => {

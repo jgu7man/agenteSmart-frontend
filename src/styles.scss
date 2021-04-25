@@ -133,6 +133,9 @@ mat-form-field {
     .mat-form-field-underline {
         bottom: 0 !important;
     }
+    .mat-menu-panel {
+      overflow: initial !important;
+    }
 }
 
 .mat-form-field-underline {

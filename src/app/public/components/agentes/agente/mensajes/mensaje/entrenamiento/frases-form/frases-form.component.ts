@@ -74,6 +74,7 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
       this.frasesList = frases
       this.lastIndex = this.lastIndex ? this.lastIndex : this.pageSize
 
+      // console.log( {first: this.firstIndex, last: this.lastIndex} )
       this.currentPage = this.frasesList.slice(this.firstIndex, this.lastIndex)
 
       this.getLastIndex(
@@ -149,6 +150,9 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
           this.firstIndex = this.pageIndex * this.pageSize
           this.lastIndex = this.frasesList.length
           this.currentPage = this.frasesList.slice(this.firstIndex, this.lastIndex)
+        } else {
+          this.currentPage.push(NEWPHRASE)
+          this.lastIndex++
         }
         this.newPhrase = '';
         await this._loading.waitFor(500);

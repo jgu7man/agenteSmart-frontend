@@ -65,10 +65,10 @@ export class PartParameterComponent implements OnInit {
     );
   }
 
-  normalize(value: any) {
-    console.log( value )
-    this.paramName = this._text.normalize(value)
-  }
+  // normalize(value: any) {
+  //   console.log( value )
+  //   this.paramName = this._text.normalize(value)
+  // }
 
   onTipoSelected(tipoSelected: string) {
     this.parte.entityType = tipoSelected

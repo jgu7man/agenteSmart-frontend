@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ResponsiveService } from '../../../../../services/responsive.service';
 import { CurrentAgenteService } from '../current-agente.service';
 import { IntentModel } from '../mensajes/mensaje.model';
@@ -15,7 +15,7 @@ import { first, take } from 'rxjs/operators';
     templateUrl: './bienvenida.component.html',
     styleUrls: ['./bienvenida.component.scss'],
 })
-export class BienvenidaComponent implements OnInit {
+export class BienvenidaComponent implements OnInit, OnDestroy {
     stateSubs: Subscription;
     unsaved: boolean;
 
