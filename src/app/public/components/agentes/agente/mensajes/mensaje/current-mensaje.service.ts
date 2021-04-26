@@ -190,14 +190,13 @@ export class CurrentMensajeService {
     const allTipos: (TipoEntidadModel | SystemEntitieModel)[] = tipos.concat(sysTipos)
 
     const entities = this.mensajeTypeEntities$.getValue();
-    paramList.forEach((param) => {
-      let splited = param.entityTypeDisplayName.split('@')
-      let paramEntity = splited[1]
+     paramList.forEach((param) => {
+       let splited = param.entityTypeDisplayName.split('@')
+      let paramEntity = splited[1] ? splited[1] : splited[0]
       if( paramEntity !== undefined){
         let tipoStored: TipoEntidadModel | SystemEntitieModel = entities.find(
           (t) => t && t.displayName == paramEntity
         );
-        // console.log(tipoStored)
         if (!tipoStored || tipoStored === undefined) {
           tipoStored = allTipos.find(t => t.displayName == paramEntity)
           this.mensajeTypeEntities$.next([

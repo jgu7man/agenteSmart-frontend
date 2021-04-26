@@ -29,47 +29,43 @@
                   <span><b>Sugerencias</b></span>
                 </div>
                 <div *ngSwitchDefault>
-                  <div [ngSwitch]="respuesta.tipo">
-                    <div *ngSwitchCase="'simple'">
-                      <span style="font-size: x-small"
-                        >Siguiente conversacion</span
-                      >
-                      <br />
-                      <b>{{ respuesta["nextIntent"] }}</b>
-                    </div>
+                  <div *ngIf="respuesta.tipo == 'simple'">
+                    <span style="font-size: x-small"
+                      >Siguiente conversacion</span
+                    >
+                    <br />
+                  </div>
+                  <b>{{ respuesta["nextIntent"] }}</b>
+                </div>
 
-                    <div *ngSwitchCase="'condicional'">
-                      <b>{{ respuesta.nextIntent }}</b
-                      ><br />
-                      <span style="font-size: x-small">
-                        Si {{ respuesta.result["parametro"] }}
-                        <span *ngIf="!disableEScondition()">es</span>
-                        {{ respuesta.result["condicion"] }}
-                        {{ respuesta.result["valor"] }}
-                      </span>
-                    </div>
+                <!-- Características -->
+                <div [ngSwitch]="respuesta.tipo">
 
-                    <div *ngSwitchCase="'grupo_datos'">
-                      <b>{{ respuesta.nextIntent }}</b
-                      ><br />
-                      <span style="font-size: x-small">
-                        Guarda {{ respuesta.result["key"] }} en
-                        {{ respuesta.result["coleccion"] }}
-                      </span>
-                    </div>
 
-                    <div *ngSwitchCase="'buscar'">
-                      <b>{{ respuesta.nextIntent }}</b
-                      ><br />
-                      <span style="font-size: x-small">
-                        Busca {{ respuesta.result["parametro"] }} en
-                        {{ respuesta.result["database"] }}
-                      </span>
-                    </div>
+                  <div *ngSwitchCase="'condicional'">
+                    <span style="font-size: x-small">
+                      Si {{ respuesta.result["parametro"] }}
+                      <span *ngIf="!disableEScondition()">es</span>
+                      {{ respuesta.result["condicion"] }}
+                      {{ respuesta.result["valor"] }}
+                    </span>
+                  </div>
 
-                    <div *ngSwitchDefault>
-                      <b>{{ respuesta.nextIntent }}</b>
-                    </div>
+                  <div *ngSwitchCase="'grupo_datos'">
+                    <span style="font-size: x-small">
+                      Guarda {{ respuesta.result["key"] }} en
+                      {{ respuesta.result["coleccion"] }}
+                    </span>
+                  </div>
+
+                  <div *ngSwitchCase="'buscar'">
+                    <span style="font-size: x-small">
+                      Busca {{ respuesta.result["parametro"] }} en
+                      {{ respuesta.result["database"] }}
+                    </span>
+                  </div>
+
+                  <div *ngSwitchDefault>
                   </div>
                 </div>
               </div>
@@ -163,7 +159,7 @@
               <div class="col s8">
                 <aSmart-contexto-selector
                   [contexto]="setContextSelected(respuesta.outputContexts)"
-                  (sendContextSelected)="catchContextSelected($event)"
+                  (contextSelected)="catchContextSelected($event)"
                 >
                 </aSmart-contexto-selector>
               </div>

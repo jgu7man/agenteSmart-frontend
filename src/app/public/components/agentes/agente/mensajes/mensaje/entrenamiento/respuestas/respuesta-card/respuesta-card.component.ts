@@ -1,5 +1,5 @@
 import { GdevAlert } from 'src/app/gdev-tools/src/lib/alert/alert.service';
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import {
   RespuestaModel,
@@ -18,13 +18,14 @@ import { CurrentMensajeService } from '../../../current-mensaje.service';
 import { ContextSelected } from '../../../../../contextos/contexto-selector/contexto-selector.component';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { AddMensajeComponent } from '../../../../add-mensaje/add-mensaje.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'aSmart-respuesta-card',
   templateUrl: './respuesta-card.component.html',
   styleUrls: ['./respuesta-card.component.scss'],
 })
-export class RespuestaCardComponent implements OnInit {
+export class RespuestaCardComponent implements OnInit, OnDestroy {
   /** Resive la data de la respuesta desde el arreglo padre */
   @Input() respuesta: RespuestaModel;
   /** Activa la visa para elegir acciones */
@@ -48,6 +49,7 @@ export class RespuestaCardComponent implements OnInit {
   @Output() opened: EventEmitter<void> = new EventEmitter();
 
   switchAddIntent: boolean = false;
+  mensajeSubscription: Subscription
 
   constructor(
     public respuestas_: RespuestasService,
@@ -59,15 +61,18 @@ export class RespuestaCardComponent implements OnInit {
     private _mensaje: CurrentMensajeService
   ) {
     this.result = new SimpleModel('');
-
+    this.mensajeSubscription =
+      this._mensaje.current$.subscribe(async mensaje => {
+      console.log( 'cargo mensajes en respuest card' )
+      this.contextLists = await this._cache.getDataKey<any>('contextosLists');
+      await this.setNextIntents(this.currentContext);
+    })
     this.currentContext = this._cache.getDataKey<string>('currentContexto');
     this.respuesta = new RespuestaModel('simple', this.result, 0, '*fin', []);
   }
 
   async ngOnInit() {
-    this.contextLists = await this._cache.getDataKey<any>('contextosLists');
 
-    await this.setNextIntents(this.currentContext);
     this.respuestas_.getDataForRespuestas();
     if (this.respuesta.result['suggestions']) {
       if (this.respuesta.result['suggestions'].length)
@@ -105,11 +110,13 @@ export class RespuestaCardComponent implements OnInit {
         );
         // console.log(currentIntentIndex)
         // Set next intent in the context
-        if (currentList[currentIntentIndex + 1])
+        if (currentList[currentIntentIndex + 1] ){
           this.nextMensajesList.push(currentList[currentIntentIndex + 1]);
+        }
         // Set previus intent in the context
-        if (currentList[currentIntentIndex - 1])
-          this.nextMensajesList.push(currentList[currentIntentIndex + 1]);
+        if (currentList[currentIntentIndex - 1]) {
+          this.nextMensajesList.push(currentList[currentIntentIndex - 1]);
+        }
         // Set current intent
         this.nextMensajesList.push(currentList[currentIntentIndex]);
       }
@@ -157,11 +164,13 @@ export class RespuestaCardComponent implements OnInit {
 
   async catchContextSelected(selected: ContextSelected) {
     const contextName = selected.context;
+    console.log( contextName )
     if (contextName) {
       if (!this.respuesta.outputContexts) {
         this.respuesta.outputContexts = [];
       }
       this.respuesta.outputContexts.push(contextName);
+      console.log( this.respuesta.outputContexts )
 
       // Search for nextIntentList
       if (!this.nextMensajesList && this.nextMensajesList.length < 1) {
@@ -283,13 +292,14 @@ export class RespuestaCardComponent implements OnInit {
   async validateRespuesta(respuestaObj: RespuestaModel) {
     let nextIntentContext = await this.setNextContext(respuestaObj.nextIntent);
     if (
-      respuestaObj.outputContexts &&
-      respuestaObj.outputContexts.length <= 0
+      !respuestaObj.outputContexts ||
+      respuestaObj.outputContexts.length == 0
     ) {
       respuestaObj.outputContexts = [nextIntentContext];
-    } else {
-      // respuestaObj.outputContext.push(nextIntentContext)
     }
+    // else {
+    //   respuestaObj.outputContexts.push(nextIntentContext)
+    // }
 
     if (respuestaObj.result.asDefault) {
       var defaultStored = this._mensaje.respuestasList$
@@ -302,7 +312,6 @@ export class RespuestaCardComponent implements OnInit {
       }
     }
 
-    respuestaObj.outputContexts;
     let respuestaClean,
       output = {};
     output = { ...respuestaObj.result, ...this.result };
@@ -347,6 +356,10 @@ export class RespuestaCardComponent implements OnInit {
     if (cleanRespuesta) this.respuestas_.setRespuesta(cleanRespuesta);
     this.respuesta.tipo = undefined;
     this.respuesta.result = new SimpleModel('');
+  }
+
+  ngOnDestroy() {
+    if (this.mensajeSubscription) this.mensajeSubscription.unsubscribe()
   }
 
   /** Lista de tipo de respuestas con sus respectivos estilos */

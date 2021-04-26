@@ -87,6 +87,7 @@ export class CurrentAgenteService {
     this._cache.updateData('currentAgente', this.current);
     return this._dashboard.initializeDashboard()
       .pipe(
+        // debounceTime(10000),
         tap(() => console.group('init')),
         flatMap(() => this.getPath()),
         distinctUntilChanged(),

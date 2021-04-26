@@ -64,10 +64,12 @@ export class CondicionalFormComponent implements OnInit {
     this.isOriginal = selected.isOriginal;
     this.result.parametro = selected.value;
     var selectedSplit = selected.value.split('$');
+    console.log( selectedSplit )
     var param = selectedSplit.length > 1 ? selectedSplit[1] : selectedSplit[0];
     console.log( param )
     console.log( this._mensaje.mensajeTypeEntities$.getValue() )
-    this.tipoSelected = this._mensaje.mensajeTypeEntities$
+    this.tipoSelected = this._mensaje
+      .mensajeTypeEntities$
       .getValue()
       .find((t) => t && t.displayName == param);
 

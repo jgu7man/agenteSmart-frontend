@@ -13,7 +13,7 @@ cdkDropListOrientation="vertical"
         </div>
     </div>
 
-    <ng-container *ngFor="let contexto of list | sortBy:'asc':'index'">
+    <ng-container *ngFor="let contexto of list">
         <div class="col s12 en-Column"
         cdkDrag cdkDragLockAxis="y"
         *ngIf="contexto.contextName != 'contextos'"

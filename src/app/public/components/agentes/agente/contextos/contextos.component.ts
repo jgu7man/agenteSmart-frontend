@@ -9,6 +9,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { CurrentAgenteService } from '../current-agente.service';
 import { flatMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { I } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'aSmart-contextos',
@@ -70,7 +71,8 @@ export class ContextosComponent implements OnInit, OnDestroy {
 
 
   drop( event: CdkDragDrop<any> ) {
-    moveItemInArray( this.list, event.previousIndex, event.currentIndex )
+    moveItemInArray(this.list, event.previousIndex, event.currentIndex)
+    this.list = this.list.map((i, index) => { return {...i, index } })
     this.contextos.updateIndex(this.list)
   }
 
