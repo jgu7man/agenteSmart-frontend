@@ -15,7 +15,8 @@ export class ContextoSelectorComponent implements OnInit {
     contextNameList;
     nuevoContexto;
 
-    @Input() contexto: string
+  @Input() contexto: string
+  @Input() allowCreate: boolean = true
     @Output() contextSelected: EventEmitter<ContextSelected> = new EventEmitter();
 
     constructor(private _cache: GdevCache, private _dialog: MatDialog) {}

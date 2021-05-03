@@ -19,6 +19,7 @@ import { ContextSelected } from '../../../../../contextos/contexto-selector/cont
 import { AngularFireDatabase } from '@angular/fire/database';
 import { AddMensajeComponent } from '../../../../add-mensaje/add-mensaje.component';
 import { Subscription } from 'rxjs';
+import {uniq, pull, pullAll} from 'lodash';
 
 @Component({
   selector: 'aSmart-respuesta-card',
@@ -150,6 +151,12 @@ export class RespuestaCardComponent implements OnInit, OnDestroy {
     }
   }
 
+  get isBienvenida() {
+    let intent = this._mensaje.current$.getValue()
+    console.log(  )
+    return intent.displayName == 'Default Welcome Intent'
+  }
+
   get activeIntentSelector() {
     if (this.respuesta.tipo == 'simple') {
       return false;
@@ -162,27 +169,59 @@ export class RespuestaCardComponent implements OnInit, OnDestroy {
     }
   }
 
-  async catchContextSelected(selected: ContextSelected) {
+  async catchInputContext(selected: ContextSelected) {
     const contextName = selected.context;
-    console.log( contextName )
+
+    if (contextName) {
+      if (!this.respuesta.inputContexts) {
+        this.respuesta.inputContexts = [];
+      }
+      if (!this.respuesta.outputContexts) {
+        this.respuesta.outputContexts = [];
+      }
+
+      let prevContext = this.respuesta.inputContexts[0]
+      this.respuesta.inputContexts = [contextName]
+
+      this.respuesta.outputContexts = uniq([
+        contextName,
+        ...this.respuesta.outputContexts.filter(c =>
+          c != prevContext
+        ),
+      ])
+    } else {
+      let prevContext = this.respuesta.inputContexts[0]
+      this.respuesta.inputContexts = []
+      this.respuesta.outputContexts = uniq([
+        ...pull(this.respuesta.outputContexts, prevContext),
+        ...this.respuesta.outputContexts
+      ])
+    }
+
+    console.log( this.respuesta.outputContexts )
+  }
+
+  async catchOutputContext(selected: ContextSelected) {
+    const contextName = selected.context;
     if (contextName) {
       if (!this.respuesta.outputContexts) {
         this.respuesta.outputContexts = [];
       }
       this.respuesta.outputContexts.push(contextName);
-      console.log( this.respuesta.outputContexts )
 
       // Search for nextIntentList
       if (!this.nextMensajesList && this.nextMensajesList.length < 1) {
         this.respuesta.nextIntent = '*fin';
       }
     } else {
-      this.respuesta.nextIntent = '*fin';
+      console.log( this.contextLists )
+      // this.respuesta.nextIntent = '*fin';
     }
+    console.log(this.respuesta.outputContexts)
     return this.respuesta;
   }
 
-  setContextSelected(contexts?: string[]) {
+  setPrevContextSelected(contexts?: string[]) {
     var context: string = '';
     if (contexts && contexts.length > 0) {
       if (this.contextLists) {
@@ -205,7 +244,7 @@ export class RespuestaCardComponent implements OnInit, OnDestroy {
 
   async setNextContext(nextIntent: string) {
     var nextMensaje: MensajeModel;
-    this._cache.getDataKey('contextLists')
+    // this.contextLists = this._cache.getDataKey('contextLists')
     var lists = Object.keys(this.contextLists);
     console.log(nextIntent);
     await this._loading.asyncForEach(lists, async (contextName) => {
@@ -223,29 +262,19 @@ export class RespuestaCardComponent implements OnInit, OnDestroy {
     var allIntents = this._cache.getDataKey<IntentModel[]>('intents');
     var intentSelected = allIntents.find((i) => i.displayName === change.value);
     if (intentSelected) {
-      var contextStored: string[];
-      if (
-        this.respuesta.outputContexts &&
-        this.respuesta.outputContexts.length > 0
-      ) {
-        contextStored = this.respuesta.outputContexts;
-      }
       this.respuesta.outputContexts = [];
-
-      // Validate context of grand-context
-      if (!contextStored) contextStored = []
-      contextStored.forEach((c) => {
-        if (c in this.contextLists) this.respuesta.outputContexts.push(c);
-      });
+      if (!this.respuesta.inputContexts) this.respuesta.inputContexts = []
 
       this.respuesta.outputContexts = [
         ...intentSelected.inputContextNames.map((c) =>
           c.slice(c.lastIndexOf('/') + 1)
-        ),
-        ...this.respuesta.outputContexts,
+        ).filter(c => !this.respuesta.inputContexts.includes(c)),
+        ...this.respuesta.inputContexts
       ];
-      console.log(this.respuesta.outputContexts);
+    } else {
+      this.respuesta.outputContexts = []
     }
+    console.log( this.respuesta.outputContexts )
   }
 
   openAddIntent() {
@@ -321,7 +350,7 @@ export class RespuestaCardComponent implements OnInit, OnDestroy {
       if (respuestaObj.tipo != 'buscar') {
         this._alerts.sendMessageAlert('Agrega al menos un mensaje de texto');
       }
-    } else if (output['suggestions'].length == 1) {
+    } else if (output['suggestions'] && output['suggestions'].length == 1) {
       this._alerts.sendMessageAlert(
         'Agrega 2 o más sugerencias o desactiva las sugerencias'
       );
