@@ -60,7 +60,7 @@ export class AgenteComponent implements OnInit, OnDestroy {
   }
 
   agentLinks:iNavlink[] = [
-    { path: 'bienvenida', label: 'Bienvenida', icon: 'fa-filter' },
+    { path: 'filtro', label: 'Filtro', icon: 'fa-filter' },
     { path: 'mensajes', label: 'Flujo', icon:'fa-sitemap' },
     { path: 'tipos', label: 'Tipos', icon:'fa-list-alt' },
     // { path: 'configuraciones', label: 'Configuración', icon: 'fa-cog' },

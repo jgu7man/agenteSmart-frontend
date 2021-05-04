@@ -30,7 +30,7 @@ export class FraseParametersComponent implements OnInit {
   }
 
   onParamAdded(parte: FraseParte, index: number) {
-    this.frase.parts[ index ] = parte
+    this.frase.parts[index] = parte
     this._frase.updatePhrase(this.frase)
   }
 

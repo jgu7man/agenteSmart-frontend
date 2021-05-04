@@ -53,7 +53,7 @@ const routes: Routes = [
             [
                 // { path: '', redirectTo: 'mensajes', pathMatch: 'full', },
                 { path: 'start', component: StartUiComponent },
-                { path: 'bienvenida', component: BienvenidaComponent },
+                { path: 'filtro', component: BienvenidaComponent },
                 { path: 'mensajes', component: MensajesComponent },
                 { path: 'mensaje/:name', component: MensajeComponent, },
                 { path: 'tipos', component: TiposComponent },

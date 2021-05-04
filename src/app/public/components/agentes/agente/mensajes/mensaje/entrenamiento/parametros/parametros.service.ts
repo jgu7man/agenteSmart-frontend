@@ -17,6 +17,7 @@ import { Store } from '@ngrx/store';
 import * as actions from '../../store/mensaje.actions';
 import { GdevColor } from '../../../../../../../../gdev-tools/src/lib/color/gdev-color.service';
 import { GdevCache } from '../../../../../../../../gdev-tools/src/lib/cache/gdev-cache.service';
+import { TiposService } from '../../../../tipos/tipos.service';
 
 @Injectable({
   providedIn: 'root',
@@ -44,7 +45,8 @@ export class ParametrosService {
     private store: Store<MensajeState>,
     private _color: GdevColor,
     private fs: AngularFirestore,
-    private _cache: GdevCache
+    private _cache: GdevCache,
+    private _tipos: TiposService
   ) {
     this.getFirestoredParams();
   }
@@ -59,7 +61,7 @@ export class ParametrosService {
 
   // CREATE Parametros
 
-  async addParam(param: ParametroMensaje) {
+  async addParam(param: ParametroMensaje, example?: string) {
     // console.log(param);
     var parameters = this._mensaje.current$.getValue().parameters;
     var paramInList = parameters.find(

@@ -1,43 +1,94 @@
-<div class="row param-row align-cols" *ngIf="parte.alias && parte.alias != '' ">
-
-    <!-- Valor -->
-    <div class="col s3 m3">
-        {{parte.text}}
-    </div>
-
-    <!-- Tipo de dato -->
-    <div class="col s3 m4" (click)="toSelectTipo()">
+<div class="row param-row" *ngIf="parte.alias && parte.alias != ''">
+  <div class="col s12">
+    <div class="row">
+      <!-- Tipo de dato -->
+      <div class="col s6" (click)="toSelectTipo()">
         <aSmart-tipo-selector
-        (tipoSelected)="onTipoSelected($event)"
-        [value]="parte.entityType"
-        [id]="parte.alias"
+          (tipoSelected)="onTipoSelected($event)"
+          [value]="parte.entityType"
+          [id]="parte.alias"
         ></aSmart-tipo-selector>
+      </div>
+
+      <div class="col s6">
+        <button mat-raised-button (click)="onAddTipo()">
+          Crear nuevo tipo de dato
+        </button>
+      </div>
     </div>
 
-    <!-- Nombre param -->
-    <div class="col s3 m3">
-
-        <mat-form-field>
+    <div class="row">
+      <!-- Nombre param -->
+      <div class="col s6">
+        <ng-container *ngIf="toggleAddClase; else select">
+          <mat-form-field appearance="outline" floatLabel="always">
+            <mat-label>Agregar Parámetro</mat-label>
             <input
-            matInput
-            type="text"
-            [(ngModel)]="paramName"
-            name="paramName"
-            (keypress)="reformatText($event)"
-            >
-        </mat-form-field>
+              placeholder="Lo que quiso decir..."
+              matInput
+              type="text"
+              [(ngModel)]="paramName"
+              name="paramName"
+            />
+          </mat-form-field>
+        </ng-container>
+        <ng-template #select >
+          <aSmart-value-selector
+          [tipoDisplayName]="parte.entityType"
+          [value]="parte.text"
+          (selected)="setSinonimo($event)"
+          ></aSmart-value-selector>
+        </ng-template>
+      </div>
+
+
+      <div class="col s6">
+        <ng-container *ngIf="!toggleAddClase; else add">
+          <button mat-raised-button
+          (click)="toggleAddClase = true" >
+            Agregar parámetro
+          </button>
+        </ng-container>
+        <ng-template #add >
+          <button mat-raised-button (click)="setClase()" >Agregar</button>
+        </ng-template>
+
+      </div>
 
     </div>
 
-    <!-- Eliminar parametro -->
-    <div class="col s3 m2 paramOptions">
-        <button mat-icon-button (click)="onDelete.emit()">
-            <i class="fas fa-times red-text"></i>
-        </button>
-        <button mat-icon-button (click)="addParameter()">
-            <i class="fas fa-check green-text"></i>
-        </button>
+    <div class="row">
+      <!-- Valor -->
+    <div class="col s6">
+      <mat-form-field appearance="outline">
+        <mat-label>Lo que dijo</mat-label>
+        <input matInput type="text" [value]="parte.text" readonly disabled />
+      </mat-form-field>
+    </div>
+
+    <div class="col s6">
+      <button mat-raised-button
+      (click)="setSinonimo()"
+      [disabled]="disableSinonimo"
+      >Agregar como sinónimo</button>
+    </div>
     </div>
 
 
+
+
+
+  </div>
+
+  <!-- Eliminar parametro -->
+  <div class="col s12 paramOptions right">
+    <button mat-icon-button (click)="onDelete.emit()">
+      <i class="fas fa-times red-text"></i>
+      <!-- Eliminar -->
+    </button>
+    <button mat-icon-button (click)="_frases.paramAdded$.next()">
+      <i class="fas fa-check green-text"></i>
+      <!-- Guardar -->
+    </button>
+  </div>
 </div>
