@@ -51,10 +51,10 @@ const routes: Routes = [
         { path: 'editar_agente/:id', component: EditAgenteComponent, },
         { path: 'agente/:id', component: AgenteComponent, data: {section: 'Agente'}, children:
             [
-                // { path: '', redirectTo: 'mensajes', pathMatch: 'full', },
+                // { path: '', redirectTo: 'flujo', pathMatch: 'full', },
                 { path: 'start', component: StartUiComponent },
                 { path: 'filtro', component: BienvenidaComponent },
-                { path: 'mensajes', component: MensajesComponent },
+                { path: 'flujo', component: MensajesComponent },
                 { path: 'mensaje/:name', component: MensajeComponent, },
                 { path: 'tipos', component: TiposComponent },
                 { path: 'configuraciones', component: AgentConfigComponent },

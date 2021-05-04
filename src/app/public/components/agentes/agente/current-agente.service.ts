@@ -1,20 +1,18 @@
 import { Injectable } from '@angular/core';
 import { AgenteModel } from '../init-agente/agente.model';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { AuthService, UserInterface } from '../../../../admin/auth/auth.service';
+import { UserInterface } from '../../../../admin/auth/auth.service';
 import { GdevCache } from '../../../../gdev-tools/src/lib/cache/gdev-cache.service';
-import { Subject, Observable, Subscription, of, BehaviorSubject, zip, forkJoin } from 'rxjs';
-import { filter, concatAll, pluck, tap, map, flatMap, debounceTime, distinctUntilKeyChanged, distinctUntilChanged } from 'rxjs/operators';
-import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
-import { IntentModel, MensajeState, MensajeModel } from './mensajes/mensaje.model';
+import { Subject, Observable, Subscription, of } from 'rxjs';
+import { filter, tap, map, flatMap, distinctUntilChanged } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { IntentModel,  MensajeModel } from './mensajes/mensaje.model';
 import { ContextoModel } from './contextos/contexto.model';
-import { SystemEntitieModel, TipoEntidadModel } from './tipos/tipo.model';
 import { ColeccionModel } from '../../colecciones/collection.interface';
 import { TarjetaModel } from '../../tarjetas/tarjeta.model';
 import { HttpClient } from '@angular/common/http';
 import { GdevAlert } from '../../../../gdev-tools/src/lib/alert/alert.service';
 import { GdevLoading } from '../../../../gdev-tools/src/lib/loading/loading.service';
-import { SystemEntitiesService } from '../../../../admin/system/system-entities.service';
 import { environment } from '../../../../../environments/environment';
 import firebase from 'firebase/app'
 import { AgentesService } from '../agentes.service';
@@ -87,25 +85,27 @@ export class CurrentAgenteService {
     this._cache.updateData('currentAgente', this.current);
     return this._dashboard.initializeDashboard()
       .pipe(
-        // debounceTime(10000),
-        tap(() => console.group('init')),
+        tap(() => {
+          console.group('init')
+          this._loading.toggleWaitingSpinner('open')
+        }),
         flatMap(() => this.getPath()),
         distinctUntilChanged(),
-        tap(data => console.log( 'path', data)),
+        tap(() => console.log( 'path loaded', )),
         flatMap(() => this.loadFirestoreList('mensajes')),
-        tap(data => console.log( 'mensajes', data)),
+        tap(() => console.log( 'mensajes loaded', )),
         flatMap(() => this._contexts.getAllContexts()),
-        tap(data => console.log( 'context', data)),
+        tap(() => console.log( 'context loaded', )),
         flatMap(() => this._mensajes.getDialogFlowIntents()),
-        tap(data => console.log( 'intent', data)),
+        tap(() => console.log( 'intent loaded', )),
         flatMap(() => this._tipos.getTiposList()),
-        tap(data => console.log( 'tipos', data)),
+        tap(() => console.log( 'tipos loaded', )),
         flatMap(() => this.loadFirestoreList('tarjetas')),
-        tap(data => console.log( 'tarjetas', data)),
+        tap(() => console.log( 'tarjetas loaded', )),
         flatMap(() => this.loadFirestoreList('colecciones')),
-        tap(data => console.log( 'colecciones', data)),
-        map(data => {
-          console.log(data)
+        tap(() => console.log( 'colecciones loaded', )),
+        tap(() => {
+          this._loading.toggleWaitingSpinner('close')
           console.groupEnd()
           this._alerts.sendFloatNotification('Agente cargado')
           this.loaded$.next(true)
