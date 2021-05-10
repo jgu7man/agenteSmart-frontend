@@ -23,6 +23,8 @@
 
   <!-- BODY -->
   <div class="col s12">
+
+    <!-- TIPO DE DATO -->
     <div class="row">
       <!-- Tipo de dato -->
       <div class="col s6" (click)="toSelectTipo()">
@@ -40,32 +42,55 @@
       </div>
     </div>
 
+
+    <!-- PARÁMETRO -->
     <div class="row">
       <!-- Nombre param -->
       <div class="col s6">
-        <ng-container *ngIf="toggleAddClase; else select">
-          <mat-form-field appearance="outline" floatLabel="always">
-            <mat-label>Agregar Parámetro</mat-label>
+        <!-- Define entity and param -->
+        <ng-container *ngIf="!isSystemEntity; else customParam">
+          <!-- Add new entity at entityType -->
+          <ng-container *ngIf="toggleAddClase; else select">
+            <mat-form-field appearance="outline" floatLabel="always">
+              <mat-label>Agregar Parámetro</mat-label>
+              <input
+                placeholder="Lo que quiso decir..."
+                matInput
+                type="text"
+                [(ngModel)]="parte.text"
+                name="paramName"
+              />
+            </mat-form-field>
+          </ng-container>
+          <!-- Select entityType -->
+          <ng-template #select >
+            <aSmart-value-selector
+            [tipoDisplayName]="parte.entityType"
+            [value]="parte.alias"
+            (selected)="onEntitySelect($event)"
+            ></aSmart-value-selector>
+          </ng-template>
+        </ng-container>
+        <!-- Defines CUSTOM PARAM -->
+        <ng-template #customParam >
+          <mat-form-field appearance="outline">
+            <mat-label>Parámetro Personalizado</mat-label>
             <input
-              placeholder="Lo que quiso decir..."
+              placeholder="Nombre del parámetro"
               matInput
               type="text"
-              [(ngModel)]="parte.text"
+              (change)="setCustomParam($event)"
+              [value]="parte.alias"
+              (keypress)="reformatText($event)"
               name="paramName"
             />
           </mat-form-field>
-        </ng-container>
-        <ng-template #select >
-          <aSmart-value-selector
-          [tipoDisplayName]="parte.entityType"
-          [value]="parte.text"
-          (selected)="setSinonimo($event)"
-          ></aSmart-value-selector>
         </ng-template>
+
       </div>
 
 
-      <div class="col s6">
+      <div class="col s6" *ngIf="!isSystemEntity" >
         <ng-container *ngIf="!toggleAddClase; else add">
           <button mat-raised-button
           (click)="toggleAddClase = true" >
@@ -73,23 +98,24 @@
           </button>
         </ng-container>
         <ng-template #add >
-          <button mat-raised-button (click)="setClase()" >Agregar</button>
+          <button mat-raised-button
+          (click)="setNewEntity()">Agregar</button>
         </ng-template>
-
       </div>
-
     </div>
 
+
+    <!-- VALOR -->
     <div class="row">
       <!-- Valor -->
     <div class="col s6">
       <mat-form-field appearance="outline">
         <mat-label>Lo que dijo</mat-label>
-        <input matInput type="text" [value]="parte.text" readonly disabled />
+        <input matInput type="text" [(ngModel)]="parte.text" readonly disabled />
       </mat-form-field>
     </div>
 
-    <div class="col s6">
+    <div class="col s6" *ngIf="!isSystemEntity">
       <button mat-raised-button
       (click)="setSinonimo()"
       [disabled]="disableSinonimo || synonymExists"

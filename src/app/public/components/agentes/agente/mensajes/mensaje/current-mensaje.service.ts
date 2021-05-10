@@ -109,7 +109,6 @@ export class CurrentMensajeService {
       }),
       flatMap((mensaje) => this.getRespuestasList(mensaje.name))
     ).subscribe(data => {
-      console.log('mensaje loaded')
     })
 
 

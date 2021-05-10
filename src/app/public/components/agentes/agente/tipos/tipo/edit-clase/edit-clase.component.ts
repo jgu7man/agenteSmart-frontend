@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { COMMA, TAB } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { Clase } from '../../tipo.model';
+import { iEntity } from '../../tipo.model';
 import { GdevText } from 'src/app/services/text.service';
 import { CurrentTipoService } from '../current-tipo.service';
 import { GdevLoading} from 'src/app/gdev-tools/src/lib/loading/loading.service';
@@ -30,7 +30,7 @@ export class EditClaseComponent implements OnInit, OnDestroy{
   /** Define el tipo de activadores de separación en el "Chips Field" */
   readonly separatorKeysCodes: number[] = [COMMA, TAB];
   /** Recibe la clase en cuestión */
-  @Input() clase: Clase;
+  @Input() clase: iEntity;
   /** Recibe el la configuración del tipo */
   @Input() kind: 'KIND_MAP' | 'KIND_LIST';
   /** Controlador del "Chips Filed" */

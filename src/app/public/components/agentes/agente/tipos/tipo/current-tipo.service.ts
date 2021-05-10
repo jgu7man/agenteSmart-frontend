@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { TipoEntidadModel, Clase } from './../tipo.model';
+import { TipoEntidadModel, iEntity, iEntityType } from './../tipo.model';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { GdevAlert, GdevCache, GdevLoading } from 'src/app/gdev-tools/src/public-api';
@@ -57,7 +57,7 @@ export class CurrentTipoService {
 
   // # UPDATE TIPO
   /** Prepara la entity para ser actualizada en el backend y posterior lo guarda en Firestore */
-  public async updateTipo(tipo: TipoEntidadModel) {
+  public async updateTipo(tipo: iEntityType) {
     // GdevLoading animation
     this._loading.toggleWaitingSpinner('open');
 
@@ -82,7 +82,7 @@ export class CurrentTipoService {
   }
 
   /** Actualiza la Entity en el backend */
-  private _putEntityRequest(entityType: TipoEntidadModel) {
+  private _putEntityRequest(entityType: iEntityType) {
     return new Promise((resolve, reject) => {
       this._http
         .put(this._url, { entityType: entityType })
@@ -120,18 +120,18 @@ export class CurrentTipoService {
 
 
   /** Obtiene la clase que solicita */
-  getClase(name?: string): Clase {
+  getClase(name?: string): iEntity {
     const tipo = this.current$.getValue()
     if ( name || tipo.body.entities) {
       return tipo.body.entities.find(e => e.value == name)
     } else {
-      return <Clase>{value: '', synonyms: []}
+      return <iEntity>{value: '', synonyms: []}
     }
   }
 
 
   /** Agrega una clase a la entity seleccionada por nombre */
-  async setClase(clase: Clase) {
+  async setClase(clase: iEntity) {
     var current = this.current$.getValue()
     if (current.body.entities && current.body.entities.length > 0) {
       var clasesList = current.body.entities;
@@ -168,14 +168,14 @@ export class CurrentTipoService {
 
   /** Agrega sinónimos a la entity actual */
   async setSinonimo(
-  clase: Clase,
+  clase: iEntity,
   sinonimo: string,
   action: 'add' | 'del'
   ) {
 
     // Obtener los datos actuales
     var current = this.current$.getValue()
-    var clasesList: Clase[] = current.body.entities;
+    var clasesList: iEntity[] = current.body.entities;
     var claseIndex = clasesList.findIndex((c) => c.value === clase.value);
 
     // Si no existe la clase, se agrega a la lista actual

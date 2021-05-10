@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Clase } from '../../tipo.model';
+import { iEntity } from '../../tipo.model';
 import { CurrentTipoService } from '../current-tipo.service';
 
 @Component({
@@ -18,13 +18,13 @@ export class ClaseItemComponent implements OnInit {
   /** Recibe y establece el tipo de vista de lista a mapa */
   @Input() kind: 'KIND_MAP' | 'KIND_LIST';
   /** Emite evento cuando la clase fue editada */
-  @Output() claseEdited = new EventEmitter<Clase>();
+  @Output() claseEdited = new EventEmitter<iEntity>();
   /** Emite evento cuando la clase fue borrada */
   @Output() claseDeleted = new EventEmitter<boolean>();
   /** Emite evento cuando la clase se cerró */
   @Output() closeClase = new EventEmitter<boolean>();
   /** Almacena la clase filtrada por id */
-  public clase: Clase;
+  public clase: iEntity;
 
   constructor(
     public tipo_: CurrentTipoService

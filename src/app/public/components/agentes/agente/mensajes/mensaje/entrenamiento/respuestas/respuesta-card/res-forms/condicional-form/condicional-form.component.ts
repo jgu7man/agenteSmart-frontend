@@ -24,10 +24,10 @@ export class CondicionalFormComponent implements OnInit {
   @Output() onRespChanges: EventEmitter<CondicionalModel> = new EventEmitter();
 
   condicionesList: Condition[] = [
-    { displayText: 'existe', operator: 'existe' },
-    { displayText: 'no existe', operator: 'no_existe' },
     { displayText: 'igual a', operator: 'igual' },
     { displayText: 'diferente a ', operator: 'diferente' },
+    { displayText: 'existe', operator: 'existe' },
+    { displayText: 'no existe', operator: 'no_existe' },
     { displayText: 'mayor que', operator: 'mayor' },
     { displayText: 'menor que ', operator: 'menor' },
     { displayText: 'mayor o igual que', operator: 'mayor_igual' },
@@ -42,9 +42,16 @@ export class CondicionalFormComponent implements OnInit {
     this.result = new CondicionalModel('', '', '');
   }
 
-  async ngOnInit() {}
+  async ngOnInit() {
+    if (this.result.parametro) {
+      this.tipoSelected = this._mensaje
+      .mensajeTypeEntities$
+      .getValue()
+      .find((t) => t && t.displayName == this.result.parametro);
+    }
+  }
 
-  disableValue() {
+  get disableValue() {
     return (
       this.result.condicion == 'existe' ||
       this.result.condicion == 'no_existe' ||
@@ -60,21 +67,33 @@ export class CondicionalFormComponent implements OnInit {
     }
   }
 
-  onParamChange(selected: ParamSelected) {
-    this.isOriginal = selected.isOriginal;
-    this.result.parametro = selected.value;
-    var selectedSplit = selected.value.split('$');
-    console.log( selectedSplit )
-    var param = selectedSplit.length > 1 ? selectedSplit[1] : selectedSplit[0];
-    console.log( param )
+  onParamChange(selected: string) {
+    console.log( selected )
+    let displayName = selected.startsWith('@') ?
+      selected.substring(1) : selected
+
+    let paramFound = this._params.getParamByName(displayName);
+    if (paramFound) {
+      this.isOriginal = paramFound.value.split('.').length > 1 ? true : false;
+    }
+    this.result.parametro = displayName;
+    // var selectedSplit = selected.value.split('$');
+    // console.log( selectedSplit )
+    // var param = selectedSplit.length > 1 ? selectedSplit[1] : selectedSplit[0];
+    // console.log( param )
     console.log( this._mensaje.mensajeTypeEntities$.getValue() )
     this.tipoSelected = this._mensaje
       .mensajeTypeEntities$
       .getValue()
-      .find((t) => t && t.displayName == param);
+      .find((t) => t && t.displayName == displayName);
 
     console.log( this.tipoSelected )
     this.onRespChanges.emit(this.result);
+  }
+
+  get isntSystem() {
+    return this.tipoSelected && 'entities' in this.tipoSelected
+    ? this.tipoSelected as TipoEntidadModel : false
   }
 
   validateOriginal() {
@@ -88,7 +107,7 @@ export class CondicionalFormComponent implements OnInit {
   }
 
   entitiesOf(tipoSelected: TipoEntidadModel | SystemEntitieModel) {
-    if ( 'entities' in tipoSelected) {
+    if ('entities' in tipoSelected) {
       return tipoSelected.entities;
     }
   }

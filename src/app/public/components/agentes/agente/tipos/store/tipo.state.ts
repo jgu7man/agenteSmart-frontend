@@ -1,11 +1,11 @@
-import { TipoEntidadModel } from '../tipo.model';
+import { iEntityType, TipoEntidadModel } from '../tipo.model';
 
 export class TipoState {
     saved: boolean
     selected: boolean
-    body: TipoEntidadModel
+    body: iEntityType
     name: string
-     constructor( body: TipoEntidadModel ) {
+     constructor( body: iEntityType ) {
          this.saved = true
          this.body = body
          this.name = body.name

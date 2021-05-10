@@ -1,5 +1,5 @@
 import { GdevAlert } from 'src/app/gdev-tools/src/lib/alert/alert.service';
-import { Component, OnInit, Input, EventEmitter, Output, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import {
   RespuestaModel,
@@ -52,6 +52,8 @@ export class RespuestaCardComponent implements OnInit, OnDestroy {
   switchAddIntent: boolean = false;
   mensajeSubscription: Subscription
 
+  @ViewChild('respuestaCard') public ownElement: ElementRef
+
   constructor(
     public respuestas_: RespuestasService,
     private _alerts: GdevAlert,
@@ -64,7 +66,6 @@ export class RespuestaCardComponent implements OnInit, OnDestroy {
     this.result = new SimpleModel('');
     this.mensajeSubscription =
       this._mensaje.current$.subscribe(async mensaje => {
-      console.log( 'cargo mensajes en respuest card' )
       this.contextLists = await this._cache.getDataKey<any>('contextosLists');
       await this.setNextIntents(this.currentContext);
     })

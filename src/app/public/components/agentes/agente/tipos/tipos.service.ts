@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { GdevLoading } from 'src/app/gdev-tools/src/lib/loading/loading.service';
 import { AngularFirestore, CollectionReference } from '@angular/fire/firestore';
 import { GdevCache } from 'src/app/gdev-tools/src/lib/cache/gdev-cache.service';
-import { TipoEntidadModel, SystemEntitieModel, Clase } from './tipo.model';
+import { TipoEntidadModel, SystemEntitieModel, iEntity, iEntityType } from './tipo.model';
 import { GdevText } from 'src/app/services/text.service';
 import { Subject, Observable, of, zip } from 'rxjs';
 import { map, tap, flatMap, take } from 'rxjs/operators';
@@ -50,10 +50,10 @@ export class TiposService {
   }
 
   /** Define la ruta de firestore */
-  public tiposCollection(): CollectionReference<TipoEntidadModel> {
+  public tiposCollection(): CollectionReference<iEntityType> {
     this.agentePath = this._cache.getDataKey('agentePath');
     this.tiposPath = `${this.agentePath}/tipos`;
-    const tiposRef = this._afs.collection<TipoEntidadModel>(this.tiposPath).ref;
+    const tiposRef = this._afs.collection<iEntityType>(this.tiposPath).ref;
     return tiposRef;
   }
 
@@ -86,13 +86,13 @@ export class TiposService {
     if (tipoInList < 0) {
       console.log('nueva entity');
       // create entity API
-      let newEntity = await this._postCreateEntity({ ...tipo });
+      let newEntity = await this._postCreateEntity({ ...tipo.value });
       console.log(newEntity);
       // Get clean entity Id
       const resourceID = newEntity.name.slice(
         newEntity.name.lastIndexOf('/') + 1
       );
-      const newTipo:TipoEntidadModel = { ...tipo, name: newEntity.name };
+      const newTipo:iEntityType = { ...tipo.value, name: newEntity.name };
 
       // Save tipo in firestore
       await this.tiposCollection().doc(resourceID).set(newTipo);
@@ -110,7 +110,7 @@ export class TiposService {
 
   /** Crea el entity en el backend */
   private _postCreateEntity(
-    entityType: TipoEntidadModel
+    entityType: iEntityType
   ): Promise<TipoEntidadModel> {
     // NOTE POST /entity Necesitas enviar un entityType valido
     // LINK https://googleapis.dev/nodejs/dialogflow/latest/google.cloud.dialogflow.v2.IEntityType.html
@@ -148,8 +148,9 @@ export class TiposService {
   public closeCreateDialog: Subject<any> = new Subject();
 
 
-  async putClaseOnTipo(displayName: string, entity: Clase) {
-    console.log( displayName )
+  async putClaseOnTipo(displayName: string, entity: iEntity) {
+    try {
+      console.log( displayName )
     displayName = displayName.split('@').length > 1
       ? displayName.split('@')[1] : displayName;
 
@@ -165,8 +166,9 @@ export class TiposService {
       tipo.entities = [...tipo.entities, entity]
       await this._tipo.updateTipo(tipo)
       this.getTiposList().pipe(take(1)).subscribe()
+      return tipo
     } else {
-      const synonyms = difference(entityInList.synonyms, entity.synonyms)
+      const synonyms = difference( entity.synonyms, entityInList.synonyms,)
       console.log( synonyms )
 
       if (synonyms.length > 0) {
@@ -175,7 +177,13 @@ export class TiposService {
         console.log( tipo )
         await this._tipo.updateTipo(tipo)
         this.getTiposList().pipe(take(1)).subscribe()
+        return tipo
       }
+    }
+    } catch (error) {
+      console.error(error)
+      this._alerts.sendError('Error', error)
+      throw error
     }
   }
 

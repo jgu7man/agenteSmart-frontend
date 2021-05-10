@@ -9,7 +9,7 @@ import { GdevAlert } from 'src/app/gdev-tools/src/lib/alert/alert.service';
 import { finalize } from 'rxjs/operators';
 import { GdevCache } from '../../../../gdev-tools/src/lib/cache/gdev-cache.service';
 import { UserInterface } from '../../../../admin/auth/auth.service';
-import { TipoEntidadModel, Clase } from '../../agentes/agente/tipos/tipo.model';
+import { TipoEntidadModel, iEntity } from '../../agentes/agente/tipos/tipo.model';
 
 @Injectable({ providedIn: 'root' })
 export class GdevStoreProductsService {
@@ -80,7 +80,7 @@ export class GdevStoreProductsService {
         name: string
     ) {
         try {
-            var productClase: Clase = {
+            var productClase: iEntity = {
                 value: referencia,
                 synonyms: sinonimos,
             };
@@ -178,7 +178,7 @@ export class GdevStoreProductsService {
             console.log(productObject);
             await this.productsRef.doc(product.id).update(productObject);
             let typesDoc = await this.typesDocRef.get();
-            var productClase: Clase = {
+            var productClase: iEntity = {
                 value: product.referencia,
                 synonyms: product.sinonimos,
             };

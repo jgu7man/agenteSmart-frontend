@@ -4,6 +4,9 @@ import {
     OnDestroy,
     ViewChildren,
     QueryList,
+    ViewChild,
+    Output,
+    EventEmitter,
 } from '@angular/core';
 import { RespuestaModel, SimpleModel } from './respuesta.model';
 import { RespuestasService } from './respuestas.service';
@@ -30,6 +33,8 @@ export class RespuestasComponent implements OnInit, OnDestroy {
   @ViewChildren(RespuestaCardComponent) cards: QueryList<RespuestaCardComponent>;
 
   openedCard: number;
+
+  @Output() lastPositionChange = new EventEmitter<number>();
 
     constructor(
         private _respuestas: RespuestasService,
@@ -70,7 +75,10 @@ export class RespuestasComponent implements OnInit, OnDestroy {
         ]
       );
         await this._loading.waitFor(500);
-        this.cards.last.switchEditResp = true;
+      this.cards.last.switchEditResp = true;
+      let lastPosition = this.cards.last.ownElement.nativeElement.offsetTop
+      this.lastPositionChange.emit(lastPosition);
+      // window.scrollTo(lastPosition)
     }
 
 

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ResponsiveService } from '../../../../../services/responsive.service';
 import { CurrentAgenteService } from '../current-agente.service';
 import { IntentModel } from '../mensajes/mensaje.model';
@@ -17,7 +17,8 @@ import { first, take } from 'rxjs/operators';
 })
 export class BienvenidaComponent implements OnInit, OnDestroy {
     stateSubs: Subscription;
-    unsaved: boolean;
+  unsaved: boolean;
+  @ViewChild('respuestas') respuestasPanel: ElementRef;
 
     constructor(
         public responsive: ResponsiveService,
@@ -51,6 +52,10 @@ export class BienvenidaComponent implements OnInit, OnDestroy {
           'No se encontró el intent de bienvenida. Restáuralo en las configuraciones del agente.'
       );
     }
+
+  onLastChange(position: number) {
+    this.respuestasPanel.nativeElement.scrollTop = position
+  }
 
     ngOnDestroy() {
         this.stateSubs.unsubscribe();

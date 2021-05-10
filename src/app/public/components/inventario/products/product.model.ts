@@ -1,4 +1,4 @@
-import { Clase } from '../../agentes/agente/tipos/tipo.model';
+import { iEntity } from '../../agentes/agente/tipos/tipo.model';
 export class GdevStoreProductModel {
     constructor (
         public referencia?: string,

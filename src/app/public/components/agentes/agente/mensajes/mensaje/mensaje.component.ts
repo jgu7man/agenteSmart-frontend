@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ResponsiveService } from '../../../../../../services/responsive.service';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { CurrentMensajeService } from './current-mensaje.service';
@@ -19,6 +19,7 @@ export class MensajeComponent implements OnInit, OnDestroy {
   private stateSubs: Subscription
   private intentName: string
   private currentContexto: string
+  @ViewChild('respuestas') respuestasPanel: ElementRef;
 
   constructor (
     public responsive: ResponsiveService,
@@ -59,6 +60,11 @@ export class MensajeComponent implements OnInit, OnDestroy {
         }
       })
   }
+
+  onLastChange(position: number) {
+    this.respuestasPanel.nativeElement.scrollTop = position
+  }
+
 
 
 

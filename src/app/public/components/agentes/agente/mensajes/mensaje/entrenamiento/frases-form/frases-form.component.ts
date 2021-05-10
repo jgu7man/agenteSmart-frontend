@@ -48,7 +48,7 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
   frasesList: FraseEntrenamiento[] = []
 
   @ViewChild('newPhraseInput') newPhraseInput: ElementRef;
-  @ViewChild('accordeon') accordeon: MatAccordion;
+  @ViewChild('accordeon') accordion: MatAccordion;
   @ViewChildren('frase') frasePanels: QueryList<MatExpansionPanel>;
   @ViewChildren(FraseItemComponent) prhaseList: QueryList<FraseItemComponent>;
   @ViewChildren(FraseParametersComponent) parametersList: QueryList<
@@ -115,7 +115,7 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     this.paramAddedSub = this.$frases.paramAdded$.subscribe(() => {
       console.log( 'added' )
-      this.accordeon.closeAll();
+      this.accordion.closeAll();
     });
 
   }
@@ -157,7 +157,7 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         this.newPhrase = '';
         await this._loading.waitFor(500);
-        this.accordeon.closeAll();
+        this.accordion.closeAll();
       });
     }
   }

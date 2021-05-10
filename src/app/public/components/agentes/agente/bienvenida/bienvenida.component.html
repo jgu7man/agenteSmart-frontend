@@ -33,8 +33,10 @@
             </div>
 
         </div>
-        <div strechHeight class="col s12 m6" id="resp-manager">
-            <aSmart-respuestas></aSmart-respuestas>
+        <div strechHeight class="col s12 m6" id="resp-manager" #respuestas>
+            <aSmart-respuestas
+            (lastPositionChange)="onLastChange($event)"
+            ></aSmart-respuestas>
         </div>
     </ng-container>
 

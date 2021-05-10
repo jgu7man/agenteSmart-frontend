@@ -41,8 +41,8 @@ export class TipoBodyComponent implements OnInit {
    */
   onKindChange(event: MatCheckboxChange) {
     let tipoState = this.tipo_.current$.getValue()
-    this.tipo = {
-        ...this.tipo,
+    this.tipo.value = {
+        ...this.tipo.value,
         kind: event.checked ? 'KIND_MAP' : 'KIND_LIST',
       }
     this.tipo_.current$.next({...tipoState, body:this.tipo, saved: false})
@@ -51,8 +51,8 @@ export class TipoBodyComponent implements OnInit {
   /** Define el tipo de expansión */
   onExpantionChange(event: MatCheckboxChange) {
     let tipoState = this.tipo_.current$.getValue()
-    this.tipo = {
-        ...this.tipo,
+    this.tipo.value = {
+        ...this.tipo.value,
         autoExpansionMode: event.checked
           ? 'AUTO_EXPANSION_MODE_DEFAULT'
           : 'AUTO_EXPANSION_MODE_UNSPECIFIED',
@@ -63,8 +63,8 @@ export class TipoBodyComponent implements OnInit {
   /** Cambia la flexibilidad de palabra */
   onFuzzyChange(event: MatCheckboxChange) {
     let tipoState = this.tipo_.current$.getValue()
-    this.tipo = {
-        ...this.tipo,
+    this.tipo.value = {
+        ...this.tipo.value,
         enableFuzzyExtraction: event.checked ? true : false,
       }
       this.tipo_.current$.next({...tipoState, body:this.tipo, saved: false})

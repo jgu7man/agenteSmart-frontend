@@ -1,16 +1,21 @@
 <!-- Parámetro -->
 <div class="row">
     <div class="col s4 resp-label">
-        Si
+        Si el dato
         <i class="fas fa-info-circle"
         matTooltip="Elige un parámetro de la lista el cuál comparar"
         ></i>
     </div>
     <div class="col s8">
-        <aSmart-param-selector
+      <aSmart-tipo-selector
+          (tipoSelected)="onParamChange($event)"
+          [value]="result.parametro"
+        ></aSmart-tipo-selector>
+
+        <!-- <aSmart-param-selector
             [paramSelected]="setParameter()"
             (onParamaSelected)="onParamChange($event)"
-        ></aSmart-param-selector>
+        ></aSmart-param-selector> -->
     </div>
 </div>
 <!-- Condición -->
@@ -22,23 +27,25 @@
         ></i>
     </div>
     <div class="col s8">
-        <mat-select
+        <mat-form-field appearance="outline">
+          <mat-select
             placeholder="condición"
             [(ngModel)]="result.condicion"
             name="condition"
             (selectionChange)="onRespChanges.emit(result)"
-        >
+          >
             <mat-option
                 *ngFor="let condition of condicionesList"
                 [value]="condition.displayText"
             >
                 {{ condition.displayText }}
             </mat-option>
-        </mat-select>
+          </mat-select>
+        </mat-form-field>
     </div>
 </div>
 <!-- Valor -->
-<div class="row" *ngIf="!disableValue()" >
+<div class="row" *ngIf="!disableValue" >
     <div class="col s4 resp-label">
         Valor
         <i class="fas fa-info-circle"
@@ -48,20 +55,12 @@
     <div class="col s8">
 
         <!-- Si no es original muestra las opciones -->
-        <ng-container *ngIf="validateOriginal(); else original">
-            <mat-select
-                placeholder="Valor"
-                [(ngModel)]="result.valor"
-                name="valor"
-                (selectionChange)="onRespChanges.emit(result)"
-            >
-                <mat-option
-                    *ngFor="let valor of entitiesOf(tipoSelected)"
-                    [value]="valor.value"
-                >
-                    {{ valor.value }}
-                </mat-option>
-            </mat-select>
+        <ng-container *ngIf="isntSystem as tipo; else original">
+            <aSmart-value-selector
+            [tipoDisplayName]="tipo.displayName"
+            [value]="result.valor"
+            (selected)="result.valor = $event"
+            ></aSmart-value-selector>
         </ng-container>
 
         <!-- Recibe cualquier valor -->

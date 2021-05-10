@@ -12,7 +12,7 @@
 
 
     <ng-container *ngIf="(mensaje_.respuestasList$ | async) as respuestas; else sinRespuestas">
-      <div class="row respuestasList" *ngIf="respuestas.length; else sinRespuestas" (cdkDropListDropped)="drop($event)" cdkDropList >
+      <div class="row respuestasList" *ngIf="respuestas.length; else sinRespuestas" (cdkDropListDropped)="drop($event)" cdkDropList #respuestasList >
         <div class="respuestaItem"
         *ngFor="let respuesta of respuestas; let i = index" cdkDrag
         [cdkDragDisabled]="openedCard == i">

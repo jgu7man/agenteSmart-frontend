@@ -19,7 +19,10 @@ export class ValueSelectorComponent implements OnInit, OnDestroy {
   clases: string[] = [];
   // @Input() tipoDisplayName: string;
   private _displayName : BehaviorSubject<string> = new BehaviorSubject('');
-  @Input() set tipoDisplayName(name: string) { this._displayName.next(name); }
+  @Input() set tipoDisplayName(name: string) {
+    let displayName = name.startsWith('@') ? name.substring(1) : name
+    this._displayName.next(displayName);
+  }
   get tipoDisplayName() { return this._displayName.getValue()}
 
   @Input() value: string
