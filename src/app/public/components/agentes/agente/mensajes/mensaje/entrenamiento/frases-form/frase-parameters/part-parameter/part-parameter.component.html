@@ -1,4 +1,27 @@
 <div class="row param-row" *ngIf="parte.alias && parte.alias != ''">
+
+  <!-- HEADER -->
+  <!-- Texto seleccionado -->
+  <div class="col l10">
+    <p>"<b>{{parte.text}}</b>"
+      <mat-divider [inset]="true"></mat-divider>
+    </p>
+  </div>
+
+  <!-- Eliminar parametro -->
+  <div class="col l2 paramOptions right">
+    <button mat-icon-button (click)="onDelete.emit()">
+      <i class="fas fa-times red-text"></i>
+      <!-- Eliminar -->
+    </button>
+    <button mat-icon-button (click)="_frases.paramAdded$.next()">
+      <i class="fas fa-check green-text"></i>
+      <!-- Guardar -->
+    </button>
+  </div>
+
+
+  <!-- BODY -->
   <div class="col s12">
     <div class="row">
       <!-- Tipo de dato -->
@@ -27,7 +50,7 @@
               placeholder="Lo que quiso decir..."
               matInput
               type="text"
-              [(ngModel)]="paramName"
+              [(ngModel)]="parte.text"
               name="paramName"
             />
           </mat-form-field>
@@ -69,7 +92,8 @@
     <div class="col s6">
       <button mat-raised-button
       (click)="setSinonimo()"
-      [disabled]="disableSinonimo"
+      [disabled]="disableSinonimo || synonymExists"
+      [matTooltip]="addSynonymToolTip "
       >Agregar como sinónimo</button>
     </div>
     </div>
@@ -80,15 +104,5 @@
 
   </div>
 
-  <!-- Eliminar parametro -->
-  <div class="col s12 paramOptions right">
-    <button mat-icon-button (click)="onDelete.emit()">
-      <i class="fas fa-times red-text"></i>
-      <!-- Eliminar -->
-    </button>
-    <button mat-icon-button (click)="_frases.paramAdded$.next()">
-      <i class="fas fa-check green-text"></i>
-      <!-- Guardar -->
-    </button>
-  </div>
+
 </div>

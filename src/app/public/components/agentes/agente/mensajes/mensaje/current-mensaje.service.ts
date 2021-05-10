@@ -100,7 +100,7 @@ export class CurrentMensajeService {
     this.intentName = displayNameOname
     this._cache.updateData('currentContexto', this.currentContexto);
     of(this._cache.getDataKey('intents')).pipe(
-      tap((data)=> console.log( data )),
+      // tap((data)=> console.log( data )),
       map(() => this.findIntent(displayNameOname)),
       tap((mensaje) => {
         this.findIntent(displayNameOname)

@@ -41,6 +41,7 @@ export class PartParameterComponent implements OnInit {
 
   toggleAddClase: boolean = false;
   disableSinonimo: boolean = false;
+  synonymExists: boolean = false;
 
   @ViewChild('partEntityInput') partEntityInput: ElementRef;
 
@@ -105,9 +106,7 @@ export class PartParameterComponent implements OnInit {
   // }
 
   onTipoSelected(tipoSelected: string) {
-    this.parte.entityType = tipoSelected;
     this.tipoSelected.emit(this.parte);
-    // console.log( this.parte.alias )
     this.paramName = this.parte.text
 
     this.param = {
@@ -121,6 +120,8 @@ export class PartParameterComponent implements OnInit {
         : `$${tipoSelected}`,
     };
 
+    this.parte.entityType = tipoSelected;
+    this.parte.alias = this.param.displayName;
 
     this.addParameter()
   }
@@ -130,12 +131,9 @@ export class PartParameterComponent implements OnInit {
   }
 
   addParameter() {
+    this.paramAdded.emit(this.parte);
     const paramStored = this._mensaje.current$.getValue()
       .parameters.find((p) => p.displayName == this.param.displayName);
-
-    this.parte.alias = this.param.displayName;
-    console.log( this.parte.alias )
-    this.paramAdded.emit(this.parte);
 
     if (!paramStored) {
       this._params.addParam(this.param)
@@ -156,20 +154,26 @@ export class PartParameterComponent implements OnInit {
     this.disableSinonimo = true
   }
 
-  get sinonimoExists() {
+  get entityExists() {
     const tiposList = this._cache.getDataKey<TipoEntidadModel[]>('tipos')
-    const tipoStored = tiposList.find(t => t.displayName == this.parte.entityType)
-    const entites = tipoStored ? tipoStored.entities : []
-    return entites.find(e => e.value == this.entitySelected)
+    let entityType = this.parte.entityType.startsWith('@')
+      ? this.parte.entityType.substring(1) : this.parte.entityType
+    const tipoStored = tiposList.find(t => t.displayName == entityType)
+    const entities = tipoStored ? tipoStored.entities : []
+    let entity = entities.find(e => e.value == this.entitySelected)
+    this.synonymExists = entity.synonyms.some(s => s == this.parte.text)
+    return entity
+  }
+
+  get addSynonymToolTip():string {
+    return this.synonymExists ? 'El sinónimo ya existe, no es necesario agregarlo de nuevo': ''
   }
 
 
   setSinonimo(entitySelected?: string) {
-    console.log(entitySelected)
     this.entitySelected = entitySelected
     const synonym = this.parte.text
-    var entity = this.sinonimoExists
-    console.log(entity)
+    var entity = this.entityExists
     if (!entity.synonyms.some(s => s === synonym)) {
       entity.synonyms.push(synonym)
       this._tipos.putClaseOnTipo(this.param.displayName, entity)

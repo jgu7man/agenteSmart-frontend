@@ -1,4 +1,4 @@
-import { map, startWith } from 'rxjs/operators';
+import { map, startWith, take } from 'rxjs/operators';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
@@ -50,21 +50,13 @@ export class ValueSelectorComponent implements OnInit, OnDestroy {
 
 
   async getClases(name: string) {
-    if (!this._tipos.list$) {
-      this._tipos.list$ = this._cache.listenForChanges<TipoEntidadModel[]>('tipos')
-    }
-
-      this._tipos.list$.pipe(
-        map<TipoEntidadModel[], string[]>(list => {
-          const tipoFinded = list.find(t => t.displayName === name)
-
-          return tipoFinded && tipoFinded.entities ?
-            tipoFinded.entities.map(e =>e.value) : []
-        }),
-      ).subscribe((list) => {
-        this.clases = list
+    this._cache.listenForChanges<TipoEntidadModel[]>('tipos')
+      .pipe(take(1))
+      .subscribe((list) => {
+        const tipoFinded = list.find(t => t.displayName === name)
+        this.clases = tipoFinded && 'entities' in tipoFinded ?
+          tipoFinded.entities.map(e =>e.value) : []
       });
-      // this._tipos.getTiposList();
   }
 
   onSelected(selected: MatSelectChange) {

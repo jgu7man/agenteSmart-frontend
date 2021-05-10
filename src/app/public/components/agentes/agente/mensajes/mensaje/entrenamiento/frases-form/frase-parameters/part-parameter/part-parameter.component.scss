@@ -1,5 +1,5 @@
 .paramOptions {
-    opacity: 0;
+    opacity: 1;
     transition: all .3s;
     display: flex;
     padding: 0;
@@ -10,8 +10,9 @@
     }
 }
 
-.param-row:hover .paramOptions {
-    opacity: 1;
+.param-row {
+  margin-bottom: 0;
+
 }
 
 ::ng-deep .mat-form-field-underline{
