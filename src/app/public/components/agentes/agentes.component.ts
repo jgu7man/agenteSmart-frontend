@@ -14,9 +14,17 @@ export class AgentesComponent implements OnInit  {
   constructor (
     public agentes_: AgentesService,
     private _alerts: GdevAlert,
+    private _router: Router
   ) {}
 
   async ngOnInit() {
+    this.agentes_.agentes$.subscribe(list => {
+      if (list.length > 0) {
+        this._router.navigate(['/dashboard/agente/', list[0].projectId])
+      } else {
+        this._router.navigate(['/dashboard/crear_agente'])
+      }
+    })
   }
 
 

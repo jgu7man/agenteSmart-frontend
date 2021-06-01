@@ -37,20 +37,20 @@ export class SidenavComponent implements OnInit {
     this.Sidenav = [
       {
         name: 'Agente',
-        route: undefined,
+        route: '/dashboard/agentes',
         routeId: 'agentes',
         icon: 'fa-project-diagram',
         childs: [
-          {
-            name: 'Crear agente',
-            route: '/dashboard/crear_agente',
-            routeId: 'crear_agente',
-          },
-          {
-            name: 'Agentes creados',
-            route: '/dashboard/agentes',
-            routeId: 'agentes',
-          },
+          // {
+          //   name: 'Crear agente',
+          //   route: '/dashboard/crear_agente',
+          //   routeId: 'crear_agente',
+          // },
+          // {
+          //   name: 'Agentes creados',
+          //   route: '/dashboard/agentes',
+          //   routeId: 'agentes',
+          // },
         ],
       },
       {
