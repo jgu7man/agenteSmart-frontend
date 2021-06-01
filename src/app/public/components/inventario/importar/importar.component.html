@@ -1,0 +1,72 @@
+<div class="container">
+  <div class="row">
+    <div class="col s12">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Importar productos</mat-card-title>
+          <mat-card-subtitle>Sube un archivo con la información de tus productos. Es necesario que sigas las instrucciones de manera correcta para que sea efectivo.</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="row">
+            <div class="col l3">
+              <mx-import-file
+              [requiredColumns]="needColumns"
+              [importCol]="'tienda/productos/referencias'"
+              [idField]="'referencia'"
+              ></mx-import-file>
+            </div>
+            <div class="col l9">
+              <h4>Instrucciones</h4>
+              <ol  class="instructions-list">
+                <li class="instruction">
+                  El archivo que debes subir, debe ser formato CSV. Es un archivo similar a un tipo de archivo "Excel", incluso es leído por este mismo programa.</li>
+                <li class="instruction">
+                  Si tienes tu lista de productos en un archivo de Excel, puedes guardar este mismo archivo como CSV al seleccionar, sólo asegúrate de que tu archivo tiene el formato correcto.
+                  <ul>
+                    <li>Sólo el nombre de las columnas en la primera fila</li>
+                    <li>Sin encabezados o títulos</li>
+                    <li>Sin celdas o filas vacías.</li>
+                    <li>Sin celdas combinadas</li>
+                    <li>Sin imágenes, gráficos o multimedia</li>
+                  </ul>
+                </li>
+                <li class="instruction">
+                  Las columnas que puede o debe tener tu archivo son las siguientes sin espacios ni caracteres especiales y respentando las mayúsculas y minúsculas que se muestran:
+                  <ul>
+                    <li>
+                      <b>referencia</b>: El nombre o identificador principal de tu producto,
+                    </li>
+                    <li>
+                      <b>precio</b>: El precio de tu producto, sin signos ni letras. Puede contener decimales,
+                    </li>
+                    <li><b>descripcion</b>: Un texto explícito de lo que es tu producto,</li>
+                    <li>
+                      <b>onStock</b>: (Opcional). El estado de tu producto. Usa sólo las etiquetas <span class="red-text"><b>true</b></span> para definir si tienes stock o <span class="red-text"><b>false</b></span> de lo contrario,
+                    </li>
+                    <li>
+                      <b>stockCant</b>: (Opcional) Cantidad en stock, si no lo agregas. Tu producto siempre estará disponible para venta,
+                    </li>
+                    <li>
+                      <b>imagenUrl</b>: (Opcional) Una URL de la imagen principal de tu producto, que pueda estar alojada en algún servicio de almacenamiento, o de alguna otro sitio web,
+                    </li>
+                    <li><b>SKU</b>: (Opcional) Código identificador en tu tienda</li>
+                  </ul>
+                </li>
+                <li class="instruction">
+                  Para guardar tu archivo de Excel como CSV ve a <b>Menú Archivo</b> => <b>Guardar como...</b> => <b>Formato</b> => <b>CSV</b></li>
+                <li class="instruction">
+                  Si usas Google Sheets ve a <b>Menú Archivo</b> => <b>Descargar</b> => <b>Valores separados por comas (.csv, hoja actual) </b></li>
+                <li>
+                  En esta página presiona el botón <b>Importar CSV</b> y arrastra el archivo al cuadro punteado o tócalo para buscar una ubicación en tu dispositivo.</li>
+              </ol>
+            </div>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+        </mat-card-actions>
+      </mat-card>
+
+
+    </div>
+  </div>
+</div>

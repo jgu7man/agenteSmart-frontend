@@ -27,6 +27,7 @@ import { IntegracionesComponent } from './components/agentes/agente/integracione
 import { ConversacionesComponent } from './components/agentes/agente/conversaciones/conversaciones.component';
 import { ClientesComponent } from './components/clientes/clientes.component';
 import { StartUiComponent } from './components/agentes/agente/start-ui/start-ui.component';
+import { ImportarComponent } from './components/inventario/importar/importar.component';
 
 const routes: Routes = [
     // # Public pages
@@ -67,6 +68,7 @@ const routes: Routes = [
         { path: 'colecciones', component: ColeccionesComponent },
 
         { path: 'inventario', component: ProductsComponent },
+        { path: 'importar', component: ImportarComponent },
         { path: 'products/add', component: AddProductComponent },
         {
             path: 'products/edit/:id',

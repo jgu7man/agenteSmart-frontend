@@ -41,7 +41,6 @@ export class TiposService {
     private _http: HttpClient,
     private _auth: AuthService,
     private _alerts: GdevAlert,
-    // private store: Store<AppState>,
     private _color: GdevColor,
     private _systemEntites: SystemEntitiesService,
     private _tipo: CurrentTipoService
@@ -112,8 +111,6 @@ export class TiposService {
   private _postCreateEntity(
     entityType: iEntityType
   ): Promise<TipoEntidadModel> {
-    // NOTE POST /entity Necesitas enviar un entityType valido
-    // LINK https://googleapis.dev/nodejs/dialogflow/latest/google.cloud.dialogflow.v2.IEntityType.html
     console.log({ entityType: { ...entityType } });
     return new Promise((resolve, reject) => {
       this._http.post(
