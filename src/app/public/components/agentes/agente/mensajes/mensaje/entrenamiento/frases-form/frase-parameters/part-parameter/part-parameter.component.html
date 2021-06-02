@@ -83,6 +83,7 @@
               [value]="paramName"
               (keypress)="reformatText($event)"
               name="paramName"
+              [disabled]="param && param.displayName == 'productos'"
             />
           </mat-form-field>
         </ng-template>

@@ -113,14 +113,21 @@ export class PartParameterComponent implements OnInit {
   onTipoSelected(tipoSelected: string) {
     this.parte.entityType = tipoSelected.startsWith('@')
       ? tipoSelected : `@${tipoSelected}`
+    if (tipoSelected === 'productos') {
+      this.parte.alias = this.paramName = 'productos'
+    } else {
+      this.paramName = this.parte.text
+    }
 
-    this.paramName = this.parte.text
     this.addParameter()
     // this.tipoSelected.emit(this.parte);
   }
 
-  isSystemEntity() {
-    return this.parte.entityType ? this.parte.entityType.includes('sys.') : false
+  get isSystemEntity() {
+    return this.parte.entityType
+      ? this.parte.entityType.includes('sys.')
+      || this.parte.entityType.includes('productos')
+      : false
   }
 
   addParameter() {

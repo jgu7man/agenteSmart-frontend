@@ -119,8 +119,9 @@ export class ChatService {
     reciveMessage(respuestas: ResultResponse[]) {
         if (respuestas.length > 0) {
             respuestas.forEach((resp: ResultResponse) => {
-                if (resp != null) {
-                    if (resp.suggestions.length > 0) {
+              if (resp != null) {
+                  console.log( resp )
+                    if (resp.suggestions && resp.suggestions.length > 0) {
                         console.log( 'Sugerencias' )
                         this._store.dispatch(
                             actions.recive({ message: resp.text })

@@ -108,12 +108,15 @@ export class GdevStoreProductsService {
   async saveProductTipo(
     referencia: string,
     sinonimos: string[],
-    name: string
+    entity: string
   ) {
     try {
       var productClase: iEntity = {
-        value: referencia,
-        synonyms: sinonimos,
+        value: entity,
+        synonyms: [
+          ...sinonimos.filter(s => s != referencia),
+          referencia
+        ],
       };
 
       var typeRef = await this.productTypeRef()
@@ -123,7 +126,10 @@ export class GdevStoreProductsService {
         var typesDoc = await  typeRef.get()
         console.log('Existen tipo');
         let productType = typesDoc.data() as TipoEntidadModel;
-        productType.entities = [...productType.entities, productClase];
+        productType.entities = [
+          ...productType.entities.filter(e => e.value != productClase.value),
+          productClase
+        ];
 
         this._updateProductEntity(productType)
         await (await this.productTypeRef()).update({ entities: productType.entities })
@@ -247,11 +253,17 @@ private _createProductsEntity(
       let typesDoc = await (await this.productTypeRef()).get();
       let type = typesDoc.data() as iEntityType
       var productClase: iEntity = {
-        value: product.referencia,
-        synonyms: product.sinonimos,
+        value: product.id,
+        synonyms: [
+          ...product.sinonimos.filter(s => s != product.referencia),
+           product.referencia
+        ],
       };
 
-      type.entities = [...type.entities, productClase];
+      type.entities = [
+        ...type.entities.filter(e => e.value != productClase.value),
+        productClase
+      ];
       this._updateProductEntity(type);
       (await this.productTypeRef()).update({ entities: type.entities });
 
