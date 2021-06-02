@@ -86,6 +86,7 @@ import { StartUiComponent } from './agente/start-ui/start-ui.component';
 import { StartTipoComponent } from './agente/start-ui/start-tipo/start-tipo.component';
 import { StartFrasesComponent } from './agente/start-ui/start-frases/start-frases.component';
 import { AddMensajeComponent } from './agente/mensajes/add-mensaje/add-mensaje.component';
+import { ValueSelectorComponent } from './agente/tipos/value-selector/value-selector.component';
 
 
 
@@ -165,6 +166,7 @@ import { AddMensajeComponent } from './agente/mensajes/add-mensaje/add-mensaje.c
     StartTipoComponent,
     StartFrasesComponent,
     AddMensajeComponent,
+    ValueSelectorComponent,
   ],
   imports: [
     CommonModule,

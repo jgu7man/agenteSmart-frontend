@@ -9,6 +9,7 @@
                 type="text"
                 [(ngModel)]="nuevoContexto.contextName"
                 name="contextName"
+                (keypress)="_text.onlyAllow(['letters', 'backspace'], $event)"
                 >
             </mat-form-field>
         </div>

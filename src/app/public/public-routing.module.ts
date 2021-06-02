@@ -27,6 +27,7 @@ import { IntegracionesComponent } from './components/agentes/agente/integracione
 import { ConversacionesComponent } from './components/agentes/agente/conversaciones/conversaciones.component';
 import { ClientesComponent } from './components/clientes/clientes.component';
 import { StartUiComponent } from './components/agentes/agente/start-ui/start-ui.component';
+import { ImportarComponent } from './components/inventario/importar/importar.component';
 
 const routes: Routes = [
     // # Public pages
@@ -51,10 +52,10 @@ const routes: Routes = [
         { path: 'editar_agente/:id', component: EditAgenteComponent, },
         { path: 'agente/:id', component: AgenteComponent, data: {section: 'Agente'}, children:
             [
-                // { path: '', redirectTo: 'mensajes', pathMatch: 'full', },
+                // { path: '', redirectTo: 'flujo', pathMatch: 'full', },
                 { path: 'start', component: StartUiComponent },
-                { path: 'bienvenida', component: BienvenidaComponent },
-                { path: 'mensajes', component: MensajesComponent },
+                { path: 'filtro', component: BienvenidaComponent },
+                { path: 'flujo', component: MensajesComponent },
                 { path: 'mensaje/:name', component: MensajeComponent, },
                 { path: 'tipos', component: TiposComponent },
                 { path: 'configuraciones', component: AgentConfigComponent },
@@ -67,6 +68,7 @@ const routes: Routes = [
         { path: 'colecciones', component: ColeccionesComponent },
 
         { path: 'inventario', component: ProductsComponent },
+        { path: 'importar', component: ImportarComponent },
         { path: 'products/add', component: AddProductComponent },
         {
             path: 'products/edit/:id',

@@ -100,7 +100,7 @@ export class CurrentMensajeService {
     this.intentName = displayNameOname
     this._cache.updateData('currentContexto', this.currentContexto);
     of(this._cache.getDataKey('intents')).pipe(
-      tap((data)=> console.log( data )),
+      // tap((data)=> console.log( data )),
       map(() => this.findIntent(displayNameOname)),
       tap((mensaje) => {
         this.findIntent(displayNameOname)
@@ -109,7 +109,6 @@ export class CurrentMensajeService {
       }),
       flatMap((mensaje) => this.getRespuestasList(mensaje.name))
     ).subscribe(data => {
-      console.log('mensaje loaded')
     })
 
 
@@ -190,14 +189,13 @@ export class CurrentMensajeService {
     const allTipos: (TipoEntidadModel | SystemEntitieModel)[] = tipos.concat(sysTipos)
 
     const entities = this.mensajeTypeEntities$.getValue();
-    paramList.forEach((param) => {
-      let splited = param.entityTypeDisplayName.split('@')
-      let paramEntity = splited[1]
+     paramList.forEach((param) => {
+       let splited = param.entityTypeDisplayName.split('@')
+      let paramEntity = splited[1] ? splited[1] : splited[0]
       if( paramEntity !== undefined){
         let tipoStored: TipoEntidadModel | SystemEntitieModel = entities.find(
           (t) => t && t.displayName == paramEntity
         );
-        // console.log(tipoStored)
         if (!tipoStored || tipoStored === undefined) {
           tipoStored = allTipos.find(t => t.displayName == paramEntity)
           this.mensajeTypeEntities$.next([
@@ -228,13 +226,13 @@ export class CurrentMensajeService {
         }
 
         const request = await this.updateIntentApiRequest(current);
-        console.log(request);
+        // console.log(request);
         if (request) {
           // console.info('Se Actualizo Intent:', request);
           this._mensajes.getDialogFlowIntents()
             .pipe(take(1))
             .subscribe(() => {
-              console.log( 'changes' )
+              // console.log( 'changes' )
               this.setCurrent(request.displayName)
 
             });

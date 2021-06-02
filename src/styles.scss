@@ -18,8 +18,27 @@ html, body {
     background: #EFF1FE;
 }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-div::-webkit-scrollbar {
-    display: none;
+
+@mixin scrollbar {
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent
+  }
+  &::-webkit-scrollbar-button {
+    display:none
+  }
+  &::-webkit-scrollbar-thumb{
+    background: #141e66;
+    border: none;
+    box-shadow: -1px -1px 10px -3px rgb(0 0 0 / 50%);
+  }
+}
+
+div{
+  // overflow-x: hidden;
+  @include scrollbar;
 }
 
 p, i, mat-card-title, span, input, textarea, button, * {
@@ -113,6 +132,9 @@ mat-form-field {
 ::ng-deep {
     .mat-form-field-underline {
         bottom: 0 !important;
+    }
+    .mat-menu-panel {
+      overflow: initial !important;
     }
 }
 

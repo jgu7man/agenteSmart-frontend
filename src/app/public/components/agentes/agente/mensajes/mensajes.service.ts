@@ -69,7 +69,6 @@ export class MensajesService {
     };
 
     const intentRequest = { projectId: this.projectId, intent };
-    console.log(intentRequest);
 
     return new Promise<IntentModel>((resolve, reject) => {
       this._http
@@ -103,11 +102,15 @@ export class MensajesService {
 
     // Prepara los contextos
     const contextPath = `projects/${this.projectId}/agent/sessions/-/contexts/`
-    var inputContextNames = [contextPath + nameContext]
     var nameContext = this._text.normalize(displayName).toLowerCase();
     nameContext = nameContext.replace(/\s/g, '');
-    contexto = this._text.normalize(contexto).toLowerCase();
-    if (contexto) inputContextNames.push( contextPath + contexto)
+    var inputContextNames = [contextPath + nameContext]
+
+    if (contexto) {
+      contexto = this._text.normalize(contexto).toLowerCase();
+      inputContextNames.push(contextPath + contexto)
+    }
+
 
     try {
       const newIntent = await this.createNewIntent({
@@ -123,20 +126,23 @@ export class MensajesService {
         displayName: newIntent.displayName,
       };
 
-      console.log(intent);
-      if (index) intent['index'] = index;
+      if (index || index === 0) intent['index'] = index;
       intent['contexto'] = contexto ? contexto : 'no-context';
 
       console.log(`guardando intent en firestore: `, intent);
       await (await this.mensajesCollection()).ref.doc(resourceID).set(intent);
       this.getDialogFlowIntents();
       this._loading.toggleWaitingSpinner('close');
-      await this._router
-        .navigateByUrl('/dashboard/agentes', { skipLocationChange: true })
-        .then(() => this._router.navigate([
-            `/dashboard/agente/${this.projectId}/mensajes`,
-          ])
-        );
+
+      let currentRoute = this._router.url.slice( this._router.url.lastIndexOf('/') +1 )
+      if (currentRoute == 'mensajes') {
+        await this._router
+          .navigateByUrl('/dashboard/agentes', { skipLocationChange: true })
+          .then(() => this._router.navigate([
+              `/dashboard/agente/${this.projectId}/mensajes`,
+            ])
+          );
+      }
       this._alerts.sendFloatNotification('Mensaje creado')
       return
 
@@ -224,7 +230,7 @@ export class MensajesService {
     `${this._url}/${projectId}`,
     { responseType: 'json' }
     ).pipe(
-      tap(data => console.log( data )),
+      // tap(data => console.log( data )),
       pluck<any, IntentModel[]>('result', 'intents'),
       map<IntentModel[], IntentModel[]>((list) => {
         return list.map((intent) => {
@@ -232,7 +238,7 @@ export class MensajesService {
             return intent;
           });
         }),
-        tap(data => console.log( data )),
+        // tap(data => console.log( data )),
         tap((list) => this._cache.updateData('intents', list))
       );
   }

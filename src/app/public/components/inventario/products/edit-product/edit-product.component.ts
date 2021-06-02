@@ -22,15 +22,15 @@ export class EditProductComponent implements OnInit, OnDestroy {
 
   @Input() public product: GdevStoreProductModel
 
-  
+
   public imgToLoad: any;
   public precio = [ '$', /[1-9]/, /\d/, /\d/, ',', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/ ]
   public categories: any[]
   public usuario: UserInterface
-  
+
   @Output() closeForm: EventEmitter<any> = new EventEmitter()
   DeleteDialogSub: Subscription
-  
+
   constructor (
     public _products: GdevStoreProductsService,
     // private _categorias: GdevStoreCategoriesService,
@@ -55,11 +55,11 @@ export class EditProductComponent implements OnInit, OnDestroy {
     } )
 
 
-    
-    
+
+
   }
 
-  
+
 
   setStock( e: MatSlideToggleChange ) {
     this.product.onStock = e.checked
@@ -95,7 +95,7 @@ export class EditProductComponent implements OnInit, OnDestroy {
   deleteProductImage(image) {
     this.product.imagenUrl  = {}
   }
-  
+
   getImageGallery( gallery ) {
     console.log(gallery);
     this.product.galeria = gallery
@@ -114,10 +114,14 @@ export class EditProductComponent implements OnInit, OnDestroy {
       minWidth: 320,
       data: this.product.id
     } )
-    
+
     this.DeleteDialogSub = dialog.afterClosed()
       .subscribe( ( response ) => {
-        if(response) this.closeForm.emit()
+        if (response) {
+          this.closeForm.emit()
+          this.router.navigateByUrl('/dashboard', { skipLocationChange: true })
+            .then(() => this.router.navigate(['/dashboard/inventario']))
+        }
       } )
   }
 

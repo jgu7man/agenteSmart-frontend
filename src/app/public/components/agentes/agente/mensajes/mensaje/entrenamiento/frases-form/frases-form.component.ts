@@ -48,7 +48,7 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
   frasesList: FraseEntrenamiento[] = []
 
   @ViewChild('newPhraseInput') newPhraseInput: ElementRef;
-  @ViewChild('accordeon') accordeon: MatAccordion;
+  @ViewChild('accordeon') accordion: MatAccordion;
   @ViewChildren('frase') frasePanels: QueryList<MatExpansionPanel>;
   @ViewChildren(FraseItemComponent) prhaseList: QueryList<FraseItemComponent>;
   @ViewChildren(FraseParametersComponent) parametersList: QueryList<
@@ -72,7 +72,11 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     this.frasesSub = this.$frases.list$.subscribe((frases) => {
       this.frasesList = frases
-        this.currentPage = frases.slice(this.firstIndex, this.pageSize)
+      this.lastIndex = this.lastIndex ? this.lastIndex : this.pageSize
+
+      // console.log( {first: this.firstIndex, last: this.lastIndex} )
+      this.currentPage = this.frasesList.slice(this.firstIndex, this.lastIndex)
+
       this.getLastIndex(
           this.firstIndex,
           this.currentPage.length
@@ -84,28 +88,34 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
     startIndex: number,
     length: number
   ) {
+
     if (this.pageSize > length) {
-      this.lastIndex = length;
+      this.lastIndex = length + startIndex;
     } else {
       this.lastIndex = startIndex + this.pageSize;
     }
   }
 
   pageEvent(event: PageEvent) {
-    // let lastDiff = this.frasesList.length - (event.pageIndex * this.pageSize);
-    // let firstDiff = lastDiff - this.pageSize;
-    // firstDiff = firstDiff <= 0 ? 0 : firstDiff;
-    this.firstIndex = event.pageIndex * this.pageSize + 1;
-    this.getLastIndex(this.firstIndex, this.currentPage.length);
-    this.currentPage = this.frasesList.slice(this.firstIndex-1, this.lastIndex-1);
-    console.log(this.currentPage.length, this.firstIndex, this.lastIndex);
 
-    console.log(this.firstIndex, this.lastIndex);
+    this.firstIndex = event.pageIndex == 0 ? 0
+      : (event.pageIndex * this.pageSize);
+
+    let trim = (event.pageIndex * this.pageSize) + this.pageSize
+
+
+    this.currentPage = this.frasesList.slice(this.firstIndex, trim);
+
+    this.getLastIndex(this.firstIndex, this.currentPage.length);
+    // console.log(this.currentPage.length, this.firstIndex, this.lastIndex);
+
+    // console.log(this.firstIndex, this.lastIndex);
   }
 
   ngAfterViewInit() {
     this.paramAddedSub = this.$frases.paramAdded$.subscribe(() => {
-      this.accordeon.closeAll();
+      // console.log( 'added' )
+      this.accordion.closeAll();
     });
 
   }
@@ -141,10 +151,13 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
           this.firstIndex = this.pageIndex * this.pageSize
           this.lastIndex = this.frasesList.length
           this.currentPage = this.frasesList.slice(this.firstIndex, this.lastIndex)
+        } else {
+          this.currentPage.push(NEWPHRASE)
+          this.lastIndex++
         }
         this.newPhrase = '';
         await this._loading.waitFor(500);
-        this.accordeon.closeAll();
+        this.accordion.closeAll();
       });
     }
   }
@@ -165,7 +178,6 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
       this.$frases.updatePhrase(fraseRestructured);
       await this._loading.waitFor(100)
       this.fraseExpanded = index
-      // console.log(this.currentPage[this.fraseExpanded])
     }
   }
 

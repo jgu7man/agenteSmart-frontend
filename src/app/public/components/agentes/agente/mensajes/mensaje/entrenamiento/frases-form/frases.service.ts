@@ -76,7 +76,7 @@ export class FrasesService {
         ...this._mensaje.current$.getValue(),
         trainingPhrases
       })
-      // console.log(this._mensaje.current.trainingPhrases);
+      // console.log(this._mensaje.current$.getValue().trainingPhrases);
       return this.store.dispatch(actions.setUnsaved());
     } catch (error) {
       console.error(error);

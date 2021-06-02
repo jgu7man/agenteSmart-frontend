@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ContextoModel } from '../contexto.model';
 import { ContextosService } from '../contextos.service';
 import { GdevLoading } from '../../../../../../gdev-tools/src/lib/loading/loading.service';
+import { GdevText } from 'src/app/gdev-tools/src/public-api';
 
 @Component({
   templateUrl: './add-contexto-dialog.component.html',
@@ -14,7 +15,8 @@ export class AddContextoDialogComponent implements OnInit {
     public dialog_: MatDialogRef<AddContextoDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public nuevoContexto: ContextoModel,
     private _contextos: ContextosService,
-    private _loading: GdevLoading
+    private _loading: GdevLoading,
+    public _text: GdevText
   ) { }
 
   ngOnInit(): void {

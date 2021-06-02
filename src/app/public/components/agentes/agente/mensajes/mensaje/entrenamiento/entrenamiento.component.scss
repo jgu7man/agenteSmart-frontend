@@ -1,7 +1,8 @@
 #mensaje-container {
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 #mensaje-container::-webkit-scrollbar {
-    display: none;
+    display: block;
 }

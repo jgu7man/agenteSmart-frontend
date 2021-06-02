@@ -1,5 +1,5 @@
 import { GdevAlert } from 'src/app/gdev-tools/src/lib/alert/alert.service';
-import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, OnDestroy } from '@angular/core';
 import { GdevLoading } from 'src/app/gdev-tools/src/lib/loading/loading.service';
 import { AgenteModel } from '../../../init-agente/agente.model';
 import { MensajesService } from '../mensajes.service';
@@ -16,13 +16,14 @@ import {
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'aSmart-mensajes-by-contexto',
   templateUrl: './mensajes-contexto.component.html',
   styleUrls: ['./mensajes-contexto.component.scss'],
 })
-export class MensajesByContextoComponent implements OnInit {
+export class MensajesByContextoComponent implements OnInit, OnDestroy {
   agente: AgenteModel;
   projectId;
   newIntent: string = '';
@@ -31,6 +32,7 @@ export class MensajesByContextoComponent implements OnInit {
 
   @Input() contexto: ContextoModel;
   @ViewChild('intentNuevo') intentNuevo: ElementRef;
+  private listSubscription: Subscription
 
   constructor(
     private _loading: GdevLoading,
@@ -47,7 +49,7 @@ export class MensajesByContextoComponent implements OnInit {
   }
 
   async getMensajes() {
-    this.mensajes_.list$
+    this.listSubscription = this.mensajes_.list$
       .pipe(distinctUntilChanged((x, y) => x && x.length == y.length))
       .subscribe(async () => {
         await this.mensajes_
@@ -98,5 +100,10 @@ export class MensajesByContextoComponent implements OnInit {
     moveItemInArray(this.mensajes, event.previousIndex, event.currentIndex);
     console.log(this.mensajes);
     this.mensajes_.orderContextMensajes(this.mensajes)
+  }
+
+
+  ngOnDestroy() {
+    if (this.listSubscription) this.listSubscription.unsubscribe();
   }
 }

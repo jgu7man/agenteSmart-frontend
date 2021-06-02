@@ -5,7 +5,7 @@ import { IntentModel, MensajeModel } from '../mensajes/mensaje.model';
 import { GdevCache } from '../../../../../gdev-tools/src/lib/cache/gdev-cache.service';
 import { ContextoModel } from './contexto.model';
 // import { CurrentAgenteService } from '../current-agente.service';
-import { distinctUntilKeyChanged, filter, map, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilKeyChanged, filter, map, tap } from 'rxjs/operators';
 import { GdevAlert } from '../../../../../gdev-tools/src/lib/alert/alert.service';
 import { GdevLoading } from '../../../../../gdev-tools/src/lib/loading/loading.service';
 import { Observable, Subject, Subscription } from 'rxjs';
@@ -144,13 +144,17 @@ export class ContextosService {
     this.list$ = this._cache.listenForChanges<ContextoModel[]>('contextos')
     .pipe(filter(list => !!list))
 
+
     const agentePath = this._cache.getDataKey('agentePath');
     this.contextosPath = agentePath + '/contextos';
     return this.afs.collection<ContextoModel>(this.contextosPath,
-      // ref => ref.orderBy('index')
+      ref => ref.orderBy('index', 'asc')
     ).valueChanges().pipe(
-      // tap((list) => console.log( list )),
-      tap((list => this._cache.updateData('contextos', list)))
+      debounceTime(1000),
+      tap((list => {
+        console.log( 'contextos cargados', list )
+        this._cache.updateData('contextos', list)
+      }))
     )
   }
 
@@ -163,12 +167,13 @@ export class ContextosService {
 
   /** Actualiza el orden de los contextos en la vista de contextos */
   async updateIndex(contextos: ContextoModel[]) {
-    contextos.forEach(async (contexto, index) => {
-      await (await this.contextosCollection())
-        .doc(contexto.id)
-        .update({ index: index });
+    const batch = this.afs.firestore.batch()
+    await this._loading.asyncForEach(contextos,
+      async ({ id, index }) => {
+      batch.update(await (await this.contextosCollection())
+        .doc(id),{index});
     });
-    return;
+    batch.commit()
   }
 
   // DELETE

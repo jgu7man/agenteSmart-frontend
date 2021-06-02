@@ -11,6 +11,8 @@ import { ProdDetailsComponent } from './products/prod-details/prod-details.compo
 import { GdevToolsModule } from '../../../gdev-tools/src/lib/gdev-tools.module';
 import { MaterialModule } from 'src/app/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ImportarComponent } from './importar/importar.component';
+import { MxStorageModule } from '@marxa/storage-v9';
 
 
 @NgModule({
@@ -20,7 +22,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     AddProductComponent,
     DelProdcutComponent,
     EditProductComponent,
-    ProdDetailsComponent
+    ProdDetailsComponent,
+    ImportarComponent
   ],
   imports: [
     CommonModule,
@@ -28,7 +31,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     GdevToolsModule,
     MaterialModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MxStorageModule
   ]
 })
 export class InventarioModule { }

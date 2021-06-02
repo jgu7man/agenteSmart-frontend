@@ -1,20 +1,18 @@
 import { Injectable } from '@angular/core';
 import { AgenteModel } from '../init-agente/agente.model';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { AuthService, UserInterface } from '../../../../admin/auth/auth.service';
+import { UserInterface } from '../../../../admin/auth/auth.service';
 import { GdevCache } from '../../../../gdev-tools/src/lib/cache/gdev-cache.service';
-import { Subject, Observable, Subscription, of, BehaviorSubject, zip, forkJoin } from 'rxjs';
-import { filter, concatAll, pluck, tap, map, flatMap, debounceTime } from 'rxjs/operators';
-import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
-import { IntentModel, MensajeState, MensajeModel } from './mensajes/mensaje.model';
+import { Subject, Observable, Subscription, of } from 'rxjs';
+import { filter, tap, map, flatMap, distinctUntilChanged } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { IntentModel,  MensajeModel } from './mensajes/mensaje.model';
 import { ContextoModel } from './contextos/contexto.model';
-import { SystemEntitieModel, TipoEntidadModel } from './tipos/tipo.model';
 import { ColeccionModel } from '../../colecciones/collection.interface';
 import { TarjetaModel } from '../../tarjetas/tarjeta.model';
 import { HttpClient } from '@angular/common/http';
 import { GdevAlert } from '../../../../gdev-tools/src/lib/alert/alert.service';
 import { GdevLoading } from '../../../../gdev-tools/src/lib/loading/loading.service';
-import { SystemEntitiesService } from '../../../../admin/system/system-entities.service';
 import { environment } from '../../../../../environments/environment';
 import firebase from 'firebase/app'
 import { AgentesService } from '../agentes.service';
@@ -43,7 +41,7 @@ export class CurrentAgenteService {
   public usuario: UserInterface;
   // # AGENTE LOADED
   /** Escucha cuando el agente termina de ser cargado */
-  public agenteLoaded$: Subject<boolean> = new Subject();
+  public loaded$: Subject<boolean> = new Subject();
   /** Número de veces que se ha recargado el agente */
   private loads = 0;
   /** Almacena la URL del API */
@@ -87,25 +85,30 @@ export class CurrentAgenteService {
     this._cache.updateData('currentAgente', this.current);
     return this._dashboard.initializeDashboard()
       .pipe(
-        // tap(data => console.log( 'dashboard', data)),
+        tap(() => {
+          console.group('init')
+          this._loading.toggleWaitingSpinner('open')
+        }),
         flatMap(() => this.getPath()),
-        // tap(data => console.log( 'path', data)),
-        flatMap(() => this._mensajes.getDialogFlowIntents()),
-        // tap(data => console.log( 'intent', data)),
-        flatMap(() => this._tipos.getTiposList()),
-        // tap(data => console.log( 'tipos', data)),
+        distinctUntilChanged(),
+        tap(() => console.log( 'path loaded', )),
         flatMap(() => this.loadFirestoreList('mensajes')),
-        // tap(data => console.log( 'mensajes', data)),
+        tap(() => console.log( 'mensajes loaded', )),
         flatMap(() => this._contexts.getAllContexts()),
-        // tap(data => console.log( 'context', data)),
+        tap(() => console.log( 'context loaded', )),
+        flatMap(() => this._mensajes.getDialogFlowIntents()),
+        tap(() => console.log( 'intent loaded', )),
+        flatMap(() => this._tipos.getTiposList()),
+        tap(() => console.log( 'tipos loaded', )),
         flatMap(() => this.loadFirestoreList('tarjetas')),
-        // tap(data => console.log( 'tarjetas', data)),
+        tap(() => console.log( 'tarjetas loaded', )),
         flatMap(() => this.loadFirestoreList('colecciones')),
-        // tap(data => console.log( 'colecciones', data)),
-        map(data => {
-          // console.log( data )
+        tap(() => console.log( 'colecciones loaded', )),
+        tap(() => {
+          this._loading.toggleWaitingSpinner('close')
+          console.groupEnd()
           this._alerts.sendFloatNotification('Agente cargado')
-          this.agenteLoaded$.next(true)
+          this.loaded$.next(true)
           console.log( 'loaded' )
           return true
         })
@@ -123,10 +126,10 @@ export class CurrentAgenteService {
     return of( this.path );
     // this.projectId = await this._cache.getAsyncKey<string>('projectId');
   }
-
-  /** Función para la ruta en común de llamdas a firestore para cargar las listas del agente */
   private loadFirestoreList(collection: string) {
     return this.fs
+
+  /** Función para la ruta en común de llamdas a firestore para cargar las listas del agente */
       .collection(`${this.path}/${collection}`)
       .valueChanges()
       .pipe(

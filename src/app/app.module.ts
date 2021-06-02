@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { ComunesModule, } from './comunes.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -54,6 +54,9 @@ import { appReducers } from './app.state';
     StoreDevtoolsModule.instrument( { maxAge: 25, logOnly: environment.production } ),
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
+  ]
 })
 export class AppModule { }

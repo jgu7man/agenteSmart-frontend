@@ -40,7 +40,11 @@ export class AddMensajeComponent implements OnInit {
     this.switchAddIntent = false;
 
     if (this.newIntent) {
-        await this._mensajes.saveNewMensaje(this.newIntent, this.lastIndex, this.context ? this.context : null)
+      await this._mensajes.saveNewMensaje(
+        this.newIntent,
+        this.lastIndex,
+        this.context ? this.context : null
+      )
         this.dialog.close(this.newIntent)
     }
   }

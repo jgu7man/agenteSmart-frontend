@@ -3,16 +3,18 @@ import { Injectable } from '@angular/core';
 import { GdevLoading } from 'src/app/gdev-tools/src/lib/loading/loading.service';
 import { AngularFirestore, CollectionReference } from '@angular/fire/firestore';
 import { GdevCache } from 'src/app/gdev-tools/src/lib/cache/gdev-cache.service';
-import { TipoEntidadModel, SystemEntitieModel } from './tipo.model';
+import { TipoEntidadModel, SystemEntitieModel, iEntity, iEntityType } from './tipo.model';
 import { GdevText } from 'src/app/services/text.service';
 import { Subject, Observable, of, zip } from 'rxjs';
-import { map, tap, flatMap } from 'rxjs/operators';
+import { map, tap, flatMap, take } from 'rxjs/operators';
 import { AuthService } from 'src/app/admin/auth/auth.service';
 import { GdevAlert } from 'src/app/gdev-tools/src/lib/alert/alert.service';
 import { environment } from 'src/environments/environment';
 import { ContextoModel } from '../contextos/contexto.model';
 import { GdevColor } from 'src/app/gdev-tools/src/lib/color/gdev-color.service';
 import { SystemEntitiesService } from 'src/app/admin/system/system-entities.service';
+import { CurrentTipoService } from './tipo/current-tipo.service';
+import { difference } from 'lodash';
 
 @Injectable({
   providedIn: 'root',
@@ -39,18 +41,18 @@ export class TiposService {
     private _http: HttpClient,
     private _auth: AuthService,
     private _alerts: GdevAlert,
-    // private store: Store<AppState>,
     private _color: GdevColor,
     private _systemEntites: SystemEntitiesService,
+    private _tipo: CurrentTipoService
   ) {
     this.projectId = this._cache.getDataKey('projectId');
   }
 
   /** Define la ruta de firestore */
-  public tiposCollection(): CollectionReference<TipoEntidadModel> {
+  public tiposCollection(): CollectionReference<iEntityType> {
     this.agentePath = this._cache.getDataKey('agentePath');
     this.tiposPath = `${this.agentePath}/tipos`;
-    const tiposRef = this._afs.collection<TipoEntidadModel>(this.tiposPath).ref;
+    const tiposRef = this._afs.collection<iEntityType>(this.tiposPath).ref;
     return tiposRef;
   }
 
@@ -82,17 +84,20 @@ export class TiposService {
 
     if (tipoInList < 0) {
       console.log('nueva entity');
-      // create enriry API
-      let newEntity = await this._postCreateEntity({ ...tipo });
+      // create entity API
+      let newEntity = await this._postCreateEntity({ ...tipo.value });
       console.log(newEntity);
       // Get clean entity Id
       const resourceID = newEntity.name.slice(
         newEntity.name.lastIndexOf('/') + 1
       );
-      const newTipo = { ...tipo, name: newEntity.name };
+      const newTipo:iEntityType = { ...tipo.value, name: newEntity.name };
 
       // Save tipo in firestore
       await this.tiposCollection().doc(resourceID).set(newTipo);
+      this.getTiposList().pipe(take(1))
+      .subscribe()
+
       // this.store.dispatch(actions.addTipo({ tipo: newTipo }));
 
       this._loading.toggleWaitingSpinner('close');
@@ -104,10 +109,8 @@ export class TiposService {
 
   /** Crea el entity en el backend */
   private _postCreateEntity(
-    entityType: TipoEntidadModel
+    entityType: iEntityType
   ): Promise<TipoEntidadModel> {
-    // NOTE POST /entity Necesitas enviar un entityType valido
-    // LINK https://googleapis.dev/nodejs/dialogflow/latest/google.cloud.dialogflow.v2.IEntityType.html
     console.log({ entityType: { ...entityType } });
     return new Promise((resolve, reject) => {
       this._http.post(
@@ -140,6 +143,48 @@ export class TiposService {
   // # CLOSE "CREATE DIALOG"
   /** Escucha cunado el Dialog de creado de entity es cerrado */
   public closeCreateDialog: Subject<any> = new Subject();
+
+
+  async putClaseOnTipo(displayName: string, entity: iEntity) {
+    try {
+      console.log( displayName )
+    displayName = displayName.split('@').length > 1
+      ? displayName.split('@')[1] : displayName;
+
+    const list = this._cache.getDataKey<TipoEntidadModel[]>('tipos');
+    const tipo = list.find(t => t.displayName === displayName)
+    console.log(tipo)
+
+    const entityInList = tipo.entities.find(e => e.value === entity.value)
+    console.log(entityInList)
+
+    if (!entityInList) {
+      if (!tipo.entities) tipo.entities = []
+      tipo.entities = [...tipo.entities, entity]
+      await this._tipo.updateTipo(tipo)
+      this.getTiposList().pipe(take(1)).subscribe()
+      return tipo
+    } else {
+      const synonyms = difference( entity.synonyms, entityInList.synonyms,)
+      console.log( synonyms )
+
+      if (synonyms.length > 0) {
+        entityInList.synonyms = [...entityInList.synonyms, ...synonyms]
+        tipo.entities = [...tipo.entities, entityInList]
+        console.log( tipo )
+        await this._tipo.updateTipo(tipo)
+        this.getTiposList().pipe(take(1)).subscribe()
+        return tipo
+      }
+    }
+    } catch (error) {
+      console.error(error)
+      this._alerts.sendError('Error', error)
+      throw error
+    }
+  }
+
+
 
 
 

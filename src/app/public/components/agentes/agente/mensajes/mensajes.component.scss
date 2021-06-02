@@ -1,5 +1,19 @@
-mat-drawer-container {
-    background: transparent;
+@import 'src/styles.scss';
+
+#flow-area {
+  background: transparent;
+  height:100%;
+  overflow-y:auto;
+  @include scrollbar;
+  #context-list {
+    height: fit-content;
+    padding-bottom: 5em;
+    ::ng-deep {
+      .mat-drawer-inner-container{
+        overflow: hidden;
+      }
+    }
+  }
 }
 
 .mensajes-list-container {
@@ -41,5 +55,5 @@ mat-drawer-container {
     .mensajes-list-container {
     width: 75%;
     max-width: 350px;
-}    
+}
 }

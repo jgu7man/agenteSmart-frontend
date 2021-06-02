@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ComunesModule } from '../comunes.module';
 
@@ -32,6 +32,7 @@ import { ClientInteractionComponent } from './components/clientes/client-interac
 
 
 
+
 @NgModule({
   declarations: [
     DashboardComponent,
@@ -60,9 +61,8 @@ import { ClientInteractionComponent } from './components/clientes/client-interac
     InventarioModule,
     GdevToolsModule,
     ChatTesterModule,
-    ChatModule
+    ChatModule,
   ],
-  providers: [
-  ]
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
 export class PublicModule { }

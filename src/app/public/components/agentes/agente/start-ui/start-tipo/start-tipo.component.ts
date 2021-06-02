@@ -2,7 +2,7 @@ import { ClaseItemComponent } from './../../tipos/tipo/clase-item/clase-item.com
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { GdevCache } from './../../../../../../gdev-tools/src/lib/cache/gdev-cache.service';
 import { TiposService } from './../../tipos/tipos.service';
-import { Clase, TipoEntidadModel } from './../../tipos/tipo.model';
+import { iEntity, TipoEntidadModel } from './../../tipos/tipo.model';
 import { Component, OnInit, ViewChild, ElementRef, ViewChildren, QueryList, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { debounceTime } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
@@ -20,7 +20,7 @@ export class StartTipoComponent implements OnInit, OnDestroy {
     ClaseItemComponent
         >;
         switchAddClase: boolean;
-        clases: Clase[];
+        clases: iEntity[];
     @Output() tipoAdded = new EventEmitter<any>();
 
     switchEditTipo: boolean = false;

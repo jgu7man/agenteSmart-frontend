@@ -29,6 +29,6 @@
 }
 
 .container {
-  overflow-y: auto;
-  max-height: 80vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }

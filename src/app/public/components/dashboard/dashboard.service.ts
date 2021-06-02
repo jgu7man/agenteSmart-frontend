@@ -6,7 +6,7 @@ import { GdevStoreProductsService } from '../inventario/products/products.servic
 import { iNavlink } from '../navbar/navlink.interface';
 import { GdevCache } from 'src/app/gdev-tools/src/public-api';
 import { UserInterface } from 'src/app/admin/auth/auth.service';
-import { filter, flatMap, map, tap } from 'rxjs/operators';
+import { distinctUntilChanged, distinctUntilKeyChanged, filter, flatMap, map, tap } from 'rxjs/operators';
 
 @Injectable({providedIn: 'root'})
 export class DashboardService {
@@ -32,7 +32,8 @@ export class DashboardService {
       <UserInterface>('user').pipe(
         // tap(console.log),
         filter(user => !!user),
-        flatMap(user => this._agentes.listenAgentes(user.uid))
+        flatMap(user => this._agentes.listenAgentes(user.uid)),
+        distinctUntilChanged((x, y) => x.length === y.length)
         // Another flatMap as you like
       )
   }

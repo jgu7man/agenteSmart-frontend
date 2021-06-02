@@ -43,14 +43,14 @@ export class TipoSelectorComponent implements OnInit, OnDestroy {
       this.tipoControl.setValue(this.value);
     }
     // NOTE Hacer que esto espere la carga de todo
-    await this.getTipos();
+    await this.getTipo();
     this.tiposFiltered = this.tipoControl.valueChanges.pipe(
       startWith(''),
       map((value) => this._filter(value)),
     );
   }
 
-  async getTipos() {
+  async getTipo() {
     if (!this._tipos.list$) {
       this._tipos.list$ = this._cache.listenForChanges<TipoEntidadModel[]>('tipos')
     }

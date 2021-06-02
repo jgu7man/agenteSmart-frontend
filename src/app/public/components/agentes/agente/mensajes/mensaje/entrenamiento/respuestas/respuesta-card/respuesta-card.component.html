@@ -1,4 +1,4 @@
-<div class="respuesta-card row">
+<div class="respuesta-card row" #respuestaCard>
   <!-- Icono de color para identificar tipo de respuesta -->
   <div
     class="col 2 res-type-icon"
@@ -29,47 +29,43 @@
                   <span><b>Sugerencias</b></span>
                 </div>
                 <div *ngSwitchDefault>
-                  <div [ngSwitch]="respuesta.tipo">
-                    <div *ngSwitchCase="'simple'">
-                      <span style="font-size: x-small"
-                        >Siguiente conversacion</span
-                      >
-                      <br />
-                      <b>{{ respuesta["nextIntent"] }}</b>
-                    </div>
+                  <div *ngIf="respuesta.tipo == 'simple'">
+                    <span style="font-size: x-small"
+                      >Siguiente conversacion</span
+                    >
+                    <br />
+                  </div>
+                  <b>{{ respuesta["nextIntent"] }}</b>
+                </div>
 
-                    <div *ngSwitchCase="'condicional'">
-                      <b>{{ respuesta.nextIntent }}</b
-                      ><br />
-                      <span style="font-size: x-small">
-                        Si {{ respuesta.result["parametro"] }}
-                        <span *ngIf="!disableEScondition()">es</span>
-                        {{ respuesta.result["condicion"] }}
-                        {{ respuesta.result["valor"] }}
-                      </span>
-                    </div>
+                <!-- Características -->
+                <div [ngSwitch]="respuesta.tipo">
 
-                    <div *ngSwitchCase="'grupo_datos'">
-                      <b>{{ respuesta.nextIntent }}</b
-                      ><br />
-                      <span style="font-size: x-small">
-                        Guarda {{ respuesta.result["key"] }} en
-                        {{ respuesta.result["coleccion"] }}
-                      </span>
-                    </div>
 
-                    <div *ngSwitchCase="'buscar'">
-                      <b>{{ respuesta.nextIntent }}</b
-                      ><br />
-                      <span style="font-size: x-small">
-                        Busca {{ respuesta.result["parametro"] }} en
-                        {{ respuesta.result["database"] }}
-                      </span>
-                    </div>
+                  <div *ngSwitchCase="'condicional'">
+                    <span style="font-size: x-small">
+                      Si {{ respuesta.result["parametro"] }}
+                      <span *ngIf="!disableEScondition()">es</span>
+                      {{ respuesta.result["condicion"] }}
+                      {{ respuesta.result["valor"] }}
+                    </span>
+                  </div>
 
-                    <div *ngSwitchDefault>
-                      <b>{{ respuesta.nextIntent }}</b>
-                    </div>
+                  <div *ngSwitchCase="'grupo_datos'">
+                    <span style="font-size: x-small">
+                      Guarda {{ respuesta.result["key"] }} en
+                      {{ respuesta.result["coleccion"] }}
+                    </span>
+                  </div>
+
+                  <div *ngSwitchCase="'buscar'">
+                    <span style="font-size: x-small">
+                      Busca {{ respuesta.result["parametro"] }} en
+                      {{ respuesta.result["database"] }}
+                    </span>
+                  </div>
+
+                  <div *ngSwitchDefault>
                   </div>
                 </div>
               </div>
@@ -119,6 +115,26 @@
 
         <!-- CONTENIDO DE LA TARJETA -->
         <mat-card-content *ngIf="respuesta.tipo">
+
+          <!-- INPUT CONTEXT -->
+          <ng-container *ngIf="!isBienvenida">
+            <div class="row card-row">
+              <div class="col s4 resp-label">
+                Contexto
+                <i class="fas fa-info-circle"
+                  style="font-size: smaller"
+                  matTooltip="Contexto que condiciona la respuesta. La conversación puede provenir desde cualquier contexto si no se selecciona"
+                ></i>
+              </div>
+              <div class="col s8">
+                <aSmart-contexto-selector
+                  [contexto]="setPrevContextSelected(respuesta.inputContexts)"
+                  (contextSelected)="catchInputContext($event)"
+                ></aSmart-contexto-selector>
+              </div>
+            </div>
+          </ng-container>
+
           <!-- SWITCH TIPO RESPUESAS -->
           <div [ngSwitch]="respuesta.tipo">
             <div *ngSwitchCase="'condicional'">
@@ -148,27 +164,25 @@
             </aSmart-simple>
           </div>
 
-          <!-- CONTEXTO -->
-          <ng-container *ngIf="!sugerenciasActivated">
-            <!-- Select contexto -->
+          <!-- OUTPUT CONTEXT -->
+          <!-- <ng-container *ngIf="!sugerenciasActivated">
             <div class="row card-row">
               <div class="col s4 resp-label">
-                Contexto
+                Cambiar contexto
                 <i
                   class="fas fa-info-circle"
                   style="font-size: smaller"
-                  matTooltip="Elige el contexto que tiene la conversación a partir de esta respuesta"
+                  matTooltip="Elige el contexto que tendrá la conversación a partir de esta respuesta"
                 ></i>
               </div>
               <div class="col s8">
                 <aSmart-contexto-selector
-                  [contexto]="setContextSelected(respuesta.outputContexts)"
-                  (sendContextSelected)="catchContextSelected($event)"
-                >
-                </aSmart-contexto-selector>
+                  [contexto]="setPrevContextSelected(respuesta.outputContexts)"
+                  (contextSelected)="catchOutputContext($event)"
+                ></aSmart-contexto-selector>
               </div>
             </div>
-          </ng-container>
+          </ng-container> -->
 
           <!-- Select next mensaje -->
           <div class="row card-row" id="siguiente">
@@ -180,28 +194,32 @@
                 matTooltip="Elige la siguiente interacción con la que continúa la conversación. La interacción que te indique el tipo de mensajes esperados"
               ></i>
             </div>
-            <div class="col s7">
-              <mat-form-field appearance="outline">
-                <mat-select
-                  [disableRipple]="true"
-                  [(ngModel)]="respuesta.nextIntent"
-                  (selectionChange)="setNextIntentContext($event)"
-                  name="mensaje"
-                >
-                  <mat-option value="*fin"> Termina conversación </mat-option>
-                  <mat-option
-                    *ngFor="let mensaje of nextMensajesList"
-                    [value]="mensaje.displayName"
-                  >
-                    {{ mensaje.displayName }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-            <div class="col s1">
-              <button mat-icon-button (click)="openAddIntent()">
-                <i class="fas fa-plus"></i>
-              </button>
+            <div class="col s8">
+              <div class="row align-cols">
+                <div class="col s9">
+                  <mat-form-field appearance="outline">
+                    <mat-select
+                      [disableRipple]="true"
+                      [(ngModel)]="respuesta.nextIntent"
+                      (selectionChange)="setNextIntentContext($event)"
+                      name="mensaje"
+                    >
+                      <mat-option value="*fin"> Termina conversación </mat-option>
+                      <mat-option
+                        *ngFor="let mensaje of nextMensajesList"
+                        [value]="mensaje?.displayName"
+                      >
+                        {{ mensaje?.displayName }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col s3">
+                  <button mat-icon-button (click)="openAddIntent()">
+                    <i class="fas fa-plus"></i>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -238,6 +256,8 @@
                     </div>
                 </ng-container> -->
         </mat-card-content>
+
+        <!-- ACTION BUTTTONS -->
         <mat-card-actions class="res-actions">
           <button mat-raised-button (click)="switchEditResp = false">
             Cerrar

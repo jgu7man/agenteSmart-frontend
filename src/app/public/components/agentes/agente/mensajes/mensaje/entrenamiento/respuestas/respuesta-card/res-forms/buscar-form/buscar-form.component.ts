@@ -58,15 +58,16 @@ export class BuscarFormComponent implements OnInit, OnDestroy {
     this._BuscarRes.pipe(
       distinctUntilKeyChanged('parametro')
     ).subscribe( form => {
-      console.log(form);
+      // console.log(form);
       this.response = form
     } )
   }
 
   validateColeccionOnClick() {
 
-    if (this.tarjetas.length < 1) {
-      this._alerts.sendMessageAlert('Debes crear una tarjeta o un producto primero')
+    if (this.tarjetas.length < 1 ) {
+      // this._alerts.sendMessageAlert('Debes crear una tarjeta o un producto primero')
+      console.log( 'validate tarjetas o productos' )
     }
   }
 

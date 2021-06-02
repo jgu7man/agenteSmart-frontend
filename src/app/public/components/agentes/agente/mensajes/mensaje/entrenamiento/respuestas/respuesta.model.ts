@@ -19,7 +19,7 @@ export class RespuestaModel {
         public index: number,
         public nextIntent?: string,
         public outputContexts?: string[],
-        public inputContext?: string[],
+        public inputContexts?: string[],
         public accion?:string,
         public id?: string,
     ) {}

@@ -8,6 +8,9 @@ import { GdevCache } from '../../../../gdev-tools/src/lib/cache/gdev-cache.servi
 import { CurrentAgenteService } from './current-agente.service';
 import { GdevLoading } from '../../../../gdev-tools/src/lib/loading/loading.service';
 import { CurrentMensajeService } from './mensajes/mensaje/current-mensaje.service';
+import { Subscription } from 'rxjs';
+import { ContextosService } from './contextos/contextos.service';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'aSmart-agente',
@@ -18,6 +21,7 @@ export class AgenteComponent implements OnInit, OnDestroy {
 
   public agente: AgenteModel
   public projectId: string
+  private _agenteSubscription: Subscription
 
   constructor (
     private _agente: CurrentAgenteService,
@@ -28,16 +32,25 @@ export class AgenteComponent implements OnInit, OnDestroy {
     public dashboard_: DashboardService,
     public resposive_: ResponsiveService,
     public _loading: GdevLoading,
-    public responsive: ResponsiveService
+    public responsive: ResponsiveService,
+    private _contexts: ContextosService
   ) {
 
     // ANCHOR GET THE CURRENT PROJECT ID
     // NOTE INIZIALITE THE CURRENT AGENT
     this._route.params.subscribe(async params => {
+      this._agenteSubscription =
       ( await this._agente.setCurrentAgente(params['id'])
-      ).subscribe()
+      ).subscribe(() => {
+        const url = this._router.url
+        if ( url.slice(url.lastIndexOf('/') + 1) == params['id']) {
+          this._router.navigate([`/dashboard/agente/${params['id']}/flujo`])
+          this._contexts.getAllContexts().pipe(take(1)).subscribe()
+        }
+      })
     })
-   }
+
+  }
 
 
 
@@ -60,8 +73,8 @@ export class AgenteComponent implements OnInit, OnDestroy {
   }
 
   agentLinks:iNavlink[] = [
-    { path: 'bienvenida', label: 'Bienvenida', icon: 'fa-filter' },
-    { path: 'mensajes', label: 'Flujo', icon:'fa-sitemap' },
+    { path: 'filtro', label: 'Filtro', icon: 'fa-filter' },
+    { path: 'flujo', label: 'Flujo', icon:'fa-sitemap' },
     { path: 'tipos', label: 'Tipos', icon:'fa-list-alt' },
     // { path: 'configuraciones', label: 'Configuración', icon: 'fa-cog' },
     // { path: 'integraciones', label: 'Integraciones', icon: 'fa-plug' },
@@ -80,6 +93,7 @@ export class AgenteComponent implements OnInit, OnDestroy {
         this._agente.contextosSubs.unsubscribe()
       if(this._agente.tarjetasSubs)
         this._agente.tarjetasSubs.unsubscribe()
+      this._agenteSubscription.unsubscribe()
     }
 
 }

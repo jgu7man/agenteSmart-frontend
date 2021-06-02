@@ -22,7 +22,7 @@
     </div>
 
     <!-- Tipo -->
-    <div class="col s4" (click)="toEditTipo()">
+    <div class="col s3 param-entity-selector" (click)="toEditTipo()">
         <ng-container *ngIf="!switchTipoSelecter; else tipoSelecter">
             {{param.entityTypeDisplayName}}
         </ng-container>
