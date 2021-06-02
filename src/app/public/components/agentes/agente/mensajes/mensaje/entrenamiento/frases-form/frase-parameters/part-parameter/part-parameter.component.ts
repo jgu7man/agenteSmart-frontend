@@ -133,12 +133,12 @@ export class PartParameterComponent implements OnInit {
           : `$${this.parte.alias}`
         : this.parte.entityType.substring(1)
     };
-    console.log( this.parte )
+    // console.log( this.parte )
     this.paramAdded.emit(this.parte);
     const paramStored = this._mensaje.current$.getValue()
       .parameters.find((p) => p.displayName == this.param.displayName);
 
-    console.log( paramStored )
+    // console.log( paramStored )
     if (!paramStored) {
       this._params.addParam(this.param)
     }

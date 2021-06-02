@@ -230,7 +230,7 @@ export class MensajesService {
     `${this._url}/${projectId}`,
     { responseType: 'json' }
     ).pipe(
-      tap(data => console.log( data )),
+      // tap(data => console.log( data )),
       pluck<any, IntentModel[]>('result', 'intents'),
       map<IntentModel[], IntentModel[]>((list) => {
         return list.map((intent) => {
@@ -238,7 +238,7 @@ export class MensajesService {
             return intent;
           });
         }),
-        tap(data => console.log( data )),
+        // tap(data => console.log( data )),
         tap((list) => this._cache.updateData('intents', list))
       );
   }

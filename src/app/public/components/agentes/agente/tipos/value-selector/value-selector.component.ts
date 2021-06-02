@@ -43,8 +43,9 @@ export class ValueSelectorComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
+    console.log( this.value )
     if (this.value) {
-      this.valueCtrl.setValue(this.value)
+      this.valueCtrl.setValue(typeof this.value == 'string' ? this.value : '')
     }
 
 

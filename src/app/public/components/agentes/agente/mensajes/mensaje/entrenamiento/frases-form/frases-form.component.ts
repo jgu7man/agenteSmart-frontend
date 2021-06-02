@@ -114,7 +114,7 @@ export class FrasesFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.paramAddedSub = this.$frases.paramAdded$.subscribe(() => {
-      console.log( 'added' )
+      // console.log( 'added' )
       this.accordion.closeAll();
     });
 

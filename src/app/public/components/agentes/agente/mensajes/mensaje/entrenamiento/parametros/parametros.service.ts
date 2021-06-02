@@ -80,12 +80,12 @@ export class ParametrosService {
 
     if (!parameters || parameters.length == 0) {
       parameters = [param];
-      console.log('params defined');
-      console.log(parameters);
+      // console.log('params defined');
+      // console.log(parameters);
       // this.parameterAdded$.next(param);
     } else {
       parameters.push(param);
-      console.log('params defined');
+      // console.log('params defined');
       // this.parameterAdded$.next(param);
     }
     this._mensaje.current$.next({
@@ -93,7 +93,7 @@ export class ParametrosService {
       parameters,
     });
 
-    console.log(param);
+    // console.log(param);
     return;
   }
 

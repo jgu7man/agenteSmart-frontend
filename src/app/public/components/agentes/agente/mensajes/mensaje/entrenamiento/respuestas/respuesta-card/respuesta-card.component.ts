@@ -247,14 +247,14 @@ export class RespuestaCardComponent implements OnInit, OnDestroy {
     var nextMensaje: MensajeModel;
     // this.contextLists = this._cache.getDataKey('contextLists')
     var lists = Object.keys(this.contextLists);
-    console.log(nextIntent);
+    // console.log(nextIntent);
     await this._loading.asyncForEach(lists, async (contextName) => {
-      console.log(this.contextLists[contextName]);
+      // console.log(this.contextLists[contextName]);
       let mensajeFinded = this.contextLists[contextName].find(
         (intent) => intent.displayName == nextIntent
       );
       if (mensajeFinded) nextMensaje = mensajeFinded;
-      console.log(nextMensaje);
+      // console.log(nextMensaje);
     });
     return nextMensaje && nextMensaje.contexto ? nextMensaje.contexto : '';
   }
@@ -374,13 +374,13 @@ export class RespuestaCardComponent implements OnInit, OnDestroy {
    *
    */
   async onSave() {
-    console.log(this.respuesta.nextIntent);
+    // console.log(this.respuesta.nextIntent);
     this.respuesta.outputContexts;
     let cleanRespuesta = await this.validateRespuesta(this.respuesta);
     if (!cleanRespuesta['nextIntent']) {
       cleanRespuesta['nextIntent'] = '*sug';
     }
-    console.log(cleanRespuesta['nextIntent']);
+    // console.log(cleanRespuesta['nextIntent']);
     this.switchEditResp = false;
 
     if (cleanRespuesta) this.respuestas_.setRespuesta(cleanRespuesta);

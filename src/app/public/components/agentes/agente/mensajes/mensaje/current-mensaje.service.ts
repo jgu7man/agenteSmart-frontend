@@ -226,13 +226,13 @@ export class CurrentMensajeService {
         }
 
         const request = await this.updateIntentApiRequest(current);
-        console.log(request);
+        // console.log(request);
         if (request) {
           // console.info('Se Actualizo Intent:', request);
           this._mensajes.getDialogFlowIntents()
             .pipe(take(1))
             .subscribe(() => {
-              console.log( 'changes' )
+              // console.log( 'changes' )
               this.setCurrent(request.displayName)
 
             });
