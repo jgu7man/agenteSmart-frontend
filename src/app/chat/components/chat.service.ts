@@ -28,7 +28,8 @@ import { environment } from "src/environments/environment";
     providedIn: 'root',
 })
 export class ChatService {
-    conversation;
+
+  conversation;
     private _function =
         'https://us-central1-main-agentesmart.cloudfunctions.net/dialogflow/';
     private _localhost =

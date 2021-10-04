@@ -12,9 +12,11 @@
     "serve:ip": "ng serve --no-live-reload --configuration=debug  --host 192.168.1.65 -o",
     "serve:prod": "ng serve --source-map=false --aot --prod --live-reload false --configuration=debug  --host 192.168.1.65 -o",
     "back": "cd ../agenteSmart-backend/functions && start cmd /k npm run debug",
+    "websocket": "cd ../agentesmart-ws && start cmd /k npm run test ",
     "fetch:back": "cd ../agenteSmart-backend && start cmd /k \"git fetch && exit\"",
     "fetch:front": "start cmd /k \"git fetch && exit\"",
-    "work": "npm run fetch:back && npm run fetch:front && npm run back && ng serve -o"
+    "work": "npm run back && npm run websocket && ng serve -o",
+    "work:fetch": "npm run fetch:back && npm run fetch:front && npm run back && ng serve -o"
   },
   "private": true,
   "dependencies": {

@@ -23,7 +23,7 @@ export class AgentesService {
 
   /**
    * Observable de los agentes en FIRESTORE*/
-public agentes$ = new Observable<AgenteModel[]>();
+  public agentes$ = new Observable<AgenteModel[]>();
   private restURL = environment.restURL
 
   constructor(
