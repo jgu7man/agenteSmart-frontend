@@ -1,27 +1,53 @@
-# AgenteSmartFrontend
+# 🖥️ AgenteSmart Frontend — No-Code Dialogflow Dashboard
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.6.
+[![Angular](https://img.shields.io/badge/Angular-PWA%20Dashboard-DD0031?style=flat-square&logo=angular&logoColor=white)](https://angular.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Strict-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![Firebase Hosting](https://img.shields.io/badge/Deploy-Firebase%20Hosting-FFCA28?style=flat-square&logo=firebase&logoColor=black)](https://firebase.google.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](LICENSE)
 
-## Development server
+An intuitive **Angular Single Page Application & PWA** designed to give non-technical users a visual, No-Code interface to supervise, configure, and train **Google Dialogflow** conversational agents.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Part of the **AgenteSmart Full-Stack Suite**:
+- 🖥️ [**`agenteSmart-frontend`**](https://github.com/jgu7man/agenteSmart-frontend) (Visual Angular Dashboard)
+- ⚙️ [**`agenteSmart-backend`**](https://github.com/jgu7man/agenteSmart-backend) (Firebase Cloud Functions & Firestore API)
+- ⚡ [**`agentesmart-ws`**](https://github.com/jgu7man/agentesmart-ws) (Real-Time WebSockets WhatsApp Bridge)
 
-## Code scaffolding
+---
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## 🏗️ Full-Stack Suite Topology
 
-## Build
+```mermaid
+flowchart LR
+    User["👔 Business User / Operator"] --> Front["🖥️ agenteSmart-frontend<br/>(Visual Angular Dashboard)"]
+    Front <--> Back["⚙️ agenteSmart-backend<br/>(Firebase Cloud Functions & Firestore)"]
+    Back <--> Dialogflow["🤖 Google Dialogflow v2 API"]
+    Back <--> WS["⚡ agentesmart-ws<br/>(Real-Time WebSockets Server)"]
+    WS <--> WhatsApp["📱 WhatsApp Messaging Client"]
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+---
 
-## Running unit tests
+## ✨ Key Features
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+- 🎨 **Visual Intent & Entity Management:** Allows operators to review and edit conversational intents without opening the Google Cloud console.
+- 💬 **Live Conversation Inspector:** Real-time visibility into active user chats and intent matching logs.
+- 📱 **Progressive Web App (PWA):** Built with `@angular/pwa` and Service Workers for mobile-friendly operational access.
+- 🔐 **Role-Based Authentication:** Integrated with Firebase Authentication and Firestore security rules.
 
-## Running end-to-end tests
+---
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+## 🛠️ Local Development
 
-## Further help
+```bash
+# Install dependencies
+npm install
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+# Run local development server
+npm start
+# Open http://localhost:4200
+```
+
+---
+
+## 📄 License
+Distributed under the [MIT License](LICENSE). Created by [Jorge Guzmán (@jgu7man)](https://github.com/jgu7man).
